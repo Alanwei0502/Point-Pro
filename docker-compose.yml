@@ -1,0 +1,19 @@
+version: '3'
+services:
+  point-pro-fe: 
+    build:
+      context: ./point-pro-fe
+      dockerfile: Dockerfile.dev
+    ports:
+      - "5173:5173"
+    volumes:
+      - /app/node_modules
+      - ./point-pro-fe:/app
+  # point-pro-be:
+  # db:
+  #   image: supabase/postgres
+  #   ports:
+  #     - "5432:5432"
+  #   command: postgres -c config_file=/etc/postgresql/postgresql.conf 
+  #   environment:
+  #     POSTGRES_PASSWORD: postgres

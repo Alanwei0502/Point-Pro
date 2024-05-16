@@ -1,0 +1,12 @@
+export { AuthApi } from "./auth.api";
+export { MealApi } from "./meal.api";
+export { CategoryApi } from "./category.api";
+export { SpecialtyApi } from "./specialty.api";
+export { MenuApi } from "./menu.api";
+export { OrderApi } from "./order.api";
+export { ImgurApi } from "./imgur.api";
+export { PaymentApi } from "./payment.api";
+export { SeatApi } from "./seat.api";
+export { ReservationApi } from "./reservation.api";
+export { PeriodApi } from "./period.api";
+export { MailerApi } from "./mailer.api";
