@@ -11,14 +11,15 @@ import {
   ListItemText,
   ListItemButton,
   FormControlLabel,
-  Typography
+  Typography,
+  Select,
+  SelectChangeEvent
 } from "@mui/material";
-import Select, { SelectChangeEvent } from "@mui/material/Select";
 import AddIcon from "@mui/icons-material/Add";
-import SwitchBase from "~/components/switch";
+import { BaseSwitch } from "~/components";
 import { RouterProps, IMeal, ICategory } from "~/types";
 import { useAppDispatch, useAppSelector } from "~/hooks";
-import { getMeals, patchMealById } from "~/app/slices";
+import { getMeals, patchMealById } from "~/store/slices";
 import { appDayjs, formatFullDate } from "~/utils";
 
 export const MealListContainer: FC<RouterProps> = ({ navigate }) => {
@@ -41,14 +42,9 @@ export const MealListContainer: FC<RouterProps> = ({ navigate }) => {
   };
 
   const handleSwitchChange = async (mealId: string, checked: boolean) => {
-    // console.log(event.target.checked);
-    let payload: { publishedAt: string | null } = { publishedAt: appDayjs().toISOString() };
-    if (checked) {
-      payload.publishedAt = appDayjs().toISOString();
-    } else {
-      payload.publishedAt = null;
-    }
-    console.log({ mealId, payload });
+    const payload = {
+      publishedAt: checked ? appDayjs().toISOString() : undefined
+    };
 
     try {
       await dispatch(patchMealById({ mealId, payload }));
@@ -59,7 +55,6 @@ export const MealListContainer: FC<RouterProps> = ({ navigate }) => {
   };
 
   const handleMealClick = (mealId: string) => {
-    console.log({ mealId });
     navigate({ pathname: `/admin/meal/list/${mealId}` });
   };
 
@@ -122,7 +117,7 @@ export const MealListContainer: FC<RouterProps> = ({ navigate }) => {
                   <FormControlLabel
                     onClick={(eve) => eve.stopPropagation()}
                     control={
-                      <SwitchBase
+                      <BaseSwitch
                         sx={{ mx: 2 }}
                         onChange={(event) => handleSwitchChange(meal.id, event.target.checked)}
                         checked={appDayjs().isAfter(appDayjs(meal.publishedAt))}

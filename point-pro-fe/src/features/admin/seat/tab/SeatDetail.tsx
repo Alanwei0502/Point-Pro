@@ -1,25 +1,19 @@
-import { FC, useEffect, useMemo, useState } from "react";
+import { FC, useMemo, useState } from "react";
 
 import { Stack, Typography, styled, Button, Box, Divider } from "@mui/material";
-import { DrawerBase } from "~/components/drawer";
-import TabsBase from "~/components/tabs";
+import { BaseDraw, BaseTabs } from "~/components";
 import theme from "~/theme";
 import UnDraw from "~/assets/images/undraw_login.svg";
 import ReservationDetail from "./ReservationDetail";
 
-import { SeatDetailsPeriod, SeatDetails } from "~/types";
-import { genderListStringArray, seatStatusListObj } from "~/utils/constants.utils";
-import appDayjs, { formatTimeOnly } from "~/utils/dayjs.util";
+import { SeatDetailsPeriod, SeatDetails, CustomerBookingDialog } from "~/types";
+import { appDayjs, genderListStringArray, seatStatusListObj, formatTimeOnly } from "~/utils";
 
-import { useAppDispatch } from "~/hooks/useRedux";
-import { patchReservationById } from "~/app/slices/reservation.slice";
-
+import { useAppDispatch } from "~/hooks";
+import { patchReservationById, getUserTokenByReservationLogId, setDialog } from "~/store/slices";
 import { people } from "./reducers/reservation-detail";
-import { setDialog } from "~/features/booking/booking.slice";
-import { CustomerBookingDialog } from "~/types/common";
-import { getUserTokenByReservationLogId } from "~/app/slices/auth.slice";
 
-const enum SeatTab {
+enum SeatTab {
   CURRENT = "CURRENT",
   TODAY = "TODAY"
 }
@@ -71,7 +65,7 @@ const SelectTab = styled(Button)(({ theme }) => ({
 
 export const SeatStatusTabs: FC<SeatProps> = ({ seatTab, setSeatTab }) => {
   return (
-    <TabsBase
+    <BaseTabs
       sx={{ position: "sticky", top: "0", zIndex: "10", backgroundColor: theme.palette.background.paper }}
       tabs={[
         {
@@ -167,7 +161,7 @@ export const SeatDetail: FC<SeatDetailProps> = ({ open, onClose, state, update, 
               payload: { startOfMeal: appDayjs().toDate() }
             })
           );
-          await dispatch(getUserTokenByReservationLogId({ reservationLogId: info?.reservation?.id as string }));
+          await dispatch(getUserTokenByReservationLogId({ reservationId: info?.reservation?.id as string }));
           dispatch(setDialog(CustomerBookingDialog.QRCODE));
           update();
         } catch (error) {
@@ -196,27 +190,27 @@ export const SeatDetail: FC<SeatDetailProps> = ({ open, onClose, state, update, 
     return seatTab === SeatTab.CURRENT
       ? info?.reservation
         ? [
-          {
-            label: "編輯",
-            onClick: () => handleButtonClick("edit"),
-            disabled: info.reservation.status === "IN_USE"
-          },
-          {
-            label: "客到開始使用",
-            onClick: () => handleButtonClick("start"),
-            disabled: info.reservation.status === "IN_USE"
-          }
-        ]
+            {
+              label: "編輯",
+              onClick: () => handleButtonClick("edit"),
+              disabled: info.reservation.status === "IN_USE"
+            },
+            {
+              label: "客到開始使用",
+              onClick: () => handleButtonClick("start"),
+              disabled: info.reservation.status === "IN_USE"
+            }
+          ]
         : [{ label: "新增預約", onClick: () => handleButtonClick("create") }]
       : info?.reservation
-        ? [
+      ? [
           {
             label: "編輯",
             onClick: () => handleButtonClick("edit"),
             disabled: appDayjs().isAfter(info.reservation.startOfMeal)
           }
         ]
-        : [
+      : [
           {
             label: "新增預約",
             onClick: () => handleButtonClick("create"),
@@ -227,7 +221,7 @@ export const SeatDetail: FC<SeatDetailProps> = ({ open, onClose, state, update, 
   console.log({ info });
 
   return (
-    <DrawerBase title="座位概況" open={open} onClose={onClose} buttonList={getButtonList()}>
+    <BaseDraw title="座位概況" open={open} onClose={onClose} buttonList={getButtonList()}>
       <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ pt: 2 }}>
         <Typography variant="h6" sx={{ pl: 3 }}>
           座位
@@ -280,6 +274,6 @@ export const SeatDetail: FC<SeatDetailProps> = ({ open, onClose, state, update, 
         date={appDayjs(state.date)}
         info={info}
       />
-    </DrawerBase>
+    </BaseDraw>
   );
 };

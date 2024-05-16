@@ -1,17 +1,22 @@
-// Lib
 import { useEffect, useState } from "react";
 import { Box, Chip, List, ListItem, ListItemText, Tab, Tabs, Typography, tabsClasses } from "@mui/material";
 import DoneIcon from "@mui/icons-material/Done";
 import DeleteIcon from "@mui/icons-material/Delete";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-// Components
-import { TabPanel } from "~/components/tabs";
-import { Column, Row } from "~/components/layout";
-import GridBase, { GridItemBase } from "~/components/grid";
-import { ButtonBase, ButtonIcon, CloseButton } from "~/components/buttons";
-import { TabletModal } from "~/components/modals";
-// Others
-import { useAppDispatch, useAppSelector } from "~/hooks/useRedux";
+import {
+  BaseGrid,
+  BaseGridItem,
+  PanelTabs,
+  BaseButton,
+  IconButton,
+  CloseButton,
+  ClearCartConfirmModal,
+  SubmitOrderConfirmModal,
+  headerHeight,
+  Column,
+  Row
+} from "~/components";
+import { useAppDispatch, useAppSelector } from "~/hooks";
 import {
   closeDialog,
   createCartItem,
@@ -27,10 +32,8 @@ import {
 } from "~/features/orders/slice";
 import { InputNumber } from "~/features/orders/index.styles";
 import theme from "~/theme";
-import { CartItem, Meal, Specialty, SpecialtyItem } from "~/features/orders/type";
-import { calculateCartPrice } from "~/utils/price.utils";
-import { headerHeight } from "~/components/header";
-import { DialogType } from "~/types/common";
+import { calculateCartPrice } from "~/utils";
+import { DialogType, ICartItem, IMeal, ISpecialty, ISpecialtyItem } from "~/types";
 
 export const MenuTabs = () => {
   const dispatch = useAppDispatch();
@@ -67,7 +70,7 @@ export const MenuTabs = () => {
 };
 
 type MealItemProps = {
-  meal: Meal;
+  meal: IMeal;
 };
 const MealItem = (props: MealItemProps) => {
   const dispatch = useAppDispatch();
@@ -123,9 +126,9 @@ export const MealDrawer = () => {
 
   const customizedSpecialties = meals?.find((meal) => meal.id === customized?.id)?.specialties ?? [];
 
-  const items = customized?.specialties?.reduce((acc, cur) => acc.concat(cur.items), [] as SpecialtyItem[]);
+  const items = customized?.specialties?.reduce((acc, cur) => acc.concat(cur.items), [] as ISpecialtyItem[]);
 
-  const handleClickItem = (selectedSpecialty: Specialty, selectedItem: SpecialtyItem) => () => {
+  const handleClickItem = (selectedSpecialty: ISpecialty, selectedItem: ISpecialtyItem) => () => {
     dispatch(updateSpecialty({ selectedSpecialty, selectedItem }));
   };
 
@@ -184,57 +187,57 @@ export const MealDrawer = () => {
         <Box>
           {customizedSpecialties.length
             ? customizedSpecialties.map((specialty) => (
-              <Box key={specialty.id}>
-                <Typography
-                  variant="h6"
-                  key={specialty.id}
-                  sx={{ fontWeight: 900, padding: "1rem 0 1rem", color: theme.palette.common.black_80 }}
-                >
-                  {specialty.title}
-                </Typography>
-                <Box
-                  sx={{
-                    padding: 0,
-                    margin: 0,
-                    width: "100%",
-                    display: "grid",
-                    gridTemplateColumns: "repeat(6, 1fr)",
-                    gap: ".5rem"
-                  }}
-                >
-                  {specialty.items.map((item) => (
-                    <Chip
-                      key={item.id}
-                      label={item.title}
-                      color="primary"
-                      variant={items?.find(({ id }) => id === item.id) ? "filled" : "outlined"}
-                      icon={
-                        <DoneIcon
-                          sx={{
-                            display: items?.find(({ id }) => id === item.id) ? "block" : "none",
-                            fontSize: theme.typography.body1.fontSize
-                          }}
-                        />
-                      }
-                      onClick={handleClickItem(specialty, item)}
-                      sx={{
-                        color: theme.palette.common.black,
-                        fontSize: theme.typography.body1.fontSize,
-                        "&:hover": {
-                          bgcolor: theme.palette.primary.main
+                <Box key={specialty.id}>
+                  <Typography
+                    variant="h6"
+                    key={specialty.id}
+                    sx={{ fontWeight: 900, padding: "1rem 0 1rem", color: theme.palette.common.black_80 }}
+                  >
+                    {specialty.title}
+                  </Typography>
+                  <Box
+                    sx={{
+                      padding: 0,
+                      margin: 0,
+                      width: "100%",
+                      display: "grid",
+                      gridTemplateColumns: "repeat(6, 1fr)",
+                      gap: ".5rem"
+                    }}
+                  >
+                    {specialty.items.map((item) => (
+                      <Chip
+                        key={item.id}
+                        label={item.title}
+                        color="primary"
+                        variant={items?.find(({ id }) => id === item.id) ? "filled" : "outlined"}
+                        icon={
+                          <DoneIcon
+                            sx={{
+                              display: items?.find(({ id }) => id === item.id) ? "block" : "none",
+                              fontSize: theme.typography.body1.fontSize
+                            }}
+                          />
                         }
-                      }}
-                    />
-                  ))}
+                        onClick={handleClickItem(specialty, item)}
+                        sx={{
+                          color: theme.palette.common.black,
+                          fontSize: theme.typography.body1.fontSize,
+                          "&:hover": {
+                            bgcolor: theme.palette.primary.main
+                          }
+                        }}
+                      />
+                    ))}
+                  </Box>
                 </Box>
-              </Box>
-            ))
+              ))
             : null}
         </Box>
         {customized && (
           <Box sx={{ marginTop: "1rem", display: "flex", justifyContent: "end" }}>
             <InputNumber value={customized.amount} onAdd={handleAdd} onMinus={handleMinus} />
-            <ButtonBase
+            <BaseButton
               sx={{
                 backgroundColor: "common.black",
                 color: "white",
@@ -251,7 +254,7 @@ export const MealDrawer = () => {
               <Typography variant="body1" fontWeight={700}>
                 {isModifiedCartItem ? "確認修改" : "加入購物車"}
               </Typography>
-            </ButtonBase>
+            </BaseButton>
           </Box>
         )}
       </Box>
@@ -275,21 +278,21 @@ export const MealList = () => {
         {menu.map(
           (category) =>
             category.id === currentCategory && (
-              <TabPanel key={category.id} value={category.position} index={category.position}>
-                <GridBase columns="5" gap="1rem">
+              <PanelTabs key={category.id} value={category.position} index={category.position}>
+                <BaseGrid columns="5" gap="1rem">
                   {category.meals.length > 0 &&
                     category.meals.map((meal) => (
-                      <GridItemBase
+                      <BaseGridItem
                         sx={{
                           cursor: "pointer"
                         }}
                         key={meal.id}
                       >
                         <MealItem meal={meal} />
-                      </GridItemBase>
+                      </BaseGridItem>
                     ))}
-                </GridBase>
-              </TabPanel>
+                </BaseGrid>
+              </PanelTabs>
             )
         )}
       </Box>
@@ -299,8 +302,9 @@ export const MealList = () => {
 
 type CartMealProps = {
   idx: number;
-  cartItem: CartItem;
+  cartItem: ICartItem;
 };
+
 const CartMeal = ({ idx, cartItem }: CartMealProps) => {
   const dispatch = useAppDispatch();
 
@@ -337,9 +341,9 @@ const CartMeal = ({ idx, cartItem }: CartMealProps) => {
         <Typography variant="h6" fontWeight={700} mb={0.5}>
           {title} x {amount}
         </Typography>
-        <ButtonIcon sx={{ marginLeft: "auto" }} size="large" color="inherit" onClick={handleDeleteCartItem}>
+        <IconButton sx={{ marginLeft: "auto" }} size="large" color="inherit" onClick={handleDeleteCartItem}>
           <DeleteIcon />
-        </ButtonIcon>
+        </IconButton>
       </Row>
       <Row sx={{ gap: "0.5rem" }} alignItems="flex-start">
         <Column>
@@ -408,7 +412,7 @@ export const CartList = () => {
                 已點項目
               </Typography>
               <Box>
-                <ButtonBase
+                <BaseButton
                   size={"small"}
                   color="inherit"
                   disableRipple
@@ -422,7 +426,7 @@ export const CartList = () => {
                   >
                     清空購物車
                   </Typography>
-                </ButtonBase>
+                </BaseButton>
               </Box>
             </Row>
             {/* 購物車項目 */}
@@ -459,7 +463,7 @@ export const CartList = () => {
                   </Typography>
                 </Row>
               </Column>
-              <ButtonBase
+              <BaseButton
                 sx={{ width: "100%", padding: "1rem", borderRadius: 0, boxShadow: "none" }}
                 variant="contained"
                 onClick={handleSubmitOrders}
@@ -468,7 +472,7 @@ export const CartList = () => {
                 <Typography variant="h6" fontWeight={900} textAlign="center">
                   送出訂單
                 </Typography>
-              </ButtonBase>
+              </BaseButton>
             </Box>
           </>
         ) : (
@@ -484,8 +488,8 @@ export const CartList = () => {
           </Typography>
         )}
       </Column>
-      <TabletModal.ClearCartConfirm open={openClearCartConfirmModal} setOpen={setOpenClearCartConfirmModal} />
-      <TabletModal.SubmitOrderConfirm open={openSubmitOrderConfirmModal} setOpen={setOpenSubmitOrderConfirmModal} />
+      <ClearCartConfirmModal open={openClearCartConfirmModal} setOpen={setOpenClearCartConfirmModal} />
+      <SubmitOrderConfirmModal open={openSubmitOrderConfirmModal} setOpen={setOpenSubmitOrderConfirmModal} />
     </>
   );
 };

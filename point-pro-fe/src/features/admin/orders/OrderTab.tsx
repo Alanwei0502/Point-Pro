@@ -1,6 +1,6 @@
 import { useAppDispatch, useAppSelector } from "~/hooks/useRedux";
-import { setOrderStatus } from "~/app/slices/order.slice";
-import TabsBase from "~/components/tabs";
+import { setOrderStatus } from "~/store/slices/order.slice";
+import BaseTabs from "~/components/tabs/TabBase";
 import theme from "~/theme";
 import { OrderStatus } from "~/types/common";
 import { ORDER_STATUS } from "~/utils/constants.utils";
@@ -14,7 +14,7 @@ const OrderTabs = () => {
   };
 
   return (
-    <TabsBase
+    <BaseTabs
       sx={{
         position: "sticky",
         top: "0",

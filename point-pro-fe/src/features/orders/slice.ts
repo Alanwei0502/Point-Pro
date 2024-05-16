@@ -1,20 +1,31 @@
 // Libs
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
-import { AuthApi, MenuApi } from "~/api";
-
 // Others
-import { createAppAsyncThunk } from "~/hooks/useRedux";
-import { CartItem, Category, Meal, Menu, Order, Specialty, SpecialtyItem, UserInfo } from "./type";
-import { SpecialtyType, MobileModal, DialogType } from "~/types/common";
+import { AuthApi, MenuApi } from "~/api";
+import { createAppAsyncThunk } from "~/hooks";
+import {
+  DialogType,
+  ICategory,
+  MobileModal,
+  SpecialtyType,
+  UserInfo,
+  ISpecialty,
+  ISpecialtyItem,
+  IMeal,
+  ICartItem,
+  IMenu
+} from "~/types";
+
+const name = "takeOrder";
 
 type TakeOrderSliceState = {
-  userInfo: UserInfo;
-  menu: Menu[];
-  categories: Category[];
-  meals: Meal[];
-  customized: CartItem | null;
-  cart: CartItem[];
-  currentCategory: Category["id"];
+  userInfo: UserInfo | null;
+  menu: IMenu[];
+  categories: ICategory[];
+  meals: IMeal[];
+  customized: ICartItem | null;
+  cart: ICartItem[];
+  currentCategory: ICategory["id"];
   currentDialog: DialogType | "";
   currentModal: MobileModal | "";
   modalData: any;
@@ -23,7 +34,6 @@ type TakeOrderSliceState = {
   isLoading: boolean;
 };
 
-const name = "takeOrder";
 const initialState: TakeOrderSliceState = {
   userInfo: null,
   menu: [],
@@ -59,8 +69,8 @@ export const getMenu = createAppAsyncThunk(`${name}/getMenu`, async (_, { reject
     const menuRes = await MenuApi.getMenu();
     const { result = [] } = menuRes;
     const menu = result;
-    const categories = result.map(({ meals, ...category }: Menu) => category);
-    const meals = result.map((category: Menu) => category.meals).flat();
+    const categories = result?.map(({ meals, ...category }: IMenu) => category) ?? [];
+    const meals = result?.map((category: IMenu) => category.meals).flat() ?? [];
 
     return { menu, meals, categories };
   } catch (error) {
@@ -109,7 +119,10 @@ export const takeOrderSlice = createSlice({
       takeOrderSlice.caseReducers.resetCustomized(state);
       takeOrderSlice.caseReducers.setNotModifiedCartItem(state);
     },
-    updateSpecialty: (state, action: PayloadAction<{ selectedSpecialty: Specialty; selectedItem: SpecialtyItem }>) => {
+    updateSpecialty: (
+      state,
+      action: PayloadAction<{ selectedSpecialty: ISpecialty; selectedItem: ISpecialtyItem }>
+    ) => {
       const { selectedSpecialty, selectedItem } = action.payload;
       const { id, title, type } = selectedSpecialty;
       if (state.customized) {
@@ -161,7 +174,7 @@ export const takeOrderSlice = createSlice({
         takeOrderSlice.caseReducers.closeDialog(state);
       }
     },
-    viewCartItemCustomized: (state, action: PayloadAction<{ cartItem: CartItem; idx: number }>) => {
+    viewCartItemCustomized: (state, action: PayloadAction<{ cartItem: ICartItem; idx: number }>) => {
       const { cartItem, idx } = action.payload;
       state.customized = cartItem;
       state.currentDialog = DialogType.CUSTOMIZED;
@@ -192,7 +205,7 @@ export const takeOrderSlice = createSlice({
         state.isLoading = true;
       })
       .addCase(getUserInfo.fulfilled, (state, action) => {
-        state.userInfo = action.payload;
+        state.userInfo = action.payload as UserInfo; // TODO
         state.isLoading = false;
       })
       .addCase(getUserInfo.rejected, (state) => {
@@ -204,7 +217,7 @@ export const takeOrderSlice = createSlice({
       })
       .addCase(getMenu.fulfilled, (state, action) => {
         const { menu, categories, meals } = action.payload;
-        state.menu = menu;
+        state.menu = menu ?? []; // TODO
         state.categories = categories;
         if (state.currentCategory === initialState.currentCategory) {
           state.currentCategory = categories[0]?.id ?? "";

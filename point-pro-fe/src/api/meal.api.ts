@@ -1,5 +1,5 @@
 import { http } from "./http";
-import { MealsResponse, MealResponse, PostMealPayload, PatchMealByIdPayload } from "~/types/api";
+import { MealsResponse, MealResponse, PatchMealByIdPayload, IMeal } from "~/types";
 
 export class MealApi {
   public static path = "meal";
@@ -12,7 +12,7 @@ export class MealApi {
     return http.get<string, MealResponse>(`${MealApi.path}/${mealId}`);
   }
 
-  static postMeal(payload: PostMealPayload) {
+  static postMeal(payload: IMeal) {
     return http.post<string, MealResponse>(MealApi.path, payload);
   }
 

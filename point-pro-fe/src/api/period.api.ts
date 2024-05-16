@@ -1,5 +1,5 @@
 import { http } from "./http";
-import { PeriodsResponse } from "~/types/api";
+import { PeriodsResponse } from "~/types";
 
 export class PeriodApi {
   public static path = "period";

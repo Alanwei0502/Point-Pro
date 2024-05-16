@@ -1,10 +1,5 @@
 import { http } from "./http";
-import {
-  ReservationsResponse,
-  ReservationResponse,
-  PostReservationPayload,
-  PatchReservationPayload
-} from "~/types/api";
+import { ReservationsResponse, ReservationResponse, PostReservationPayload, PatchReservationPayload } from "~/types";
 
 export class ReservationApi {
   public static path = "reservation";

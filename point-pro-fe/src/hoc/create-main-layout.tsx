@@ -1,7 +1,7 @@
 import { FC } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 
-import Header, { headerHeight } from "~/components/header";
+import Header, { headerHeight } from "~/components/header/Header";
 import { Box } from "@mui/material";
 
 import { RouterProps } from "~/types";

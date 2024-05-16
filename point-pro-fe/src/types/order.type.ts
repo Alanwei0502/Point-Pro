@@ -31,20 +31,9 @@ export interface ICartItem {
   title: string;
   coverUrl: string;
   price: number;
-  recommended: boolean;
+  isPopular: boolean;
   specialties: ISpecialty[];
   amount: number;
-}
-
-export interface IOrder {
-  id: string;
-  status: OrderStatus;
-  type: OrderType;
-  reservationId: IBookingInfo["id"];
-  createdAt: number;
-  updatedAt: number;
-  orderMeals: OrderMeal[];
-  paymentLogs: IPaymentLog[];
 }
 
 export interface IPaymentLog {
@@ -56,11 +45,23 @@ export interface IPaymentLog {
   status: OrderStatus.UNPAID | OrderStatus.SUCCESS;
 }
 
-export interface OrderMeal {
+export interface IOrder {
+  id: string;
+  status: OrderStatus;
+  type: OrderType;
+  orderMeals: IOrderMeal[];
+  paymentLogs: IPaymentLog[];
+  seats?: string[];
+  reservationId?: IBookingInfo["id"];
+  createdAt?: number;
+  updatedAt?: number;
+}
+
+export interface IOrderMeal {
   id: string;
   orderId: IOrder["id"];
   mealId: IMeal["id"];
-  mealTitle: IMeal["title"];
+  title: IMeal["title"];
   price: IMeal["price"];
   amount: number;
   servedAmount: number;
@@ -69,4 +70,15 @@ export interface OrderMeal {
   categories: ICategory[];
   mealDetails?: string;
   meal?: IMeal;
+  mealPrice: number;
+}
+
+export interface GatherOrder {
+  id: string;
+  status: OrderStatus;
+  type: OrderType;
+  seats: string[];
+  paymentLogs: IPaymentLog[];
+  orders: IOrder[];
+  reservationId?: IBookingInfo["id"];
 }

@@ -1,16 +1,11 @@
+import { LoginResponse } from "~/types";
 import { http } from "./http";
-import {
-  GenerateTokenPayload,
-  GenerateTokenResponse,
-  GetUserInfoResponse,
-  LoginPayload,
-  LoginResponse
-} from "~/types/api";
+import { GenerateTokenPayload, GenerateTokenResponse, GetUserInfoResponse, LoginPayload } from "~/types";
 
 export class AuthApi {
   public static path = "auth";
 
-  static postLogin(payload: LoginPayload) {
+  static login(payload: LoginPayload) {
     return http.post<string, LoginResponse>(`${AuthApi.path}/login`, payload, { withCredentials: true });
   }
 

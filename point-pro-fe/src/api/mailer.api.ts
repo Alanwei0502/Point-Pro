@@ -1,5 +1,5 @@
-import { MailerRequestBody } from "~/types/api";
 import { http } from "./http";
+import { MailerRequestBody } from "~/types";
 
 export class MailerApi {
   public static path = "mail";

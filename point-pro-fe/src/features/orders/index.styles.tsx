@@ -14,7 +14,6 @@ import {
   List,
   ListItem,
   ListItemButton,
-  ListSubheader,
   Tab,
   Tabs,
   ToggleButton,
@@ -30,13 +29,10 @@ import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
 import DeleteIcon from "@mui/icons-material/Delete";
-// Others
-import { formatFullDateWithTime } from "~/utils/dayjs.util";
-import { useAppDispatch, useAppSelector } from "~/hooks/useRedux";
+import { formatFullDateWithTime } from "~/utils";
+import { usePrevious, useAppDispatch, useAppSelector } from "~/hooks";
 import { openDialog, setCurrentCategory, viewCartItemCustomized, openModal } from "./slice";
-import { CartItem, Meal } from "./type";
-import usePrevious from "~/hooks/usePrevious";
-import { OrderStatus, MobileModal, DialogType } from "~/types/common";
+import { ICartItem, IMeal, OrderStatus, MobileModal, DialogType } from "~/types";
 
 export const Header = () => {
   const { pathname } = useLocation();
@@ -237,7 +233,7 @@ export const Meals = () => {
     [cart]
   );
 
-  const handleSelectedMeal = (meal: Meal) => () => {
+  const handleSelectedMeal = (meal: IMeal) => () => {
     dispatch(openDialog({ type: DialogType.CUSTOMIZED, data: { ...meal, amount: 1, specialties: [] } }));
   };
 
@@ -466,7 +462,7 @@ export const InputNumber = (props: InputNumberProps) => {
 };
 
 type CartMealProps = {
-  cartItem: CartItem;
+  cartItem: ICartItem;
   idx: number;
 };
 export const CartMeal = (props: CartMealProps) => {
@@ -486,7 +482,7 @@ export const CartMeal = (props: CartMealProps) => {
   );
   const totalPrice = (price + specialtiesPrice) * amount;
 
-  const handleCustomized = (cartItem: CartItem, idx: number) => () => {
+  const handleCustomized = (cartItem: ICartItem, idx: number) => () => {
     dispatch(viewCartItemCustomized({ cartItem, idx }));
   };
 

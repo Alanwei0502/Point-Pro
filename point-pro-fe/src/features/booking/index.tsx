@@ -13,9 +13,9 @@ import {
   PrivacyPolicyModal
 } from "./index.styles";
 // Others
-import { useAppDispatch, useAppSelector } from "~/hooks/useRedux";
-import { getPeriods } from "../../app/slices/booking.slice";
-import { NameSpace, useSocket } from "~/hooks/useSocket";
+import { useAppDispatch, useAppSelector, useSocket } from "~/hooks";
+import { getPeriods } from "~/store/slices";
+import { NameSpace } from "~/types";
 
 const stepTitle = ["人數及時間", "訂位人資訊", "請確認輸入資訊"];
 
@@ -52,7 +52,7 @@ const Booking = () => {
       {/* 已為您安排訂位 */}
       <BookingReminderModal />
       {/* 請出示此畫面 QR Code */}
-      {/* <BookingQRCodeModal /> */}
+      {/* <BookingQRCodeDialog /> */}
     </>
   );
 };

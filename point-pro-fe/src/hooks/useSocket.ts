@@ -2,18 +2,11 @@ import { useEffect, useRef } from "react";
 import { useLocation } from "react-router-dom";
 import io from "socket.io-client";
 import { apiHost } from "~/api/http";
-import { useAppDispatch, useAppSelector } from "~/hooks/useRedux";
-import { getOrders } from "~/app/slices/order.slice";
-import { addNotification, resetSocket, setSocket } from "~/app/slices/socket.slice";
+import { useAppDispatch, useAppSelector } from "~/hooks";
+import { addNotification, resetSocket, setSocket, getOrders } from "~/store/slices";
 import { closeDialog, getMenu } from "~/features/orders/slice";
 import { getToken } from "~/utils";
-import { SocketTopic } from "~/types";
-
-export enum NameSpace {
-  main = "/",
-  user = "/user",
-  admin = "/admin"
-}
+import { NameSpace, SocketTopic } from "~/types";
 
 type useSocketProps = {
   ns: NameSpace;
@@ -100,7 +93,7 @@ export const useSocket = (props: useSocketProps) => {
   useEffect(() => {
     socket.on(SocketTopic.ORDER, (data) => {
       if (ns === NameSpace.user) {
-        dispatch(getOrders({}));
+        dispatch(getOrders({ status: orderStatus })); // TODO
       }
 
       if (ns === NameSpace.admin) {

@@ -1,15 +1,20 @@
-// Libs
 import { useEffect } from "react";
-// Components
 import { SeatInfo, CategoryNavbar, Meals, Header, Footer } from "./index.styles";
-// Others
-import { useAppDispatch } from "~/hooks/useRedux";
 import { getMenu, getUserInfo } from "./slice";
-import { getOrders } from "~/app/slices/order.slice";
-import { MobileModal } from "~/components/modals";
-import { DialogType } from "~/components/dialog";
-import { NameSpace, useSocket } from "~/hooks/useSocket";
-import { getToken } from "~/utils/token.utils";
+import { getOrders } from "~/store/slices";
+import {
+  CartDialog,
+  CustomizedDialog,
+  OrdersDialog,
+  PaymentModal,
+  ConfirmRemoveCartItemModal,
+  CounterReminderModal,
+  CartItemIsOffReminderModal,
+  EcPayFormModal
+} from "~/components";
+import { useSocket, useAppDispatch } from "~/hooks";
+import { getToken } from "~/utils";
+import { OrderStatus, NameSpace } from "~/types";
 
 const Order = () => {
   const dispatch = useAppDispatch();
@@ -22,7 +27,7 @@ const Order = () => {
     const token = getToken();
     if (token) {
       dispatch(getUserInfo());
-      dispatch(getOrders({}));
+      dispatch(getOrders({ status: OrderStatus.PENDING }));
     }
   }, []);
 
@@ -35,16 +40,16 @@ const Order = () => {
       <Footer />
 
       {/* 客製化、購物車、訂單畫面 */}
-      <DialogType.Customized />
-      <DialogType.Cart />
-      <DialogType.Orders />
+      <CustomizedDialog />
+      <CartDialog />
+      <OrdersDialog />
 
       {/* 提示彈窗 */}
-      <MobileModal.ConfirmRemoveCartItem />
-      <MobileModal.Payment />
-      <MobileModal.CounterReminder />
-      <MobileModal.CartItemIsOffReminder />
-      <MobileModal.EcPayForm />
+      <ConfirmRemoveCartItemModal />
+      <PaymentModal />
+      <CounterReminderModal />
+      <CartItemIsOffReminderModal />
+      <EcPayFormModal />
     </>
   );
 };

@@ -1,11 +1,15 @@
-import { OrderMeal } from "~/features/orders/type";
-import { OrderStatus, OrderType } from "./order.type";
-import { BookingType, Gender, IBookingInfo } from "./book.type";
+import { IOrderMeal, OrderStatus, OrderType, BookingType, Gender, IBookingInfo } from "~/types";
 
 export enum SocketTopic {
   MENU = "MENU",
   ORDER = "ORDER",
   RESERVATION = "RESERVATION"
+}
+
+export enum NameSpace {
+  main = "/",
+  user = "/user",
+  admin = "/admin"
 }
 
 export enum OrderMessage {
@@ -26,8 +30,8 @@ export enum ReservationMessage {
   UPDATE_RESERVATION = "UPDATE_RESERVATION"
 }
 
-export interface INotification<Message, Result> {
-  notiType: SocketTopic;
+export interface INotification<NotiType extends SocketTopic, Message, Result> {
+  notiType: NotiType;
   message: Message;
   result: Result;
 }
@@ -37,10 +41,10 @@ export interface IOrderResult {
   type: OrderType;
   status: OrderStatus;
   parentOrderId: string | null;
-  reservationLogId: string | null;
+  reservationId: string | null;
   createAt: string | null;
   updatedAt: string | null;
-  orderMeals: OrderMeal[];
+  orderMeals: IOrderMeal[];
   paymentLogs: [];
   seats?: string[];
   reservationsLogs: {
@@ -94,6 +98,6 @@ export interface IReservationResult {
   token?: string;
 }
 
-export type OrderNotification = INotification<OrderMessage, IOrderResult>;
-export type MenuNotification = INotification<MenuMessage, IMenuResult>;
-export type ReservationNotification = INotification<ReservationMessage, IReservationResult>;
+export type OrderNotification = INotification<SocketTopic.ORDER, OrderMessage, IOrderResult>;
+export type MenuNotification = INotification<SocketTopic.MENU, MenuMessage, IMenuResult>;
+export type ReservationNotification = INotification<SocketTopic.RESERVATION, ReservationMessage, IReservationResult>;

@@ -1,12 +1,10 @@
 import { useEffect } from "react";
-import { CartList, MealList, MenuTabs, MealDrawer } from "./index.style";
-
-import { useAppDispatch } from "~/hooks/useRedux";
-import { getMenu } from "~/features/orders/slice";
 import { Grid } from "@mui/material";
+import { CartList, MealList, MenuTabs, MealDrawer } from "./index.style";
+import { useAppDispatch } from "~/hooks";
+import { getMenu } from "~/features/orders/slice";
 import theme from "~/theme";
-import { headerHeight } from "~/components/header";
-import PaymentDrawer from "~/components/payment";
+import { headerHeight, PaymentDrawer } from "~/components";
 
 export const MenuContainer = () => {
   const dispatch = useAppDispatch();

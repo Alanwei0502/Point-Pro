@@ -7,10 +7,10 @@ import {
   SubscribeSectionStyledCard,
   SubscribeSectionIconButton
 } from "./SubscribedSection.style";
-import { ModalBase } from "~/components/modals";
-import { ButtonBase } from "~/components/buttons";
+import { BaseModal } from "~/components/modals";
+import { BaseButton } from "~/components/buttons";
 import { useAppDispatch, useDeviceType } from "~/hooks";
-import { sendMail } from "~/app/slices/mailer.slice";
+import { sendMail } from "~/store/slices/mailer.slice";
 
 interface SubscribeSectionDialogProps {
   open: boolean;
@@ -51,7 +51,7 @@ const SubscribeSectionDialog = (props: SubscribeSectionDialogProps) => {
   };
 
   return (
-    <ModalBase open={open} onClose={() => handleCloseModal(true)}>
+    <BaseModal open={open} onClose={() => handleCloseModal(true)}>
       <Box
         sx={{
           display: "flex",
@@ -70,11 +70,11 @@ const SubscribeSectionDialog = (props: SubscribeSectionDialogProps) => {
         }}
       >
         {children}
-        <ButtonBase variant={"contained"} color={"primary"} fullWidth onClick={() => handleCloseModal(true)}>
+        <BaseButton variant={"contained"} color={"primary"} fullWidth onClick={() => handleCloseModal(true)}>
           確認
-        </ButtonBase>
+        </BaseButton>
       </Box>
-    </ModalBase>
+    </BaseModal>
   );
 };
 

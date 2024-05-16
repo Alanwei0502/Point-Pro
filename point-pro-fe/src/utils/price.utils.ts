@@ -1,6 +1,6 @@
-import { CartItem, Order, GatherOrder, Specialty } from "~/features/orders/type";
+import { IOrder, ISpecialty, GatherOrder, ICartItem } from "~/types";
 
-export const calculateSpecialtiesPrice = (specialties: Specialty[]) => {
+export const calculateSpecialtiesPrice = (specialties: ISpecialty[]) => {
   const specialtiesPrice = specialties.reduce((acc, specialty) => {
     const specialtyItemsPrice = specialty.items.reduce((acc, specialtyItem) => (acc += specialtyItem.price), 0);
     return (acc += specialtyItemsPrice);
@@ -9,20 +9,20 @@ export const calculateSpecialtiesPrice = (specialties: Specialty[]) => {
   return specialtiesPrice;
 };
 
-export const calculateCartItemPrice = (cartItem: CartItem) => {
+export const calculateCartItemPrice = (cartItem: ICartItem) => {
   const specialtiesPrice = calculateSpecialtiesPrice(cartItem.specialties);
   const cartItemPrice = (cartItem.price + specialtiesPrice) * cartItem.amount;
 
   return cartItemPrice;
 };
 
-export const calculateCartPrice = (cart: CartItem[]) => {
+export const calculateCartPrice = (cart: ICartItem[]) => {
   const cartPrice = cart.reduce((acc, cartItem) => (acc += calculateCartItemPrice(cartItem)), 0);
 
   return cartPrice;
 };
 
-export const calculateOrderPrice = (order: Order) => {
+export const calculateOrderPrice = (order: IOrder) => {
   const { orderMeals = [] } = order;
   const orderPrice = orderMeals.reduce((acc, orderMeal) => (acc += orderMeal.price), 0);
 

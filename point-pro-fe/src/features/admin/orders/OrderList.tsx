@@ -5,10 +5,10 @@ import { Typography, Box } from "@mui/material";
 import { Column } from "~/components/layout";
 // Others
 import { useAppDispatch, useAppSelector } from "~/hooks/useRedux";
-import { getOrders } from "~/app/slices/order.slice";
+import { getOrders } from "~/store/slices/order.slice";
 import { GatherOrder, Order } from "~/features/orders/type";
 import { TabletModal } from "~/components/modals";
-import { headerHeight } from "~/components/header";
+import { headerHeight } from "~/components/header/Header";
 import { PendingAndCancelOrderItem, UnpaidAndSuccessOrderItem } from "./OrderItem";
 import { OrderStatus } from "~/types/common";
 
@@ -22,12 +22,12 @@ const OrderList = () => {
     let showNewOrders: GatherOrder[] = [];
 
     orders.forEach((order) => {
-      const { id, status, type, seats = [], paymentLogs, reservationLogId } = order;
-      const gatherOrder: GatherOrder = { id, status, type, seats, paymentLogs, orders: [order], reservationLogId };
+      const { id, status, type, seats = [], paymentLogs, reservationId } = order;
+      const gatherOrder: GatherOrder = { id, status, type, seats, paymentLogs, orders: [order], reservationId };
 
-      if (reservationLogId) {
+      if (reservationId) {
         // 內用單
-        const sameGroupOrderIndex = showNewOrders.findIndex((item) => item.reservationLogId === reservationLogId);
+        const sameGroupOrderIndex = showNewOrders.findIndex((item) => item.reservationId === reservationId);
 
         if (sameGroupOrderIndex === -1 && !showNewOrders[sameGroupOrderIndex]) {
           showNewOrders.push(gatherOrder);
@@ -64,9 +64,9 @@ const OrderList = () => {
         >
           {isPendingOrCancelOrder
             ? // 準備中、已取消
-            orders.map((order) => <PendingAndCancelOrderItem key={order.id} order={order} />)
+              orders.map((order) => <PendingAndCancelOrderItem key={order.id} order={order} />)
             : // 未付款、已付款
-            gatherOrders().map((order) => <UnpaidAndSuccessOrderItem key={order.id} gatherOrder={order} />)}
+              gatherOrders().map((order) => <UnpaidAndSuccessOrderItem key={order.id} gatherOrder={order} />)}
         </Box>
       ) : (
         <Column
@@ -82,7 +82,7 @@ const OrderList = () => {
           </Typography>
         </Column>
       )}
-      <TabletModal.CancelOrderConfirm />
+      <TabletModal.CancelOrderConfirmModal />
     </>
   );
 };

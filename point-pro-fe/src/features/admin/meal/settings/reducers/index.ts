@@ -1,8 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { forEach, some, every } from "lodash";
-import { ISpecialty } from "~/types";
-import { SpecialtyType } from "~/types/common";
-import { MakeFieldResponse, makeField } from "~/utils/makeField.utils";
+import { ISpecialty, SpecialtyType } from "~/types";
+import { MakeFieldResponse, makeField } from "~/utils";
 
 interface StateProps {
   [key: string]: MakeFieldResponse;

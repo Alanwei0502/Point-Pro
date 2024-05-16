@@ -1,7 +1,7 @@
 // Libs
 import React from "react";
 import ReactDOM from "react-dom/client";
-import { store } from "./app/store";
+import { store } from "./store/store";
 import router from "./router";
 // Components
 import { Provider } from "react-redux";

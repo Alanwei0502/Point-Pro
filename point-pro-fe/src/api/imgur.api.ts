@@ -1,5 +1,5 @@
 import { http } from "./http";
-import { updateImgPayload, updateImgResponse } from "~/types/api";
+import { updateImgPayload, updateImgResponse } from "~/types";
 
 export class ImgurApi {
   public static path = "imgur";

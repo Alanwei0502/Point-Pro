@@ -1,8 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { isEmpty, forEach, every } from "lodash";
+import { forEach, every } from "lodash";
 import { IMeal } from "~/types";
-import appDayjs from "~/utils/dayjs.util";
-import { MakeFieldResponse, makeField } from "~/utils/makeField.utils";
+import { appDayjs, MakeFieldResponse, makeField } from "~/utils";
 
 interface StateProps {
   [key: string]: MakeFieldResponse;
@@ -28,7 +27,7 @@ export const initialState = makeFieldsBase({
   coverUrl: "",
   description: "",
   price: 0,
-  publishedAt: null,
+  position: 0, // TODO
   isPopular: false,
   categories: [],
   specialties: []

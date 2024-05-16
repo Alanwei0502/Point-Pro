@@ -1,13 +1,13 @@
 import { http } from "./http";
 import {
-  CashPaymentResponse,
   EcPayResponse,
   EcPayResponseBody,
   LinePayRequestBody,
-  LinePayConfirmResponse,
   LinePayResponse,
-  EcPayConfirmResponse
-} from "~/types/api";
+  EcPayConfirmResponse,
+  LinePayConfirmResponse,
+  CashPaymentResponse
+} from "~/types";
 
 export class PaymentApi {
   public static path = "payment";

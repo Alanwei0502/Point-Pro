@@ -1,65 +1,43 @@
-import React from "react";
-import { DrawerBase } from "./drawer-base";
-import { Box, Button, Card, CardActionArea, Typography } from "@mui/material";
-import { useAppDispatch, useAppSelector } from "~/hooks/useRedux";
-import {
-  ReservationMessage,
-  MenuMessage,
-  OrderMessage,
-  SocketTopic,
-  clearNotifications,
-  removeNotification
-} from "~/app/slices/socket.slice";
-import { BookingType, OrderType } from "~/types/common";
-import appDayjs from "~/utils/dayjs.util";
-import { genderObj } from "~/features/booking/index.styles";
+import { FC, Dispatch, SetStateAction } from "react";
 import { useNavigate } from "react-router-dom";
+import { Box, Button, Card, CardActionArea, Typography } from "@mui/material";
+import { useAppDispatch, useAppSelector } from "~/hooks";
+import { clearNotifications, removeNotification } from "~/store/slices";
+import { BookingType, OrderType, SocketTopic, MenuMessage, OrderMessage, ReservationMessage } from "~/types";
+import { appDayjs } from "~/utils";
+import { genderObj } from "~/features/booking/index.styles";
+import { BaseDraw } from "~/components";
 
-type NotificationDrawerType = {
+interface INotificationDrawerProps {
   open: boolean;
-  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setOpen: Dispatch<SetStateAction<boolean>>;
+}
+
+const menuTitle = {
+  [MenuMessage.CREATE_MEAL]: "新增",
+  [MenuMessage.UPDATE_MEAL]: "更新",
+  [MenuMessage.DELETE_MEAL]: "刪除"
 };
 
-const menuTitle = (key: MenuMessage) => {
-  switch (key) {
-    case "CREATE_MEAL":
-      return "新增";
-    case "UPDATE_MEAL":
-      return "更新";
-    case "DELETE_MEAL":
-      return "刪除";
-    default:
-      return "";
-  }
-};
-const orderTitle = (key: OrderMessage) => {
-  switch (key) {
-    case "CREATE_ORDER":
-      return "新單";
-    case "UPDATE_ORDER":
-      return "出餐";
-    case "CANCEL_ORDER":
-      return "取消";
-    case "PAY_ORDER":
-      return "結帳";
-    default:
-      return "";
-  }
-};
-const reservationTitle = (key: ReservationMessage, type: BookingType) => {
-  switch (key) {
-    case "CREATE_RESERVATION":
-      return `新的預約 (${type === BookingType.ONLINE_BOOKING ? "線上訂位" : "電話訂位"})`;
-    case "UPDATE_RESERVATION":
-      return "更新預約資訊";
-    default:
-      return "";
-  }
+const orderTitle = {
+  [OrderMessage.CREATE_ORDER]: "新單",
+  [OrderMessage.UPDATE_ORDER]: "出餐",
+  [OrderMessage.CANCEL_ORDER]: "取消",
+  [OrderMessage.PAY_ORDER]: "結帳"
 };
 
-const NotificationDrawer = (props: NotificationDrawerType) => {
-  const { open, setOpen } = props;
+const reservationTitle1 = {
+  [ReservationMessage.CREATE_RESERVATION]: "新的預約",
+  [ReservationMessage.UPDATE_RESERVATION]: "更新預約資訊"
+};
 
+const reservationTypeTitle = {
+  [BookingType.ONLINE_BOOKING]: "線上訂位",
+  [BookingType.PHONE_BOOKING]: "電話訂位",
+  [BookingType.WALK_IN_SEATING]: "即走即坐"
+};
+
+export const NotificationDrawer: FC<INotificationDrawerProps> = ({ open, setOpen }) => {
   const navigate = useNavigate();
 
   const dispatch = useAppDispatch();
@@ -88,7 +66,7 @@ const NotificationDrawer = (props: NotificationDrawerType) => {
   };
 
   return (
-    <DrawerBase title="即時通知" open={open} onClose={() => setOpen(false)} width="300px">
+    <BaseDraw title="即時通知" open={open} onClose={() => setOpen(false)} width="300px">
       {notifications.length > 0 ? (
         <>
           <Box sx={{ flexGrow: 1, overflowY: "scroll" }}>
@@ -106,7 +84,7 @@ const NotificationDrawer = (props: NotificationDrawerType) => {
                   {notiType === SocketTopic.MENU && (
                     <Box>
                       <Box sx={{ display: "flex", justifyContent: "space-between", mb: "1rem" }}>
-                        <Typography fontWeight={700}>菜單 ({menuTitle(message)})</Typography>
+                        <Typography fontWeight={700}>菜單 ({menuTitle[message]})</Typography>
                         <Typography variant="small">{appDayjs(result?.updatedAt).format("HH:mm")}</Typography>
                       </Box>
                       <Box>{result.title}</Box>
@@ -119,7 +97,7 @@ const NotificationDrawer = (props: NotificationDrawerType) => {
                       // DINE IN
                       <Box>
                         <Box sx={{ display: "flex", justifyContent: "space-between", mb: "1rem" }}>
-                          <Typography fontWeight={700}>內用訂單 ({orderTitle(message)})</Typography>
+                          <Typography fontWeight={700}>內用訂單 ({orderTitle[message]})</Typography>
                           <Typography variant="small">{appDayjs(result.updatedAt).format("HH:mm")}</Typography>
                         </Box>
                         <Typography variant="small">
@@ -127,15 +105,15 @@ const NotificationDrawer = (props: NotificationDrawerType) => {
                           {message === OrderMessage.PAY_ORDER
                             ? result.seats?.join(", ")
                             : result?.reservationsLogs?.bookedSeats
-                              ?.map(({ seat }) => `${seat.prefix}-${seat.no}`)
-                              .join(",")}
+                                ?.map(({ seat }) => `${seat.prefix}-${seat.no}`)
+                                .join(",")}
                         </Typography>
                       </Box>
                     ) : (
                       // TAKE OUT
                       <Box>
                         <Box sx={{ display: "flex", justifyContent: "space-between", mb: "1rem" }}>
-                          <Typography fontWeight={700}>外帶訂單 ({orderTitle(message)})</Typography>
+                          <Typography fontWeight={700}>外帶訂單 ({orderTitle[message]})</Typography>
                           <Typography variant="small">{appDayjs(result.updatedAt).format("HH:mm")}</Typography>
                         </Box>
                         <Typography variant="small">訂單編號：{result.id.slice(-5)}</Typography>
@@ -146,7 +124,9 @@ const NotificationDrawer = (props: NotificationDrawerType) => {
                   {notiType === SocketTopic.RESERVATION && (
                     <Box>
                       <Box sx={{ display: "flex", justifyContent: "space-between", mb: "1rem" }}>
-                        <Typography fontWeight={700}>{reservationTitle(message, result.type)}</Typography>
+                        <Typography fontWeight={700}>{`${reservationTitle1[message]} ${
+                          reservationTypeTitle[result.type] ?? ""
+                        }`}</Typography>
                         <Typography variant="small">{appDayjs(result.reservedAt).format("HH:mm")}</Typography>
                       </Box>
                       <Typography variant="small">
@@ -173,8 +153,6 @@ const NotificationDrawer = (props: NotificationDrawerType) => {
       ) : (
         <Typography sx={{ margin: "auto" }}>無通知</Typography>
       )}
-    </DrawerBase>
+    </BaseDraw>
   );
 };
-
-export default NotificationDrawer;

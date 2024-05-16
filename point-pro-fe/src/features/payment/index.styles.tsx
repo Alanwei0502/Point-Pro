@@ -11,9 +11,9 @@ import { EcPayConfirmPayload, LinePayConfirmPayload, MealDetails } from "~/types
 import theme from "~/theme";
 import { OrderMeal } from "~/types";
 import { getToken, appDayjs } from "~/utils";
-import { confirmEcPay, confirmLinePay } from "~/app/slices/payment.slice";
-import { patchReservationById } from "~/app/slices/reservation.slice";
-import { getUserInfo } from "~/app/slices/auth.slice";
+import { confirmEcPay, confirmLinePay } from "~/store/slices/payment.slice";
+import { patchReservationById } from "~/store/slices/reservation.slice";
+import { getUserInfo } from "~/store/slices/auth.slice";
 
 export const PaymentReturnContainer = () => {
   const [searchParams] = useSearchParams();
@@ -93,7 +93,7 @@ const PaymentReturnData = (props: { message: string; result: LinePayConfirmPaylo
   }
   useEffect(() => {
     if (message === "success") {
-      const reservationId = result?.paymentLogs[0]?.parentOrder?.reservationLogId;
+      const reservationId = result?.paymentLogs[0]?.parentOrder?.reservationId;
       reservationId &&
         dispatch(
           patchReservationById({
@@ -124,7 +124,7 @@ const PaymentReturnData = (props: { message: string; result: LinePayConfirmPaylo
                     >
                       <img
                         src={orderMeal.meal?.coverUrl as string}
-                        alt={orderMeal.mealTitle}
+                        alt={orderMeal.title}
                         style={{
                           width: "100%",
                           height: "100%",
@@ -139,7 +139,7 @@ const PaymentReturnData = (props: { message: string; result: LinePayConfirmPaylo
                           fontWeight={700}
                           fontSize={deviceType === "tablet" ? "2rem" : "1.25rem"}
                         >
-                          {orderMeal.mealTitle}
+                          {orderMeal.title}
                         </Typography>
                         <Typography
                           variant="h4"

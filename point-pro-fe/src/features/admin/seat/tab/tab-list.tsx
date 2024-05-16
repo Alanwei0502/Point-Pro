@@ -9,13 +9,13 @@ import {
   GridRenderCellParams
 } from "@mui/x-data-grid";
 import appDayjs, { formatTimeOnly } from "~/utils/dayjs.util";
-import { headerHeight } from "~/components/header";
+import { headerHeight } from "~/components/header/Header";
 import { ReservationInfo } from "~/types";
 import { useAppDispatch, useAppSelector } from "~/hooks/useRedux";
-import { getReservations } from "~/app/slices/reservation.slice";
+import { getReservations } from "~/store/slices/reservation.slice";
 import { genderListStringArray, reservationStatusListObj } from "~/utils/constants.utils";
 import { people } from "./reducers/reservation-detail";
-import { ReservationMessage } from "~/app/slices/socket.slice";
+import { ReservationMessage } from "~/store/slices/socket.slice";
 
 interface TabListProps {
   date: appDayjs.Dayjs;

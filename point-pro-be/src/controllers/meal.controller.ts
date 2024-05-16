@@ -217,7 +217,7 @@ class MealController {
           await prismaClient.categoriesOnMeals.createMany({
             data:
               categoryIds?.map((id) => ({
-                mealId: mealId,
+                mealId,
                 categoryId: id,
               })) || [],
             skipDuplicates: true,

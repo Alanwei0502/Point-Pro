@@ -2,14 +2,11 @@ import { useEffect, useReducer, useState } from "react";
 
 import { Stack } from "@mui/material";
 import { FieldContainer } from "~/components/layout";
-import { DrawerBase } from "~/components/drawer";
+import { BaseDraw } from "~/components";
 
-import { useAppDispatch, useAppSelector } from "~/hooks/useRedux";
-import { getPeriodByDate } from "~/app/slices/period.slice";
-import { patchReservationById, postReservation } from "~/app/slices/reservation.slice";
-import { PeriodInfo } from "~/types";
-import { PatchReservation } from "~/types/api";
-import { genderList } from "~/utils/constants.utils";
+import { useAppDispatch, useAppSelector } from "~/hooks";
+import { getPeriodByDate, patchReservationById, postReservation } from "~/store/slices";
+import { PatchReservation, PeriodInfo, ReservationMessage } from "~/types";
 import mainReducer, {
   initialState,
   defaultSetting,
@@ -19,8 +16,7 @@ import mainReducer, {
   convertToCreatePayload,
   convertToPatchPayload
 } from "./reducers/reservation-detail";
-import appDayjs, { convertToDatePayload, formatTimeOnly } from "~/utils/dayjs.util";
-import { ReservationMessage } from "~/app/slices/socket.slice";
+import { appDayjs, convertToDatePayload, formatTimeOnly, genderList } from "~/utils";
 
 interface ReservationDetail {
   open: boolean;
@@ -63,26 +59,26 @@ const ReservationDetail = ({ open, onClose, isCreate, date, info }: ReservationD
       isOnlineBooking: false
     };
     let { result } = await dispatch(getPeriodByDate(payload)).unwrap();
-    setPeriods(result?.[0]?.periods ?? []);
+    setPeriods(result?.periods ?? []);
   };
 
   const amountList = () => {
     let available = periods.find((e) => e.id === state.period?.value)?.available || 0;
     return available > 10
       ? [
-        { id: 1, title: 1 },
-        { id: 2, title: 2 },
-        { id: 3, title: 3 },
-        { id: 4, title: 4 },
-        { id: 7, title: 7 },
-        { id: 8, title: 8 },
-        { id: 9, title: 9 },
-        { id: 10, title: 10 }
-      ]
+          { id: 1, title: 1 },
+          { id: 2, title: 2 },
+          { id: 3, title: 3 },
+          { id: 4, title: 4 },
+          { id: 7, title: 7 },
+          { id: 8, title: 8 },
+          { id: 9, title: 9 },
+          { id: 10, title: 10 }
+        ]
       : Array.from({ length: periods.find((e) => e.id === state.period?.value)?.available ?? 0 }, (_, i) => ({
-        id: i + 1,
-        title: i + 1
-      }));
+          id: i + 1,
+          title: i + 1
+        }));
   };
 
   const fieldList = [
@@ -164,17 +160,17 @@ const ReservationDetail = ({ open, onClose, isCreate, date, info }: ReservationD
   const getButtonList = () => {
     return isCreate
       ? [
-        { label: "取消", onClick: () => handleButtonClick("cancel") },
-        { label: "新增", onClick: () => handleButtonClick("create") }
-      ]
+          { label: "取消", onClick: () => handleButtonClick("cancel") },
+          { label: "新增", onClick: () => handleButtonClick("create") }
+        ]
       : [
-        { label: "取消", onClick: () => handleButtonClick("cancel") },
-        { label: "保存", onClick: () => handleButtonClick("save") }
-      ];
+          { label: "取消", onClick: () => handleButtonClick("cancel") },
+          { label: "保存", onClick: () => handleButtonClick("save") }
+        ];
   };
 
   return (
-    <DrawerBase
+    <BaseDraw
       title={isCreate ? "新增預約使用" : "編輯預約使用"}
       open={open}
       onClose={onClose}
@@ -193,7 +189,7 @@ const ReservationDetail = ({ open, onClose, isCreate, date, info }: ReservationD
           />
         ))}
       </Stack>
-    </DrawerBase>
+    </BaseDraw>
   );
 };
 export default ReservationDetail;

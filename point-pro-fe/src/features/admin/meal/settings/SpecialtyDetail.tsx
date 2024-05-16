@@ -1,22 +1,27 @@
 import { useEffect, useState, useReducer } from "react";
-
-import { FilterOptionsState, IconButton, InputAdornment, Stack, TextField } from "@mui/material";
-import Autocomplete, { createFilterOptions } from "@mui/material/Autocomplete";
-import { FieldContainer } from "~/components/layout";
-import { DrawerBase } from "~/components/drawer";
-import { InputText } from "~/components/input";
+import {
+  FilterOptionsState,
+  IconButton,
+  InputAdornment,
+  Stack,
+  TextField,
+  Autocomplete,
+  createFilterOptions
+} from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import CancelIcon from "@mui/icons-material/Cancel";
-
-import { useAppDispatch } from "~/hooks/useRedux";
+import { FieldContainer } from "~/components/layout";
+import { BaseDraw } from "~/components";
+import { TextInput } from "~/components/input";
+import { useAppDispatch } from "~/hooks";
 import {
   getSpecialtyById,
   getSpecialtyItems,
   postSpecialty,
   patchSpecialtyById,
   deleteSpecialty
-} from "~/app/slices/specialty.slice";
-import { SpecialtyTypeList } from "~/utils/constants.utils";
+} from "~/store/slices";
+import { SpecialtyTypeList } from "~/utils";
 import mainReducer, {
   initialState,
   defaultSetting,
@@ -62,6 +67,7 @@ const SpecialtyDetail = ({ specialtyId, open, onClose }: SpecialtyDetailProps) =
 
   const dispatchGetSpecialtyItems = async () => {
     const { result } = await dispatch(getSpecialtyItems()).unwrap();
+    if (!result) return; // TODO
     setSpecialtyItemOptions(result);
   };
   const dispatchGetSpecialtyById = async () => {
@@ -113,6 +119,7 @@ const SpecialtyDetail = ({ specialtyId, open, onClose }: SpecialtyDetailProps) =
       filtered.push({
         id: "",
         title: `新增 "${inputValue}"`,
+        price: 0,
         inputValue
       });
     }
@@ -138,7 +145,6 @@ const SpecialtyDetail = ({ specialtyId, open, onClose }: SpecialtyDetailProps) =
         case "create":
           if (validateCheck(state)) {
             let payload = convertToPayload(state);
-            console.log({ payload });
             await dispatch(postSpecialty(payload));
             onClose(true);
           } else {
@@ -148,8 +154,7 @@ const SpecialtyDetail = ({ specialtyId, open, onClose }: SpecialtyDetailProps) =
         case "save":
           if (validateCheck(state)) {
             let payload = convertToPayload(state);
-            console.log({ payload });
-            await dispatch(patchSpecialtyById({ specialtyId: specialtyId as string, payload }));
+            await dispatch(patchSpecialtyById(payload));
             onClose(true);
           } else {
             reducerDispatch(validator());
@@ -172,12 +177,12 @@ const SpecialtyDetail = ({ specialtyId, open, onClose }: SpecialtyDetailProps) =
     return isCreate
       ? [{ label: "新增", onClick: () => handleButtonClick("create") }]
       : [
-        { label: "刪除", onClick: () => handleButtonClick("delete") },
-        { label: "保存", onClick: () => handleButtonClick("save") }
-      ];
+          { label: "刪除", onClick: () => handleButtonClick("delete") },
+          { label: "保存", onClick: () => handleButtonClick("save") }
+        ];
   };
   return (
-    <DrawerBase
+    <BaseDraw
       title={isCreate ? "新增客製化選項" : "編輯客製化選項"}
       open={open}
       onClose={onClose}
@@ -216,7 +221,7 @@ const SpecialtyDetail = ({ specialtyId, open, onClose }: SpecialtyDetailProps) =
               freeSolo
               renderInput={(params) => <TextField placeholder="請輸入客製化選項" {...params} />}
             />
-            <InputText
+            <TextInput
               type="number"
               value={item.price}
               onChange={(event) =>
@@ -230,7 +235,7 @@ const SpecialtyDetail = ({ specialtyId, open, onClose }: SpecialtyDetailProps) =
           </Stack>
         ))}
       </Stack>
-    </DrawerBase>
+    </BaseDraw>
   );
 };
 

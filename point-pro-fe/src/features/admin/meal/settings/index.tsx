@@ -5,11 +5,11 @@ import CloseIcon from "@mui/icons-material/Close";
 import AddIcon from "@mui/icons-material/Add";
 import FormatAlignJustifyIcon from "@mui/icons-material/FormatAlignJustify";
 import { Base } from "~/components/layout";
-import { InputText } from "~/components/input";
+import { TextInput } from "~/components/input";
 import SpecialtyDetail from "./SpecialtyDetail";
 import { RouterProps, ICategory, ISpecialty } from "~/types";
 import { useAppDispatch, useAppSelector } from "~/hooks";
-import { getSpecialties, getCategories, postCategory, deleteCategory } from "~/app/slices";
+import { getSpecialties, getCategories, postCategory, deleteCategory } from "~/store/slices";
 
 const initCategory = { id: "", title: "" };
 
@@ -92,7 +92,7 @@ export const MealSettingsContainer: FC<RouterProps> = ({ navigate }) => {
         </Typography>
         {categoryList?.map((category) => (
           <Fragment key={`category-input-${category.id ? category.id : "new"}`}>
-            <InputText
+            <TextInput
               value={category.title}
               placeholder="請輸入新增分類項目"
               disabled={Boolean(category.id)}
@@ -120,7 +120,7 @@ export const MealSettingsContainer: FC<RouterProps> = ({ navigate }) => {
           客製化
         </Typography>
         {specialtyList?.map((specialty) => (
-          <InputText
+          <TextInput
             key={`specialty-${specialty.id}`}
             value={specialty.title}
             disabled

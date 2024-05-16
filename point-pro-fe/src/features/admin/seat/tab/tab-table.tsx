@@ -1,16 +1,12 @@
 import { FC, memo, useEffect, useState } from "react";
-
 import { Stack } from "@mui/material";
 import { TableCircle, TableNormal, Periods } from "./index.styles";
-
-import { headerHeight } from "~/components/header";
-import { useAppDispatch } from "~/hooks/useRedux";
-import { getSeatById, getSeats } from "~/app/slices/seat.slice";
-import { getPeriodByDate } from "~/app/slices/period.slice";
-import { PeriodInfo, SeatInfo, SeatDetails } from "~/types";
-import appDayjs, { convertToDatePayload } from "~/utils/dayjs.util";
+import { headerHeight } from "~/components/header/Header";
+import { useAppDispatch } from "~/hooks";
+import { getSeatById, getSeats, getPeriodByDate } from "~/store/slices";
+import { PeriodInfo, SeatInfo, SeatDetails, SeatsPayload } from "~/types";
+import { appDayjs, convertToDatePayload } from "~/utils";
 import { SeatDetail } from "~/features/admin/seat/tab/SeatDetail";
-import { SeatsPayload } from "~/types/api";
 
 interface TabTablePros {
   date: appDayjs.Dayjs;
@@ -27,14 +23,13 @@ const normalSeatList = [
 export const TabTable: FC<TabTablePros> = ({ date }) => {
   const [seats, setSeats] = useState<{ [no: string]: SeatInfo }>();
   const [periods, setPeriods] = useState<PeriodInfo[]>([]);
-  const [selectedPeriod, setSelectedPeriod] = useState<string>();
-  const [selectedSeat, setSelectedSeat] = useState<string>();
-  const [seatDteail, setSeatDetail] = useState<SeatDetails>();
+  const [selectedPeriod, setSelectedPeriod] = useState<string>("");
+  const [selectedSeat, setSelectedSeat] = useState<string>("");
+  const [seatDteail, setSeatDetail] = useState<SeatDetails | null>(null);
 
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    // dispatchGetSeats();
     dispatchGetPeriodByDate();
   }, [date]);
 
@@ -51,27 +46,28 @@ export const TabTable: FC<TabTablePros> = ({ date }) => {
   }, [selectedSeat]);
 
   const dispatchGetSeatById = async () => {
-    let { result } = await dispatch(
-      getSeatById({ seatId: selectedSeat as string, date: convertToDatePayload(date) })
-    ).unwrap();
+    const { result } = await dispatch(getSeatById({ seatId: selectedSeat, date: convertToDatePayload(date) })).unwrap();
     setSeatDetail(result);
   };
 
   const dispatchGetSeats = async (periodId?: string) => {
-    let payload: SeatsPayload = { date: convertToDatePayload(date) };
+    const payload: SeatsPayload = { date: convertToDatePayload(date) };
     if (periodId) {
       payload.periodId = periodId;
     }
-    let { result } = await dispatch(getSeats(payload)).unwrap();
+    const { result } = await dispatch(getSeats(payload)).unwrap();
     setSeats(formatSeatResponseToData(result));
   };
 
   const dispatchGetPeriodByDate = async () => {
-    let { result } = await dispatch(getPeriodByDate({ date: convertToDatePayload(date) })).unwrap();
-    let payload = result[0].periods.filter((e: PeriodInfo) => appDayjs().isBefore(e.periodEndedAt));
+    const { result } = await dispatch(getPeriodByDate({ date: convertToDatePayload(date) })).unwrap();
+
+    if (!result) return; // TODO
+
+    const payload = result.periods.filter((e: PeriodInfo) => appDayjs().isBefore(e.periodEndedAt));
     setPeriods(payload);
     if (date.isToday()) {
-      let defaultSelect = result[0].periods.find((e: PeriodInfo) =>
+      let defaultSelect = result.periods.find((e: PeriodInfo) =>
         appDayjs().isBetween(e.periodStartedAt, e.periodEndedAt)
       );
       if (!defaultSelect) {
@@ -79,15 +75,16 @@ export const TabTable: FC<TabTablePros> = ({ date }) => {
       }
       setSelectedPeriod(defaultSelect.id);
     } else {
-      setSelectedPeriod(result[0].periods[0].id);
+      setSelectedPeriod(result.periods[0].id);
     }
   };
 
-  const formatSeatResponseToData = (res: []) => {
+  const formatSeatResponseToData = (res: any[] | null) => {
     let data: any = {};
-    res.forEach((e: any) => {
-      data[e.seatNo] = e;
-    });
+    res &&
+      res.forEach((e: any) => {
+        data[e.seatNo] = e;
+      });
     return data;
   };
 
@@ -100,8 +97,8 @@ export const TabTable: FC<TabTablePros> = ({ date }) => {
   };
 
   const handleSeatDetailClose = () => {
-    setSelectedSeat(undefined);
-    setSeatDetail(undefined);
+    setSelectedSeat("");
+    setSeatDetail(null);
   };
 
   return (

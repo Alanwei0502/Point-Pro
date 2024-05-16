@@ -1,5 +1,5 @@
 import { http } from "./http";
-import { GetMenuResponse } from "~/types/api";
+import { GetMenuResponse } from "~/types";
 
 export class MenuApi {
   public static path = "menu";

@@ -1,8 +1,13 @@
-import { DeleteOrderResponse, GetOrdersResponse, PostOrderPayload, PostOrderResponse } from "~/types/api";
 import { http } from "./http";
-import { Order } from "~/features/orders/type";
-import { PatchOrderResponse } from "~/types/api";
-import { OrderStatus } from "~/types";
+import {
+  DeleteOrderResponse,
+  GetOrdersResponse,
+  PostOrderPayload,
+  PostOrderResponse,
+  PatchOrderResponse,
+  OrderStatus,
+  IOrder
+} from "~/types";
 
 export class OrderApi {
   public static path = "order";
@@ -11,7 +16,7 @@ export class OrderApi {
     return http.post<string, PostOrderResponse>(`${OrderApi.path}`, payload);
   }
 
-  static getOrders(payload: { status: OrderStatus | "" }) {
+  static getOrders(payload: { status: OrderStatus }) {
     return http.get<string, GetOrdersResponse>(`${OrderApi.path}`, {
       params: payload
     });
@@ -23,7 +28,7 @@ export class OrderApi {
     });
   }
 
-  static patchOrder(order: Order) {
+  static patchOrder(order: IOrder) {
     return http.patch<string, PatchOrderResponse>(`${OrderApi.path}`, order);
   }
 }

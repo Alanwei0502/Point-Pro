@@ -1,5 +1,5 @@
 import { http } from "./http";
-import { CategoriesResponse, CategoryResponse, PostCategoryPayload } from "~/types/api";
+import { CategoriesResponse, CategoryResponse, PostCategoryPayload } from "~/types";
 
 export class CategoryApi {
   public static path = "category";

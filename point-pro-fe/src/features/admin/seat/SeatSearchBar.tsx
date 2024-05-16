@@ -2,14 +2,14 @@ import { useEffect, useState } from "react";
 import { Box, InputAdornment } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import SearchIcon from "@mui/icons-material/Search";
-import { ButtonBase } from "~/components/buttons";
-import { InputText } from "~/components/input";
 import { DesktopDatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { BaseButton } from "~/components";
+import { TextInput } from "~/components/input";
 import { appDayjs, formatDateOnly } from "~/utils";
+import { useAppDispatch } from "~/hooks";
+import { getPeriods } from "~/store/slices";
 import ReservationDetail from "./tab/ReservationDetail";
-import { useAppDispatch } from "~/hooks/useRedux";
-import { getPeriods } from "~/app/slices/period.slice";
 
 interface ISeatSearchBarProps {
   view: number;
@@ -29,8 +29,8 @@ const SeatSearchBar = ({ view, date, handleDateChange, handleSearchChange }: ISe
 
   const diaptchGetPeriods = async () => {
     let { result } = await dispatch(getPeriods()).unwrap();
-    let availableDays = [...new Set(result.map((item: any) => formatDateOnly(item.periodStartedAt)))];
-    setPeriods(availableDays as string[]);
+    let availableDays = [...new Set(result?.periods.map((item: any) => formatDateOnly(item.periodStartedAt)))];
+    setPeriods(availableDays);
   };
 
   const handleCloseDrawer = () => {
@@ -47,12 +47,12 @@ const SeatSearchBar = ({ view, date, handleDateChange, handleSearchChange }: ISe
         borderBottom: (theme) => `1px solid ${theme.palette.divider}`
       }}
     >
-      <ButtonBase
+      <BaseButton
         sx={{ border: "1px solid", borderColor: "common.black_40", color: "common.black", fontWeight: 900 }}
         onClick={() => handleDateChange(appDayjs())}
       >
         現在
-      </ButtonBase>
+      </BaseButton>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <DesktopDatePicker
           value={date}
@@ -72,7 +72,7 @@ const SeatSearchBar = ({ view, date, handleDateChange, handleSearchChange }: ISe
       </LocalizationProvider>
       {view === 1 && (
         <Box sx={{ flexGrow: 1, display: "flex", justifyContent: "center" }}>
-          <InputText
+          <TextInput
             sx={{ width: "25rem", bgcolor: "common.black_20" }}
             placeholder="輸入電話號碼搜尋"
             onChange={(event) => handleSearchChange(event.target.value)}
@@ -91,13 +91,13 @@ const SeatSearchBar = ({ view, date, handleDateChange, handleSearchChange }: ISe
           flexDirection: "row-reverse"
         }}
       >
-        <ButtonBase
+        <BaseButton
           onClick={() => setOpen(true)}
           sx={{ color: "common.black", bgcolor: "primary.main", width: "12rem" }}
         >
           <AddIcon sx={{ fontSize: "h6.fontSize" }} />
           新增預約
-        </ButtonBase>
+        </BaseButton>
       </Box>
       <ReservationDetail isCreate={true} open={open} onClose={handleCloseDrawer} date={date} />
     </Box>

@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import {
   Box,
   Button,
-  ButtonBase,
+  BaseButton,
   DialogActions,
   FormControl,
   FormControlLabel,
@@ -31,13 +31,12 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { PickersActionBarProps } from "@mui/x-date-pickers";
-// Components
-import { CustomerBookingDialog } from "~/types/common";
 import { MobileButton, MobileDialogLayout } from "~/components/dialog";
-import { CheckboxBase } from "~/components/checkbox";
-// Others
-import appDayjs, { formatTimeOnly, formatDateOnly } from "~/utils/dayjs.util";
-import { useAppDispatch, useAppSelector } from "~/hooks/useRedux";
+import { BaseCheckbox } from "~/components/checkbox";
+import Loading from "~/components/loading/Loading";
+import { CustomerBookingDialog } from "~/types";
+import { appDayjs, formatTimeOnly, formatDateOnly, emailRegex, phoneRegex } from "~/utils";
+import { useAppDispatch, useAppSelector } from "~/hooks";
 import {
   setStep,
   setAdultsAmount,
@@ -53,12 +52,10 @@ import {
   setGender,
   setAgreedPolicy,
   postReservation,
-  resetUserInfo
-} from "../../app/slices/booking.slice";
-import { emailRegex, phoneRegex } from "~/utils/regex.utils";
-import Loading from "~/components/loading";
-import { sendMail } from "~/app/slices/mailer.slice";
-import { getPeriodByDate } from "../../app/slices/booking.slice";
+  resetUserInfo,
+  getPeriodByDate,
+  sendMail
+} from "~/store/slices";
 
 export const genderObj = {
   0: "先生",
@@ -86,10 +83,6 @@ export const PeopleAndTime = () => {
   useEffect(() => {
     dispatch(getPeriodByDate());
   }, [choosedDate]);
-
-  // const handleOpenBookingSearch = () => {
-  //   dispatch(setDialog(CustomerBookingDialog.RECORD_QUERY));
-  // };
 
   const handleChangeAdultsAmount = (e: SelectChangeEvent<`${number}`>) => {
     dispatch(setAdultsAmount(+e.target.value));
@@ -123,7 +116,7 @@ export const PeopleAndTime = () => {
             slots={{
               actionBar: (props: PickersActionBarProps) => (
                 <DialogActions className={props.className} sx={{ padding: ".5rem" }}>
-                  <ButtonBase
+                  <BaseButton
                     onClick={props.onAccept}
                     sx={{
                       fontSize: "body1.fontSize",
@@ -134,7 +127,7 @@ export const PeopleAndTime = () => {
                     }}
                   >
                     確定
-                  </ButtonBase>
+                  </BaseButton>
                 </DialogActions>
               )
             }}
@@ -172,12 +165,12 @@ export const PeopleAndTime = () => {
         </Select>
       </FormControl>
       {/* [TODO]: no api, temporarily hide */}
-      {/* <ButtonBase
+      {/* <BaseButton
         onClick={handleOpenBookingSearch}
         sx={{ textDecoration: "underline", fontWeight: 700, fontSize: "body1.fontSize", mt: "2rem" }}
       >
         我已經有預約了，查詢預訂資訊
-      </ButtonBase> */}
+      </BaseButton> */}
     </>
   );
 };
@@ -286,16 +279,16 @@ export const BookerInfo = () => {
 
       <Box sx={{ padding: "0 .1rem" }}>
         <FormControlLabel
-          control={<CheckboxBase checked={isAgreedPrivacyPolicy} onChange={handleAgreedPolicy} />}
+          control={<BaseCheckbox checked={isAgreedPrivacyPolicy} onChange={handleAgreedPolicy} />}
           label="確認我已閱讀並同意"
           sx={{ margin: 0 }}
         />
-        <ButtonBase
+        <BaseButton
           sx={{ textDecoration: "underline", fontWeight: 700, fontSize: "body1.fontSize" }}
           onClick={handleOpenPrivayPolicyDialog}
         >
           PointPro 隱私權政策
-        </ButtonBase>
+        </BaseButton>
       </Box>
     </Box>
   );
@@ -440,7 +433,7 @@ export const BookingStep = (props: IBookingStepProps) => {
   };
 
   const handleConfirm = async () => {
-    await dispatch(postReservation());
+    await dispatch(postReservation({}));
     dispatch(setDialog(CustomerBookingDialog.REMINDER));
   };
 
@@ -495,7 +488,7 @@ export const BookingRecordQueryModal = () => {
   const [isPhoneError, setIsPhoneError] = useState(true);
 
   const handleClose = () => {
-    dispatch(setDialog(""));
+    dispatch(setDialog());
   };
 
   const handleQuery = () => {
@@ -535,12 +528,12 @@ export const PrivacyPolicyModal = () => {
   const dialog = useAppSelector(({ customerReservation }) => customerReservation.dialog);
 
   const handleClose = () => {
-    dispatch(setDialog(""));
+    dispatch(setDialog());
   };
 
   const handleConfirm = () => {
     dispatch(setAgreedPolicy(true));
-    dispatch(setDialog(""));
+    dispatch(setDialog());
   };
 
   return (
@@ -607,7 +600,7 @@ export const ActionIcon = (props: IAtionIconProps) => {
         alignItems: "center"
       }}
     >
-      <ButtonBase
+      <BaseButton
         sx={{
           display: "flex",
           justifyContent: "center",
@@ -620,7 +613,7 @@ export const ActionIcon = (props: IAtionIconProps) => {
         onClick={() => onClick()}
       >
         {icon}
-      </ButtonBase>
+      </BaseButton>
       <Typography fontWeight={700}>{title}</Typography>
     </Box>
   );
@@ -636,7 +629,7 @@ export const BookingReminderModal = () => {
   const handleClose = () => {
     dispatch(setStep(0));
     dispatch(resetUserInfo());
-    dispatch(setDialog(""));
+    dispatch(setDialog());
   };
 
   // [TODO]: temprarily remove

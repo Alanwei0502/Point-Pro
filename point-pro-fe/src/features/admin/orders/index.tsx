@@ -1,4 +1,4 @@
-import PaymentDrawer from "~/components/payment";
+import PaymentDrawer from "~/components/payment/PaymentDrawer";
 import OrderTabs from "./OrderTab";
 import OrderList from "./OrderList";
 import { Box } from "@mui/material";

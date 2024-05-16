@@ -5,10 +5,10 @@ import { Circle } from "@mui/icons-material";
 import FingerprintIcon from "@mui/icons-material/Fingerprint";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 
-import type { RootState } from "~/app/store";
+import type { RootState } from "~/store/store";
 import { decrement, increment } from "./slice";
 
-import { ButtonBase } from "~/components/buttons";
+import { BaseButton } from "~/components/buttons";
 
 interface CounterButton {}
 
@@ -18,13 +18,13 @@ export const CounterButton: FC<CounterButton> = () => {
 
   return (
     <>
-      <ButtonBase aria-label="Increment value" onClick={() => dispatch(increment())}>
+      <BaseButton aria-label="Increment value" onClick={() => dispatch(increment())}>
         Increment
-      </ButtonBase>
+      </BaseButton>
       <span>{count}</span>
-      <ButtonBase aria-label="Decrement value" onClick={() => dispatch(decrement())}>
+      <BaseButton aria-label="Decrement value" onClick={() => dispatch(decrement())}>
         Decrement
-      </ButtonBase>
+      </BaseButton>
     </>
   );
 };

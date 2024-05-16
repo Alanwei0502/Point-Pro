@@ -16,7 +16,7 @@ import {
 import HeaderLogo from "~/assets/images/header-logo.svg";
 import { useAppDispatch, useAppSelector } from "~/hooks/useRedux";
 import { useNavigate } from "react-router-dom";
-import { login } from "~/app/slices/auth.slice";
+import { login } from "~/store/slices/auth.slice";
 
 export const LoginContainer = () => {
   const dispatch = useAppDispatch();

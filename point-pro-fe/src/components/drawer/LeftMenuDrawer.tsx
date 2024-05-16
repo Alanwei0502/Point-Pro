@@ -1,21 +1,19 @@
 import React, { Fragment, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-// Components
 import { Box, List, ListItem, ListItemButton, ListItemIcon, ListItemText } from "@mui/material";
-import { KeyboardArrowDown } from "@mui/icons-material";
-import { DrawerBase } from "./drawer-base";
 import LabelIcon from "@mui/icons-material/Label";
-// Libs
-import { SideBarItemType, sideBarItemList } from "~/utils/constants.utils";
+import { KeyboardArrowDown } from "@mui/icons-material";
+import { BaseDraw } from "~/components";
+import { SideBarItemType, sideBarItemList } from "~/utils";
 import theme from "~/theme";
 
-type LeftMenuDrawerProps = {
+interface ILeftMenuDrawerProps {
   drawerWidth: string;
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
-};
+}
 
-const LeftMenuDrawer = (props: LeftMenuDrawerProps) => {
+export const LeftMenuDrawer = (props: ILeftMenuDrawerProps) => {
   const { drawerWidth, open, setOpen } = props;
 
   const navigate = useNavigate();
@@ -34,7 +32,7 @@ const LeftMenuDrawer = (props: LeftMenuDrawerProps) => {
   };
 
   return (
-    <DrawerBase anchor="left" open={open} width={drawerWidth} onClose={() => setOpen(false)} hideCloseButton sx={{}}>
+    <BaseDraw anchor="left" open={open} width={drawerWidth} onClose={() => setOpen(false)} hideCloseButton sx={{}}>
       <Box sx={{ overflow: "auto", height: "100%" }}>
         <List sx={{ padding: 0 }}>
           {sideBarItemList.map((item) => (
@@ -79,8 +77,6 @@ const LeftMenuDrawer = (props: LeftMenuDrawerProps) => {
           ))}
         </List>
       </Box>
-    </DrawerBase>
+    </BaseDraw>
   );
 };
-
-export default LeftMenuDrawer;

@@ -1,4 +1,3 @@
-// Libs
 import { useCallback, useEffect, useState } from "react";
 import {
   Accordion,
@@ -15,17 +14,12 @@ import {
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
-// Components
 import { Column, Row } from "~/components/layout";
-// Others
-import { useAppDispatch } from "~/hooks/useRedux";
-import { patchOrder, setCancelOrder } from "~/app/slices/order.slice";
-import { Order, OrderMeal, GatherOrder } from "~/features/orders/type";
-import appDayjs from "~/utils/dayjs.util";
-import { calculateOrderPrice, calculateGatherOrderPrice } from "~/utils/price.utils";
+import { useAppDispatch } from "~/hooks";
+import { patchOrder, setCancelOrder, openPaymentDrawer } from "~/store/slices";
+import { appDayjs, calculateOrderPrice, calculateGatherOrderPrice } from "~/utils";
 import theme from "~/theme";
-import { OrderStatus, OrderType } from "~/types/common";
-import { openPaymentDrawer } from "~/app/slices/payment.slice";
+import { OrderStatus, OrderType, GatherOrder, IOrder, IOrderMeal } from "~/types";
 import LinearProgressWithLabel from "./LinearProgressWithLabel";
 
 function useAccordion() {
@@ -47,7 +41,7 @@ const VerticalDivider = styled("div")(({ theme }) => ({
 
 interface orderMealItemProps {
   idx: number;
-  orderMeal: OrderMeal;
+  orderMeal: IOrderMeal;
   status: OrderStatus;
   isShowServedAmount?: boolean;
   tempServedAmount?: string;
@@ -108,7 +102,7 @@ function OrderMealItem(props: orderMealItemProps) {
 }
 
 type PendingAndCancelOrderItemProps = {
-  order: Order;
+  order: IOrder;
 };
 export const PendingAndCancelOrderItem = (props: PendingAndCancelOrderItemProps) => {
   const dispatch = useAppDispatch();

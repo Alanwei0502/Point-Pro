@@ -1,6 +1,7 @@
 import { FC, useEffect, useReducer } from "react";
 import { Button, Stack } from "@mui/material";
 import { Base, FieldContainer } from "~/components/layout";
+import { headerHeight } from "~/components/header/Header";
 import { RouterProps } from "~/types";
 import mainReducer, {
   initialState,
@@ -11,8 +12,7 @@ import mainReducer, {
   validator
 } from "./reducers";
 import { useAppDispatch, useAppSelector } from "~/hooks";
-import { getMealById, postMeal, patchMealById, uploadImg, deleteMeal } from "~/app/slices";
-import { headerHeight } from "~/components/header";
+import { getMealById, postMeal, patchMealById, uploadImg, deleteMeal } from "~/store/slices";
 
 export const MealListDetailContainer: FC<RouterProps> = ({ params, navigate }) => {
   const isCreate = params.meal_id === "create";
@@ -94,7 +94,6 @@ export const MealListDetailContainer: FC<RouterProps> = ({ params, navigate }) =
             if (payload.coverUrl) {
               payload.coverUrl = await updateImage(payload.coverUrl);
             }
-            console.log({ payload });
 
             await dispatch(postMeal(payload));
             navigate({ pathname: "/admin/meal/list" });
@@ -108,7 +107,6 @@ export const MealListDetailContainer: FC<RouterProps> = ({ params, navigate }) =
             if (payload.coverUrl && typeof payload.coverUrl !== "string") {
               payload.coverUrl = await updateImage(payload.coverUrl);
             }
-            console.log({ payload });
             await dispatch(patchMealById({ mealId: params.meal_id as string, payload }));
             navigate({ pathname: "/admin/meal/list" });
           } else {
@@ -139,7 +137,7 @@ export const MealListDetailContainer: FC<RouterProps> = ({ params, navigate }) =
       return result;
     } catch (error) {
       console.log("upload file error : ", error);
-      return null;
+      return "";
     }
   };
   return (
