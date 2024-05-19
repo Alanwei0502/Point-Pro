@@ -6,11 +6,11 @@ import {
   orderSlice,
   paymentSlice,
   socketSlice,
-  specialtySlice
+  specialtySlice,
+  customerBookingSlice
 } from "./slices";
 import { counterSlice } from "~/features/home/slice";
 import { takeOrderSlice } from "~/features/orders/slice";
-import { customerBookingSlice } from "./slices/booking.slice";
 
 const reducer = combineReducers({
   [counterSlice.name]: counterSlice.reducer,

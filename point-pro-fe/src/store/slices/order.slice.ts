@@ -1,6 +1,4 @@
-// Libs
 import { createSlice } from "@reduxjs/toolkit";
-// Others
 import { OrderApi } from "~/api";
 import { createAppAsyncThunk } from "~/hooks";
 import { clearCart, openDialog } from "~/features/orders/slice";

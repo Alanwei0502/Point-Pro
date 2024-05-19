@@ -1,9 +1,7 @@
-// Libs
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-// Others
 import { ReservationApi, PeriodApi } from "~/api";
 import { appDayjs, formatDateOnly, convertToDatePayload } from "~/utils";
-import { createAppAsyncThunk } from "~/hooks/useRedux";
+import { createAppAsyncThunk } from "~/hooks";
 import {
   IAvailableBookingPeriod,
   IBookingInfo,
@@ -58,7 +56,9 @@ const initialState: ICustomerBookingSliceState = {
 export const getPeriods = createAppAsyncThunk(`${name}/getPeriods`, async (arg, { rejectWithValue }) => {
   try {
     const { result } = await PeriodApi.getPeriods();
-    const availableBookings = [...new Set(result.map((item: any) => formatDateOnly(item.periodStartedAt)))] as string[];
+    const availableBookings = [
+      ...new Set(result?.periods?.map((item: any) => formatDateOnly(item.periodStartedAt)) ?? [])
+    ] as string[];
     return { availableBookings };
   } catch (error) {
     if (error instanceof Error) {
@@ -78,7 +78,7 @@ export const getPeriodByDate = createAppAsyncThunk(
         date: convertToDatePayload(choosedDate),
         excludeTime: false
       });
-      const availablePeriods = result[0]?.periods ?? [];
+      const availablePeriods = result?.periods ?? [];
       return { availablePeriods };
     } catch (error) {
       if (error instanceof Error) {
@@ -205,10 +205,11 @@ export const customerBookingSlice = createSlice({
         state.isLoading = false;
       })
       .addCase(postReservation.fulfilled, (state, action) => {
-        state.token = action.payload.token;
-        state.reservationParams.id = action.payload.id;
-        state.reservationParams.reservedAt = action.payload.periodStartedAt;
-        state.reservationParams.user = action.payload.options;
+        const { token, id, periodStartedAt, options } = action.payload;
+        state.token = token;
+        state.reservationParams.id = id;
+        state.reservationParams.reservedAt = periodStartedAt;
+        state.reservationParams.user = options;
         state.isLoading = false;
       })
       .addCase(postReservation.pending, (state, action) => {
@@ -227,7 +228,7 @@ export const customerBookingSlice = createSlice({
         state.isLoading = true;
       })
       .addCase(getBookingRecord.fulfilled, (state, action) => {
-        const { id, reservedAt, ...rest } = action.payload.bookingRecord;
+        const { id, reservedAt, ...rest } = bookingRecord;
         state.reservationParams.id = id;
         state.reservationParams.reservedAt = reservedAt;
         state.reservationParams.user = rest;

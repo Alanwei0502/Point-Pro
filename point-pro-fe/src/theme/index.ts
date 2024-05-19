@@ -1,3 +1,4 @@
+import { CSSProperties } from "react";
 import { createTheme } from "@mui/material/styles";
 
 declare module "@mui/material/styles" {
@@ -9,20 +10,20 @@ declare module "@mui/material/styles" {
   }
 
   interface TypographyVariants {
-    display1: React.CSSProperties;
-    display2: React.CSSProperties;
-    display3: React.CSSProperties;
-    small: React.CSSProperties;
-    tiny: React.CSSProperties;
+    display1: CSSProperties;
+    display2: CSSProperties;
+    display3: CSSProperties;
+    small: CSSProperties;
+    tiny: CSSProperties;
   }
 
   // allow configuration using `createTheme`
   interface TypographyVariantsOptions {
-    display1?: React.CSSProperties;
-    display2?: React.CSSProperties;
-    display3?: React.CSSProperties;
-    small?: React.CSSProperties;
-    tiny?: React.CSSProperties;
+    display1?: CSSProperties;
+    display2?: CSSProperties;
+    display3?: CSSProperties;
+    small?: CSSProperties;
+    tiny?: CSSProperties;
   }
 }
 declare module "@mui/material/Typography" {

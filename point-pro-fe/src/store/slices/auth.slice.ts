@@ -1,6 +1,4 @@
-// Libs
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
-// Others
 import { AuthApi } from "~/api";
 import { createAppAsyncThunk } from "~/hooks";
 import {
@@ -36,7 +34,7 @@ export const login = createAppAsyncThunk<LoginResponse, LoginPayload>(
     try {
       const data = await AuthApi.login(payload);
 
-      if (data.result.authToken) {
+      if (data?.result?.authToken) {
         sessionStorage.setItem("token", data.result.authToken);
       }
       return data;
@@ -98,7 +96,7 @@ export const authSlice = createSlice({
     builder
       .addCase(login.fulfilled, (state, action) => {
         const { result } = action.payload;
-        if (result.authToken) {
+        if (result?.authToken) {
           state.authToken = result.authToken;
           state.isAuthenticated = true;
         } else {
@@ -121,7 +119,7 @@ export const authSlice = createSlice({
         state.isLoading = true;
       })
       .addCase(getUserTokenByReservationLogId.fulfilled, (state, action) => {
-        state.userToken = action.payload.result.token;
+        state.userToken = action?.payload?.result?.token ?? null; // TODO
         state.isLoading = true;
       })
       .addCase(getUserTokenByReservationLogId.rejected, (state) => {

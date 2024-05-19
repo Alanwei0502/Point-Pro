@@ -1,6 +1,4 @@
-// Libs
 import { createSlice } from "@reduxjs/toolkit";
-// Others
 import { SpecialtyApi } from "~/api";
 import { createAppAsyncThunk } from "~/hooks";
 import { ISpecialty, SpecialtiesResponse, SpecialtyResponse, SpecialtyItemsResponse } from "~/types";
@@ -111,7 +109,7 @@ export const specialtySlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder.addCase(getSpecialties.fulfilled, (state, { payload }) => {
-      state.specialties = payload.result;
+      state.specialties = payload.result ?? [];
     });
   }
 });

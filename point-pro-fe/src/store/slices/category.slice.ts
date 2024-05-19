@@ -1,6 +1,4 @@
-// Libs
 import { createSlice } from "@reduxjs/toolkit";
-// Others
 import { CategoryApi } from "~/api";
 import { createAppAsyncThunk } from "~/hooks";
 import { ICategory, CategoryResponse, CategoriesResponse, PostCategoryPayload } from "~/types";
@@ -66,7 +64,7 @@ export const categorySlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder.addCase(getCategories.fulfilled, (state, { payload }) => {
-      state.categories = payload.result;
+      state.categories = payload.result ?? [];
     });
   }
 });

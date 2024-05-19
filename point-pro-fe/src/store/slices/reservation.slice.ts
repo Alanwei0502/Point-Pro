@@ -1,6 +1,4 @@
-// Libs
 import { createSlice } from "@reduxjs/toolkit";
-// Others
 import { ReservationApi } from "~/api";
 import { createAppAsyncThunk } from "~/hooks";
 import {
