@@ -6,8 +6,7 @@ express api server with supabase and prisma schema
 ## Set up environment
 
 ```shell
-## npm i -g yarn
-yarn
+npm i
 
 # copy local settings
 cp .env.example .env

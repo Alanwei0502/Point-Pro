@@ -9,11 +9,11 @@ services:
     volumes:
       - /app/node_modules
       - ./point-pro-fe:/app
-  # point-pro-be:
+  point-pro-be:
   # db:
-  #   image: supabase/postgres
-  #   ports:
-  #     - "5432:5432"
+    # image: supabase/postgres
+    # ports:
+      # - "5432:5432"
   #   command: postgres -c config_file=/etc/postgresql/postgresql.conf 
   #   environment:
-  #     POSTGRES_PASSWORD: postgres
+  #     POSTGRES_PASSWORD: 000000

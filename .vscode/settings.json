@@ -1,7 +1,11 @@
 {
   "files.autoSave": "onFocusChange",
   "editor.formatOnSave": true,
-  "cSpell.words": ["passhash"],
+  "prettier.trailingComma": "all",
+  "prettier.tabWidth": 2,
+  "prettier.semi": true,
+  "prettier.singleQuote": true,
+  "prettier.printWidth": 120,
   "[json]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
