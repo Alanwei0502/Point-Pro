@@ -13,7 +13,7 @@
     "makemigrations": "npx prisma migrate dev --create-only"
   },
   "prisma": {
-    "seed": "ts-node prisma/migrate.ts"
+    "seed": "ts-node --transpile-only prisma/seed.ts"
   },
   "dependencies": {
     "@prisma/client": "^5.14.0",
@@ -49,7 +49,7 @@
     "@types/express-session": "^1.17.7",
     "@types/jsonwebtoken": "^9.0.2",
     "@types/morgan": "^1.9.4",
-    "@types/node": "^18.15.11",
+    "@types/node": "^18.19.33",
     "@types/nodemailer": "^6.4.8",
     "@types/pg": "^8.6.6",
     "@types/ramda": "^0.29.2",
