@@ -1,7 +1,7 @@
 import { Navigate, Outlet, useLocation } from "react-router-dom";
-import { useAppSelector } from "~/hooks/useRedux";
-import { NameSpace, useSocket } from "~/hooks/useSocket";
-import { getToken } from "~/utils/token.utils";
+import { useAppSelector, useSocket } from "~/hooks";
+import { NameSpace } from "~/types";
+import { getToken } from "~/utils";
 
 export const ProtectedRoute = () => {
   const location = useLocation();

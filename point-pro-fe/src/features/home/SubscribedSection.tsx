@@ -7,10 +7,9 @@ import {
   SubscribeSectionStyledCard,
   SubscribeSectionIconButton
 } from "./SubscribedSection.style";
-import { BaseModal } from "~/components/modals";
-import { BaseButton } from "~/components/buttons";
+import { BaseModal, BaseButton } from "~/components";
 import { useAppDispatch, useDeviceType } from "~/hooks";
-import { sendMail } from "~/store/slices/mailer.slice";
+import { sendMail } from "~/store/slices";
 
 interface SubscribeSectionDialogProps {
   open: boolean;
@@ -78,7 +77,7 @@ const SubscribeSectionDialog = (props: SubscribeSectionDialogProps) => {
   );
 };
 
-const SubscribedSection: FC = () => {
+export const SubscribedSection: FC = () => {
   const [isFocused, setIsFocused] = useState(false);
   const [email, setEmail] = useState("");
   const [errorMessages, setErrorMessages] = useState("");
@@ -203,5 +202,3 @@ const SubscribedSection: FC = () => {
     </Box>
   );
 };
-
-export default SubscribedSection;

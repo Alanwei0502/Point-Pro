@@ -1,9 +1,9 @@
 import { FC } from "react";
 import { Box, Container, Typography, Grid } from "@mui/material";
-import { Column } from "~/components/layout";
+import { Column } from "~/components";
 import { Title } from "./index.styles";
-import AboutUsAvatarCard from "./AboutUsSection.style";
 import { useGetImageUrl, useDeviceType } from "~/hooks";
+import { AboutUsAvatarCard } from "./AboutUsSection.style";
 
 const aboutUsData = [
   {
@@ -38,7 +38,7 @@ const aboutUsData = [
   }
 ];
 
-const AboutUsSection: FC = () => {
+export const AboutUsSection: FC = () => {
   const deviceType = useDeviceType();
 
   return (
@@ -92,5 +92,3 @@ const AboutUsSection: FC = () => {
     </Box>
   );
 };
-
-export default AboutUsSection;

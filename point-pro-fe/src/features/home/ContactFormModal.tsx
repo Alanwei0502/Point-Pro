@@ -14,11 +14,11 @@ import {
   RadioGroup,
   TextField
 } from "@mui/material";
-import { Row } from "~/components/layout";
 import Slide from "@mui/material/Slide";
 import { TransitionProps } from "@mui/material/transitions";
-import { cityList, contactTimeList } from "~/utils/constants.utils";
 import axios from "axios";
+import { cityList, contactTimeList } from "~/utils";
+import { Row } from "~/components";
 
 const Transition = forwardRef(function Transition(
   props: TransitionProps & {
@@ -37,7 +37,7 @@ interface InquiryContent {
   [key: string]: boolean | { [key: string]: boolean } | string[];
 }
 
-const ContactFormModal: FC<ContactFormModalProps> = ({ open, onClose }) => {
+export const ContactFormModal: FC<ContactFormModalProps> = ({ open, onClose }) => {
   const [formData, setFormData] = useState<InquiryContent>({
     quest: []
   });
@@ -238,5 +238,3 @@ const ContactFormModal: FC<ContactFormModalProps> = ({ open, onClose }) => {
     </Dialog>
   );
 };
-
-export default ContactFormModal;

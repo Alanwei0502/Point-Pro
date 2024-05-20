@@ -3,7 +3,6 @@ import React, { useEffect, useState } from "react";
 import {
   Box,
   Button,
-  BaseButton,
   DialogActions,
   FormControl,
   FormControlLabel,
@@ -31,9 +30,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { PickersActionBarProps } from "@mui/x-date-pickers";
-import { MobileButton, MobileDialogLayout } from "~/components/dialog";
-import { BaseCheckbox } from "~/components/checkbox";
-import Loading from "~/components/loading/Loading";
+import { MobileButton, MobileDialogLayout, BaseCheckbox, BaseButton, Loading } from "~/components";
 import { CustomerBookingDialog } from "~/types";
 import { appDayjs, formatTimeOnly, formatDateOnly, emailRegex, phoneRegex } from "~/utils";
 import { useAppDispatch, useAppSelector } from "~/hooks";
@@ -81,7 +78,7 @@ export const PeopleAndTime = () => {
       : Array.from({ length: choosedPeriodInfo?.available ?? 0 }, (_, i) => i + 1);
 
   useEffect(() => {
-    dispatch(getPeriodByDate());
+    dispatch(getPeriodByDate({ date: choosedDate }));
   }, [choosedDate]);
 
   const handleChangeAdultsAmount = (e: SelectChangeEvent<`${number}`>) => {
@@ -433,7 +430,7 @@ export const BookingStep = (props: IBookingStepProps) => {
   };
 
   const handleConfirm = async () => {
-    await dispatch(postReservation({}));
+    await dispatch(postReservation());
     dispatch(setDialog(CustomerBookingDialog.REMINDER));
   };
 

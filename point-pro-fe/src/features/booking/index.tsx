@@ -1,5 +1,5 @@
 // Libs
-import { useEffect } from "react";
+import { FC, useEffect } from "react";
 import { Box, Typography } from "@mui/material";
 // Components
 import { Header } from "../orders/index.styles";
@@ -14,12 +14,15 @@ import {
 } from "./index.styles";
 // Others
 import { useAppDispatch, useAppSelector, useSocket } from "~/hooks";
-import { getPeriods } from "~/store/slices";
 import { NameSpace } from "~/types";
+import { getBookingPeriods } from "~/store/slices";
+import { MobileLayout } from "~/components";
+
+interface IBookingProps {}
 
 const stepTitle = ["人數及時間", "訂位人資訊", "請確認輸入資訊"];
 
-const Booking = () => {
+export const Booking: FC<IBookingProps> = () => {
   const dispatch = useAppDispatch();
 
   useSocket({ ns: NameSpace.main });
@@ -27,11 +30,11 @@ const Booking = () => {
   const step = useAppSelector(({ customerReservation }) => customerReservation.step);
 
   useEffect(() => {
-    dispatch(getPeriods());
+    dispatch(getBookingPeriods());
   }, []);
 
   return (
-    <>
+    <MobileLayout>
       <Header />
       <Typography variant="h4" fontWeight={900} sx={{ marginBottom: "1rem" }}>
         {stepTitle[step]}
@@ -53,8 +56,6 @@ const Booking = () => {
       <BookingReminderModal />
       {/* 請出示此畫面 QR Code */}
       {/* <BookingQRCodeDialog /> */}
-    </>
+    </MobileLayout>
   );
 };
-
-export default Booking;

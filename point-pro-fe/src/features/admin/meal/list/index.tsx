@@ -1,4 +1,5 @@
 import { useState, FC, useEffect, Fragment } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   List,
   ListItem,
@@ -16,17 +17,18 @@ import {
   SelectChangeEvent
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
-import { BaseSwitch } from "~/components";
-import { RouterProps, IMeal, ICategory } from "~/types";
+import { AdminLayout, BaseSwitch } from "~/components";
+import { IMeal, ICategory } from "~/types";
 import { useAppDispatch, useAppSelector } from "~/hooks";
 import { getMeals, patchMealById } from "~/store/slices";
 import { appDayjs, formatFullDate } from "~/utils";
 
-export const MealListContainer: FC<RouterProps> = ({ navigate }) => {
+export const AdminMealList: FC = () => {
+  const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const categories: ICategory[] = useAppSelector((state) => state.category.categories);
-  const [mealList, setMealList] = useState<IMeal[]>();
+  const [mealList, setMealList] = useState<IMeal[]>([]);
 
   useEffect(() => {
     dispatchGetMeals();
@@ -34,7 +36,10 @@ export const MealListContainer: FC<RouterProps> = ({ navigate }) => {
 
   const dispatchGetMeals = async () => {
     const { result } = await dispatch(getMeals()).unwrap();
-    setMealList(result);
+    // TODO
+    if (result) {
+      setMealList(result);
+    }
   };
 
   const handleChange = (event: SelectChangeEvent) => {
@@ -63,7 +68,7 @@ export const MealListContainer: FC<RouterProps> = ({ navigate }) => {
   };
 
   return (
-    <>
+    <AdminLayout>
       <Stack direction="row" justifyContent="space-between" p={3}>
         <FormControl sx={{ width: "150px" }}>
           <InputLabel id="category-select-label">分類</InputLabel>
@@ -91,7 +96,7 @@ export const MealListContainer: FC<RouterProps> = ({ navigate }) => {
       <List sx={{ mx: 0, p: 0 }}>
         {mealList?.map((meal) => (
           <Fragment key={`meal-${meal.id}`}>
-            {selectedCategory === "all" || meal.categories?.some((categoryId) => categoryId === selectedCategory) ? (
+            {selectedCategory === "all" || meal.categories?.some((category) => category.id === selectedCategory) ? (
               <ListItemButton
                 sx={{ borderBottom: (theme) => `1px solid ${theme.palette.divider}` }}
                 onClick={() => handleMealClick(meal.id)}
@@ -135,8 +140,6 @@ export const MealListContainer: FC<RouterProps> = ({ navigate }) => {
           </Fragment>
         ))}
       </List>
-    </>
+    </AdminLayout>
   );
 };
-
-export default MealListContainer;

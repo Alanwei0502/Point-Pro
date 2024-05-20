@@ -1,14 +1,14 @@
 import { FC, memo, useEffect, useState } from "react";
 import { Stack } from "@mui/material";
 import { TableCircle, TableNormal, Periods } from "./index.styles";
-import { headerHeight } from "~/components/header/Header";
+import { headerHeight } from "~/components";
 import { useAppDispatch } from "~/hooks";
 import { getSeatById, getSeats, getPeriodByDate } from "~/store/slices";
 import { PeriodInfo, SeatInfo, SeatDetails, SeatsPayload } from "~/types";
 import { appDayjs, convertToDatePayload } from "~/utils";
 import { SeatDetail } from "~/features/admin/seat/tab/SeatDetail";
 
-interface TabTablePros {
+interface ITabTableProps {
   date: appDayjs.Dayjs;
 }
 
@@ -20,7 +20,7 @@ const normalSeatList = [
   ["C-1", "C-2", "C-3", "C-4", "C-5", "C-6"]
 ];
 
-export const TabTable: FC<TabTablePros> = ({ date }) => {
+export const TabTable: FC<ITabTableProps> = ({ date }) => {
   const [seats, setSeats] = useState<{ [no: string]: SeatInfo }>();
   const [periods, setPeriods] = useState<PeriodInfo[]>([]);
   const [selectedPeriod, setSelectedPeriod] = useState<string>("");
@@ -137,5 +137,3 @@ export const TabTable: FC<TabTablePros> = ({ date }) => {
     </Stack>
   );
 };
-
-export default memo(TabTable);

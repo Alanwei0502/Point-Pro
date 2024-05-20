@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { FC, useEffect } from "react";
 import { SeatInfo, CategoryNavbar, Meals, Header, Footer } from "./index.styles";
 import { getMenu, getUserInfo } from "./slice";
 import { getOrders } from "~/store/slices";
@@ -10,13 +10,16 @@ import {
   ConfirmRemoveCartItemModal,
   CounterReminderModal,
   CartItemIsOffReminderModal,
-  EcPayFormModal
+  EcPayFormModal,
+  MobileLayout
 } from "~/components";
 import { useSocket, useAppDispatch } from "~/hooks";
 import { getToken } from "~/utils";
 import { OrderStatus, NameSpace } from "~/types";
 
-const Order = () => {
+interface IOrderProps {}
+
+export const Order: FC<IOrderProps> = () => {
   const dispatch = useAppDispatch();
 
   useSocket({ ns: NameSpace.user });
@@ -32,7 +35,7 @@ const Order = () => {
   }, []);
 
   return (
-    <>
+    <MobileLayout>
       <Header />
       <SeatInfo />
       <CategoryNavbar />
@@ -50,8 +53,6 @@ const Order = () => {
       <CounterReminderModal />
       <CartItemIsOffReminderModal />
       <EcPayFormModal />
-    </>
+    </MobileLayout>
   );
 };
-
-export default Order;

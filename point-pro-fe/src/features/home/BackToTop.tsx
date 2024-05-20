@@ -23,7 +23,7 @@ const BackToTopStyleButton = styled(IconButton)`
   }
 `;
 
-const BackToTopButton: FC<BackToTopButtonProps> = ({ position }) => {
+export const BackToTopButton: FC<BackToTopButtonProps> = ({ position }) => {
   const deviceType = useDeviceType();
   const [isVisible, setIsVisible] = useState(false);
 
@@ -67,5 +67,3 @@ const BackToTopButton: FC<BackToTopButtonProps> = ({ position }) => {
     </BackToTopStyleButton>
   );
 };
-
-export default BackToTopButton;

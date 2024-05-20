@@ -1,15 +1,14 @@
-import { useEffect, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import { Box, InputAdornment } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import SearchIcon from "@mui/icons-material/Search";
 import { DesktopDatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { BaseButton } from "~/components";
-import { TextInput } from "~/components/input";
+import { BaseButton, TextInput } from "~/components";
 import { appDayjs, formatDateOnly } from "~/utils";
 import { useAppDispatch } from "~/hooks";
 import { getPeriods } from "~/store/slices";
-import ReservationDetail from "./tab/ReservationDetail";
+import { ReservationDetail } from "./tab/ReservationDetail";
 
 interface ISeatSearchBarProps {
   view: number;
@@ -18,7 +17,7 @@ interface ISeatSearchBarProps {
   handleSearchChange: (value: string) => void;
 }
 
-const SeatSearchBar = ({ view, date, handleDateChange, handleSearchChange }: ISeatSearchBarProps) => {
+export const SeatSearchBar: FC<ISeatSearchBarProps> = ({ view, date, handleDateChange, handleSearchChange }) => {
   const [open, setOpen] = useState<boolean>(false);
   const [periods, setPeriods] = useState<string[]>([]);
   const dispatch = useAppDispatch();
@@ -28,8 +27,8 @@ const SeatSearchBar = ({ view, date, handleDateChange, handleSearchChange }: ISe
   }, []);
 
   const diaptchGetPeriods = async () => {
-    let { result } = await dispatch(getPeriods()).unwrap();
-    let availableDays = [...new Set(result?.periods.map((item: any) => formatDateOnly(item.periodStartedAt)))];
+    const { result } = await dispatch(getPeriods()).unwrap();
+    const availableDays = [...new Set(result?.periods.map((item: any) => formatDateOnly(item.periodStartedAt)))];
     setPeriods(availableDays);
   };
 
@@ -103,5 +102,3 @@ const SeatSearchBar = ({ view, date, handleDateChange, handleSearchChange }: ISe
     </Box>
   );
 };
-
-export default SeatSearchBar;

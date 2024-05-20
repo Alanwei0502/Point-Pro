@@ -1,8 +1,8 @@
-import { Typography, Box } from "@mui/material";
-import { styled, LinearProgressProps, LinearProgress, linearProgressClasses } from "@mui/material";
-import theme from "~/theme";
+import { FC } from "react";
+import { Typography, Box, LinearProgressProps, LinearProgress, linearProgressClasses } from "@mui/material";
+import { theme } from "~/theme";
 
-const LinearProgressWithLabel = (props: LinearProgressProps & { value: number }) => {
+export const LinearProgressWithLabel: FC<LinearProgressProps & { value: number }> = (props) => {
   return (
     <Box sx={{ display: "flex", alignItems: "center" }}>
       <Box sx={{ width: "100%", mr: 1 }}>
@@ -27,5 +27,3 @@ const LinearProgressWithLabel = (props: LinearProgressProps & { value: number })
     </Box>
   );
 };
-
-export default LinearProgressWithLabel;

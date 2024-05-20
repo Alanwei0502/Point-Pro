@@ -1,6 +1,6 @@
 import { FC, ReactNode } from "react";
 import { Box, Grid, Typography } from "@mui/material";
-import { Column } from "~/components/layout";
+import { Column } from "~/components";
 
 interface FeatureCardProps {
   title: string;
@@ -8,7 +8,7 @@ interface FeatureCardProps {
   children: ReactNode;
 }
 
-const FeatureCard: FC<FeatureCardProps> = ({ children, title, description }) => {
+export const FeatureCard: FC<FeatureCardProps> = ({ children, title, description }) => {
   return (
     <Grid container>
       <Grid item xs={9} flex={1}>
@@ -50,5 +50,3 @@ const FeatureCard: FC<FeatureCardProps> = ({ children, title, description }) => 
     </Grid>
   );
 };
-
-export default FeatureCard;

@@ -4,16 +4,15 @@ import { Button, IconButton, Stack, Typography } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import AddIcon from "@mui/icons-material/Add";
 import FormatAlignJustifyIcon from "@mui/icons-material/FormatAlignJustify";
-import { Base } from "~/components/layout";
-import { TextInput } from "~/components/input";
+import { AdminLayout, Base, TextInput } from "~/components";
 import SpecialtyDetail from "./SpecialtyDetail";
-import { RouterProps, ICategory, ISpecialty } from "~/types";
+import { ICategory, ISpecialty } from "~/types";
 import { useAppDispatch, useAppSelector } from "~/hooks";
 import { getSpecialties, getCategories, postCategory, deleteCategory } from "~/store/slices";
 
 const initCategory = { id: "", title: "" };
 
-export const MealSettingsContainer: FC<RouterProps> = ({ navigate }) => {
+export const AdminMealSettings: FC = () => {
   const categories: ICategory[] = useAppSelector((state) => state.category.categories);
   const specialties: ISpecialty[] = useAppSelector((state) => state.specialty.specialties);
   const [categoryList, setCategoryList] = useState<ICategory[] | undefined>();
@@ -85,18 +84,46 @@ export const MealSettingsContainer: FC<RouterProps> = ({ navigate }) => {
   };
 
   return (
-    <Base display="flex" justifyContent="space-between" sx={{ userSelect: "none" }}>
-      <Stack width="50%" gap={3} p={2}>
-        <Typography variant="h3" sx={{ mb: 1 }}>
-          分類
-        </Typography>
-        {categoryList?.map((category) => (
-          <Fragment key={`category-input-${category.id ? category.id : "new"}`}>
+    <AdminLayout>
+      <Base display="flex" justifyContent="space-between" sx={{ userSelect: "none" }}>
+        <Stack width="50%" gap={3} p={2}>
+          <Typography variant="h3" sx={{ mb: 1 }}>
+            分類
+          </Typography>
+          {categoryList?.map((category) => (
+            <Fragment key={`category-input-${category.id ? category.id : "new"}`}>
+              <TextInput
+                value={category.title}
+                placeholder="請輸入新增分類項目"
+                disabled={Boolean(category.id)}
+                onChange={handleChangeCategory}
+                sx={{
+                  "& .Mui-disabled": {
+                    color: (theme) => theme.palette.primary.contrastText,
+                    WebkitTextFillColor: "unset !important"
+                  }
+                }}
+                endAdornment={
+                  <IconButton onClick={() => handleEditCategory(category.id)}>
+                    {category.id ? <CloseIcon /> : <AddIcon />}
+                  </IconButton>
+                }
+              />
+            </Fragment>
+          ))}
+          <Button variant="contained" onClick={handleAddCategory} startIcon={<AddIcon />}>
+            新增
+          </Button>
+        </Stack>
+        <Stack width="50%" gap={3} p={2}>
+          <Typography variant="h3" sx={{ mb: 1 }}>
+            客製化
+          </Typography>
+          {specialtyList?.map((specialty) => (
             <TextInput
-              value={category.title}
-              placeholder="請輸入新增分類項目"
-              disabled={Boolean(category.id)}
-              onChange={handleChangeCategory}
+              key={`specialty-${specialty.id}`}
+              value={specialty.title}
+              disabled
               sx={{
                 "& .Mui-disabled": {
                   color: (theme) => theme.palette.primary.contrastText,
@@ -104,46 +131,18 @@ export const MealSettingsContainer: FC<RouterProps> = ({ navigate }) => {
                 }
               }}
               endAdornment={
-                <IconButton onClick={() => handleEditCategory(category.id)}>
-                  {category.id ? <CloseIcon /> : <AddIcon />}
+                <IconButton onClick={() => handleEditSpecialty(specialty.id)}>
+                  <FormatAlignJustifyIcon />
                 </IconButton>
               }
             />
-          </Fragment>
-        ))}
-        <Button variant="contained" onClick={handleAddCategory} startIcon={<AddIcon />}>
-          新增
-        </Button>
-      </Stack>
-      <Stack width="50%" gap={3} p={2}>
-        <Typography variant="h3" sx={{ mb: 1 }}>
-          客製化
-        </Typography>
-        {specialtyList?.map((specialty) => (
-          <TextInput
-            key={`specialty-${specialty.id}`}
-            value={specialty.title}
-            disabled
-            sx={{
-              "& .Mui-disabled": {
-                color: (theme) => theme.palette.primary.contrastText,
-                WebkitTextFillColor: "unset !important"
-              }
-            }}
-            endAdornment={
-              <IconButton onClick={() => handleEditSpecialty(specialty.id)}>
-                <FormatAlignJustifyIcon />
-              </IconButton>
-            }
-          />
-        ))}
-        <Button variant="contained" onClick={handleCreateSpecailty} startIcon={<AddIcon />}>
-          新增
-        </Button>
-      </Stack>
-      <SpecialtyDetail open={open} onClose={handleCloseDrawer} specialtyId={selectedSpecialty} />
-    </Base>
+          ))}
+          <Button variant="contained" onClick={handleCreateSpecailty} startIcon={<AddIcon />}>
+            新增
+          </Button>
+        </Stack>
+        <SpecialtyDetail open={open} onClose={handleCloseDrawer} specialtyId={selectedSpecialty} />
+      </Base>
+    </AdminLayout>
   );
 };
-
-export default MealSettingsContainer;

@@ -15,7 +15,7 @@ import {
   styled
 } from "@mui/material";
 import { GlobalStyles, css } from "@mui/system";
-import { Row, Column } from "~/components/layout";
+import { Row, Column } from "~/components";
 import { useDeviceType, useGetImageUrl } from "~/hooks";
 import { CallToActionButton, Title } from "./index.styles";
 
@@ -30,24 +30,24 @@ export const AnimatedCard = styled(Column)<AnimatedCardProps>(({ theme, index })
     easing: theme.transitions.easing.easeInOut,
     duration: theme.transitions.duration.enteringScreen
   }),
-  transform: `translateX(${index === 0 ? "2rem" : index === 2 ? "-2rem" : 0}) translateY(${index === 1 ? "-3.125rem" : "0rem"
-    })`,
+  transform: `translateX(${index === 0 ? "2rem" : index === 2 ? "-2rem" : 0}) translateY(${
+    index === 1 ? "-3.125rem" : "0rem"
+  })`,
   filter: `blur(${index === 1 ? 0 : 2}px)`,
   zIndex: index === 1 ? 2 : 1,
   "&::after":
     index === 1
       ? {}
       : {
-        content: "''",
-        position: "absolute",
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        background: "rgba(255, 255, 255, 0.5)"
-      }
+          content: "''",
+          position: "absolute",
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          background: "rgba(255, 255, 255, 0.5)"
+        }
 }));
-
 
 const pricingData = [
   {
@@ -103,10 +103,10 @@ const globalStyles = css`
     }
   }
 `;
-interface Props {
+interface IPricingSectionProps {
   openModal: () => void;
 }
-const PricingSection: FC<Props> = ({ openModal }) => {
+export const PricingSection: FC<IPricingSectionProps> = ({ openModal }) => {
   const [cards, setCards] = useState(pricingData);
   const [currentPage, setCurrentPage] = useState(1);
   const [centerCardIndex, setCenterCardIndex] = useState(1);
@@ -277,5 +277,3 @@ const PricingSection: FC<Props> = ({ openModal }) => {
     );
   }
 };
-
-export default PricingSection;

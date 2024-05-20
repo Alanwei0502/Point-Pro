@@ -1,17 +1,14 @@
-// Libs
-import React from "react";
+import { FC } from "react";
 import { Box, Button, Container, Typography } from "@mui/material";
 import RestaurantMenuIcon from "@mui/icons-material/RestaurantMenu";
 import InsertInvitationIcon from "@mui/icons-material/InsertInvitation";
 import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
-// Components
-import { Column, Row } from "~/components/layout";
+import { Column, Row } from "~/components";
 import { Title } from "./index.styles";
-// Others
-import theme from "~/theme";
+import { theme } from "~/theme";
 import { useDeviceType } from "~/hooks";
 
-const SuccessCase = () => {
+export const SuccessCase: FC = () => {
   const deviceType = useDeviceType();
 
   return (
@@ -81,5 +78,3 @@ const SuccessCase = () => {
     </Box>
   );
 };
-
-export default SuccessCase;

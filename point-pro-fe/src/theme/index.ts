@@ -37,7 +37,7 @@ declare module "@mui/material/Typography" {
 }
 
 // Create a theme instance.
-const theme = createTheme({
+export const theme = createTheme({
   palette: {
     common: {
       black: "#020202",
@@ -95,5 +95,3 @@ const theme = createTheme({
     }
   }
 });
-
-export default theme;

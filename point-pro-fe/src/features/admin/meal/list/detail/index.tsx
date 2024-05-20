@@ -1,8 +1,7 @@
 import { FC, useEffect, useReducer } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import { Button, Stack } from "@mui/material";
-import { Base, FieldContainer } from "~/components/layout";
-import { headerHeight } from "~/components/header/Header";
-import { RouterProps } from "~/types";
+import { AdminLayout, Base, FieldContainer, headerHeight } from "~/components";
 import mainReducer, {
   initialState,
   defaultSetting,
@@ -14,7 +13,9 @@ import mainReducer, {
 import { useAppDispatch, useAppSelector } from "~/hooks";
 import { getMealById, postMeal, patchMealById, uploadImg, deleteMeal } from "~/store/slices";
 
-export const MealListDetailContainer: FC<RouterProps> = ({ params, navigate }) => {
+export const AdminMealListDetail: FC = () => {
+  const params = useParams();
+  const navigate = useNavigate();
   const isCreate = params.meal_id === "create";
   const dispatch = useAppDispatch();
   const categories = useAppSelector((state) => state.category.categories);
@@ -92,7 +93,7 @@ export const MealListDetailContainer: FC<RouterProps> = ({ params, navigate }) =
           if (validateCheck(state)) {
             let payload = convertToPayload(state);
             if (payload.coverUrl) {
-              payload.coverUrl = await updateImage(payload.coverUrl);
+              payload.coverUrl = (await updateImage(payload.coverUrl)) || "";
             }
 
             await dispatch(postMeal(payload));
@@ -105,7 +106,7 @@ export const MealListDetailContainer: FC<RouterProps> = ({ params, navigate }) =
           if (validateCheck(state)) {
             let payload = convertToPayload(state);
             if (payload.coverUrl && typeof payload.coverUrl !== "string") {
-              payload.coverUrl = await updateImage(payload.coverUrl);
+              payload.coverUrl = (await updateImage(payload.coverUrl)) || "";
             }
             await dispatch(patchMealById({ mealId: params.meal_id as string, payload }));
             navigate({ pathname: "/admin/meal/list" });
@@ -141,43 +142,43 @@ export const MealListDetailContainer: FC<RouterProps> = ({ params, navigate }) =
     }
   };
   return (
-    <Base>
-      <Stack sx={{ flexWrap: "wrap", maxHeight: `calc(100vh - ${headerHeight} - 47px)`, gap: 5 }}>
-        {fieldList.map((config) => (
-          <FieldContainer
-            key={`meal-${config.id}`}
-            width={200}
-            value={state[config.id].value}
-            onChange={handleFieldChange}
-            error={state[config.id].invalid}
-            {...config}
-          />
-        ))}
-      </Stack>
-      {/* button */}
-      <Stack direction="row" justifyContent="end" spacing={4}>
-        <Button variant="contained" onClick={() => handleButtonClick("cancel")}>
-          取消
-        </Button>
-        {isCreate ? (
-          <>
-            <Button variant="contained" onClick={() => handleButtonClick("create")}>
-              新增
-            </Button>
-          </>
-        ) : (
-          <>
-            <Button variant="contained" onClick={() => handleButtonClick("delete")}>
-              刪除
-            </Button>
-            <Button variant="contained" onClick={() => handleButtonClick("save")}>
-              保存
-            </Button>
-          </>
-        )}
-      </Stack>
-    </Base>
+    <AdminLayout>
+      <Base>
+        <Stack sx={{ flexWrap: "wrap", maxHeight: `calc(100vh - ${headerHeight} - 47px)`, gap: 5 }}>
+          {fieldList.map((config) => (
+            <FieldContainer
+              key={`meal-${config.id}`}
+              width={200}
+              value={state[config.id].value}
+              onChange={handleFieldChange}
+              error={state[config.id].invalid}
+              {...config}
+            />
+          ))}
+        </Stack>
+        {/* button */}
+        <Stack direction="row" justifyContent="end" spacing={4}>
+          <Button variant="contained" onClick={() => handleButtonClick("cancel")}>
+            取消
+          </Button>
+          {isCreate ? (
+            <>
+              <Button variant="contained" onClick={() => handleButtonClick("create")}>
+                新增
+              </Button>
+            </>
+          ) : (
+            <>
+              <Button variant="contained" onClick={() => handleButtonClick("delete")}>
+                刪除
+              </Button>
+              <Button variant="contained" onClick={() => handleButtonClick("save")}>
+                保存
+              </Button>
+            </>
+          )}
+        </Stack>
+      </Base>
+    </AdminLayout>
   );
 };
-
-export default MealListDetailContainer;

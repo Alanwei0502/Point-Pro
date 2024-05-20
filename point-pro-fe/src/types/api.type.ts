@@ -224,7 +224,7 @@ export interface Info {
   shipping?: Shipping;
 }
 
-export type LinePayConfirmResponse = ApiResponse<{
+export interface ILinePayConfirmPayload {
   paymentLogs: PaymentLogsResponse[];
   response: {
     body: {
@@ -233,7 +233,8 @@ export type LinePayConfirmResponse = ApiResponse<{
       returnMessage: string;
     };
   };
-}>;
+}
+export type LinePayConfirmResponse = ApiResponse<ILinePayConfirmPayload>;
 
 // Ec Pay
 export interface EcPayResponseBody {
@@ -253,9 +254,11 @@ export type EcPayResponse = ApiResponse<{
   SimulatePaid: string;
 }>;
 
-export type EcPayConfirmResponse = ApiResponse<{
+export interface IEcPayConfirmPayload {
   paymentLogs: PaymentLogsResponse[];
-}>;
+}
+
+export type EcPayConfirmResponse = ApiResponse<IEcPayConfirmPayload>;
 
 // Cash Pay
 export type CashPaymentResponse = ApiResponse<{

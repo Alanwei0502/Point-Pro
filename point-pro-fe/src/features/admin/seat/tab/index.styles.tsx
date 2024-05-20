@@ -1,34 +1,25 @@
-import { Fragment, memo } from "react";
-
+import { FC, Fragment, memo } from "react";
 import { Stack, Typography, Box, ListItem, ListItemButton } from "@mui/material";
 import { ReactComponent as CircleTable } from "~/assets/images/table-circle.svg";
 import { ReactComponent as NormalTable } from "~/assets/images/table-normal.svg";
+import { PeriodInfo, SeatInfo, SeatStatus } from "~/types";
+import { appDayjs, formatTimeOnly, percentOfUsed, seatStatusListObj } from "~/utils";
 
-import { PeriodInfo, SeatInfo } from "~/types";
-import appDayjs, { formatTimeOnly, percentOfUsed } from "~/utils/dayjs.util";
-import { seatStatusListObj } from "~/utils/constants.utils";
-
-interface TablePros {
-  state: SeatInfo;
-  handleClick: (seatId: string) => void;
-}
-
-interface TableInfoProps {
+interface ITableInfoProps {
   state: SeatInfo;
 }
 
-const TableInfo = ({ state }: TableInfoProps) => {
-  if (!state) return <Fragment />;
+const TableInfo: FC<ITableInfoProps> = ({ state }) => {
   switch (state.status) {
-    case "AVAILABLE":
+    case SeatStatus.AVAILABLE:
       return (
         <Typography variant="h6" fontWeight={900}>
           {state.seatNo}
         </Typography>
       );
-    case "RESERVED":
+    case SeatStatus.BOOKED:
       return (
-        <Fragment>
+        <>
           <Typography variant="body2" fontWeight={700} lineHeight={"24px"}>
             {state.seatNo}
           </Typography>
@@ -47,11 +38,11 @@ const TableInfo = ({ state }: TableInfoProps) => {
           <Typography variant="body2" fontWeight={400} lineHeight={"24px"}>
             {formatTimeOnly(state.period.startedAt)}
           </Typography>
-        </Fragment>
+        </>
       );
-    case "OCCUPIED":
+    case SeatStatus.INUSE:
       return (
-        <Fragment>
+        <>
           <Typography variant="body2" fontWeight={700} lineHeight={"24px"}>
             {state.seatNo}
           </Typography>
@@ -73,20 +64,19 @@ const TableInfo = ({ state }: TableInfoProps) => {
           <Typography variant="body2" fontWeight={700} lineHeight={"24px"}>
             {percentOfUsed(state.currentReservation.startOfMeal, state.period.endedAt)}
           </Typography>
-        </Fragment>
+        </>
       );
     default:
-      return <Fragment />;
+      return <></>;
   }
 };
 
-interface PeriodsProps {
-  periods: PeriodInfo[];
-  selected: string | undefined;
-  handleClick: (id: string) => void;
+interface ITableProps {
+  state: SeatInfo;
+  handleClick: (seatId: string) => void;
 }
 
-export const TableCircle = memo(({ state, handleClick }: TablePros) => {
+export const TableCircle: FC<ITableProps> = memo(({ state, handleClick }) => {
   return (
     <Stack
       alignItems="center"
@@ -104,7 +94,7 @@ export const TableCircle = memo(({ state, handleClick }: TablePros) => {
   );
 });
 
-export const TableNormal = memo(({ state, handleClick }: TablePros) => {
+export const TableNormal: FC<ITableProps> = memo(({ state, handleClick }) => {
   return (
     <Stack
       alignItems="center"
@@ -122,7 +112,13 @@ export const TableNormal = memo(({ state, handleClick }: TablePros) => {
   );
 });
 
-export const Periods = ({ periods, selected, handleClick }: PeriodsProps) => {
+interface IPeriodsProps {
+  periods: PeriodInfo[];
+  selected: string | undefined;
+  handleClick: (id: string) => void;
+}
+
+export const Periods: FC<IPeriodsProps> = ({ periods, selected, handleClick }) => {
   return (
     <Stack
       alignItems="center"

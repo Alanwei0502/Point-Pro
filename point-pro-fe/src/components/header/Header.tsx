@@ -1,20 +1,21 @@
-import { memo, useState, useEffect, FC } from "react";
-import { useParams } from "react-router-dom";
+import { useState, useEffect, FC } from "react";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { isEmpty } from "lodash";
 import { Box, Button, Badge, AppBar, Toolbar, IconButton, Typography } from "@mui/material";
 import { DoubleArrow, NotificationsNone, PowerSettingsNew } from "@mui/icons-material";
 import HeaderLogo from "~/assets/images/header-logo.svg";
 import { useAppDispatch, useAppSelector } from "~/hooks";
 import { getCategories, getSpecialties } from "~/store/slices";
-import { RouterProps } from "~/types";
 import { appDayjs, dateForm, flatSideBarItemList } from "~/utils";
-import theme from "~/theme";
+import { theme } from "~/theme";
 import { LeftMenuDrawer, NotificationDrawer } from "~/components";
 
 const drawerWidth = "300px";
 export const headerHeight = "72px";
 
-export const Header: FC<RouterProps> = ({ location, navigate }) => {
+export const Header: FC = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const { meal_id } = useParams();
 

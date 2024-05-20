@@ -1,10 +1,9 @@
 import { FC } from "react";
-import { Box, Container, Typography, Rating } from "@mui/material";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Column, Row } from "~/components/layout";
+import { Box, Container, Typography, Rating } from "@mui/material";
+import { Column, Row } from "~/components";
 import { Title } from "./index.styles";
 import { useGetImageUrl, useDeviceType } from "~/hooks";
-
 import "swiper/css";
 
 const testimonialsData = [
@@ -48,7 +47,7 @@ const testimonialsData = [
   }
 ];
 
-const TestimonialsSection: FC = () => {
+export const TestimonialsSection: FC = () => {
   const deviceType = useDeviceType();
   return (
     <Box pt={20} bgcolor={"background.paper"} sx={{ userSelect: "none", paddingBottom: "1rem" }}>
@@ -110,5 +109,3 @@ const TestimonialsSection: FC = () => {
     </Box>
   );
 };
-
-export default TestimonialsSection;

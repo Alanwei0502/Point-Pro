@@ -3,7 +3,7 @@ import { Box, Button, Card, CardActions, CardContent, CardHeader, Typography } f
 import { useAppDispatch, useAppSelector } from "~/hooks";
 import { clearCart } from "~/features/orders/slice";
 import { BaseModal } from "~/components";
-import theme from "~/theme";
+import { theme } from "~/theme";
 import { cancelOrder, postOrder, setCancelOrder } from "~/store/slices";
 
 interface ITabletModalLayoutProps {

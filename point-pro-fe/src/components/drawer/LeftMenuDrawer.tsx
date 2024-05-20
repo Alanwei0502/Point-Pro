@@ -5,7 +5,7 @@ import LabelIcon from "@mui/icons-material/Label";
 import { KeyboardArrowDown } from "@mui/icons-material";
 import { BaseDraw } from "~/components";
 import { SideBarItemType, sideBarItemList } from "~/utils";
-import theme from "~/theme";
+import { theme } from "~/theme";
 
 interface ILeftMenuDrawerProps {
   drawerWidth: string;

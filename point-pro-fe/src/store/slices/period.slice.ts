@@ -3,7 +3,6 @@ import { createSlice } from "@reduxjs/toolkit";
 // Others
 import { PeriodApi } from "~/api";
 import { createAppAsyncThunk } from "~/hooks";
-import { PeriodsResponse } from "~/types";
 import { appDayjs } from "~/utils";
 
 const name = "period";

@@ -1,21 +1,14 @@
-// Libs
 import { useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { Box, Button, List, ListItem, Typography } from "@mui/material";
-// Components
-
-// Others
 import { useAppDispatch, useAppSelector, useDeviceType } from "~/hooks";
-import { Column, Row } from "~/components/layout";
-import { EcPayConfirmPayload, LinePayConfirmPayload, MealDetails } from "~/types/api";
-import theme from "~/theme";
-import { OrderMeal } from "~/types";
+import { Column, MobileLayout, Row } from "~/components";
+import { IEcPayConfirmPayload, ILinePayConfirmPayload, IOrderMeal, MealDetails } from "~/types";
+import { theme } from "~/theme";
 import { getToken, appDayjs } from "~/utils";
-import { confirmEcPay, confirmLinePay } from "~/store/slices/payment.slice";
-import { patchReservationById } from "~/store/slices/reservation.slice";
-import { getUserInfo } from "~/store/slices/auth.slice";
+import { confirmEcPay, confirmLinePay, patchReservationById, getUserInfo } from "~/store/slices";
 
-export const PaymentReturnContainer = () => {
+export const PaymentConfirm = () => {
   const [searchParams] = useSearchParams();
   const dispatch = useAppDispatch();
   const linePayConfirmResponse = useAppSelector(({ payment }) => payment.linePayConfirmResponse);
@@ -58,26 +51,31 @@ export const PaymentReturnContainer = () => {
   }, [linePayConfirmResponse, ecPayConfirmResponse]);
 
   return (
-    <Column justifyContent={"space-between"} p={3} sx={{ height: "100%", minHeight: "90vh", userSelect: "none" }}>
-      <Typography variant="h1" textAlign={"center"} fontWeight={900} marginBottom={1}>
-        完成付款
-      </Typography>
-      {linePayConfirmResponse.message === "success" ||
-        (ecPayConfirmResponse.message === "success" && (
-          <PaymentReturnData
-            message={linePayConfirmResponse.message || ecPayConfirmResponse.message}
-            result={from === "linePay" ? linePayConfirmResponse.result : ecPayConfirmResponse.result}
-          />
-        ))}
+    <MobileLayout>
+      <Column justifyContent={"space-between"} p={3} sx={{ height: "100%", minHeight: "90vh", userSelect: "none" }}>
+        <Typography variant="h1" textAlign={"center"} fontWeight={900} marginBottom={1}>
+          完成付款
+        </Typography>
+        {linePayConfirmResponse.message === "success" ||
+          (ecPayConfirmResponse.message === "success" && (
+            <PaymentReturnData
+              message={linePayConfirmResponse.message || ecPayConfirmResponse.message}
+              result={from === "linePay" ? linePayConfirmResponse.result : ecPayConfirmResponse.result}
+            />
+          ))}
 
-      <Button variant="contained" color="primary" onClick={handleReturnMeal}>
-        {userRole?.role === "USER" ? "預定下次用餐" : "返回訂單頁面"}
-      </Button>
-    </Column>
+        <Button variant="contained" color="primary" onClick={handleReturnMeal}>
+          {userRole?.role === "USER" ? "預定下次用餐" : "返回訂單頁面"}
+        </Button>
+      </Column>
+    </MobileLayout>
   );
 };
 
-const PaymentReturnData = (props: { message: string; result: LinePayConfirmPayload | EcPayConfirmPayload }) => {
+const PaymentReturnData = (props: {
+  message: string;
+  result: ILinePayConfirmPayload | IEcPayConfirmPayload | null;
+}) => {
   const { result, message } = props;
   const deviceType = useDeviceType();
   const dispatch = useAppDispatch();
@@ -108,7 +106,7 @@ const PaymentReturnData = (props: { message: string; result: LinePayConfirmPaylo
       <Column marginBottom={5}>
         {result &&
           result.paymentLogs.map((paymentLog) =>
-            paymentLog.order.orderMeals.map((orderMeal: OrderMeal) => (
+            paymentLog.order.orderMeals.map((orderMeal: IOrderMeal) => (
               <Column
                 key={orderMeal.id}
                 bgcolor={"white"}
@@ -251,13 +249,15 @@ export const PaymentCancel = () => {
     userRole?.role === "USER" ? navigate(`/orders?token=${token}`) : navigate("/admin/orders");
   };
   return (
-    <Column justifyContent={"space-between"} p={3} sx={{ height: "100%", minHeight: "90vh", userSelect: "none" }}>
-      <Typography variant="h1" textAlign={"center"}>
-        取消付款
-      </Typography>
-      <Button variant="contained" color="primary" onClick={handleReturnMeal}>
-        {userRole?.role === "USER" ? "返回繼續點餐" : "返回訂單頁面"}
-      </Button>
-    </Column>
+    <MobileLayout>
+      <Column justifyContent={"space-between"} p={3} sx={{ height: "100%", minHeight: "90vh", userSelect: "none" }}>
+        <Typography variant="h1" textAlign={"center"}>
+          取消付款
+        </Typography>
+        <Button variant="contained" color="primary" onClick={handleReturnMeal}>
+          {userRole?.role === "USER" ? "返回繼續點餐" : "返回訂單頁面"}
+        </Button>
+      </Column>
+    </MobileLayout>
   );
 };

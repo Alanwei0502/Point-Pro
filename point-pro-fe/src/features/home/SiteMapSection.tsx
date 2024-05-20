@@ -53,7 +53,7 @@ const siteMapData = [
   }
 ];
 
-const SiteMapSection: FC = () => {
+export const SiteMapSection: FC = () => {
   const deviceType = useDeviceType();
   const handleClick = (event: React.MouseEvent, targetId: string) => {
     event.preventDefault();
@@ -125,5 +125,3 @@ const SiteMapSection: FC = () => {
     </Box>
   );
 };
-
-export default SiteMapSection;

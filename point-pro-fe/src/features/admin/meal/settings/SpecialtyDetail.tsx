@@ -10,9 +10,7 @@ import {
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import CancelIcon from "@mui/icons-material/Cancel";
-import { FieldContainer } from "~/components/layout";
-import { BaseDraw } from "~/components";
-import { TextInput } from "~/components/input";
+import { FieldContainer, BaseDraw, TextInput } from "~/components";
 import { useAppDispatch } from "~/hooks";
 import {
   getSpecialtyById,

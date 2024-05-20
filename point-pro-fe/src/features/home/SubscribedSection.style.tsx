@@ -1,6 +1,6 @@
 import { Box, InputBase, styled, IconButton } from "@mui/material";
 
-const SubscribeSectionStyledCard = styled(Box)`
+export const SubscribeSectionStyledCard = styled(Box)`
   && {
     background-color: white;
     border-radius: 2.5rem;
@@ -9,7 +9,7 @@ const SubscribeSectionStyledCard = styled(Box)`
   }
 `;
 
-const SubscribeSectionInputContainer = styled(Box)`
+export const SubscribeSectionInputContainer = styled(Box)`
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -22,13 +22,13 @@ const SubscribeSectionInputContainer = styled(Box)`
   }
 `;
 
-const SubscribeSectionInputBase = styled(InputBase)`
+export const SubscribeSectionInputBase = styled(InputBase)`
   && {
     font-size: 20px;
   }
 `;
 
-const SubscribeSectionIconButton = styled(IconButton)`
+export const SubscribeSectionIconButton = styled(IconButton)`
   && {
     transition: all 0.3s ease-in-out;
     &:disabled {
@@ -37,10 +37,3 @@ const SubscribeSectionIconButton = styled(IconButton)`
     background-color: ${(props) => props.theme.palette.primary.main};
   }
 `;
-
-export {
-  SubscribeSectionStyledCard,
-  SubscribeSectionInputContainer,
-  SubscribeSectionInputBase,
-  SubscribeSectionIconButton
-};

@@ -15,7 +15,7 @@ const tabs = [
   { value: View.TABLE_VIEW, title: "列表", id: View.TABLE_VIEW }
 ];
 
-const SeatTabs: FC<ISeatViewProps> = (props) => {
+export const SeatTabs: FC<ISeatViewProps> = (props) => {
   const { view, setView } = props;
 
   return (
@@ -30,5 +30,3 @@ const SeatTabs: FC<ISeatViewProps> = (props) => {
     </Tabs>
   );
 };
-
-export default SeatTabs;

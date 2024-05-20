@@ -1,23 +1,19 @@
-// Libs
 import { createBrowserRouter } from "react-router-dom";
-// Components
-import {
-  Home,
-  Booking,
-  Orders,
-  AdminLogin,
-  AdminOrders,
-  AdminMenu,
-  AdminSeat,
-  AdminMealList,
-  AdminMealListDetail,
-  AdminMealSettings,
-  PaymentReturn,
-  PaymentCancel
-} from "../pages";
+import { Home } from "~/features/home";
+import { Booking } from "~/features/booking";
+import { Order } from "~/features/orders";
+import { PaymentCancel, PaymentConfirm } from "~/features/payment";
+import { Login } from "~/features/admin/login";
 import { ProtectedRoute } from "./protected";
+import { AdminOrders } from "~/features/admin/orders";
+import { AdminMenu } from "~/features/admin/menu";
+import { AdminMealListDetail } from "~/features/admin/meal/list/detail";
+import { AdminMealSettings } from "~/features/admin/meal/settings";
+import { AdminMealList } from "~/features/admin/meal/list";
+import { AdminSeat } from "~/features/admin/seat";
 
 const router = createBrowserRouter([
+  // User
   {
     path: "/",
     element: <Home />
@@ -28,11 +24,25 @@ const router = createBrowserRouter([
   },
   {
     path: "orders",
-    element: <Orders />
+    element: <Order />
   },
   {
+    path: "payment",
+    children: [
+      {
+        path: "confirm",
+        element: <PaymentConfirm />
+      },
+      {
+        path: "cancel",
+        element: <PaymentCancel />
+      }
+    ]
+  },
+  // Admin
+  {
     path: "admin",
-    element: <AdminLogin />
+    element: <Login />
   },
   {
     element: <ProtectedRoute />,
@@ -71,19 +81,6 @@ const router = createBrowserRouter([
             element: <AdminMealSettings />
           }
         ]
-      }
-    ]
-  },
-  {
-    path: "payment",
-    children: [
-      {
-        path: "confirm",
-        element: <PaymentReturn />
-      },
-      {
-        path: "cancel",
-        element: <PaymentCancel />
       }
     ]
   }

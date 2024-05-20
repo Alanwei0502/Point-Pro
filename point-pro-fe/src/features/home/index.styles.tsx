@@ -4,15 +4,11 @@ import { Box, Button, Icon, Link, SxProps, Typography, styled } from "@mui/mater
 import { Circle } from "@mui/icons-material";
 import FingerprintIcon from "@mui/icons-material/Fingerprint";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
-
 import type { RootState } from "~/store/store";
 import { decrement, increment } from "./slice";
+import { BaseButton } from "~/components";
 
-import { BaseButton } from "~/components/buttons";
-
-interface CounterButton {}
-
-export const CounterButton: FC<CounterButton> = () => {
+export const CounterButton: FC = () => {
   const count = useSelector((state: RootState) => state.counter.value);
   const dispatch = useDispatch();
 

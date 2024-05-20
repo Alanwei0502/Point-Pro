@@ -1,24 +1,22 @@
-// Libs
-// Components
 import { FC, useState } from "react";
-import AboutUsSection from "./AboutUsSection";
-import BackToTopButton from "./BackToTop";
-import ContactFormModal from "./ContactFormModal";
-import FeatureSection from "./FeatureSection";
-import HeroSection from "./HeroSection";
-import MapSection from "./MapSection";
-import PricingSection from "./PricingSection";
-import SiteMapSection from "./SiteMapSection";
-import SubscribedSection from "./SubscribedSection";
-import TestimonialsSection from "./TestimonialsSection";
-import Footer from "~/components/footer";
-import { HeaderNavBar } from "./HeaderNavBar";
 import { Box } from "@mui/material";
-import SuccessCase from "./SuccessCase";
+import { AboutUsSection } from "./AboutUsSection";
+import { BackToTopButton } from "./BackToTop";
+import { ContactFormModal } from "./ContactFormModal";
+import { FeatureSection } from "./FeatureSection";
+import { HeroSection } from "./HeroSection";
+import { MapSection } from "./MapSection";
+import { PricingSection } from "./PricingSection";
+import { SiteMapSection } from "./SiteMapSection";
+import { SubscribedSection } from "./SubscribedSection";
+import { TestimonialsSection } from "./TestimonialsSection";
+import { HeaderNavBar } from "./HeaderNavBar";
+import { SuccessCase } from "./SuccessCase";
+import { Footer } from "~/components";
 
-interface HomeContainerProps { }
+interface HomeProps {}
 
-const HomeContainer: FC<HomeContainerProps> = ({ ...rest }) => {
+export const Home: FC<HomeProps> = ({ ...rest }) => {
   const [isOpen, setIsOpen] = useState(false);
   const handleOpenModal = () => {
     setIsOpen(true);
@@ -56,4 +54,3 @@ const HomeContainer: FC<HomeContainerProps> = ({ ...rest }) => {
     </>
   );
 };
-export default HomeContainer;

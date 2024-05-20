@@ -2,9 +2,8 @@ import { FC, useState } from "react";
 import { Map, MapProvider, Marker, Popup } from "react-map-gl";
 import { Box, Typography } from "@mui/material";
 import { PushPin } from "@mui/icons-material";
-
-import "mapbox-gl/dist/mapbox-gl.css";
 import { ReactComponent as MapLogo } from "~/assets/map_logo.svg";
+import "mapbox-gl/dist/mapbox-gl.css";
 
 const mapboxToken = import.meta.env.VITE_MAPBOX_TOKEN;
 
@@ -14,7 +13,7 @@ const viewport = {
   zoom: 17
 };
 
-const MapSection: FC = () => {
+export const MapSection: FC = () => {
   const [popupInfo, setPopupInfo] = useState(true);
 
   return (
@@ -74,5 +73,3 @@ const MapSection: FC = () => {
     </MapProvider>
   );
 };
-
-export default MapSection;

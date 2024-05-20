@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { FC, useCallback, useEffect, useState } from "react";
 import {
   Accordion,
   AccordionSummary,
@@ -14,13 +14,13 @@ import {
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
-import { Column, Row } from "~/components/layout";
+import { Column, Row } from "~/components";
 import { useAppDispatch } from "~/hooks";
 import { patchOrder, setCancelOrder, openPaymentDrawer } from "~/store/slices";
 import { appDayjs, calculateOrderPrice, calculateGatherOrderPrice } from "~/utils";
-import theme from "~/theme";
+import { theme } from "~/theme";
 import { OrderStatus, OrderType, GatherOrder, IOrder, IOrderMeal } from "~/types";
-import LinearProgressWithLabel from "./LinearProgressWithLabel";
+import { LinearProgressWithLabel } from "./LinearProgressWithLabel";
 
 function useAccordion() {
   const [expanded, setExpanded] = useState(false);
@@ -39,7 +39,7 @@ const VerticalDivider = styled("div")(({ theme }) => ({
   margin: "0 1rem"
 }));
 
-interface orderMealItemProps {
+interface IOrderMealItemProps {
   idx: number;
   orderMeal: IOrderMeal;
   status: OrderStatus;
@@ -47,7 +47,7 @@ interface orderMealItemProps {
   tempServedAmount?: string;
   handleChangeServedAmount?: (idx: number, value: number | string) => void;
 }
-function OrderMealItem(props: orderMealItemProps) {
+export const OrderMealItem: FC<IOrderMealItemProps> = (props) => {
   const { handleChangeServedAmount, tempServedAmount, orderMeal, isShowServedAmount, idx } = props;
   const { id, title, mealPrice, price, amount, specialties } = orderMeal;
 
@@ -99,12 +99,12 @@ function OrderMealItem(props: orderMealItemProps) {
       </Row>
     </ListItem>
   );
-}
-
-type PendingAndCancelOrderItemProps = {
-  order: IOrder;
 };
-export const PendingAndCancelOrderItem = (props: PendingAndCancelOrderItemProps) => {
+
+interface IPendingAndCancelOrderItemProps {
+  order: IOrder;
+}
+export const PendingAndCancelOrderItem: FC<IPendingAndCancelOrderItemProps> = (props) => {
   const dispatch = useAppDispatch();
   const { expanded, handleExpand } = useAccordion();
   const { order } = props;
@@ -247,10 +247,10 @@ export const PendingAndCancelOrderItem = (props: PendingAndCancelOrderItemProps)
   );
 };
 
-type UnpaidAndSuccessOrderItemProps = {
+interface IUnpaidAndSuccessOrderItemProps {
   gatherOrder: GatherOrder;
-};
-export const UnpaidAndSuccessOrderItem = (props: UnpaidAndSuccessOrderItemProps) => {
+}
+export const UnpaidAndSuccessOrderItem: FC<IUnpaidAndSuccessOrderItemProps> = (props) => {
   const { gatherOrder } = props;
   const { id, type, status, seats = [], orders = [], paymentLogs = [] } = gatherOrder;
   const totalPrice = calculateGatherOrderPrice(gatherOrder);

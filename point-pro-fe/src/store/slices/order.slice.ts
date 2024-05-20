@@ -67,14 +67,14 @@ export const postOrder = createAppAsyncThunk(
       });
 
       const response = await OrderApi.postOrder({ orderMeals });
-      const { id, status, type, seats = [], paymentLogs, reservationId } = response.result;
+      const { id, status, type, seats = [], paymentLogs, reservationId } = response.result!;
       const gatherOrder: GatherOrder = {
         id,
         status,
         type,
         seats,
         paymentLogs,
-        orders: [response.result],
+        orders: [response.result!],
         reservationId
       };
 
@@ -158,7 +158,7 @@ export const orderSlice = createSlice({
       .addCase(getOrders.fulfilled, (state, action) => {
         const { orders } = action.payload;
         state.isLoading = false;
-        state.orders = orders;
+        state.orders = orders!;
       })
       .addCase(getOrders.rejected, (state) => {
         state.isLoading = false;

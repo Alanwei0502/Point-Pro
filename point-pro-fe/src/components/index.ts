@@ -28,6 +28,8 @@ export * from "./input/TextInput";
 export * from "./input/TextareaInput";
 // Layout
 export * from "./layout/Layout";
+export * from "./layout/MobileLayout";
+export * from "./layout/AdminLayout";
 // Loading
 export * from "./loading/Loading";
 // Modal

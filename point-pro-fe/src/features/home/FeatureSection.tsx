@@ -2,8 +2,8 @@ import { FC } from "react";
 import { Box, Container, Grid, Typography } from "@mui/material";
 import { Assignment, MoreTime, ChromeReaderMode, MenuBook } from "@mui/icons-material";
 import { Title } from "./index.styles";
-import FeatureCard from "./FeatureSection.style";
-import { Column } from "~/components/layout";
+import { FeatureCard } from "./FeatureSection.style";
+import { Column } from "~/components";
 import { useGetImageUrl, useDeviceType } from "~/hooks";
 import { ReactComponent as FeatureIllustration } from "~/assets/featureIllustration.svg";
 
@@ -70,7 +70,7 @@ const featureData: FeatureData[] = [
   }
 ];
 
-const FeatureSection: FC = () => {
+export const FeatureSection: FC = () => {
   const deviceType = useDeviceType();
   return (
     <Box pt={20} pb={deviceType === "tablet" ? "7.5rem" : "5rem"} bgcolor={"background.paper"}>
@@ -170,5 +170,3 @@ const FeatureSection: FC = () => {
     </Box>
   );
 };
-
-export default FeatureSection;

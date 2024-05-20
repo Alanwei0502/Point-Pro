@@ -53,7 +53,7 @@ const initialState: ICustomerBookingSliceState = {
   isLoading: false
 };
 
-export const getPeriods = createAppAsyncThunk(`${name}/getPeriods`, async (arg, { rejectWithValue }) => {
+export const getBookingPeriods = createAppAsyncThunk(`${name}/getBookingPeriods`, async (arg, { rejectWithValue }) => {
   try {
     const { result } = await PeriodApi.getPeriods();
     const availableBookings = [
@@ -69,8 +69,8 @@ export const getPeriods = createAppAsyncThunk(`${name}/getPeriods`, async (arg, 
   }
 });
 
-export const getPeriodByDate = createAppAsyncThunk(
-  `${name}/getPeriodByDate`,
+export const getBookingPeriodByDate = createAppAsyncThunk(
+  `${name}/getBookingPeriodByDate`,
   async (arg, { getState, rejectWithValue }) => {
     try {
       const choosedDate = getState().customerReservation.choosedDate;
@@ -90,8 +90,8 @@ export const getPeriodByDate = createAppAsyncThunk(
   }
 );
 
-export const postReservation = createAppAsyncThunk(
-  `${name}/postReservation`,
+export const postBookingReservation = createAppAsyncThunk(
+  `${name}/postBookingReservation`,
   async (arg, { getState, rejectWithValue }) => {
     try {
       const reservationParams = getState().customerReservation.reservationParams;
@@ -190,45 +190,45 @@ export const customerBookingSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(getPeriods.pending, (state, action) => {
+      .addCase(getBookingPeriods.pending, (state, action) => {
         state.isLoading = true;
       })
-      .addCase(getPeriods.fulfilled, (state, action) => {
+      .addCase(getBookingPeriods.fulfilled, (state, action) => {
         state.availableBookings = action.payload.availableBookings;
         state.isLoading = false;
       })
-      .addCase(getPeriodByDate.pending, (state, action) => {
+      .addCase(getBookingPeriodByDate.pending, (state, action) => {
         state.isLoading = true;
       })
-      .addCase(getPeriodByDate.fulfilled, (state, action) => {
+      .addCase(getBookingPeriodByDate.fulfilled, (state, action) => {
         state.availablePeriods = action.payload.availablePeriods;
         state.isLoading = false;
       })
-      .addCase(postReservation.fulfilled, (state, action) => {
-        const { token, id, periodStartedAt, options } = action.payload;
-        state.token = token;
-        state.reservationParams.id = id;
-        state.reservationParams.reservedAt = periodStartedAt;
-        state.reservationParams.user = options;
-        state.isLoading = false;
+      .addCase(postBookingReservation.fulfilled, (state, action) => {
+        // const { token, id, periodStartedAt, options } = action.payload;
+        // state.token = token;
+        // state.reservationParams.id = id;
+        // state.reservationParams.reservedAt = periodStartedAt;
+        // state.reservationParams.user = options;
+        // state.isLoading = false;
       })
-      .addCase(postReservation.pending, (state, action) => {
+      .addCase(postBookingReservation.pending, (state, action) => {
         state.isLoading = true;
       })
-      .addCase(postReservation.rejected, (state, action) => {
+      .addCase(postBookingReservation.rejected, (state, action) => {
         state.isLoading = false;
       })
-      .addCase(getPeriods.rejected, (state) => {
+      .addCase(getBookingPeriods.rejected, (state) => {
         state.isLoading = false;
       })
-      .addCase(getPeriodByDate.rejected, (state) => {
+      .addCase(getBookingPeriodByDate.rejected, (state) => {
         state.isLoading = false;
       })
       .addCase(getBookingRecord.pending, (state) => {
         state.isLoading = true;
       })
       .addCase(getBookingRecord.fulfilled, (state, action) => {
-        const { id, reservedAt, ...rest } = bookingRecord;
+        const { id, reservedAt, ...rest } = action.payload.bookingRecord;
         state.reservationParams.id = id;
         state.reservationParams.reservedAt = reservedAt;
         state.reservationParams.user = rest;

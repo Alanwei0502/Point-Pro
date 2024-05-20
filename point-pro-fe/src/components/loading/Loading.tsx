@@ -5,7 +5,7 @@ interface ILoadingProps {
   open: boolean;
 }
 
-const Loading: FC<ILoadingProps> = (props) => {
+export const Loading: FC<ILoadingProps> = (props) => {
   const { open } = props;
   return (
     <Backdrop sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.modal + 1 }} open={open}>
@@ -13,5 +13,3 @@ const Loading: FC<ILoadingProps> = (props) => {
     </Backdrop>
   );
 };
-
-export default Loading;

@@ -3,7 +3,7 @@ import { Fragment, useEffect, useState } from "react";
 import { Box, Button, Divider, List, ListItem, Typography } from "@mui/material";
 import MoneyIcon from "@mui/icons-material/Money";
 import { MobileDialogLayout, Column, Row } from "~/components";
-import theme from "~/theme";
+import { theme } from "~/theme";
 import { CashPaymentResponse, MealDetails, PaymentLogsResponse } from "~/types";
 import { useAppDispatch } from "~/hooks";
 import { clearCashPaymentResponse, patchReservationById } from "~/store/slices";

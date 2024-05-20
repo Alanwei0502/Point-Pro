@@ -1,8 +1,7 @@
 import { useEffect, useRef, useState } from "react";
-
+import { useNavigate } from "react-router-dom";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
-
 import {
   Box,
   Typography,
@@ -13,12 +12,11 @@ import {
   InputLabel,
   Button
 } from "@mui/material";
+import { useAppDispatch, useAppSelector } from "~/hooks";
+import { login } from "~/store/slices";
 import HeaderLogo from "~/assets/images/header-logo.svg";
-import { useAppDispatch, useAppSelector } from "~/hooks/useRedux";
-import { useNavigate } from "react-router-dom";
-import { login } from "~/store/slices/auth.slice";
 
-export const LoginContainer = () => {
+export const Login = () => {
   const dispatch = useAppDispatch();
   const isAuthenticated = useAppSelector(({ auth }) => auth.isAuthenticated);
   const accountRef = useRef<HTMLInputElement>(null);
@@ -100,5 +98,3 @@ export const LoginContainer = () => {
     </Box>
   );
 };
-
-export default LoginContainer;

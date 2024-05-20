@@ -31,7 +31,7 @@ import {
   viewCartItemCustomized
 } from "~/features/orders/slice";
 import { InputNumber } from "~/features/orders/index.styles";
-import theme from "~/theme";
+import { theme } from "~/theme";
 import { calculateCartPrice } from "~/utils";
 import { DialogType, ICartItem, IMeal, ISpecialty, ISpecialtyItem } from "~/types";
 
@@ -278,7 +278,7 @@ export const MealList = () => {
         {menu.map(
           (category) =>
             category.id === currentCategory && (
-              <PanelTabs key={category.id} value={category.position} index={category.position}>
+              <PanelTabs key={category.id} value={category.position!} index={category.position!}>
                 <BaseGrid columns="5" gap="1rem">
                   {category.meals.length > 0 &&
                     category.meals.map((meal) => (

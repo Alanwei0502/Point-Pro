@@ -1,12 +1,12 @@
 import { useEffect } from "react";
 import { Grid } from "@mui/material";
-import { CartList, MealList, MenuTabs, MealDrawer } from "./index.style";
 import { useAppDispatch } from "~/hooks";
 import { getMenu } from "~/features/orders/slice";
-import theme from "~/theme";
-import { headerHeight, PaymentDrawer } from "~/components";
+import { theme } from "~/theme";
+import { CartList, MealList, MenuTabs, MealDrawer } from "./index.style";
+import { headerHeight, PaymentDrawer, AdminLayout } from "~/components";
 
-export const MenuContainer = () => {
+export const AdminMenu = () => {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
@@ -14,7 +14,7 @@ export const MenuContainer = () => {
   }, []);
 
   return (
-    <>
+    <AdminLayout>
       <Grid container sx={{ height: `calc(100vh - ${headerHeight})`, userSelect: "none" }} bgcolor={"background.paper"}>
         <Grid item xs={8} sx={{ overflow: "hidden" }}>
           <MenuTabs />
@@ -29,8 +29,6 @@ export const MenuContainer = () => {
         <CartList />
         <PaymentDrawer />
       </Grid>
-    </>
+    </AdminLayout>
   );
 };
-
-export default MenuContainer;

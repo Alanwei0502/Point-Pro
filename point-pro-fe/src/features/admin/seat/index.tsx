@@ -1,13 +1,13 @@
 import { FC, useState } from "react";
-import { BookingQRCodeDialog, PanelTabs } from "~/components";
-import SeatTabs from "./SeatTabs";
-import SeatSearchBar from "./SeatSearchBar";
-import { TabList, TabTable } from "./tab";
+import { AdminLayout, BookingQRCodeDialog, PanelTabs } from "~/components";
+import { SeatTabs } from "./SeatTabs";
+import { SeatSearchBar } from "./SeatSearchBar";
+import { TabTable, TabList } from "./tab";
 import { appDayjs } from "~/utils";
 
 interface SeatContainerProps {}
 
-const SeatContainer: FC<SeatContainerProps> = () => {
+export const AdminSeat: FC<SeatContainerProps> = () => {
   const [view, setView] = useState(0);
   const [date, setDate] = useState<appDayjs.Dayjs>(appDayjs());
   const [search, setSearch] = useState<string>("");
@@ -20,7 +20,7 @@ const SeatContainer: FC<SeatContainerProps> = () => {
   };
 
   return (
-    <>
+    <AdminLayout>
       <SeatTabs view={view} setView={setView} />
       <SeatSearchBar
         view={view}
@@ -35,8 +35,6 @@ const SeatContainer: FC<SeatContainerProps> = () => {
         <TabList date={date} search={search} />
       </PanelTabs>
       <BookingQRCodeDialog />
-    </>
+    </AdminLayout>
   );
 };
-
-export default SeatContainer;

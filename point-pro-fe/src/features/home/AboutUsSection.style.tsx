@@ -1,6 +1,6 @@
 import { FC } from "react";
 import { Box, Grid, Typography } from "@mui/material";
-import { Column } from "~/components/layout";
+import { Column } from "~/components";
 
 interface AboutUsAvatarCardProps {
   name: string;
@@ -8,7 +8,7 @@ interface AboutUsAvatarCardProps {
   imgUrl: string;
 }
 
-const AboutUsAvatarCard: FC<AboutUsAvatarCardProps> = ({ name, title, imgUrl }) => {
+export const AboutUsAvatarCard: FC<AboutUsAvatarCardProps> = ({ name, title, imgUrl }) => {
   return (
     <Grid container>
       <Grid item xs={5}>
@@ -44,5 +44,3 @@ const AboutUsAvatarCard: FC<AboutUsAvatarCardProps> = ({ name, title, imgUrl }) 
     </Grid>
   );
 };
-
-export default AboutUsAvatarCard;

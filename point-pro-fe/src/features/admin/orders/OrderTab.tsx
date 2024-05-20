@@ -1,11 +1,12 @@
-import { useAppDispatch, useAppSelector } from "~/hooks/useRedux";
-import { setOrderStatus } from "~/store/slices/order.slice";
-import BaseTabs from "~/components/tabs/TabBase";
-import theme from "~/theme";
-import { OrderStatus } from "~/types/common";
-import { ORDER_STATUS } from "~/utils/constants.utils";
+import { FC } from "react";
+import { useAppDispatch, useAppSelector } from "~/hooks";
+import { setOrderStatus } from "~/store/slices";
+import { BaseTabs } from "~/components";
+import { theme } from "~/theme";
+import { OrderStatus } from "~/types";
+import { ORDER_STATUS } from "~/utils";
 
-const OrderTabs = () => {
+export const OrderTabs: FC = () => {
   const dispatch = useAppDispatch();
   const status = useAppSelector(({ order }) => order.status);
 
@@ -28,5 +29,3 @@ const OrderTabs = () => {
     />
   );
 };
-
-export default OrderTabs;

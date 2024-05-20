@@ -1,18 +1,12 @@
-// Libs
-import { useEffect } from "react";
+import { FC, useEffect } from "react";
 import { Typography, Box } from "@mui/material";
-// Components
-import { Column } from "~/components/layout";
-// Others
-import { useAppDispatch, useAppSelector } from "~/hooks/useRedux";
-import { getOrders } from "~/store/slices/order.slice";
-import { GatherOrder, Order } from "~/features/orders/type";
-import { TabletModal } from "~/components/modals";
-import { headerHeight } from "~/components/header/Header";
+import { useAppDispatch, useAppSelector } from "~/hooks";
+import { getOrders } from "~/store/slices";
+import { OrderStatus, GatherOrder } from "~/types";
+import { headerHeight, Column, CancelOrderConfirmModal } from "~/components";
 import { PendingAndCancelOrderItem, UnpaidAndSuccessOrderItem } from "./OrderItem";
-import { OrderStatus } from "~/types/common";
 
-const OrderList = () => {
+export const OrderList: FC = () => {
   const dispatch = useAppDispatch();
 
   const tabStatus = useAppSelector(({ order }) => order.status);
@@ -82,9 +76,7 @@ const OrderList = () => {
           </Typography>
         </Column>
       )}
-      <TabletModal.CancelOrderConfirmModal />
+      <CancelOrderConfirmModal />
     </>
   );
 };
-
-export default OrderList;

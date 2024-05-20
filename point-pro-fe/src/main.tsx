@@ -6,7 +6,7 @@ import { ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import router from "./router";
 import { store } from "./store/store";
-import theme from "./theme";
+import { theme } from "./theme";
 import "./index.css";
 
 const root = document.getElementById("root")!;

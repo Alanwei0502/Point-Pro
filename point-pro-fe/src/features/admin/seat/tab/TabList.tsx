@@ -1,4 +1,4 @@
-import { useEffect, useState, memo } from "react";
+import { useEffect, useState, memo, FC } from "react";
 import { Avatar, Box } from "@mui/material";
 import {
   DataGrid,
@@ -8,21 +8,19 @@ import {
   GridValueGetterParams,
   GridRenderCellParams
 } from "@mui/x-data-grid";
-import appDayjs, { formatTimeOnly } from "~/utils/dayjs.util";
-import { headerHeight } from "~/components/header/Header";
-import { ReservationInfo } from "~/types";
-import { useAppDispatch, useAppSelector } from "~/hooks/useRedux";
-import { getReservations } from "~/store/slices/reservation.slice";
-import { genderListStringArray, reservationStatusListObj } from "~/utils/constants.utils";
+import { appDayjs, formatTimeOnly, genderListStringArray, reservationStatusListObj } from "~/utils";
+import { headerHeight } from "~/components";
+import { ReservationInfo, ReservationMessage } from "~/types";
+import { useAppDispatch, useAppSelector } from "~/hooks";
+import { getReservations } from "~/store/slices";
 import { people } from "./reducers/reservation-detail";
-import { ReservationMessage } from "~/store/slices/socket.slice";
 
-interface TabListProps {
+interface ITabListProps {
   date: appDayjs.Dayjs;
   search: string;
 }
 
-const TabList = ({ date, search }: TabListProps) => {
+export const TabList: FC<ITabListProps> = ({ date, search }) => {
   const dispatch = useAppDispatch();
   const [reservations, setReservations] = useState<GridRowsProp>([]);
 
@@ -192,4 +190,3 @@ const columns: GridColDef[] = [
   },
   { field: "remark", headerName: "備註", minWidth: 100, flex: 0.5 }
 ];
-export default memo(TabList);

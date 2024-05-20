@@ -1,9 +1,6 @@
-import { useEffect, useReducer, useState } from "react";
-
+import { FC, useEffect, useReducer, useState } from "react";
 import { Stack } from "@mui/material";
-import { FieldContainer } from "~/components/layout";
-import { BaseDraw } from "~/components";
-
+import { FieldContainer, BaseDraw } from "~/components";
 import { useAppDispatch, useAppSelector } from "~/hooks";
 import { getPeriodByDate, patchReservationById, postReservation } from "~/store/slices";
 import { PatchReservation, PeriodInfo, ReservationMessage } from "~/types";
@@ -18,7 +15,7 @@ import mainReducer, {
 } from "./reducers/reservation-detail";
 import { appDayjs, convertToDatePayload, formatTimeOnly, genderList } from "~/utils";
 
-interface ReservationDetail {
+interface IReservationDetailProps {
   open: boolean;
   onClose: (refresh?: boolean) => void;
   isCreate: boolean;
@@ -26,7 +23,7 @@ interface ReservationDetail {
   info?: any;
 }
 
-const ReservationDetail = ({ open, onClose, isCreate, date, info }: ReservationDetail) => {
+export const ReservationDetail: FC<IReservationDetailProps> = ({ open, onClose, isCreate, date, info }) => {
   const dispatch = useAppDispatch();
   const [periods, setPeriods] = useState<PeriodInfo[]>([]);
   const [state, reducerDispatch] = useReducer(mainReducer, initialState);
@@ -192,4 +189,3 @@ const ReservationDetail = ({ open, onClose, isCreate, date, info }: ReservationD
     </BaseDraw>
   );
 };
-export default ReservationDetail;

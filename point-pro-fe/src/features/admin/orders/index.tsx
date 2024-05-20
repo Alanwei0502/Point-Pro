@@ -1,16 +1,17 @@
-import PaymentDrawer from "~/components/payment/PaymentDrawer";
-import OrderTabs from "./OrderTab";
-import OrderList from "./OrderList";
+import { FC } from "react";
 import { Box } from "@mui/material";
+import { PaymentDrawer, AdminLayout } from "~/components";
+import { OrderTabs } from "./OrderTab";
+import { OrderList } from "./OrderList";
 
-export const OrdersContainer = () => {
+export const AdminOrders: FC = () => {
   return (
-    <Box bgcolor={"background.paper"}>
-      <OrderTabs />
-      <OrderList />
-      <PaymentDrawer />
-    </Box>
+    <AdminLayout>
+      <Box bgcolor={"background.paper"}>
+        <OrderTabs />
+        <OrderList />
+        <PaymentDrawer />
+      </Box>
+    </AdminLayout>
   );
 };
-
-export default OrdersContainer;

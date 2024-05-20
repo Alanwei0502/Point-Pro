@@ -2,9 +2,9 @@ import { FC, useMemo, useState } from "react";
 
 import { Stack, Typography, styled, Button, Box, Divider } from "@mui/material";
 import { BaseDraw, BaseTabs } from "~/components";
-import theme from "~/theme";
+import { theme } from "~/theme";
 import UnDraw from "~/assets/images/undraw_login.svg";
-import ReservationDetail from "./ReservationDetail";
+import { ReservationDetail } from "./ReservationDetail";
 
 import { SeatDetailsPeriod, SeatDetails, CustomerBookingDialog } from "~/types";
 import { appDayjs, genderListStringArray, seatStatusListObj, formatTimeOnly } from "~/utils";

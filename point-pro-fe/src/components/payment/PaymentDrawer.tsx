@@ -14,7 +14,7 @@ import MoneyIcon from "@mui/icons-material/Money";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { Column, Row, BaseDraw, CashPaymentDialog } from "~/components";
 import { ReactComponent as LinePayIcon } from "~/assets/line-pay-solid.svg";
-import theme from "~/theme";
+import { theme } from "~/theme";
 import { useAppDispatch, useAppSelector } from "~/hooks";
 import { OrderType, OrderMessage, SocketTopic } from "~/types";
 import { getOrders, requestLinePay, requestCashPayment, closePaymentDrawer } from "~/store/slices";
