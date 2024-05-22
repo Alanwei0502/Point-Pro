@@ -91,7 +91,7 @@ export const AdminMealListDetail: FC = () => {
       switch (key) {
         case "create":
           if (validateCheck(state)) {
-            let payload = convertToPayload(state);
+            const payload = convertToPayload(state);
             if (payload.coverUrl) {
               payload.coverUrl = (await updateImage(payload.coverUrl)) || "";
             }
@@ -104,7 +104,7 @@ export const AdminMealListDetail: FC = () => {
           break;
         case "save":
           if (validateCheck(state)) {
-            let payload = convertToPayload(state);
+            const payload = convertToPayload(state);
             if (payload.coverUrl && typeof payload.coverUrl !== "string") {
               payload.coverUrl = (await updateImage(payload.coverUrl)) || "";
             }
@@ -132,9 +132,9 @@ export const AdminMealListDetail: FC = () => {
   };
   const updateImage = async (file: string) => {
     try {
-      let formData = new FormData();
+      const formData = new FormData();
       formData.append("image", file);
-      let { result } = await dispatch(uploadImg(formData)).unwrap();
+      const { result } = await dispatch(uploadImg(formData)).unwrap();
       return result;
     } catch (error) {
       console.log("upload file error : ", error);

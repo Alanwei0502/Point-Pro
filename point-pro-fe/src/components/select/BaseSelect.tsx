@@ -22,7 +22,7 @@ export const BaseSelect: FC<IBaseSelectProps> = ({ list, onChange, includeAll = 
   const [select, setSelect] = useState("");
 
   const handleSelectChange = (event: SelectChangeEvent<string>) => {
-    let payload = { id: props.id, value: event.target.value };
+    const payload = { id: props.id, value: event.target.value };
     setSelect(event.target.value);
     onChange && onChange(payload);
   };

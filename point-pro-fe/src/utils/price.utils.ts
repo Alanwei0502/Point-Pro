@@ -1,17 +1,16 @@
-import { IOrder, ISpecialty, GatherOrder, ICartItem } from "~/types";
+import { IOrder, GatherOrder, ICartItem, GetMenuResponseSpecialtyItem } from '~/types';
 
-export const calculateSpecialtiesPrice = (specialties: ISpecialty[]) => {
-  const specialtiesPrice = specialties.reduce((acc, specialty) => {
-    const specialtyItemsPrice = specialty.items.reduce((acc, specialtyItem) => (acc += specialtyItem.price), 0);
-    return (acc += specialtyItemsPrice);
+export const calculateSpecialtiesPrice = (selectedSpecialtyItems: GetMenuResponseSpecialtyItem[]) => {
+  const specialtiesPrice = selectedSpecialtyItems.reduce((acc, specialtyItem) => {
+    return (acc += specialtyItem.price);
   }, 0);
 
   return specialtiesPrice;
 };
 
 export const calculateCartItemPrice = (cartItem: ICartItem) => {
-  const specialtiesPrice = calculateSpecialtiesPrice(cartItem.specialties);
-  const cartItemPrice = (cartItem.price + specialtiesPrice) * cartItem.amount;
+  const selectedSpecialtyItemsPrice = calculateSpecialtiesPrice(cartItem.selectedSpecialtyItems);
+  const cartItemPrice = (cartItem.price + selectedSpecialtyItemsPrice) * cartItem.amount;
 
   return cartItemPrice;
 };

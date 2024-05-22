@@ -5,7 +5,7 @@ export class MealApi {
   public static path = "meal";
 
   static getMeals() {
-    return http.get<string, MealsResponse>(MealApi.path, { params: { maxResult: 999 } });
+    return http.get<string, MealsResponse>(MealApi.path);
   }
 
   static getMealById(mealId: string) {

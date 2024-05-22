@@ -1,12 +1,12 @@
-import { createSlice } from "@reduxjs/toolkit";
-import { OrderApi } from "~/api";
-import { createAppAsyncThunk } from "~/hooks";
-import { clearCart, openDialog } from "~/features/orders/slice";
-import { appDayjs, calculateCartItemPrice } from "~/utils";
-import { DialogType, IOrder, OrderStatus, SocketTopic, GatherOrder } from "~/types";
-import { openPaymentDrawer } from "./payment.slice";
+import { createSlice } from '@reduxjs/toolkit';
+import { OrderApi } from '~/api';
+import { createAppAsyncThunk } from '~/hooks';
+import { clearCart, openDialog } from '~/store/slices/takeOrder.slice';
+import { appDayjs, calculateCartItemPrice } from '~/utils';
+import { MobileDialog, IOrder, OrderStatus, SocketTopic, GatherOrder } from '~/types';
+import { openPaymentDrawer } from './payment.slice';
 
-const name = "order";
+const name = 'order';
 
 interface IOrderSliceState {
   status: OrderStatus;
@@ -22,8 +22,8 @@ const initialState: IOrderSliceState = {
   orders: [],
   currentOrder: null,
   mobileOrderStatusTab: 0,
-  cancelOrderId: "",
-  isLoading: false
+  cancelOrderId: '',
+  isLoading: false,
 };
 
 export const getOrders = createAppAsyncThunk(
@@ -33,7 +33,7 @@ export const getOrders = createAppAsyncThunk(
       const orderRes = await OrderApi.getOrders(payload);
       const { result = [] } = orderRes;
       const orders = result?.sort(
-        (a: IOrder, b: IOrder) => appDayjs(b.createdAt).valueOf() - appDayjs(a.createdAt).valueOf()
+        (a: IOrder, b: IOrder) => appDayjs(b.createdAt).valueOf() - appDayjs(a.createdAt).valueOf(),
       );
 
       return { orders };
@@ -41,32 +41,30 @@ export const getOrders = createAppAsyncThunk(
       if (error instanceof Error) {
         return rejectWithValue({ message: error.message });
       } else {
-        return rejectWithValue({ message: "unknown error" });
+        return rejectWithValue({ message: 'unknown error' });
       }
     }
-  }
+  },
 );
 
 export const postOrder = createAppAsyncThunk(
   `${name}/postOrder`,
-  async (payload: { isUser: boolean }, { getState, dispatch, rejectWithValue }) => {
+  async (payload: { isCustomer: boolean }, { getState, dispatch, rejectWithValue }) => {
     try {
       const cart = getState().takeOrder.cart;
       const socket = getState().socket.socket;
       const orderMeals = cart.map((cartItem) => {
-        const { amount, id, specialties, title } = cartItem;
-        const mealsPrice = calculateCartItemPrice(cartItem);
+        const { id, amount, selectedSpecialtyItems } = cartItem;
         return {
           id,
-          title,
           amount,
-          price: mealsPrice,
-          specialties,
-          servedAmount: 0
+          price: calculateCartItemPrice(cartItem),
+          selectedSpecialtyItems,
         };
       });
+      // const reservationId = '69727eec-1701-11ef-b470-6f61e1d3261a';
 
-      const response = await OrderApi.postOrder({ orderMeals });
+      const response = await OrderApi.postOrder(orderMeals);
       const { id, status, type, seats = [], paymentLogs, reservationId } = response.result!;
       const gatherOrder: GatherOrder = {
         id,
@@ -75,13 +73,12 @@ export const postOrder = createAppAsyncThunk(
         seats,
         paymentLogs,
         orders: [response.result!],
-        reservationId
       };
 
-      if (payload.isUser) {
+      if (payload.isCustomer) {
         dispatch(getOrders({ status: getState()[name].status }));
         dispatch(setMobileOrderStatusTab(0));
-        dispatch(openDialog({ type: DialogType.ORDER }));
+        dispatch(openDialog({ type: MobileDialog.ORDER }));
       } else {
         // 後台外帶訂單先結帳
         dispatch(openPaymentDrawer(gatherOrder));
@@ -92,10 +89,10 @@ export const postOrder = createAppAsyncThunk(
       if (error instanceof Error) {
         return rejectWithValue({ message: error.message });
       } else {
-        return rejectWithValue({ message: "unknown error" });
+        return rejectWithValue({ message: 'unknown error' });
       }
     }
-  }
+  },
 );
 
 export const cancelOrder = createAppAsyncThunk(
@@ -111,10 +108,10 @@ export const cancelOrder = createAppAsyncThunk(
       if (error instanceof Error) {
         return rejectWithValue({ message: error.message });
       } else {
-        return rejectWithValue({ message: "unknown error" });
+        return rejectWithValue({ message: 'unknown error' });
       }
     }
-  }
+  },
 );
 
 export const patchOrder = createAppAsyncThunk(
@@ -129,10 +126,10 @@ export const patchOrder = createAppAsyncThunk(
       if (error instanceof Error) {
         return rejectWithValue({ message: error.message });
       } else {
-        return rejectWithValue({ message: "unknown error" });
+        return rejectWithValue({ message: 'unknown error' });
       }
     }
-  }
+  },
 );
 
 export const orderSlice = createSlice({
@@ -147,7 +144,7 @@ export const orderSlice = createSlice({
     },
     setCancelOrder: (state, action) => {
       state.cancelOrderId = action.payload;
-    }
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -196,7 +193,7 @@ export const orderSlice = createSlice({
       .addCase(patchOrder.rejected, (state) => {
         state.isLoading = false;
       });
-  }
+  },
 });
 
 export const { setOrderStatus, setMobileOrderStatusTab, setCancelOrder } = orderSlice.actions;

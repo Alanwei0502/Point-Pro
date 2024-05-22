@@ -1,5 +1,5 @@
 import { NextFunction, Request, Router } from 'express';
-import { Logger } from '../helpers/utils';
+import { Logger } from '../helpers/utils.helper';
 import { ApiResponse } from '../types/shared';
 import authRouter from './auth.router';
 import orderRouter from './order.router';
@@ -29,17 +29,17 @@ apiRouter.use((error: Error, req: Request, res: ApiResponse, next: NextFunction)
   }
 });
 
-apiRouter.use('/auth', authRouter);
-apiRouter.use('/order', orderRouter);
-apiRouter.use('/meal', mealRouter);
-apiRouter.use('/category', categoryRouter);
-apiRouter.use('/specialty', specialtyRouter);
+// apiRouter.use('/auth', authRouter);
+// apiRouter.use('/order', orderRouter);
+// apiRouter.use('/meal', mealRouter);
+// apiRouter.use('/category', categoryRouter);
+// apiRouter.use('/specialty', specialtyRouter);
 apiRouter.use('/menu', menuRouter);
-apiRouter.use('/imgur', imgurRouter);
-apiRouter.use('/payment', paymentRouter);
-apiRouter.use('/seat', seatRouter);
+// apiRouter.use('/imgur', imgurRouter);
+// apiRouter.use('/payment', paymentRouter);
+// apiRouter.use('/seat', seatRouter);
 apiRouter.use('/period', periodRouter);
-apiRouter.use('/reservation', reservationRouter);
-apiRouter.use('/mail', mailerRouter);
+// apiRouter.use('/reservation', reservationRouter);
+// apiRouter.use('/mail', mailerRouter);
 
 export default apiRouter;

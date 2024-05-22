@@ -1,30 +1,30 @@
-import { FC, memo, useEffect, useState } from "react";
-import { Stack } from "@mui/material";
-import { TableCircle, TableNormal, Periods } from "./index.styles";
-import { headerHeight } from "~/components";
-import { useAppDispatch } from "~/hooks";
-import { getSeatById, getSeats, getPeriodByDate } from "~/store/slices";
-import { PeriodInfo, SeatInfo, SeatDetails, SeatsPayload } from "~/types";
-import { appDayjs, convertToDatePayload } from "~/utils";
-import { SeatDetail } from "~/features/admin/seat/tab/SeatDetail";
+import { FC, memo, useEffect, useState } from 'react';
+import { Stack } from '@mui/material';
+import { TableCircle, TableNormal, Periods } from './index.styles';
+import { headerHeight } from '~/components';
+import { useAppDispatch } from '~/hooks';
+import { getSeatById, getSeats, getPeriodByDate } from '~/store/slices';
+import { IPeriod, SeatInfo, SeatDetails, SeatsPayload } from '~/types';
+import { appDayjs, convertToDatePayload } from '~/utils';
+import { SeatDetail } from '~/features/admin/seat/tab/SeatDetail';
 
 interface ITabTableProps {
   date: appDayjs.Dayjs;
 }
 
-const circleSeatList = ["G-1", "G-2", "G-3"];
+const circleSeatList = ['G-1', 'G-2', 'G-3'];
 
 const normalSeatList = [
-  ["A-1", "A-2", "A-3", "A-4", "A-5", "A-6"],
-  ["B-1", "B-2", "B-3", "B-4", "B-5", "B-6"],
-  ["C-1", "C-2", "C-3", "C-4", "C-5", "C-6"]
+  ['A-1', 'A-2', 'A-3', 'A-4', 'A-5', 'A-6'],
+  ['B-1', 'B-2', 'B-3', 'B-4', 'B-5', 'B-6'],
+  ['C-1', 'C-2', 'C-3', 'C-4', 'C-5', 'C-6'],
 ];
 
 export const TabTable: FC<ITabTableProps> = ({ date }) => {
   const [seats, setSeats] = useState<{ [no: string]: SeatInfo }>();
-  const [periods, setPeriods] = useState<PeriodInfo[]>([]);
-  const [selectedPeriod, setSelectedPeriod] = useState<string>("");
-  const [selectedSeat, setSelectedSeat] = useState<string>("");
+  const [periods, setPeriods] = useState<IPeriod[]>([]);
+  const [selectedPeriod, setSelectedPeriod] = useState<string>('');
+  const [selectedSeat, setSelectedSeat] = useState<string>('');
   const [seatDteail, setSeatDetail] = useState<SeatDetails | null>(null);
 
   const dispatch = useAppDispatch();
@@ -64,12 +64,10 @@ export const TabTable: FC<ITabTableProps> = ({ date }) => {
 
     if (!result) return; // TODO
 
-    const payload = result.periods.filter((e: PeriodInfo) => appDayjs().isBefore(e.periodEndedAt));
+    const payload = result.periods.filter((e: IPeriod) => appDayjs().isBefore(e.endTime));
     setPeriods(payload);
     if (date.isToday()) {
-      let defaultSelect = result.periods.find((e: PeriodInfo) =>
-        appDayjs().isBetween(e.periodStartedAt, e.periodEndedAt)
-      );
+      let defaultSelect = result.periods.find((e: IPeriod) => appDayjs().isBetween(e.startTime, e.endTime));
       if (!defaultSelect) {
         defaultSelect = payload[0];
       }
@@ -80,7 +78,7 @@ export const TabTable: FC<ITabTableProps> = ({ date }) => {
   };
 
   const formatSeatResponseToData = (res: any[] | null) => {
-    let data: any = {};
+    const data: any = {};
     res &&
       res.forEach((e: any) => {
         data[e.seatNo] = e;
@@ -97,16 +95,16 @@ export const TabTable: FC<ITabTableProps> = ({ date }) => {
   };
 
   const handleSeatDetailClose = () => {
-    setSelectedSeat("");
+    setSelectedSeat('');
     setSeatDetail(null);
   };
 
   return (
-    <Stack direction="row" sx={{ p: 0, height: `calc(100vh - ${headerHeight} - 50px - 72px)`, width: "100%" }}>
+    <Stack direction='row' sx={{ p: 0, height: `calc(100vh - ${headerHeight} - 50px - 72px)`, width: '100%' }}>
       <Periods periods={periods} selected={selectedPeriod} handleClick={handlePeriodClick} />
       {seats ? (
-        <Stack sx={{ p: 3, width: "calc(100vw - 200px)", overflow: "auto" }}>
-          <Stack direction="row" justifyContent="space-around">
+        <Stack sx={{ p: 3, width: 'calc(100vw - 200px)', overflow: 'auto' }}>
+          <Stack direction='row' justifyContent='space-around'>
             {circleSeatList.map((g) => (
               <TableCircle key={g} state={seats[g]} handleClick={handleSeatSelect} />
             ))}
@@ -114,9 +112,9 @@ export const TabTable: FC<ITabTableProps> = ({ date }) => {
           {normalSeatList.map((row, key) => (
             <Stack
               key={`row-${String.fromCharCode(key + 65)}`}
-              direction="row"
+              direction='row'
               sx={{ mt: 3 }}
-              justifyContent="space-evenly"
+              justifyContent='space-evenly'
             >
               {row.map((e) => (
                 <TableNormal key={e} state={seats[e]} handleClick={handleSeatSelect} />

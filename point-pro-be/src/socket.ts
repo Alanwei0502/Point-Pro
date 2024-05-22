@@ -2,7 +2,7 @@ import jwt from 'jsonwebtoken';
 import { Server as SocketIOServer } from 'socket.io';
 import { Server as HttpServer } from 'http';
 import { Namespace } from 'socket.io/dist/namespace';
-import { Logger } from './helpers/utils';
+import { Logger } from './helpers/utils.helper';
 import { DefaultEventsMap } from 'socket.io/dist/typed-events';
 import { verifyAdminSchema, verifyReservationSchema } from './middleware';
 
@@ -54,11 +54,11 @@ function usersSocket({ mainNs, adminNs, userNs }: SocketArgType) {
       const reservation = verifyReservationSchema.cast(decoded);
 
       // Join Room
-      socket.join(reservation.reservationLogId);
+      socket.join(reservation.reservationId);
 
       // Listeners
       socket.on(SocketTopic.ORDER, (order) => {
-        userNs.to(reservation.reservationLogId).emit(SocketTopic.ORDER, order);
+        userNs.to(reservation.reservationId).emit(SocketTopic.ORDER, order);
         adminNs.emit(SocketTopic.ORDER, order);
       });
 
@@ -94,7 +94,7 @@ function adminsSocket({ mainNs, adminNs, userNs }: SocketArgType) {
       });
       socket.on(SocketTopic.ORDER, (order) => {
         adminNs.except(admin.memberId).emit(SocketTopic.ORDER, order);
-        userNs.to(order.result.reservationLogId).emit(SocketTopic.ORDER, order);
+        userNs.to(order.result.reservationId).emit(SocketTopic.ORDER, order);
       });
       socket.on(SocketTopic.RESERVATION, (reservation) => {
         adminNs.except(admin.memberId).emit(SocketTopic.RESERVATION, reservation);

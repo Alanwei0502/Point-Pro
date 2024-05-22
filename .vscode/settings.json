@@ -6,6 +6,7 @@
   "prettier.semi": true,
   "prettier.singleQuote": true,
   "prettier.printWidth": 120,
+  "prettier.arrowParens": "always",
   "[json]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },

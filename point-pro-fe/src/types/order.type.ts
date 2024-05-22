@@ -1,44 +1,44 @@
-import { IBookingInfo } from "./book.type";
-import { ICategory, IMeal, ISpecialty } from "./meal.type";
+import { IBookingInfo } from './book.type';
+import { ICategory, IMeal, ISpecialty } from './common.type';
 
 export enum OrderType {
-  DineIn = "DineIn",
-  TakeOut = "TakeOut"
+  DINE_IN = 'DINE_IN',
+  TAKE_OUT = 'TAKE_OUT',
 }
 
 export enum OrderStatus {
-  PENDING = "PENDING",
-  UNPAID = "UNPAID",
-  SUCCESS = "SUCCESS",
-  CANCEL = "CANCEL"
+  PENDING = 'PENDING',
+  UNPAID = 'UNPAID',
+  SUCCESS = 'SUCCESS',
+  CANCEL = 'CANCEL',
 }
 
 export enum OrderStatusTitle {
-  PENDING = "準備中",
-  UNPAID = "未付款",
-  SUCCESS = "已付款",
-  CANCEL = "已取消"
+  PENDING = '準備中',
+  UNPAID = '未付款',
+  SUCCESS = '已付款',
+  CANCEL = '已取消',
 }
 
 export enum PaymentGateway {
-  LINE_PAY = "LINE_PAY",
-  CASH = "CASH",
-  EC_PAY = "EC_PAY"
+  LINE_PAY = 'LINE_PAY',
+  CASH = 'CASH',
+  EC_PAY = 'EC_PAY',
 }
 
-export interface ICartItem {
-  id: string;
-  title: string;
-  coverUrl: string;
-  price: number;
-  isPopular: boolean;
-  specialties: ISpecialty[];
-  amount: number;
-}
+// export interface ICartItem {
+//   id: string;
+//   title: string;
+//   coverUrl: string;
+//   price: number;
+//   isPopular: boolean;
+//   specialties: ISpecialty[];
+//   amount: number;
+// }
 
 export interface IPaymentLog {
   order: any;
-  orderId: IOrder["id"];
+  orderId: IOrder['id'];
   paymentNo: string;
   price: number;
   gateway: PaymentGateway;
@@ -52,17 +52,17 @@ export interface IOrder {
   orderMeals: IOrderMeal[];
   paymentLogs: IPaymentLog[];
   seats?: string[];
-  reservationId?: IBookingInfo["id"];
+  reservationId?: IBookingInfo['id'];
   createdAt?: number;
   updatedAt?: number;
 }
 
 export interface IOrderMeal {
   id: string;
-  orderId: IOrder["id"];
-  mealId: IMeal["id"];
-  title: IMeal["title"];
-  price: IMeal["price"];
+  orderId: IOrder['id'];
+  mealId: IMeal['id'];
+  title: IMeal['title'];
+  price: IMeal['price'];
   amount: number;
   servedAmount: number;
   isServed: boolean;
@@ -80,5 +80,5 @@ export interface GatherOrder {
   seats: string[];
   paymentLogs: IPaymentLog[];
   orders: IOrder[];
-  reservationId?: IBookingInfo["id"];
+  reservationId?: IBookingInfo['id'];
 }

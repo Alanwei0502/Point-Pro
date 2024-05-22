@@ -15,7 +15,7 @@ export const verifyAdminSchema = object({
 });
 
 export const verifyReservationSchema = object({
-  reservationLogId: string().required(),
+  reservationId: string().required(),
   reservationType: string().optional(),
   startTime: date().required(),
   seatNo: string().required(),

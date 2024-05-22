@@ -24,7 +24,7 @@ http.interceptors.response.use(
   },
   // error
   (error) => {
-    let { response } = error;
+    const { response } = error;
     log(response.config, response.data, true);
     errorCodeCheck(response.status);
     return Promise.reject(response);

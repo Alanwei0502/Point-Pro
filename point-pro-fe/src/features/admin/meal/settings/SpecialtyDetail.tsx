@@ -43,7 +43,7 @@ interface SpecialtyDetailProps {
   onClose: (update?: boolean) => void;
 }
 const SpecialtyDetail = ({ specialtyId, open, onClose }: SpecialtyDetailProps) => {
-  const isCreate = !Boolean(specialtyId);
+  const isCreate = !specialtyId;
 
   const [specialtyItemOptions, setSpecialtyItemOptions] = useState<ISpecialtyItem[]>([]);
 
@@ -142,7 +142,7 @@ const SpecialtyDetail = ({ specialtyId, open, onClose }: SpecialtyDetailProps) =
       switch (key) {
         case "create":
           if (validateCheck(state)) {
-            let payload = convertToPayload(state);
+            const payload = convertToPayload(state);
             await dispatch(postSpecialty(payload));
             onClose(true);
           } else {
@@ -151,7 +151,7 @@ const SpecialtyDetail = ({ specialtyId, open, onClose }: SpecialtyDetailProps) =
           break;
         case "save":
           if (validateCheck(state)) {
-            let payload = convertToPayload(state);
+            const payload = convertToPayload(state);
             await dispatch(patchSpecialtyById(payload));
             onClose(true);
           } else {

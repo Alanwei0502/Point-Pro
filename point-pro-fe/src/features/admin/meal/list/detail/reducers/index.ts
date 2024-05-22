@@ -41,7 +41,7 @@ const mainReducer = createSlice({
       return payload ? makeFieldsBase(payload) : initialState;
     },
     editField(state, { payload }) {
-      let { id, value } = payload;
+      const { id, value } = payload;
       console.log({ id, value });
 
       if (id === "publishedAt") {
@@ -75,7 +75,7 @@ export const validateCheck = (state: StateProps) => {
 };
 
 export const convertToPayload = (state: StateProps) => {
-  let payload: { [key: string]: any } = {};
+  const payload: { [key: string]: any } = {};
   forEach(state, ({ value }, key) => {
     if (key === "categories") {
       payload.categoryIds = value;

@@ -1,4 +1,4 @@
-import { combineReducers } from "@reduxjs/toolkit";
+import { combineReducers } from '@reduxjs/toolkit';
 import {
   authSlice,
   categorySlice,
@@ -7,10 +7,11 @@ import {
   paymentSlice,
   socketSlice,
   specialtySlice,
-  customerBookingSlice
-} from "./slices";
-import { counterSlice } from "~/features/home/slice";
-import { takeOrderSlice } from "~/features/orders/slice";
+  customerBookingSlice,
+  takeOrderSlice,
+  periodSlice,
+} from './slices';
+import { counterSlice } from '~/features/home/slice';
 
 const reducer = combineReducers({
   [counterSlice.name]: counterSlice.reducer,
@@ -22,7 +23,8 @@ const reducer = combineReducers({
   [orderSlice.name]: orderSlice.reducer,
   [paymentSlice.name]: paymentSlice.reducer,
   [socketSlice.name]: socketSlice.reducer,
-  [loadingSlice.name]: loadingSlice.reducer
+  [loadingSlice.name]: loadingSlice.reducer,
+  [periodSlice.name]: periodSlice.reducer,
 });
 
 export default reducer;

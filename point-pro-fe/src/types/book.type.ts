@@ -1,29 +1,10 @@
-import { PartialSeat } from "./seat.type";
+import { BookingType, Gender } from './common.type';
+import { PartialSeat } from './seat.type';
 
-export enum BookingType {
-  ONLINE_BOOKING = "online-booking",
-  PHONE_BOOKING = "phone-booking",
-  WALK_IN_SEATING = "walk-in-seating"
-}
-
-export enum CustomerBookingDialog {
-  RECORD_QUERY = "RECORD_QUERY",
-  PRIVACY_POLICY = "PRIVACY_POLICY",
-  REMINDER = "REMINDER",
-  QRCODE = "QRCODE"
-}
-
-export enum Gender {
-  MALE,
-  FEMALE,
-  OTHER
-}
-
-export interface PeriodInfo {
+export interface IPeriod {
   id: string;
-  periodStartedAt: Date;
-  periodEndedAt: Date;
-  amount: number;
+  startTime: Date;
+  endTime: Date;
   available: number;
 }
 
@@ -31,15 +12,15 @@ export interface CreateReservation {
   id: string;
   reservedAt: Date;
   options: { [key: string]: any };
-  periodStartedAt: Date;
-  periodEndedAt: Date;
+  startTime: Date;
+  endTime: Date;
   token: string;
   seats: PartialSeat[];
 }
 
 export interface DatePeriodInfo {
   date: Date;
-  periods: PeriodInfo[];
+  periods: IPeriod[];
   totalAmount: number;
   totalAvailable: number;
 }
@@ -57,8 +38,8 @@ export interface ReservationInfo {
   reservedAt: Date;
   type: BookingType;
   options: { [key: string]: any };
-  periodStartedAt: Date;
-  periodEndedAt: Date;
+  startTime: Date;
+  endTime: Date;
   startOfMeal: Date | null;
   endOfMeal: Date | null;
   seats: PartialSeat[];
@@ -79,8 +60,8 @@ export interface IBookingInfo {
 }
 
 export interface IAvailableBookingPeriod {
-  periodStartedAt: any;
-  periodEndedAt: any;
+  startTime: any;
+  endTime: any;
   available: number;
 }
 
@@ -90,7 +71,7 @@ export interface IAvailableBooking {
 }
 
 export interface ICreateBookingParams {
-  id: IBookingInfo["id"];
-  reservedAt: IBookingInfo["reservedAt"];
-  user: Omit<IBookingInfo, "id" | "reservedAt">;
+  id: IBookingInfo['id'];
+  reservedAt: IBookingInfo['reservedAt'];
+  user: Omit<IBookingInfo, 'id' | 'reservedAt'>;
 }

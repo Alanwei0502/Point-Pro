@@ -1,4 +1,4 @@
-import { ChangeEvent, FC, useEffect, useState } from "react";
+import { ChangeEvent, FC, useEffect, useState } from 'react';
 import {
   Accordion,
   AccordionDetails,
@@ -8,17 +8,17 @@ import {
   Divider,
   FormControl,
   Input,
-  Typography
-} from "@mui/material";
-import MoneyIcon from "@mui/icons-material/Money";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { Column, Row, BaseDraw, CashPaymentDialog } from "~/components";
-import { ReactComponent as LinePayIcon } from "~/assets/line-pay-solid.svg";
-import { theme } from "~/theme";
-import { useAppDispatch, useAppSelector } from "~/hooks";
-import { OrderType, OrderMessage, SocketTopic } from "~/types";
-import { getOrders, requestLinePay, requestCashPayment, closePaymentDrawer } from "~/store/slices";
-import { calculateGatherOrderPrice } from "~/utils";
+  Typography,
+} from '@mui/material';
+import MoneyIcon from '@mui/icons-material/Money';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { Column, Row, BaseDraw, CashPaymentDialog } from '~/components';
+import { ReactComponent as LinePayIcon } from '~/assets/line-pay-solid.svg';
+import { theme } from '~/theme';
+import { useAppDispatch, useAppSelector } from '~/hooks';
+import { OrderType, OrderMessage, SocketTopic } from '~/types';
+import { getOrders, requestLinePay, requestCashPayment, closePaymentDrawer } from '~/store/slices';
+import { calculateGatherOrderPrice } from '~/utils';
 
 interface IPaymentDrawerProps {}
 
@@ -34,7 +34,7 @@ export const PaymentDrawer: FC<IPaymentDrawerProps> = () => {
   const [canPay, setCanPay] = useState<boolean>(false);
   const socket = useAppSelector(({ socket }) => socket.socket);
 
-  const [selectPayment, setSelectPayment] = useState<string>("");
+  const [selectPayment, setSelectPayment] = useState<string>('');
   const [cash, setCash] = useState<number | string>(0);
 
   const totalPrice = paymentItem ? calculateGatherOrderPrice(paymentItem) : 0;
@@ -45,7 +45,7 @@ export const PaymentDrawer: FC<IPaymentDrawerProps> = () => {
       socket.emit(SocketTopic.ORDER, {
         notiType: SocketTopic.ORDER,
         message: OrderMessage.PAY_ORDER,
-        result: paymentItem?.orders[0]
+        result: paymentItem?.orders[0],
       });
     dispatch(getOrders({ status }));
     dispatch(closePaymentDrawer());
@@ -56,22 +56,22 @@ export const PaymentDrawer: FC<IPaymentDrawerProps> = () => {
   };
 
   const handleRestPayment = () => {
-    setSelectPayment("");
-    setCash("");
+    setSelectPayment('');
+    setCash('');
     setCanPay(false);
   };
 
   const paymentBtn = () => [
     {
-      label: "結帳",
+      label: '結帳',
       onClick: () => handleCompleteOrder(),
-      disabled: !(selectPayment === "line-pay" || selectPayment === "ec-pay" || canPay)
-    }
+      disabled: !(selectPayment === 'line-pay' || selectPayment === 'ec-pay' || canPay),
+    },
   ];
 
   useEffect(() => {
     if (linePayResponse.result) {
-      if (linePayResponse.result && linePayResponse.result.returnCode === "0000") {
+      if (linePayResponse.result && linePayResponse.result.returnCode === '0000') {
         window.location.href = linePayResponse.result.info.paymentUrl.web;
       }
     }
@@ -80,7 +80,7 @@ export const PaymentDrawer: FC<IPaymentDrawerProps> = () => {
   const handlePaymentRequest = async () => {
     if (!paymentItem) return;
     const id = paymentItem.orders.map((order) => order.id);
-    if (selectPayment === "line-pay") {
+    if (selectPayment === 'line-pay') {
       const { host } = window.location;
       await dispatch(
         requestLinePay({
@@ -88,11 +88,11 @@ export const PaymentDrawer: FC<IPaymentDrawerProps> = () => {
           confirmUrl: import.meta.env.DEV
             ? `http://${host}/payment/confirm?from=linePay&`
             : `https://${host}/payment/confirm?from=linePay&`,
-          cancelUrl: import.meta.env.DEV ? `http://${host}/payment/cancel` : `https://${host}/payment/cancel`
-        })
+          cancelUrl: import.meta.env.DEV ? `http://${host}/payment/cancel` : `https://${host}/payment/cancel`,
+        }),
       );
     }
-    if (selectPayment === "cash") {
+    if (selectPayment === 'cash') {
       if (Number(cash) >= totalPrice) {
         await dispatch(requestCashPayment(id));
         handleRestPayment();
@@ -101,7 +101,7 @@ export const PaymentDrawer: FC<IPaymentDrawerProps> = () => {
   };
 
   const handleClickPaymentWay = (paymentTarget: string) => {
-    setSelectPayment(selectPayment === paymentTarget ? "" : paymentTarget);
+    setSelectPayment(selectPayment === paymentTarget ? '' : paymentTarget);
   };
 
   const CashPaymentForm = () => {
@@ -115,28 +115,28 @@ export const PaymentDrawer: FC<IPaymentDrawerProps> = () => {
     };
     return (
       <>
-        <FormControl fullWidth sx={{ marginBottom: "1rem", userSelect: "none" }}>
-          <Typography component="label" variant="body1" htmlFor="cash" fontWeight={700}>
+        <FormControl fullWidth sx={{ marginBottom: '1rem', userSelect: 'none' }}>
+          <Typography component='label' variant='body1' htmlFor='cash' fontWeight={700}>
             現場收取金額
           </Typography>
           <Input
-            id="cash"
-            sx={{ width: "100%", backgroundColor: "common.black_20", padding: "0.75rem 1rem" }}
-            type="number"
+            id='cash'
+            sx={{ width: '100%', backgroundColor: 'common.black_20', padding: '0.75rem 1rem' }}
+            type='number'
             value={cash}
             onChange={handleCountCash}
             onClick={(e) => {
               if (cash === 0) {
-                setCash("");
+                setCash('');
               }
             }}
           />
         </FormControl>
-        <Row justifyContent={"space-between"}>
-          <Typography variant="body1" fontWeight={700}>
-            {+cash - totalPrice >= 0 ? "找錢" : "不足"}
+        <Row justifyContent={'space-between'}>
+          <Typography variant='body1' fontWeight={700}>
+            {+cash - totalPrice >= 0 ? '找錢' : '不足'}
           </Typography>
-          <Typography variant="h6" fontWeight={900}>
+          <Typography variant='h6' fontWeight={900}>
             {Math.abs(+cash - totalPrice)}元
           </Typography>
         </Row>
@@ -146,40 +146,40 @@ export const PaymentDrawer: FC<IPaymentDrawerProps> = () => {
 
   const paymentFunction = [
     {
-      label: "現金結帳",
+      label: '現金結帳',
       icon: <MoneyIcon />,
       content: CashPaymentForm,
-      target: "cash"
+      target: 'cash',
     },
     {
-      label: "Line Pay",
-      type: "button",
-      icon: <LinePayIcon width="2.5rem" />,
-      target: "line-pay"
-    }
+      label: 'Line Pay',
+      type: 'button',
+      icon: <LinePayIcon width='2.5rem' />,
+      target: 'line-pay',
+    },
   ];
 
   return (
     <>
       <BaseDraw
-        title={type === OrderType.DineIn ? "內用結帳" : "外帶結帳"}
+        title={type === OrderType.DINE_IN ? '內用結帳' : '外帶結帳'}
         open={isOpenPaymentDrawer}
         onClose={handleCloseDrawer}
         buttonList={paymentBtn()}
-        sx={{ userSelect: "none" }}
-        width="400px"
+        sx={{ userSelect: 'none' }}
+        width='400px'
       >
         <Column p={2}>
           <Row>
-            {type === OrderType.DineIn ? (
+            {type === OrderType.DINE_IN ? (
               <>
-                <Typography variant="h6">桌號：</Typography>
-                <Typography variant="h6">{paymentItem?.seats.join(", ")}</Typography>
+                <Typography variant='h6'>桌號：</Typography>
+                <Typography variant='h6'>{paymentItem?.seats.join(', ')}</Typography>
               </>
             ) : (
               <>
-                <Typography variant="h6">訂單編號：</Typography>
-                <Typography variant="h6">{paymentItem?.id.slice(-5)}</Typography>
+                <Typography variant='h6'>訂單編號：</Typography>
+                <Typography variant='h6'>{paymentItem?.id.slice(-5)}</Typography>
               </>
             )}
           </Row>
@@ -187,89 +187,89 @@ export const PaymentDrawer: FC<IPaymentDrawerProps> = () => {
         <Divider />
         <Column p={3}>
           {paymentFunction.map((payment) =>
-            payment.type === "button" ? (
+            payment.type === 'button' ? (
               <Row key={payment.label}>
                 <Button
-                  variant="contained"
+                  variant='contained'
                   sx={{
-                    bgcolor: selectPayment === payment.target ? "common.black" : "common.black_60",
-                    color: "white",
-                    fill: "white",
+                    bgcolor: selectPayment === payment.target ? 'common.black' : 'common.black_60',
+                    color: 'white',
+                    fill: 'white',
                     borderRadius: 0,
                     boxShadow: 0,
-                    width: "100%",
-                    "&:hover": {
-                      bgcolor: selectPayment === payment.target ? "common.black" : "common.black_60",
-                      color: "white",
-                      fill: "white"
-                    }
+                    width: '100%',
+                    '&:hover': {
+                      bgcolor: selectPayment === payment.target ? 'common.black' : 'common.black_60',
+                      color: 'white',
+                      fill: 'white',
+                    },
                   }}
                   onClick={() => handleClickPaymentWay(payment.target)}
                 >
-                  <Row justifyContent={"flex-start"} gap={3} width={"100%"} p={1}>
+                  <Row justifyContent={'flex-start'} gap={3} width={'100%'} p={1}>
                     {payment.icon}
-                    <Typography component="h3" variant="h6" fontWeight={900}>
+                    <Typography component='h3' variant='h6' fontWeight={900}>
                       {payment.label}
                     </Typography>
                   </Row>
                 </Button>
               </Row>
             ) : (
-              payment.type !== "button" && (
+              payment.type !== 'button' && (
                 <Row key={payment.label}>
                   <Accordion
                     square
                     expanded={selectPayment === payment.target}
                     sx={{
-                      width: "100%",
-                      boxShadow: 0
+                      width: '100%',
+                      boxShadow: 0,
                     }}
                   >
                     <AccordionSummary
                       sx={{
-                        bgcolor: selectPayment === payment.target ? "common.black" : "common.black_60",
-                        color: "white",
-                        fill: "white",
-                        borderBottom: "1px solid",
-                        "& .MuiAccordionSummary-expandIconWrapper": {
-                          color: "white"
+                        bgcolor: selectPayment === payment.target ? 'common.black' : 'common.black_60',
+                        color: 'white',
+                        fill: 'white',
+                        borderBottom: '1px solid',
+                        '& .MuiAccordionSummary-expandIconWrapper': {
+                          color: 'white',
                         },
-                        "&:hover": {
-                          bgcolor: selectPayment === payment.target ? "common.black" : "common.black_60"
-                        }
+                        '&:hover': {
+                          bgcolor: selectPayment === payment.target ? 'common.black' : 'common.black_60',
+                        },
                       }}
                       onClick={() => handleClickPaymentWay(payment.target)}
                       expandIcon={<ExpandMoreIcon />}
-                      aria-controls="panel1a-content"
-                      id="panel1a-header"
+                      aria-controls='panel1a-content'
+                      id='panel1a-header'
                     >
-                      <Row justifyContent={"flex-start"} gap={3} width={"100%"}>
+                      <Row justifyContent={'flex-start'} gap={3} width={'100%'}>
                         <Box>{payment.icon}</Box>
-                        <Typography component="h3" variant="h6" fontWeight={900}>
+                        <Typography component='h3' variant='h6' fontWeight={900}>
                           {payment.label}
                         </Typography>
                       </Row>
                     </AccordionSummary>
                     {payment.content ? (
-                      <AccordionDetails sx={{ padding: "1rem" }}>{payment.content()}</AccordionDetails>
+                      <AccordionDetails sx={{ padding: '1rem' }}>{payment.content()}</AccordionDetails>
                     ) : null}
                   </Accordion>
                 </Row>
               )
-            )
+            ),
           )}
         </Column>
         <Row
-          mt={"auto"}
-          justifyContent={"space-between"}
+          mt={'auto'}
+          justifyContent={'space-between'}
           px={3}
           py={2}
           sx={{ borderTop: `1px dashed ${theme.palette.common.black_40}` }}
         >
-          <Typography variant="h6" fontWeight={700}>
+          <Typography variant='h6' fontWeight={700}>
             總金額
           </Typography>
-          <Typography variant="h6" fontWeight={900}>
+          <Typography variant='h6' fontWeight={900}>
             {totalPrice}
           </Typography>
         </Row>

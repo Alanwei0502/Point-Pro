@@ -1,10 +1,10 @@
-import { useEffect } from "react";
-import { Grid } from "@mui/material";
-import { useAppDispatch } from "~/hooks";
-import { getMenu } from "~/features/orders/slice";
-import { theme } from "~/theme";
-import { CartList, MealList, MenuTabs, MealDrawer } from "./index.style";
-import { headerHeight, PaymentDrawer, AdminLayout } from "~/components";
+import { useEffect } from 'react';
+import { Grid } from '@mui/material';
+import { useAppDispatch } from '~/hooks';
+import { getMenu } from '~/store/slices/takeOrder.slice';
+import { theme } from '~/theme';
+import { CartList, MealList, MenuTabs, MealDrawer } from './index.style';
+import { headerHeight, PaymentDrawer, AdminLayout } from '~/components';
 
 export const AdminMenu = () => {
   const dispatch = useAppDispatch();
@@ -15,8 +15,8 @@ export const AdminMenu = () => {
 
   return (
     <AdminLayout>
-      <Grid container sx={{ height: `calc(100vh - ${headerHeight})`, userSelect: "none" }} bgcolor={"background.paper"}>
-        <Grid item xs={8} sx={{ overflow: "hidden" }}>
+      <Grid container sx={{ height: `calc(100vh - ${headerHeight})`, userSelect: 'none' }} bgcolor={'background.paper'}>
+        <Grid item xs={8} sx={{ overflow: 'hidden' }}>
           <MenuTabs />
           <MealList />
           <MealDrawer />

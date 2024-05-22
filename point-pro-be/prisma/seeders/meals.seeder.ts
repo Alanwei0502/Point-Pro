@@ -1075,7 +1075,7 @@ export function insertMeals() {
           FROM
             categories
           WHERE
-            title = '飯、麵類'
+            title = '飯麵類'
         )
       WHERE
         title IN (

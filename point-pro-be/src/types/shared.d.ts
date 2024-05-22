@@ -11,7 +11,7 @@ type UserAuth = {
 };
 
 type ReservationAuth = {
-  reservationLogId: string;
+  reservationId: string;
   reservationType?: string;
   startTime: Date;
   seatNo: string;
@@ -41,13 +41,13 @@ interface ResponseError extends Error {
   code?: number;
 }
 
-type PeriodInfo = {
+interface PeriodInfo {
   id: string;
   periodStartedAt: Date;
   periodEndedAt: Date;
   amount: number;
   available: number;
-};
+}
 
 type DatePeriodInfo = {
   date: Date;

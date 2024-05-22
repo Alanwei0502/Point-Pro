@@ -3,7 +3,7 @@ import { styled, Box, Button, InputAdornment, Stack, Typography } from "@mui/mat
 import { BaseCheckbox, BaseSelect, headerHeight, File, DateInput, TextareaInput, TextInput } from "~/components";
 
 interface IRowProps {
-  length?: Number;
+  length?: number;
   align?: string;
 }
 

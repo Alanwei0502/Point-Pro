@@ -5,7 +5,7 @@ export type ReservationStatus = 'NOT_ATTENDED' | 'IN_USE' | 'COMPLETED';
 export type CreateRecord = {
   status: number;
   details: string;
-  reservationLogId: string;
+  reservationId: string;
 };
 
 export type ReservationInfo = {

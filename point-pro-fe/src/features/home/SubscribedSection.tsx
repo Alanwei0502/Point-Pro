@@ -86,7 +86,7 @@ export const SubscribedSection: FC = () => {
   const deviceType = useDeviceType();
 
   const handleEmailAddressLocalStore = (val: string) => {
-    let emails = JSON.parse(localStorage.getItem("emails") || "[]");
+    const emails = JSON.parse(localStorage.getItem("emails") || "[]");
     if (!emails.includes(val)) {
       emails.push(val);
       localStorage.setItem("emails", JSON.stringify(emails));

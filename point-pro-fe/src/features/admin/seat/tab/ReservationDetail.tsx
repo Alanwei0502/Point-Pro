@@ -1,9 +1,9 @@
-import { FC, useEffect, useReducer, useState } from "react";
-import { Stack } from "@mui/material";
-import { FieldContainer, BaseDraw } from "~/components";
-import { useAppDispatch, useAppSelector } from "~/hooks";
-import { getPeriodByDate, patchReservationById, postReservation } from "~/store/slices";
-import { PatchReservation, PeriodInfo, ReservationMessage } from "~/types";
+import { FC, useEffect, useReducer, useState } from 'react';
+import { Stack } from '@mui/material';
+import { FieldContainer, BaseDraw } from '~/components';
+import { useAppDispatch, useAppSelector } from '~/hooks';
+import { getPeriodByDate, patchReservationById, postReservation } from '~/store/slices';
+import { PatchReservation, IPeriod, ReservationMessage } from '~/types';
 import mainReducer, {
   initialState,
   defaultSetting,
@@ -11,9 +11,9 @@ import mainReducer, {
   validator,
   validateCheck,
   convertToCreatePayload,
-  convertToPatchPayload
-} from "./reducers/reservation-detail";
-import { appDayjs, convertToDatePayload, formatTimeOnly, genderList } from "~/utils";
+  convertToPatchPayload,
+} from './reducers/reservation-detail';
+import { appDayjs, convertToDatePayload, formatTimeOnly, genderObj } from '~/utils';
 
 interface IReservationDetailProps {
   open: boolean;
@@ -25,7 +25,7 @@ interface IReservationDetailProps {
 
 export const ReservationDetail: FC<IReservationDetailProps> = ({ open, onClose, isCreate, date, info }) => {
   const dispatch = useAppDispatch();
-  const [periods, setPeriods] = useState<PeriodInfo[]>([]);
+  const [periods, setPeriods] = useState<IPeriod[]>([]);
   const [state, reducerDispatch] = useReducer(mainReducer, initialState);
 
   useEffect(() => {
@@ -50,17 +50,17 @@ export const ReservationDetail: FC<IReservationDetailProps> = ({ open, onClose, 
   }, [open, isCreate, notifications]);
 
   const dispatchGetPeriodByDate = async () => {
-    let payload = {
+    const payload = {
       date: convertToDatePayload(date),
       excludeTime: false,
-      isOnlineBooking: false
+      isOnlineBooking: false,
     };
-    let { result } = await dispatch(getPeriodByDate(payload)).unwrap();
+    const { result } = await dispatch(getPeriodByDate(payload)).unwrap();
     setPeriods(result?.periods ?? []);
   };
 
   const amountList = () => {
-    let available = periods.find((e) => e.id === state.period?.value)?.available || 0;
+    const available = periods.find((e) => e.id === state.period?.value)?.available || 0;
     return available > 10
       ? [
           { id: 1, title: 1 },
@@ -70,50 +70,50 @@ export const ReservationDetail: FC<IReservationDetailProps> = ({ open, onClose, 
           { id: 7, title: 7 },
           { id: 8, title: 8 },
           { id: 9, title: 9 },
-          { id: 10, title: 10 }
+          { id: 10, title: 10 },
         ]
       : Array.from({ length: periods.find((e) => e.id === state.period?.value)?.available ?? 0 }, (_, i) => ({
           id: i + 1,
-          title: i + 1
+          title: i + 1,
         }));
   };
 
   const fieldList = [
     {
-      id: "period",
-      label: "時段",
-      type: "select",
-      list: periods.map((e: PeriodInfo) => ({ id: e.id, title: formatTimeOnly(e.periodStartedAt) })),
-      disabled: !!info?.id
+      id: 'period',
+      label: '時段',
+      type: 'select',
+      list: periods.map((e: IPeriod) => ({ id: e.id, title: formatTimeOnly(e.startTime) })),
+      disabled: !!info?.id,
     },
     {
-      id: "amount",
-      label: "人數",
-      type: "select",
+      id: 'amount',
+      label: '人數',
+      type: 'select',
       list: amountList(),
-      disabled: !state.period?.value || !!info?.reservation?.id
+      disabled: !state.period?.value || !!info?.reservation?.id,
     },
     {
-      id: "name",
-      label: "姓名",
-      type: "text"
+      id: 'name',
+      label: '姓名',
+      type: 'text',
     },
     {
-      id: "gender",
-      label: "稱謂",
-      type: "select",
-      list: genderList
+      id: 'gender',
+      label: '稱謂',
+      type: 'select',
+      list: Object.entries(genderObj).map(([key, value]) => ({ id: key, title: value })),
     },
     {
-      id: "phone",
-      label: "電話",
-      type: "text"
+      id: 'phone',
+      label: '電話',
+      type: 'text',
     },
     {
-      id: "email",
-      label: "信箱",
-      type: "text"
-    }
+      id: 'email',
+      label: '信箱',
+      type: 'text',
+    },
   ];
 
   const handleFieldChange = (props: { id: string; value: any }) => {
@@ -123,11 +123,11 @@ export const ReservationDetail: FC<IReservationDetailProps> = ({ open, onClose, 
   const handleButtonClick = async (key: string) => {
     try {
       switch (key) {
-        case "create":
+        case 'create':
           if (validateCheck(state)) {
-            let payload = convertToCreatePayload(
+            const payload = convertToCreatePayload(
               state,
-              periods.find((e) => e.id === state.period.value)?.periodStartedAt as Date
+              periods.find((e) => e.id === state.period.value)?.startTime as Date,
             );
             console.log({ payload });
             await dispatch(postReservation(payload));
@@ -136,9 +136,9 @@ export const ReservationDetail: FC<IReservationDetailProps> = ({ open, onClose, 
             reducerDispatch(validator());
           }
           break;
-        case "save":
+        case 'save':
           if (validateCheck(state)) {
-            let payload: PatchReservation = convertToPatchPayload(state);
+            const payload: PatchReservation = convertToPatchPayload(state);
             console.log({ payload });
             await dispatch(patchReservationById({ reservationId: info.reservation.id, payload }));
             onClose(true);
@@ -146,7 +146,7 @@ export const ReservationDetail: FC<IReservationDetailProps> = ({ open, onClose, 
             reducerDispatch(validator());
           }
           break;
-        case "cancel":
+        case 'cancel':
           onClose();
           break;
       }
@@ -157,24 +157,24 @@ export const ReservationDetail: FC<IReservationDetailProps> = ({ open, onClose, 
   const getButtonList = () => {
     return isCreate
       ? [
-          { label: "取消", onClick: () => handleButtonClick("cancel") },
-          { label: "新增", onClick: () => handleButtonClick("create") }
+          { label: '取消', onClick: () => handleButtonClick('cancel') },
+          { label: '新增', onClick: () => handleButtonClick('create') },
         ]
       : [
-          { label: "取消", onClick: () => handleButtonClick("cancel") },
-          { label: "保存", onClick: () => handleButtonClick("save") }
+          { label: '取消', onClick: () => handleButtonClick('cancel') },
+          { label: '保存', onClick: () => handleButtonClick('save') },
         ];
   };
 
   return (
     <BaseDraw
-      title={isCreate ? "新增預約使用" : "編輯預約使用"}
+      title={isCreate ? '新增預約使用' : '編輯預約使用'}
       open={open}
       onClose={onClose}
       buttonList={getButtonList()}
     >
       <Stack sx={{ p: 3 }} gap={3}>
-        <FieldContainer type="date" label="日期" width={200} value={date} disabled={true} />
+        <FieldContainer type='date' label='日期' width={200} value={date} disabled={true} />
         {fieldList.map((field) => (
           <FieldContainer
             width={200}

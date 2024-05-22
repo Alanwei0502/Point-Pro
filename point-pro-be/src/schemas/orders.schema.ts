@@ -33,17 +33,26 @@ export const orderStatusValidatedSchema = object({
   status: mixed().oneOf(Object.values(OrderStatus)).required(),
 });
 
-export const reservationLogValidatedSchema = object({
-  reservationLogId: string().uuid(),
+export const reservationValidatedSchema = object({
+  reservationId: string().uuid(),
 });
 
 export const orderIdValidatedSchema = object({
   orderId: string().uuid().required(),
 });
 
-export const createOrderReqBodySchema = object({
-  orderMeals: orderMealsValidatedSchema,
-});
+export const createOrderReqBodySchema = array()
+  .of(
+    object({
+      id: string().required(),
+      amount: number().required(),
+      price: number().required(),
+      title: string().required(),
+      servedAmount: number().required(),
+      specialties: specialtiesValidatedSchema,
+    }),
+  )
+  .required();
 
 export const updateOrderReqBodySchema = object({
   id: string().uuid().required(),

@@ -38,7 +38,7 @@ export const AdminMealSettings: FC = () => {
   const handleChangeCategory = (event: ChangeEvent<HTMLInputElement>) => {
     console.log(event.target.value);
     if (categoryList) {
-      let cloneCategoryList = cloneDeep(categoryList);
+      const cloneCategoryList = cloneDeep(categoryList);
       cloneCategoryList[categoryList?.length - 1].title = event.target.value;
       setCategoryList(cloneCategoryList);
     }
@@ -51,7 +51,7 @@ export const AdminMealSettings: FC = () => {
         await dispatch(deleteCategory(categoryId));
       } else {
         // create
-        let title = categoryList?.at(-1)?.title;
+        const title = categoryList?.at(-1)?.title;
         if (title) {
           await dispatch(postCategory({ title }));
         } else {

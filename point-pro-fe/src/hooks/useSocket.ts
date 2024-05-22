@@ -1,12 +1,12 @@
-import { useEffect, useRef } from "react";
-import { useLocation } from "react-router-dom";
-import io from "socket.io-client";
-import { apiHost } from "~/api/http";
-import { useAppDispatch, useAppSelector } from "~/hooks";
-import { addNotification, resetSocket, setSocket, getOrders } from "~/store/slices";
-import { closeDialog, getMenu } from "~/features/orders/slice";
-import { getToken } from "~/utils";
-import { NameSpace, SocketTopic } from "~/types";
+import { useEffect, useRef } from 'react';
+import { useLocation } from 'react-router-dom';
+import io from 'socket.io-client';
+import { apiHost } from '~/api/http';
+import { useAppDispatch, useAppSelector } from '~/hooks';
+import { addNotification, resetSocket, setSocket, getOrders } from '~/store/slices';
+import { closeDialog, getMenu } from '~/store/slices/takeOrder.slice';
+import { getToken } from '~/utils';
+import { NameSpace, SocketTopic } from '~/types';
 
 type useSocketProps = {
   ns: NameSpace;
@@ -24,12 +24,12 @@ export const useSocket = (props: useSocketProps) => {
   // Socket Instance
   const { current: socket } = useRef(
     io(`${apiHost}${ns}`, {
-      transports: ["polling", "websocket"],
+      transports: ['polling', 'websocket'],
       autoConnect: false,
       auth: {
-        token: getToken()
-      }
-    })
+        token: getToken(),
+      },
+    }),
   );
 
   // Connect to server & save socket instance
@@ -45,22 +45,22 @@ export const useSocket = (props: useSocketProps) => {
 
   // CONNECTION listener
   useEffect(() => {
-    socket.on("connect", () => {
+    socket.on('connect', () => {
       console.log(`Connect to server. ${ns} ID: ${socket.id}`);
     });
 
-    socket.on("disconnect", () => {
-      console.log("Disconnect from server.");
+    socket.on('disconnect', () => {
+      console.log('Disconnect from server.');
     });
 
-    socket.io.on("reconnect", (attempt) => {
+    socket.io.on('reconnect', (attempt) => {
       console.log(`Reconnect to server. ${attempt} times`);
     });
 
     return () => {
-      socket.off("connect");
-      socket.off("disconnect");
-      socket.io.off("reconnect");
+      socket.off('connect');
+      socket.off('disconnect');
+      socket.io.off('reconnect');
     };
   }, [socket, ns]);
 
@@ -74,11 +74,11 @@ export const useSocket = (props: useSocketProps) => {
 
       if (ns === NameSpace.admin) {
         dispatch(addNotification({ ...data, notiType: SocketTopic.MENU }));
-        if (pathname.includes("/admin/menu")) {
+        if (pathname.includes('/admin/menu')) {
           dispatch(getMenu());
           dispatch(closeDialog());
         }
-        if (pathname.includes("/admin/meal")) {
+        if (pathname.includes('/admin/meal')) {
           dispatch(getMenu());
         }
       }
@@ -99,7 +99,7 @@ export const useSocket = (props: useSocketProps) => {
       if (ns === NameSpace.admin) {
         dispatch(addNotification({ ...data, notiType: SocketTopic.ORDER }));
 
-        if (pathname.includes("/admin/orders")) {
+        if (pathname.includes('/admin/orders')) {
           dispatch(getOrders({ status: orderStatus }));
         }
       }

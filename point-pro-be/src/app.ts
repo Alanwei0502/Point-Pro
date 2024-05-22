@@ -1,10 +1,10 @@
-import express from 'express';
+import express, { json, urlencoded } from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import morgan from 'morgan';
 import { errorMiddleware, verifyMiddleware, sessionMiddleware } from './middleware';
 import apiRouter from './routes';
-import corsOptionDelegate from './helpers/cors';
+import { corsOptionDelegate } from './helpers';
 
 const app = express();
 
@@ -15,24 +15,26 @@ app.use(cookieParser());
 app.get('/healthz', async (_, res) => {
   return res.send(new Date().toISOString() + ' health check');
 });
+
 app.use(sessionMiddleware);
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(json());
+app.use(urlencoded({ extended: true }));
 
 app.use(
   '/api',
-  verifyMiddleware([
-    '/auth/login',
-    '/auth/register',
-    '/menu',
-    '/period',
-    '/period/list',
-    '/reservation',
-    '/mail',
-    '/mail/verify',
-  ]),
+  // verifyMiddleware([
+  //   '/auth/login',
+  //   '/auth/register',
+  //   '/menu',
+  //   '/period',
+  //   '/period/list',
+  //   '/reservation',
+  //   '/mail',
+  //   '/mail/verify',
+  // ]),
   apiRouter,
 );
+
 app.use(errorMiddleware);
 
 process.on('uncaughtException', (err) => {

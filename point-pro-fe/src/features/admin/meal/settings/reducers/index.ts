@@ -1,7 +1,7 @@
-import { createSlice } from "@reduxjs/toolkit";
-import { forEach, some, every } from "lodash";
-import { ISpecialty, SpecialtyType } from "~/types";
-import { MakeFieldResponse, makeField } from "~/utils";
+import { createSlice } from '@reduxjs/toolkit';
+import { forEach, some, every } from 'lodash';
+import { ISpecialty, SelectionType } from '~/types';
+import { MakeFieldResponse, makeField } from '~/utils';
 
 interface StateProps {
   [key: string]: MakeFieldResponse;
@@ -14,30 +14,30 @@ interface ItemType {
 
 const makeFieldsBase = (payload: ISpecialty): StateProps => {
   return {
-    id: makeField(payload.id, "id", false, false),
-    title: makeField(payload.title, "title", true, false),
-    type: makeField(payload.type, "type", true, false),
-    items: makeField(payload.items ?? [], "type", false, false)
+    id: makeField(payload.id, 'id', false, false),
+    title: makeField(payload.title, 'title', true, false),
+    type: makeField(payload.type, 'type', true, false),
+    items: makeField(payload.items ?? [], 'type', false, false),
   };
 };
-const initialItem = { id: "", title: "", price: 0 };
+const initialItem = { id: '', title: '', price: 0 };
 
 export const initialState = makeFieldsBase({
-  id: "",
-  title: "",
-  type: SpecialtyType.SINGLE,
-  items: []
+  id: '',
+  title: '',
+  type: SelectionType.SINGLE,
+  items: [],
 });
 
 const mainReducer = createSlice({
-  name: "mainReducer",
+  name: 'mainReducer',
   initialState,
   reducers: {
     defaultSetting(state, { payload }) {
       return payload ? makeFieldsBase(payload) : initialState;
     },
     editField(state, { payload }) {
-      let { id, value } = payload;
+      const { id, value } = payload;
       console.log({ id, value });
 
       state[id].value = value;
@@ -51,12 +51,12 @@ const mainReducer = createSlice({
       state.items.value.splice(payload, 1);
     },
     editItem(state, { payload }) {
-      let { index, key, value } = payload;
+      const { index, key, value } = payload;
       console.log(index, key, value);
-      let data = value?.inputValue ? value.inputValue : value;
-      if (typeof data === "string" || data === null) {
+      const data = value?.inputValue ? value.inputValue : value;
+      if (typeof data === 'string' || data === null) {
         // input
-        if (key === "title" && state.items.value[index][key] !== data) {
+        if (key === 'title' && state.items.value[index][key] !== data) {
           state.items.value[index] = { ...initialItem };
         }
         state.items.value[index][key] = data;
@@ -68,19 +68,19 @@ const mainReducer = createSlice({
     validator(state) {
       forEach(state, (data, key) => {
         if (data.isRequired) {
-          state[key].invalid = data.value == "";
+          state[key].invalid = data.value == '';
         }
         if (state[key].invalid) {
-          console.log("invalid : ", key);
+          console.log('invalid : ', key);
         }
       });
-    }
-  }
+    },
+  },
 });
 
 export const validateCheck = (state: StateProps) => {
   return every(state, ({ value, fieldPath, isRequired }) => {
-    if (!(isRequired && value === "")) {
+    if (!(isRequired && value === '')) {
       return true;
     } else {
       console.log(fieldPath);
@@ -90,9 +90,9 @@ export const validateCheck = (state: StateProps) => {
 };
 
 export const convertToPayload = (state: StateProps) => {
-  let payload: { [key: string]: any } = {};
+  const payload: { [key: string]: any } = {};
   forEach(state, ({ value }, key) => {
-    if (key === "items") {
+    if (key === 'items') {
       payload[key] = value
         .filter(({ title }: ItemType) => title)
         .map(({ id, title, price }: ItemType) => ({ id, title, price: Number(price) }));

@@ -1,16 +1,16 @@
-import { createSlice } from "@reduxjs/toolkit";
-import { CategoryApi } from "~/api";
-import { createAppAsyncThunk } from "~/hooks";
-import { ICategory, CategoryResponse, CategoriesResponse, PostCategoryPayload } from "~/types";
+import { createSlice } from '@reduxjs/toolkit';
+import { CategoryApi } from '~/api';
+import { createAppAsyncThunk } from '~/hooks';
+import { ICategory, CategoryResponse, CategoriesResponse, PostCategoryPayload } from '~/types';
 
-const name = "category";
+const name = 'category';
 
 interface ICategoryState {
   categories: ICategory[];
 }
 
 const initialState: ICategoryState = {
-  categories: []
+  categories: [],
 };
 
 export const getCategories = createAppAsyncThunk<CategoriesResponse>(
@@ -22,10 +22,10 @@ export const getCategories = createAppAsyncThunk<CategoriesResponse>(
       if (error instanceof Error) {
         return rejectWithValue({ message: error.message });
       } else {
-        return rejectWithValue({ message: "unknown error" });
+        return rejectWithValue({ message: 'unknown error' });
       }
     }
-  }
+  },
 );
 
 export const postCategory = createAppAsyncThunk<CategoryResponse, PostCategoryPayload>(
@@ -37,10 +37,10 @@ export const postCategory = createAppAsyncThunk<CategoryResponse, PostCategoryPa
       if (error instanceof Error) {
         return rejectWithValue({ message: error.message });
       } else {
-        return rejectWithValue({ message: "unknown error" });
+        return rejectWithValue({ message: 'unknown error' });
       }
     }
-  }
+  },
 );
 
 export const deleteCategory = createAppAsyncThunk<CategoryResponse, string>(
@@ -52,10 +52,10 @@ export const deleteCategory = createAppAsyncThunk<CategoryResponse, string>(
       if (error instanceof Error) {
         return rejectWithValue({ message: error.message });
       } else {
-        return rejectWithValue({ message: "unknown error" });
+        return rejectWithValue({ message: 'unknown error' });
       }
     }
-  }
+  },
 );
 
 export const categorySlice = createSlice({
@@ -66,7 +66,7 @@ export const categorySlice = createSlice({
     builder.addCase(getCategories.fulfilled, (state, { payload }) => {
       state.categories = payload.result ?? [];
     });
-  }
+  },
 });
 
 export const {} = categorySlice.actions;

@@ -1,33 +1,33 @@
-import { IOrderMeal, OrderStatus, OrderType, BookingType, Gender, IBookingInfo } from "~/types";
+import { IOrderMeal, OrderStatus, OrderType, BookingType, Gender, IBookingInfo } from '~/types';
 
 export enum SocketTopic {
-  MENU = "MENU",
-  ORDER = "ORDER",
-  RESERVATION = "RESERVATION"
+  MENU = 'MENU',
+  ORDER = 'ORDER',
+  RESERVATION = 'RESERVATION',
 }
 
 export enum NameSpace {
-  main = "/",
-  user = "/user",
-  admin = "/admin"
+  main = '/',
+  user = '/user',
+  admin = '/admin',
 }
 
 export enum OrderMessage {
-  CREATE_ORDER = "CREATE_ORDER",
-  UPDATE_ORDER = "UPDATE_ORDER",
-  CANCEL_ORDER = "CANCEL_ORDER",
-  PAY_ORDER = "PAY_ORDER"
+  CREATE_ORDER = 'CREATE_ORDER',
+  UPDATE_ORDER = 'UPDATE_ORDER',
+  CANCEL_ORDER = 'CANCEL_ORDER',
+  PAY_ORDER = 'PAY_ORDER',
 }
 
 export enum MenuMessage {
-  CREATE_MEAL = "CREATE_MEAL",
-  UPDATE_MEAL = "UPDATE_MEAL",
-  DELETE_MEAL = "DELETE_MEAL"
+  CREATE_MEAL = 'CREATE_MEAL',
+  UPDATE_MEAL = 'UPDATE_MEAL',
+  DELETE_MEAL = 'DELETE_MEAL',
 }
 
 export enum ReservationMessage {
-  CREATE_RESERVATION = "CREATE_RESERVATION",
-  UPDATE_RESERVATION = "UPDATE_RESERVATION"
+  CREATE_RESERVATION = 'CREATE_RESERVATION',
+  UPDATE_RESERVATION = 'UPDATE_RESERVATION',
 }
 
 export interface INotification<NotiType extends SocketTopic, Message, Result> {
@@ -49,7 +49,7 @@ export interface IOrderResult {
   seats?: string[];
   reservationsLogs: {
     id: string;
-    options: Omit<IBookingInfo, "id" | "reservedAt">;
+    options: Omit<IBookingInfo, 'id' | 'reservedAt'>;
     bookedSeats: {
       seat: {
         prefix: string;
@@ -88,8 +88,8 @@ export interface IReservationResult {
     adults: number;
     children?: number;
   };
-  periodStartedAt: string;
-  periodEndedAt: string;
+  startTime: string;
+  endTime: string;
   seats: {
     id: string;
     seatNo: string;

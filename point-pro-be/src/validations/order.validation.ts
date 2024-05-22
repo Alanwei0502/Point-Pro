@@ -4,13 +4,13 @@ import {
   createOrderReqBodySchema,
   orderIdValidatedSchema,
   orderStatusValidatedSchema,
-  reservationLogValidatedSchema,
+  reservationValidatedSchema,
   updateOrderReqBodySchema,
 } from '../schemas';
 
 export const createOrderHandlerValidation = (req: AuthRequest, res: ApiResponse, next: NextFunction) => {
   try {
-    reservationLogValidatedSchema.validateSync(req.auth);
+    // reservationValidatedSchema.validateSync(req.auth);
     createOrderReqBodySchema.validateSync(req.body);
     next();
   } catch (error) {
@@ -30,7 +30,7 @@ export const getOrderHandlerValidation = (req: AuthRequest, res: ApiResponse, ne
     }
 
     if (req.auth.role === 'USER') {
-      reservationLogValidatedSchema.validateSync(req.auth);
+      reservationValidatedSchema.validateSync(req.auth);
     }
     next();
   } catch (error) {

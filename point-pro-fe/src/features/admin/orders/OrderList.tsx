@@ -13,7 +13,7 @@ export const OrderList: FC = () => {
   const orders = useAppSelector(({ order }) => order.orders);
 
   const gatherOrders = () => {
-    let showNewOrders: GatherOrder[] = [];
+    const showNewOrders: GatherOrder[] = [];
 
     orders.forEach((order) => {
       const { id, status, type, seats = [], paymentLogs, reservationId } = order;

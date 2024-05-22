@@ -14,7 +14,7 @@ export const File: FC<IFileProps> = ({ width, value, handleChange }) => {
   const [preview, setPreview] = useState<string>();
 
   useEffect(() => {
-    if (!!value) {
+    if (value) {
       if (typeof value === "string") {
         setPreview(value);
       } else {

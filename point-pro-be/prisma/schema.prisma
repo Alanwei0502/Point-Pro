@@ -1,289 +1,335 @@
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["postgresqlExtensions", "views"]
 }
 
 datasource db {
-  provider  = "postgresql"
-  url       = env("DATABASE_URL")
-  directUrl = env("DIRECT_URL")
+  provider   = "postgresql"
+  url        = env("DATABASE_URL")
+  directUrl  = env("DIRECT_URL")
+  extensions = [uuid_ossp(map: "uuid-ossp")]
 }
 
 /// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
-model categories {
-  id         String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  title      String    @unique @db.VarChar(50)
-  position   Int?      @default(0) @db.SmallInt
-  created_at DateTime? @default(now()) @db.Timestamptz(6)
-  updated_at DateTime? @default(now()) @db.Timestamptz(6)
-  meals      meals[]
+model Category {
+  id        String    @id @default(dbgenerated("uuid_generate_v1mc()")) @db.Uuid
+  title     String    @unique @db.VarChar(50)
+  position  Int       @default(0) @db.SmallInt
+  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(0)
+  updatedAt DateTime? @updatedAt @map("updated_at") @db.Timestamptz(0)
+  meals     Meal[]
+
+  @@map("categories")
 }
 
 /// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
-model login_logs {
-  id             String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  log_type       log_type? @default(LOGIN)
-  operation_time DateTime? @default(now()) @db.Timestamptz(6)
-  user_id        String    @db.Uuid
-  users          users     @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+model LoginLog {
+  id            String   @id @default(dbgenerated("uuid_generate_v1mc()")) @db.Uuid
+  logType       LogType  @default(LOGIN) @map("log_type")
+  operationTime DateTime @default(now()) @map("operation_time") @db.Timestamptz(0)
+  userId        String   @map("user_id") @db.Uuid
+  users         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("login_logs")
 }
 
-model meal_specialties {
-  meal_id      String      @db.Uuid
-  specialty_id String      @db.Uuid
-  meals        meals       @relation(fields: [meal_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
-  specialties  specialties @relation(fields: [specialty_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+model MealSpecialty {
+  mealId      String    @map("meal_id") @db.Uuid
+  specialtyId String    @map("specialty_id") @db.Uuid
+  meals       Meal      @relation(fields: [mealId], references: [id], onDelete: Cascade)
+  specialties Specialty @relation(fields: [specialtyId], references: [id], onDelete: Cascade)
 
-  @@id([meal_id, specialty_id])
+  @@id([mealId, specialtyId])
+  @@map("meal_specialties")
 }
 
-model meal_specialty_items {
-  meal_id           String          @db.Uuid
-  specialty_item_id String          @db.Uuid
-  meals             meals           @relation(fields: [meal_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
-  specialty_items   specialty_items @relation(fields: [specialty_item_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+model MealSpecialtyItem {
+  mealId          String        @map("meal_id") @db.Uuid
+  specialtyItemId String        @map("specialty_item_id") @db.Uuid
+  meal            Meal          @relation(fields: [mealId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  specialtyItems  SpecialtyItem @relation(fields: [specialtyItemId], references: [id], onDelete: Cascade, onUpdate: NoAction)
 
-  @@id([meal_id, specialty_item_id])
-}
-
-/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
-model meals {
-  id                   String                 @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  title                String                 @unique @db.VarChar(50)
-  cover_url            String?                @default("") @db.VarChar(255)
-  description          String?                @default("")
-  is_popular           Boolean?               @default(false)
-  price                Int?                   @default(0)
-  position             Int?                   @default(0) @db.SmallInt
-  published_at         DateTime?              @default(now()) @db.Timestamptz(6)
-  created_at           DateTime?              @default(now()) @db.Timestamptz(6)
-  updated_at           DateTime?              @default(now()) @db.Timestamptz(6)
-  category_id          String?                @db.Uuid
-  meal_specialties     meal_specialties[]
-  meal_specialty_items meal_specialty_items[]
-  categories           categories?            @relation(fields: [category_id], references: [id], onUpdate: NoAction)
-  order_meals          order_meals[]
-}
-
-model order_meal_specialties {
-  order_meal_id String      @db.Uuid
-  specialty_id  String      @db.Uuid
-  order_meals   order_meals @relation(fields: [order_meal_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
-  specialties   specialties @relation(fields: [specialty_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
-
-  @@id([order_meal_id, specialty_id])
-}
-
-model order_meal_specialty_items {
-  order_meal_id     String          @db.Uuid
-  specialty_item_id String          @db.Uuid
-  order_meals       order_meals     @relation(fields: [order_meal_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
-  specialty_items   specialty_items @relation(fields: [specialty_item_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
-
-  @@id([order_meal_id, specialty_item_id])
+  @@id([mealId, specialtyItemId])
+  @@map("meal_specialty_items")
 }
 
 /// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
-model order_meals {
-  id                         String                       @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  amount                     Int                          @db.SmallInt
-  served_amount              Int?                         @default(0) @db.SmallInt
-  order_id                   String                       @db.Uuid
-  meal_id                    String                       @db.Uuid
-  order_meal_specialties     order_meal_specialties[]
-  order_meal_specialty_items order_meal_specialty_items[]
-  meals                      meals                        @relation(fields: [meal_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
-  orders                     orders                       @relation(fields: [order_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+model Meal {
+  id                 String              @id @default(dbgenerated("uuid_generate_v1mc()")) @db.Uuid
+  title              String              @unique @db.VarChar(50)
+  coverUrl           String              @default("") @map("cover_url") @db.VarChar(255)
+  description        String              @default("")
+  isPopular          Boolean             @default(false) @map("is_popular")
+  price              Int                 @default(0)
+  position           Int                 @default(0) @db.SmallInt
+  publishedAt        DateTime?           @default(now()) @map("published_at") @db.Timestamptz(0)
+  createdAt          DateTime            @default(now()) @map("created_at") @db.Timestamptz(0)
+  updatedAt          DateTime?           @updatedAt @map("updated_at") @db.Timestamptz(0)
+  categoryId         String?             @map("category_id") @db.Uuid
+  mealSpecialties    MealSpecialty[]
+  mealSpecialtyItems MealSpecialtyItem[]
+  categories         Category?           @relation(fields: [categoryId], references: [id], onUpdate: NoAction)
+  orderMeals         OrderMeal[]
+
+  @@map("meals")
+}
+
+model OrderMealSpecialty {
+  orderMealId String    @map("order_meal_id") @db.Uuid
+  specialtyId String    @map("specialty_id") @db.Uuid
+  orderMeals  OrderMeal @relation(fields: [orderMealId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  specialties Specialty @relation(fields: [specialtyId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@id([orderMealId, specialtyId])
+  @@map("order_meal_specialties")
+}
+
+model OrderMealSpecialtyItem {
+  orderMealId     String        @map("order_meal_id") @db.Uuid
+  specialtyItemId String        @map("specialty_item_id") @db.Uuid
+  orderMeals      OrderMeal     @relation(fields: [orderMealId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  specialtyItems  SpecialtyItem @relation(fields: [specialtyItemId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@id([orderMealId, specialtyItemId])
+  @@map("order_meal_specialty_items")
 }
 
 /// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
-model orders {
-  id              String         @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  status          order_status?  @default(WORKING)
-  type            order_type?    @default(DINE_IN)
-  created_at      DateTime?      @default(now()) @db.Timestamptz(6)
-  updated_at      DateTime?      @default(now()) @db.Timestamptz(6)
-  walk_in_user_id String?        @db.Uuid
-  user_id         String?        @db.Uuid
-  reservation_id  String?        @db.Uuid
-  payment_id      String?        @db.Uuid
-  order_meals     order_meals[]
-  payments        payments?      @relation(fields: [payment_id], references: [id], onUpdate: NoAction)
-  reservations    reservations?  @relation(fields: [reservation_id], references: [id], onUpdate: NoAction)
-  users           users?         @relation(fields: [user_id], references: [id], onUpdate: NoAction)
-  walk_in_users   walk_in_users? @relation(fields: [walk_in_user_id], references: [id], onUpdate: NoAction)
+model OrderMeal {
+  id                      String                   @id @default(dbgenerated("uuid_generate_v1mc()")) @db.Uuid
+  amount                  Int                      @db.SmallInt
+  servedAmount            Int                      @default(0) @map("served_amount") @db.SmallInt
+  orderId                 String                   @map("order_id") @db.Uuid
+  mealId                  String                   @map("meal_id") @db.Uuid
+  orderMealSpecialties    OrderMealSpecialty[]
+  orderMealSpecialtyItems OrderMealSpecialtyItem[]
+  meals                   Meal                     @relation(fields: [mealId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  orders                  Order                    @relation(fields: [orderId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@map("order_meals")
 }
 
 /// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
-model payments {
-  id         String          @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  payment_no String?         @unique
-  price      Int
-  gateway    String          @db.VarChar(50)
-  status     payment_status? @default(UNPAID)
-  created_at DateTime?       @default(now()) @db.Timestamptz(6)
-  updated_at DateTime?       @default(now()) @db.Timestamptz(6)
-  orders     orders[]
-}
+model Order {
+  id            String       @id @default(dbgenerated("uuid_generate_v1mc()")) @db.Uuid
+  status        OrderStatus  @default(WORKING)
+  type          OrderType    @default(DINE_IN)
+  createdAt     DateTime     @default(now()) @map("created_at") @db.Timestamptz(0)
+  updatedAt     DateTime?    @updatedAt @map("updated_at") @db.Timestamptz(0)
+  reservationId String?      @map("reservation_id") @db.Uuid
+  paymentId     String?      @map("payment_id") @db.Uuid
+  orderMeals    OrderMeal[]
+  payments      Payment?     @relation(fields: [paymentId], references: [id], onUpdate: NoAction)
+  reservations  Reservation? @relation(fields: [reservationId], references: [id], onUpdate: NoAction)
 
-model period_seats {
-  period_id                String                     @db.Uuid
-  seat_id                  String                     @db.Uuid
-  periods                  periods                    @relation(fields: [period_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
-  seats                    seats                      @relation(fields: [seat_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
-  reservation_period_seats reservation_period_seats[]
-
-  @@id([period_id, seat_id])
+  @@map("orders")
 }
 
 /// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
-model periods {
-  id           String         @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  start_time   DateTime       @db.Timestamptz(6)
-  end_time     DateTime       @db.Timestamptz(6)
-  created_at   DateTime?      @default(now()) @db.Timestamptz(6)
-  updated_at   DateTime?      @default(now()) @db.Timestamptz(6)
-  period_seats period_seats[]
-  reservations reservations[]
+model Payment {
+  id        String        @id @default(dbgenerated("uuid_generate_v1mc()")) @db.Uuid
+  paymentNo String?       @unique @map("payment_no") @db.VarChar(50)
+  price     Int
+  gateway   String        @db.VarChar(50)
+  status    PaymentStatus @default(UNPAID)
+  createdAt DateTime      @default(now()) @map("created_at") @db.Timestamptz(0)
+  updatedAt DateTime?     @updatedAt @map("updated_at") @db.Timestamptz(0)
+  orders    Order[]
+
+  @@map("payments")
 }
 
-model reservation_period_seats {
-  reservation_id String       @db.Uuid
-  period_id      String       @db.Uuid
-  seat_id        String       @db.Uuid
-  period_seats   period_seats @relation(fields: [period_id, seat_id], references: [period_id, seat_id], onDelete: Cascade, onUpdate: NoAction)
-  reservations   reservations @relation(fields: [reservation_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+model PeriodSeat {
+  periodId               String                  @map("period_id") @db.Uuid
+  seatId                 String                  @map("seat_id") @db.Uuid
+  periods                Period                  @relation(fields: [periodId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  seats                  Seat                    @relation(fields: [seatId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  reservationPeriodSeats ReservationPeriodSeat[]
 
-  @@id([reservation_id, period_id, seat_id])
-}
-
-/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
-model reservations {
-  id                       String                     @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  type                     reservation_type?          @default(ONLINE)
-  is_cancelled             Boolean?                   @default(false)
-  people                   Int?                       @default(1) @db.SmallInt
-  start_at                 DateTime?                  @db.Timestamptz(6)
-  end_at                   DateTime?                  @db.Timestamptz(6)
-  created_at               DateTime?                  @default(now()) @db.Timestamptz(6)
-  updated_at               DateTime?                  @default(now()) @db.Timestamptz(6)
-  user_id                  String                     @db.Uuid
-  period_id                String                     @db.Uuid
-  orders                   orders[]
-  reservation_period_seats reservation_period_seats[]
-  periods                  periods                    @relation(fields: [period_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
-  users                    users                      @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  @@id([periodId, seatId])
+  @@map("period_seats")
 }
 
 /// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
-model seats {
-  id           String         @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  seat_no      String         @unique @db.VarChar(5)
-  capacity     Int            @db.SmallInt
-  created_at   DateTime?      @default(now()) @db.Timestamptz(6)
-  updated_at   DateTime?      @default(now()) @db.Timestamptz(6)
-  period_seats period_seats[]
+model Period {
+  id           String        @id @default(dbgenerated("uuid_generate_v1mc()")) @db.Uuid
+  startTime    DateTime      @map("start_time") @db.Timestamptz(0)
+  endTime      DateTime      @map("end_time") @db.Timestamptz(0)
+  createdAt    DateTime      @default(now()) @map("created_at") @db.Timestamptz(0)
+  updatedAt    DateTime?     @updatedAt @map("updated_at") @db.Timestamptz(0)
+  periodSeats  PeriodSeat[]
+  reservations Reservation[]
+
+  @@map("periods")
+}
+
+model ReservationPeriodSeat {
+  reservationId String      @map("reservation_id") @db.Uuid
+  periodId      String      @map("period_id") @db.Uuid
+  seatId        String      @map("seat_id") @db.Uuid
+  periodSeats   PeriodSeat  @relation(fields: [periodId, seatId], references: [periodId, seatId], onDelete: Cascade, onUpdate: NoAction)
+  reservations  Reservation @relation(fields: [reservationId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@id([reservationId, periodId, seatId])
+  @@map("reservation_period_seats")
 }
 
 /// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
-model specialties {
-  id                     String                   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  title                  String                   @unique @db.VarChar(50)
-  selection_type         selection_type?          @default(SINGLE)
-  position               Int?                     @default(0) @db.SmallInt
-  created_at             DateTime?                @default(now()) @db.Timestamptz(6)
-  updated_at             DateTime?                @default(now()) @db.Timestamptz(6)
-  meal_specialties       meal_specialties[]
-  order_meal_specialties order_meal_specialties[]
-  specialty_items        specialty_items[]
+model Reservation {
+  id                     String                  @id @default(dbgenerated("uuid_generate_v1mc()")) @db.Uuid
+  type                   ReservationType         @default(ONLINE)
+  isCancelled            Boolean                 @default(false) @map("is_cancelled")
+  people                 Int                     @default(1) @db.SmallInt
+  startAt                DateTime?               @map("start_at") @db.Timestamptz(0)
+  endAt                  DateTime?               @map("end_at") @db.Timestamptz(0)
+  createdAt              DateTime                @default(now()) @map("created_at") @db.Timestamptz(0)
+  updatedAt              DateTime?               @updatedAt @map("updated_at") @db.Timestamptz(0)
+  userId                 String                  @map("user_id") @db.Uuid
+  periodId               String                  @map("period_id") @db.Uuid
+  orders                 Order[]
+  reservationPeriodSeats ReservationPeriodSeat[]
+  periods                Period                  @relation(fields: [periodId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  users                  User                    @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@map("reservations")
 }
 
 /// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
-model specialty_items {
-  id                         String                       @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  title                      String                       @unique @db.VarChar(50)
-  price                      Int?                         @default(0)
-  position                   Int?                         @default(0) @db.SmallInt
-  created_at                 DateTime?                    @default(now()) @db.Timestamptz(6)
-  updated_at                 DateTime?                    @default(now()) @db.Timestamptz(6)
-  specialty_id               String?                      @db.Uuid
-  meal_specialty_items       meal_specialty_items[]
-  order_meal_specialty_items order_meal_specialty_items[]
-  specialties                specialties?                 @relation(fields: [specialty_id], references: [id], onUpdate: NoAction)
+model Seat {
+  id          String       @id @default(dbgenerated("uuid_generate_v1mc()")) @db.Uuid
+  seatNo      String       @unique @map("seat_no") @db.VarChar(5)
+  capacity    Int          @db.SmallInt
+  createdAt   DateTime     @default(now()) @map("created_at") @db.Timestamptz(0)
+  updatedAt   DateTime?    @updatedAt @map("updated_at") @db.Timestamptz(0)
+  periodSeats PeriodSeat[]
+
+  @@map("seats")
 }
 
 /// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
-model users {
-  id            String         @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  username      String         @db.VarChar(50)
-  phone         String         @unique @db.VarChar(20)
-  email         String?        @unique @db.VarChar(100)
-  gender        gender?
-  password_hash String?        @db.VarChar(255)
-  role          role?          @default(CUSTOMER)
-  created_at    DateTime?      @default(now()) @db.Timestamptz(6)
-  updated_at    DateTime?      @default(now()) @db.Timestamptz(6)
-  login_logs    login_logs[]
-  orders        orders[]
-  reservations  reservations[]
+model Specialty {
+  id                   String               @id @default(dbgenerated("uuid_generate_v1mc()")) @db.Uuid
+  title                String               @unique @db.VarChar(50)
+  selectionType        SelectionType        @default(SINGLE) @map("selection_type")
+  position             Int                  @default(0) @db.SmallInt
+  createdAt            DateTime             @default(now()) @map("created_at") @db.Timestamptz(0)
+  updatedAt            DateTime?            @updatedAt @map("updated_at") @db.Timestamptz(0)
+  mealSpecialties      MealSpecialty[]
+  orderMealSpecialties OrderMealSpecialty[]
+  specialtyItems       SpecialtyItem[]
+
+  @@map("specialties")
 }
 
 /// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
-model walk_in_users {
-  id         String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  people     Int?      @default(1) @db.SmallInt
-  start_at   DateTime? @db.Timestamptz(6)
-  end_at     DateTime? @db.Timestamptz(6)
-  created_at DateTime? @default(now()) @db.Timestamptz(6)
-  updated_at DateTime? @default(now()) @db.Timestamptz(6)
-  orders     orders[]
+model SpecialtyItem {
+  id                      String                   @id @default(dbgenerated("uuid_generate_v1mc()")) @db.Uuid
+  title                   String                   @unique @db.VarChar(50)
+  price                   Int                      @default(0)
+  position                Int                      @default(0) @db.SmallInt
+  createdAt               DateTime                 @default(now()) @map("created_at") @db.Timestamptz(0)
+  updatedAt               DateTime?                @updatedAt @map("updated_at") @db.Timestamptz(0)
+  specialtyId             String?                  @map("specialty_id") @db.Uuid
+  mealSpecialtyItems      MealSpecialtyItem[]
+  orderMealSpecialtyItems OrderMealSpecialtyItem[]
+  specialties             Specialty?               @relation(fields: [specialtyId], references: [id], onUpdate: NoAction)
+
+  @@map("specialty_items")
 }
 
-enum gender {
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model User {
+  id           String        @id @default(dbgenerated("uuid_generate_v1mc()")) @db.Uuid
+  username     String        @db.VarChar(50)
+  phone        String        @unique @db.VarChar(20)
+  email        String?       @unique @db.VarChar(100)
+  gender       Gender        @default(OTHER)
+  passwordHash String?       @map("password_hash") @db.VarChar(255)
+  role         Role          @default(CUSTOMER)
+  createdAt    DateTime      @default(now()) @map("created_at") @db.Timestamptz(0)
+  updatedAt    DateTime?     @updatedAt @map("updated_at") @db.Timestamptz(0)
+  loginLogs    LoginLog[]
+  reservations Reservation[]
+
+  @@map("users")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model WalkInUser {
+  id        String    @id @default(dbgenerated("uuid_generate_v1mc()")) @db.Uuid
+  people    Int       @default(1) @db.SmallInt
+  startAt   DateTime  @default(now()) @map("start_at") @db.Timestamptz(0)
+  endAt     DateTime? @map("end_at") @db.Timestamptz(0)
+  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(0)
+  updatedAt DateTime? @updatedAt @map("updated_at") @db.Timestamptz(0)
+
+  @@map("walk_in_users")
+}
+
+enum Gender {
   MALE
   FEMALE
   OTHER
+
+  @@map("gender")
 }
 
-enum log_type {
+enum LogType {
   LOGIN
   LOGOUT
+
+  @@map("login_type")
 }
 
-enum order_status {
+enum OrderStatus {
   WORKING
   FINISHED
   CANCEL
+
+  @@map("order_status")
 }
 
-enum order_type {
+enum OrderType {
   DINE_IN
   TAKE_OUT
+
+  @@map("order_type")
 }
 
-enum payment_status {
+enum PaymentStatus {
   UNPAID
   SUCCESS
   CANCEL
+
+  @@map("payment_status")
 }
 
-enum reservation_type {
+enum ReservationType {
   ONLINE
   PHONE
+
+  @@map("reservation_type")
 }
 
-enum role {
+enum Role {
   CUSTOMER
   STAFF
   ADMIN
+
+  @@map("role")
 }
 
-enum selection_type {
+enum SelectionType {
   SINGLE
   MULTIPLE
+
+  @@map("selection_type")
 }
 
-enum slot_status {
+enum SlotStatus {
   AVAILABLE
   FULL
   UNAVAILABLE
+
+  @@map("slot_status")
 }
