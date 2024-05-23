@@ -180,6 +180,7 @@ model Reservation {
   type                   ReservationType         @default(ONLINE)
   isCancelled            Boolean                 @default(false) @map("is_cancelled")
   people                 Int                     @default(1) @db.SmallInt
+  remark                 String?                 @default("") @db.VarChar(255)
   startAt                DateTime?               @map("start_at") @db.Timestamptz(0)
   endAt                  DateTime?               @map("end_at") @db.Timestamptz(0)
   createdAt              DateTime                @default(now()) @map("created_at") @db.Timestamptz(0)

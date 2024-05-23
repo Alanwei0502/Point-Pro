@@ -1,41 +1,11 @@
 import jwt from 'jsonwebtoken';
-import { NextFunction, Request } from 'express';
-import { ApiResponse, AuthRequest } from './types/shared';
-import { object, string, number, date } from 'yup';
-import session from 'express-session';
-
-export const verifyAdminSchema = object({
-  sub: string().required(),
-  iat: number().required(),
-  exp: number().required(),
-  memberId: string().required(),
-  account: string().required(),
-  email: string().optional(),
-  role: string().required(),
-});
-
-export const verifyReservationSchema = object({
-  reservationId: string().required(),
-  reservationType: string().optional(),
-  startTime: date().required(),
-  seatNo: string().required(),
-  periodStartTime: date().optional(),
-  periodEndTime: date().optional(),
-});
+import { NextFunction } from 'express';
+import { ApiResponse, AuthRequest } from '../types/shared';
+import { verifyAdminSchema, verifyReservationSchema } from '../validators';
 
 const verifyUserSchema = verifyAdminSchema || verifyReservationSchema;
 
 const secret = process.env.POINT_PRO_SECRET || 'point-proo';
-
-const oneDay = 1000 * 60 * 60 * 24;
-
-//session middleware
-export const sessionMiddleware = session({
-  secret: 'point-pro',
-  saveUninitialized: true,
-  cookie: { maxAge: oneDay },
-  resave: false,
-});
 
 export const verifyMiddleware = (excludes?: string[]) => (req: AuthRequest, res: ApiResponse, next: NextFunction) => {
   if (excludes && excludes.includes(req.path)) {
@@ -59,8 +29,7 @@ export const verifyMiddleware = (excludes?: string[]) => (req: AuthRequest, res:
       errors.push(error as string);
     }
     try {
-      verifyUserSchema.validateSync(decoded);
-      const user = verifyUserSchema.cast(decoded);
+      const user = verifyUserSchema.parse(decoded);
       // console.log('user', user);
 
       req.auth = user;
@@ -91,8 +60,4 @@ export const verifyMiddleware = (excludes?: string[]) => (req: AuthRequest, res:
       });
     }
   }
-};
-
-export const errorMiddleware = (error: Error, req: Request, res: ApiResponse, next: NextFunction) => {
-  return res.status(500).send({ message: `${error.name} ${error.message}`, result: null });
 };

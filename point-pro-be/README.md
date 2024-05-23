@@ -24,18 +24,23 @@ npx prisma db seed # add seed data
 ## Set up api server
 
 ```shell
-yarn dev
+npm run dev
 ```
 
 ## Migrations
 
 ```shell
 # create migration file
-npx prisma migrate dev --create-only
+npx prisma migrate dev -n [migration_folder_name]
 
-# if just wanna create for test,
+# update schema in db
 npx prisma db push
 
+# add seed data
+npx prisma db seed
+
+# generate prisma client
+npx prisma generate
 ```
 ## Ref
 

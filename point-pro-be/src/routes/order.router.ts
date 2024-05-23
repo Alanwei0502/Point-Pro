@@ -1,17 +1,18 @@
 import { Router } from 'express';
 import { OrderController } from '../controllers';
 import {
-  cancelOrderHandlerValidation,
-  createOrderHandlerValidation,
-  getOrderHandlerValidation,
-  updateOrderHandlerValidation,
-} from '../validations';
+  createOrderReqBodySchema,
+  updateOrderReqBodySchema,
+  orderIdValidatedSchema,
+  orderStatusValidatedSchema,
+} from '../validators';
+import { validateMiddleware } from '../middlewares';
 
 const orderRouter = Router();
 
-// orderRouter.get('/', getOrderHandlerValidation, OrderController.getOrdersHandler);
-// orderRouter.post('/', createOrderHandlerValidation, OrderController.createOrderHandler);
-// orderRouter.patch('/', updateOrderHandlerValidation, OrderController.updateOrderHandler);
-// orderRouter.delete('/', cancelOrderHandlerValidation, OrderController.cancelOrderHandler);
+// orderRouter.get('/', validateMiddleware(orderStatusValidatedSchema, 'query'), OrderController.getOrdersHandler);
+// orderRouter.post('/', validateMiddleware(createOrderReqBodySchema), OrderController.createOrderHandler);
+// orderRouter.patch('/', validateMiddleware(updateOrderReqBodySchema), OrderController.updateOrderHandler);
+// orderRouter.delete('/', validateMiddle(orderIdValidatedSchema, 'query'), OrderController.cancelOrderHandler);
 
 export default orderRouter;

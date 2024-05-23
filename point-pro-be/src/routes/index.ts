@@ -39,7 +39,7 @@ apiRouter.use('/menu', menuRouter);
 // apiRouter.use('/payment', paymentRouter);
 // apiRouter.use('/seat', seatRouter);
 apiRouter.use('/period', periodRouter);
-// apiRouter.use('/reservation', reservationRouter);
+apiRouter.use('/reservation', reservationRouter);
 // apiRouter.use('/mail', mailerRouter);
 
 export default apiRouter;

@@ -12,6 +12,7 @@ export function insertReservations() {
           period_record RECORD;
           random_is_cancelled BOOLEAN;
           random_people SMALLINT;
+          random_remark VARCHAR(255);
       BEGIN
           FOR i IN 1..80 LOOP
               -- random user
@@ -33,6 +34,9 @@ export function insertReservations() {
   
               -- random people
               random_people := trunc(random() * 10 + 1)::SMALLINT;
+
+              -- random remark
+              random_remark := 'Remark ' || trunc(random() * 1000)::TEXT;
   
               -- insert records
               INSERT INTO reservations (
@@ -40,7 +44,8 @@ export function insertReservations() {
                   is_cancelled, 
                   people, 
                   user_id, 
-                  period_id
+                  period_id,
+                  remark
               ) VALUES (
                   CASE 
                       WHEN user_record.email IS NULL THEN 'PHONE'::reservation_type
@@ -49,7 +54,8 @@ export function insertReservations() {
                   random_is_cancelled,
                   random_people,
                   user_record.id,
-                  period_record.id
+                  period_record.id,
+                  random_remark
               );
           END LOOP;
       END $$;

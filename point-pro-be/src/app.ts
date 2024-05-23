@@ -1,15 +1,13 @@
 import express, { json, urlencoded } from 'express';
-import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import morgan from 'morgan';
-import { errorMiddleware, verifyMiddleware, sessionMiddleware } from './middleware';
 import apiRouter from './routes';
-import { corsOptionDelegate } from './helpers';
+import { corsMiddleware, errorMiddleware, sessionMiddleware, verifyMiddleware } from './middlewares';
 
 const app = express();
 
 app.use(morgan('combined'));
-app.use(cors(corsOptionDelegate));
+app.use(corsMiddleware);
 app.use(cookieParser());
 
 app.get('/healthz', async (_, res) => {

@@ -8,5 +8,5 @@ export * from './menu.controller';
 // export * from './payment.controller';
 // export * from './seat.controller';
 export * from './period.controller';
-// export * from './reservation.controller';
+export * from './reservation.controller';
 // export * from './mailer.controller';

@@ -4,7 +4,7 @@ import { Server as HttpServer } from 'http';
 import { Namespace } from 'socket.io/dist/namespace';
 import { Logger } from './helpers/utils.helper';
 import { DefaultEventsMap } from 'socket.io/dist/typed-events';
-import { verifyAdminSchema, verifyReservationSchema } from './middleware';
+import { verifyAdminSchema, verifyReservationSchema } from './validators';
 
 const secret = process.env.POINT_PRO_SECRET || 'point-proo';
 
@@ -81,8 +81,7 @@ function adminsSocket({ mainNs, adminNs, userNs }: SocketArgType) {
       // Verify & Decode token
       const token = socket.handshake.auth.token;
       const decoded = jwt.verify(token, secret);
-      verifyAdminSchema.validateSync(decoded);
-      const admin = verifyAdminSchema.cast(decoded);
+      const admin = verifyAdminSchema.parse(decoded);
 
       // Join Room
       socket.join(admin.memberId);
