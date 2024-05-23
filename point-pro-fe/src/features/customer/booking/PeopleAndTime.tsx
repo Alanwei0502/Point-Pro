@@ -1,106 +1,97 @@
-import { FC, useEffect } from 'react';
-import { ButtonBase, DialogActions, FormControl, FormLabel, MenuItem, Select, SelectChangeEvent } from '@mui/material';
+import { FC, useEffect, useMemo } from 'react';
+import { Box, FormControl, FormLabel, MenuItem, Select, SelectChangeEvent, SxProps, Theme } from '@mui/material';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { PickersActionBarProps } from '@mui/x-date-pickers';
-import { Loading } from '~/components';
+import { DateCalendar } from '@mui/x-date-pickers';
+import { BaseButton, Loading } from '~/components';
 import { appDayjs, formatTimeOnly, formatDateOnly } from '~/utils';
 import { useAppDispatch, useAppSelector } from '~/hooks';
-import { setAdultsAmount, setDate, setReservedAt, getPeriodByDate } from '~/store/slices';
+import { setSelectedPeople, setSelectedDate, setSelectedPeriod, getAvailablePeriods, setDialog } from '~/store/slices';
+import { CustomerBookingDialog } from '~/types';
+
+const formLabelStyle: SxProps<Theme> | undefined = { fontWeight: 700, color: 'common.black' };
 
 interface IPeopleAndTimeProps {}
 
 export const PeopleAndTime: FC<IPeopleAndTimeProps> = () => {
   const dispatch = useAppDispatch();
 
-  const selectedDate = useAppSelector(({ period }) => period.selectedDate);
-  const available = useAppSelector(({ period }) => period.availablePeriods);
-  const availableDate = available.map((p) => formatDateOnly(p.startTime));
-  console.log('appDayjs', appDayjs(selectedDate).startOf('date'));
-  const availableSlots = available.filter((p) => formatDateOnly(p.startTime) === formatDateOnly(selectedDate));
-  console.log('PeopleAndTime', availableSlots);
+  const isLoading = useAppSelector(({ booking }) => booking.isLoading);
+  const availableTime = useAppSelector(({ booking }) => booking.availableTime);
+  const selectedDate = useAppSelector(({ booking }) => booking.selectedDate);
+  const selectedPeriod = useAppSelector(({ booking }) => booking.selectedPeriod);
+  const people = useAppSelector(({ booking }) => booking.people);
 
-  const availablePeriods = useAppSelector(({ customerReservation }) => customerReservation.availablePeriods);
-  const choosedDate = useAppSelector(({ customerReservation }) => customerReservation.choosedDate);
-  const reservedAt = useAppSelector(({ customerReservation }) => customerReservation.reservationParams.reservedAt);
-  const adults = useAppSelector(({ customerReservation }) => customerReservation.reservationParams.user.adults);
+  const availableDate = useMemo(() => availableTime.map((p) => formatDateOnly(p.startTime)), [availableTime]);
 
-  const isLoading = useAppSelector(({ customerReservation }) => customerReservation.isLoading);
+  const availablePeriods = useMemo(
+    () => availableTime.filter((p) => appDayjs(p.startTime).isSame(selectedDate, 'day')),
+    [availableTime, selectedDate],
+  );
 
-  const choosedPeriodInfo = availablePeriods.find((e) => e.startTime === reservedAt);
-  const adultOptionList =
-    choosedPeriodInfo && choosedPeriodInfo.available > 10
+  const availablePeopleOptions = useMemo(() => {
+    if (!selectedPeriod) return [];
+
+    const choosedPeriodInfo = availableTime.find((i) => appDayjs(i.startTime).isSame(selectedPeriod.startTime));
+
+    if (!choosedPeriodInfo) return [];
+
+    return choosedPeriodInfo.available > 10
       ? [1, 2, 3, 4, 7, 8, 9, 10]
-      : Array.from({ length: choosedPeriodInfo?.available ?? 0 }, (_, i) => i + 1);
+      : Array.from({ length: choosedPeriodInfo.available }, (_, i) => i + 1);
+  }, [availableTime, selectedPeriod]);
 
   useEffect(() => {
-    // dispatch(getPeriodByDate({ date: choosedDate }));
-  }, [choosedDate, dispatch]);
+    dispatch(getAvailablePeriods());
+  }, [dispatch]);
 
-  const handleChangeAdultsAmount = (e: SelectChangeEvent<`${number}`>) => {
-    dispatch(setAdultsAmount(+e.target.value));
+  const handleSelectedPeople = (e: SelectChangeEvent<`${number}`>) => {
+    dispatch(setSelectedPeople(+e.target.value));
   };
 
-  const handleChangeBookingDate = (value: appDayjs.Dayjs | null) => {
-    dispatch(setDate(value ?? appDayjs()));
+  const handleSelectedDate = (value: appDayjs.Dayjs | null) => {
+    if (!value) return;
+    dispatch(setSelectedDate(value));
   };
 
-  const handleChangeReservedPeriod = (e: SelectChangeEvent<string>) => {
-    dispatch(setReservedAt(e.target.value));
+  const handleSelectedPeriod = (e: SelectChangeEvent<string>) => {
+    const selectedStartTime = e.target.value;
+    const selectedPeriod = availablePeriods.find((p) => `${p.startTime}` === selectedStartTime);
+    dispatch(setSelectedPeriod(selectedPeriod));
   };
 
-  if (isLoading) {
-    return <Loading open={isLoading} />;
-  }
+  const handleOpenBookingSearch = () => {
+    dispatch(setDialog(CustomerBookingDialog.RECORD_QUERY));
+  };
 
-  return (
-    <>
-      <FormControl margin='normal' fullWidth>
-        <FormLabel sx={{ fontWeight: 700, color: 'common.black' }}>用餐日期</FormLabel>
+  return isLoading ? (
+    <Loading open={isLoading} />
+  ) : (
+    <Box height={800}>
+      <FormControl margin='normal' fullWidth required>
         <LocalizationProvider dateAdapter={AdapterDayjs}>
-          <DatePicker
+          <DateCalendar
             defaultValue={selectedDate}
             value={selectedDate}
-            format='MM月DD日 星期dd'
-            onChange={handleChangeBookingDate}
             views={['day']}
+            onChange={handleSelectedDate}
             disablePast
             shouldDisableDate={(day) => !availableDate.includes(formatDateOnly(day))}
-            slots={{
-              actionBar: (props: PickersActionBarProps) => (
-                <DialogActions className={props.className} sx={{ padding: '.5rem' }}>
-                  <ButtonBase
-                    onClick={props.onAccept}
-                    sx={{
-                      fontSize: 'body1.fontSize',
-                      bgcolor: 'primary.main',
-                      padding: '.5rem',
-                      borderRadius: '.5rem',
-                      width: '100%',
-                    }}
-                  >
-                    確定
-                  </ButtonBase>
-                </DialogActions>
-              ),
-            }}
-            slotProps={{
-              toolbar: {
-                hidden: true,
-              },
-              actionBar: {
-                actions: ['accept'],
-              },
+            sx={{
+              margin: '0',
+              width: '100%',
             }}
           />
         </LocalizationProvider>
       </FormControl>
 
-      <FormControl margin='normal' fullWidth>
-        <FormLabel sx={{ fontWeight: 700, color: 'common.black' }}>用餐時段</FormLabel>
-        <Select onChange={handleChangeReservedPeriod} value={`${reservedAt}`}>
-          {availableSlots.map((slot) => (
+      <FormControl margin='normal' fullWidth required>
+        <FormLabel sx={formLabelStyle}>用餐時段</FormLabel>
+        <Select onChange={handleSelectedPeriod} value={`${selectedPeriod?.startTime ?? ''}`} displayEmpty>
+          <MenuItem disabled value=''>
+            請選擇
+          </MenuItem>
+          {availablePeriods.map((slot) => (
             <MenuItem value={`${slot.startTime}`} key={slot.id}>
               {formatTimeOnly(slot.startTime)}
             </MenuItem>
@@ -108,23 +99,32 @@ export const PeopleAndTime: FC<IPeopleAndTimeProps> = () => {
         </Select>
       </FormControl>
 
-      <FormControl margin='normal' fullWidth>
-        <FormLabel sx={{ fontWeight: 700, color: 'common.black' }}>用餐人數</FormLabel>
-        <Select onChange={handleChangeAdultsAmount} value={`${adults}`}>
-          {adultOptionList.map((value) => (
+      <FormControl margin='normal' fullWidth required>
+        <FormLabel sx={formLabelStyle}>用餐人數</FormLabel>
+        <Select onChange={handleSelectedPeople} value={`${people}`}>
+          <MenuItem disabled value='0'>
+            請選擇
+          </MenuItem>
+          {availablePeopleOptions.map((value) => (
             <MenuItem value={`${value}`} key={value}>
               {`${value} 位`}
             </MenuItem>
           ))}
         </Select>
       </FormControl>
-      {/* [TODO]: no api, temporarily hide */}
-      {/* <BaseButton
+
+      <BaseButton
         onClick={handleOpenBookingSearch}
-        sx={{ textDecoration: "underline", fontWeight: 700, fontSize: "body1.fontSize", mt: "2rem" }}
+        sx={{
+          textDecoration: 'underline',
+          fontWeight: 700,
+          fontSize: 'body1.fontSize',
+          mt: '2rem',
+          color: 'common.black',
+        }}
       >
         我已經有預約了，查詢預訂資訊
-      </BaseButton> */}
-    </>
+      </BaseButton>
+    </Box>
   );
 };

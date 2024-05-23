@@ -44,6 +44,9 @@ export const formatFullDateWithTime = (date: appDayjs.ConfigType) => {
 export const formatFullDate = (date: appDayjs.ConfigType) => {
   return appDayjs(date).format(dateForm.fullDate);
 };
+export const formatDateWithTime = (date: appDayjs.ConfigType) => {
+  return appDayjs(date).format(dateForm.dateWithTime);
+};
 export const formatDateOnly = (date: appDayjs.ConfigType) => {
   return appDayjs(date).format(dateForm.dateOnly);
 };

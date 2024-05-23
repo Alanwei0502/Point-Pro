@@ -7,7 +7,7 @@ import {
   paymentSlice,
   socketSlice,
   specialtySlice,
-  customerBookingSlice,
+  bookingSlice,
   takeOrderSlice,
   periodSlice,
 } from './slices';
@@ -16,7 +16,7 @@ import { counterSlice } from '~/features/home/slice';
 const reducer = combineReducers({
   [counterSlice.name]: counterSlice.reducer,
   [takeOrderSlice.name]: takeOrderSlice.reducer,
-  [customerBookingSlice.name]: customerBookingSlice.reducer,
+  [bookingSlice.name]: bookingSlice.reducer,
   [authSlice.name]: authSlice.reducer,
   [categorySlice.name]: categorySlice.reducer,
   [specialtySlice.name]: specialtySlice.reducer,

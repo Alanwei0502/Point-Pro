@@ -4,31 +4,32 @@ import { MobileDialogLayout } from '~/components';
 import { CustomerBookingDialog } from '~/types';
 import { phoneRegex } from '~/utils';
 import { useAppDispatch, useAppSelector } from '~/hooks';
-import { getBookingRecord, setReservationPhone, setDialog } from '~/store/slices';
+import { closeBookingRecordQueryDialog, getBookingRecord, setPhone } from '~/store/slices';
 
-interface BookingRecordQueryModalProps {}
+interface BookingRecordQueryDialogProps {}
 
-export const BookingRecordQueryModal: FC<BookingRecordQueryModalProps> = () => {
+export const BookingRecordQueryDialog: FC<BookingRecordQueryDialogProps> = () => {
   const dispatch = useAppDispatch();
 
-  const reservationPhone = useAppSelector(({ customerReservation }) => customerReservation.reservationPhone);
-  const dialog = useAppSelector(({ customerReservation }) => customerReservation.dialog);
+  const [isPhoneError, setIsPhoneError] = useState(false);
 
-  const [isPhoneError, setIsPhoneError] = useState(true);
+  const phone = useAppSelector(({ booking }) => booking.phone);
+  const dialog = useAppSelector(({ booking }) => booking.dialog);
 
   const handleClose = () => {
-    dispatch(setDialog());
+    setIsPhoneError(false);
+    dispatch(closeBookingRecordQueryDialog());
   };
 
   const handleQuery = () => {
-    if (!reservationPhone) return;
-    dispatch(getBookingRecord(reservationPhone));
+    if (!phone) return;
+    dispatch(getBookingRecord(phone));
   };
 
   const handleQueryString = (e: React.ChangeEvent<HTMLInputElement>) => {
     const isValidated = phoneRegex.test(e.target.value);
     setIsPhoneError(!isValidated);
-    dispatch(setReservationPhone(isValidated ? e.target.value : ''));
+    dispatch(setPhone(isValidated ? e.target.value : ''));
   };
 
   return (
@@ -45,7 +46,12 @@ export const BookingRecordQueryModal: FC<BookingRecordQueryModalProps> = () => {
     >
       <FormControl margin='normal' fullWidth>
         <FormLabel sx={{ fontWeight: 700, color: 'common.black' }}>請輸入訂位的手機號碼</FormLabel>
-        <TextField placeholder='0987654321' onChange={handleQueryString} />
+        <TextField
+          placeholder='0987654321'
+          onChange={handleQueryString}
+          error={isPhoneError}
+          helperText={isPhoneError && '手機號碼格式錯誤'}
+        />
       </FormControl>
     </MobileDialogLayout>
   );

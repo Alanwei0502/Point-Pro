@@ -3,7 +3,7 @@ import { MobileStepper } from '@mui/material';
 import { MobileButton } from '~/components';
 import { CustomerBookingDialog } from '~/types';
 import { useAppDispatch, useAppSelector } from '~/hooks';
-import { setStep, setDialog, postReservation } from '~/store/slices';
+import { setStep, setDialog } from '~/store/slices';
 
 interface IBookingStepsProps {
   stepLength: number;
@@ -13,12 +13,14 @@ export const BookingSteps: FC<IBookingStepsProps> = (props) => {
 
   const dispatch = useAppDispatch();
 
-  const step = useAppSelector(({ customerReservation }) => customerReservation.step);
-  const reservedAt = useAppSelector(({ customerReservation }) => customerReservation.reservationParams.reservedAt);
-  const { name, phone, email, adults } = useAppSelector(
-    ({ customerReservation }) => customerReservation.reservationParams.user,
-  );
-  const isAgreedPrivacyPolicy = useAppSelector(({ customerReservation }) => customerReservation.isAgreedPrivacyPolicy);
+  const step = useAppSelector(({ booking }) => booking.step);
+  const selectedDate = useAppSelector(({ booking }) => booking.selectedDate);
+  const selectedPeriod = useAppSelector(({ booking }) => booking.selectedPeriod);
+  const people = useAppSelector(({ booking }) => booking.people);
+  const username = useAppSelector(({ booking }) => booking.username);
+  const phone = useAppSelector(({ booking }) => booking.phone);
+  const email = useAppSelector(({ booking }) => booking.email);
+  const isAgreedPrivacyPolicy = useAppSelector(({ booking }) => booking.isAgreedPrivacyPolicy);
 
   const isNotFirstStep = step !== 0;
   const isNotLastStep = step !== stepLength - 1;
@@ -26,9 +28,9 @@ export const BookingSteps: FC<IBookingStepsProps> = (props) => {
   const isBookingNextStepBtnDisabled = () => {
     switch (step) {
       case 0:
-        return !(reservedAt && adults);
+        return !(selectedDate && selectedPeriod && people);
       case 1:
-        return !(name && phone && email && isAgreedPrivacyPolicy);
+        return !(username && phone && email && isAgreedPrivacyPolicy);
       case 2:
         return false;
       default:
@@ -57,18 +59,7 @@ export const BookingSteps: FC<IBookingStepsProps> = (props) => {
       activeStep={step}
       backButton={
         <>
-          {isNotFirstStep && (
-            <MobileButton
-              onClick={handleGoBack}
-              sx={{
-                bgcolor: 'common.white',
-                border: '.5px solid',
-                '&:hover': { backgroundColor: 'common.white' },
-              }}
-            >
-              回上一步
-            </MobileButton>
-          )}
+          {isNotFirstStep && <MobileButton onClick={handleGoBack}>回上一步</MobileButton>}
           {!isNotLastStep && <MobileButton onClick={handleConfirm}>確認預定</MobileButton>}
         </>
       }

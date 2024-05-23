@@ -1,30 +1,29 @@
 import { FC, useEffect } from 'react';
 import { Box, Typography } from '@mui/material';
-import { useAppDispatch, useAppSelector, useSocket } from '~/hooks';
+import { useAppSelector, useSocket } from '~/hooks';
 import { NameSpace } from '~/types';
-import { getAvailablePeriods } from '~/store/slices';
 import { MobileLayout, MobileHeader } from '~/components';
+import { BookingSteps } from './BookingSteps';
 import { PeopleAndTime } from './PeopleAndTime';
 import { BookerInfo } from './BookerInfo';
-import { PrivacyPolicyModal } from './PrivacyPolicyModal';
-import { BookingSteps } from './BookingSteps';
-import { BookingRecordQueryModal } from './BookingRecordQueryModal';
-import { BookingReminderModal, ConfirmBookingInfo } from './BookingReminderModal';
+import { ConfirmBookingInfo } from './ConfirmBookingInfo';
+import { PrivacyPolicyDialog } from './PrivacyPolicyDialog';
+import { BookingRecordQueryDialog } from './BookingRecordQueryDialog';
+import { BookingReminderDialog } from './BookingReminderDialog';
+import { BookingQRCodeDialog } from './BookingQrCodeDialog';
+
+const stepTitle = ['訂位時間', '訂位資訊', '請確認訂位資訊'];
 
 interface IBookingProps {}
 
-const stepTitle = ['人數及時間', '訂位人資訊', '請確認輸入資訊'];
-
 export const Booking: FC<IBookingProps> = () => {
-  const dispatch = useAppDispatch();
-
   useSocket({ ns: NameSpace.main });
 
-  const step = useAppSelector(({ customerReservation }) => customerReservation.step);
+  const step = useAppSelector(({ booking }) => booking.step);
 
   useEffect(() => {
-    dispatch(getAvailablePeriods());
-  }, [dispatch]);
+    window.scrollTo(0, 0);
+  }, [step]);
 
   return (
     <MobileLayout>
@@ -33,7 +32,7 @@ export const Booking: FC<IBookingProps> = () => {
         {stepTitle[step]}
       </Typography>
 
-      <Box component='main'>
+      <Box component='main' sx={{ overflowY: 'scroll' }}>
         {step === 0 && <PeopleAndTime />}
         {step === 1 && <BookerInfo />}
         {step === 2 && <ConfirmBookingInfo />}
@@ -42,12 +41,12 @@ export const Booking: FC<IBookingProps> = () => {
       <BookingSteps stepLength={stepTitle.length} />
 
       {/* 預訂查詢 */}
-      <BookingRecordQueryModal />
+      <BookingRecordQueryDialog />
       {/* 隱私權政策 */}
-      <PrivacyPolicyModal />
+      <PrivacyPolicyDialog />
       {/* 已為您安排訂位 */}
-      <BookingReminderModal />
-      {/* 請出示此畫面 QR Code */}
+      <BookingReminderDialog />
+      {/* TODO: 請出示此畫面 QR Code */}
       {/* <BookingQRCodeDialog /> */}
     </MobileLayout>
   );

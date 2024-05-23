@@ -1,8 +1,6 @@
 import { FC } from 'react';
-import { QRCodeSVG } from 'qrcode.react';
 import {
   Box,
-  Button,
   Typography,
   Dialog,
   DialogActions,
@@ -15,9 +13,6 @@ import {
 } from '@mui/material';
 import { Variant } from '@mui/material/styles/createTypography';
 import CancelIcon from '@mui/icons-material/Cancel';
-import { useAppDispatch, useAppSelector } from '~/hooks';
-import { setDialog } from '~/store/slices';
-import { CustomerBookingDialog } from '~/types';
 
 interface IMobileDialogLayoutProps {
   title?: React.ReactNode;
@@ -25,7 +20,7 @@ interface IMobileDialogLayoutProps {
   isShowCloseIcon?: boolean;
   children?: React.ReactNode;
   isOpen: boolean;
-  onCloseDialog: () => void;
+  onCloseDialog?: () => void;
   actionButton?: React.ReactNode;
   dialogProps?: DialogProps;
   dialogTitleProps?: DialogTitleProps;
@@ -40,7 +35,7 @@ export const MobileDialogLayout: FC<IMobileDialogLayoutProps> = (props) => {
     isShowCloseIcon = true,
     children = null,
     isOpen,
-    onCloseDialog,
+    onCloseDialog = () => {},
     actionButton,
     dialogProps,
     dialogTitleProps,
@@ -111,42 +106,5 @@ export const MobileDialogLayout: FC<IMobileDialogLayoutProps> = (props) => {
         </DialogActions>
       )}
     </Dialog>
-  );
-};
-
-interface IBookingQRCodeDialogProps {}
-
-export const BookingQRCodeDialog: FC<IBookingQRCodeDialogProps> = () => {
-  const dispatch = useAppDispatch();
-
-  const dialog = useAppSelector(({ customerReservation }) => customerReservation.dialog);
-  const token = useAppSelector(({ auth }) => auth.userToken);
-
-  const checkInQRCode =
-    (import.meta.env.DEV ? 'http://' : 'https://') + window.location.host + '/orders?token=' + token ?? '';
-
-  const handleClose = () => {
-    dispatch(setDialog());
-  };
-
-  return (
-    <MobileDialogLayout
-      title='客人桌邊點餐 QR Code'
-      titleSize='h2'
-      isOpen={dialog === CustomerBookingDialog.QRCODE}
-      onCloseDialog={handleClose}
-      actionButton={<Button onClick={handleClose}>關閉</Button>}
-    >
-      <Box
-        sx={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          m: 'auto',
-        }}
-      >
-        <QRCodeSVG size={300} value={checkInQRCode}></QRCodeSVG>
-      </Box>
-    </MobileDialogLayout>
   );
 };

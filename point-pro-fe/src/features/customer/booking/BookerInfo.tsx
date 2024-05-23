@@ -1,5 +1,5 @@
 import { FC, useState } from 'react';
-import { Box, FormControl, FormControlLabel, FormLabel, Radio, RadioGroup, TextField } from '@mui/material';
+import { Box, ButtonBase, FormControl, FormControlLabel, FormLabel, Radio, RadioGroup, TextField } from '@mui/material';
 import { BaseCheckbox, BaseButton } from '~/components';
 import { CustomerBookingDialog, Gender } from '~/types';
 import { emailRegex, genderObj, phoneRegex } from '~/utils';
@@ -11,10 +11,13 @@ interface IBookerInfoProps {}
 export const BookerInfo: FC<IBookerInfoProps> = () => {
   const dispatch = useAppDispatch();
 
-  const { name, gender, phone, email, remark } = useAppSelector(
-    ({ customerReservation }) => customerReservation.reservationParams.user,
-  );
-  const isAgreedPrivacyPolicy = useAppSelector(({ customerReservation }) => customerReservation.isAgreedPrivacyPolicy);
+  const username = useAppSelector(({ booking }) => booking.username);
+  const phone = useAppSelector(({ booking }) => booking.phone);
+  const email = useAppSelector(({ booking }) => booking.email);
+  const gender = useAppSelector(({ booking }) => booking.gender);
+  const remark = useAppSelector(({ booking }) => booking.remark);
+
+  const isAgreedPrivacyPolicy = useAppSelector(({ booking }) => booking.isAgreedPrivacyPolicy);
 
   const [nameIsError, setNameIsError] = useState(false);
   const [phoneIsError, setPhoneIsError] = useState(false);
@@ -60,7 +63,7 @@ export const BookerInfo: FC<IBookerInfoProps> = () => {
         <FormLabel sx={{ fontWeight: 700, color: 'common.black' }}>姓名</FormLabel>
         <TextField
           placeholder='如何稱呼您'
-          defaultValue={name}
+          defaultValue={username}
           error={nameIsError}
           helperText={nameIsError && '請輸入姓名'}
           onChange={handleEnterName}
@@ -71,7 +74,6 @@ export const BookerInfo: FC<IBookerInfoProps> = () => {
         <RadioGroup row value={gender} onChange={handleChooseGender}>
           <FormControlLabel value={Gender.MALE} control={<Radio />} label={genderObj.MALE} />
           <FormControlLabel value={Gender.FEMALE} control={<Radio />} label={genderObj.FEMALE} />
-          <FormControlLabel value={Gender.OTHER} control={<Radio />} label={genderObj.OTHER} />
         </RadioGroup>
       </FormControl>
 
@@ -110,18 +112,18 @@ export const BookerInfo: FC<IBookerInfoProps> = () => {
         />
       </FormControl>
 
-      <Box sx={{ padding: '0 .1rem' }}>
+      <Box sx={{ padding: '0 .1rem', margin: '1rem 0' }}>
         <FormControlLabel
           control={<BaseCheckbox checked={isAgreedPrivacyPolicy} onChange={handleAgreedPolicy} />}
           label='確認我已閱讀並同意'
           sx={{ margin: 0 }}
         />
-        <BaseButton
+        <ButtonBase
           sx={{ textDecoration: 'underline', fontWeight: 700, fontSize: 'body1.fontSize' }}
           onClick={handleOpenPrivayPolicyDialog}
         >
           PointPro 隱私權政策
-        </BaseButton>
+        </ButtonBase>
       </Box>
     </Box>
   );

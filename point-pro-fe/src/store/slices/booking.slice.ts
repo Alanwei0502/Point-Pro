@@ -10,76 +10,53 @@ import {
   CustomerBookingDialog,
   Gender,
   SocketTopic,
+  IPeriod,
 } from '~/types';
 
-const name = 'customerReservation';
+const name = 'booking';
 
 interface ICustomerBookingSliceState {
-  step: number;
-  token?: string;
-  availableBookings: string[];
-  choosedDate: appDayjs.Dayjs;
-  availablePeriods: IAvailableBookingPeriod[];
-  reservationParams: ICreateBookingParams;
-  reservationPhone: string;
-  dialog: CustomerBookingDialog | undefined;
-  isAgreedPrivacyPolicy: boolean;
   isLoading: boolean;
+  step: number;
+  availableTime: IPeriod[];
+  selectedDate: appDayjs.Dayjs;
+  selectedPeriod: IPeriod | undefined;
+  people: number;
+  username: string;
+  phone: string;
+  email: string;
+  gender: Gender;
+  remark: string;
+  isAgreedPrivacyPolicy: boolean;
+
+  token?: string;
+  dialog: CustomerBookingDialog | undefined;
 }
 
 const initialState: ICustomerBookingSliceState = {
-  step: 0,
-  availableBookings: [],
-  token: '',
-  choosedDate: appDayjs(),
-  availablePeriods: [],
-  reservationParams: {
-    id: '',
-    reservedAt: '',
-    user: {
-      name: '',
-      gender: Gender.OTHER,
-      type: BookingType.ONLINE,
-      phone: '',
-      email: '',
-      remark: '',
-      adults: 1,
-      children: 0,
-    },
-  },
-  reservationPhone: '',
-  dialog: undefined,
-  isAgreedPrivacyPolicy: false,
   isLoading: false,
+  step: 0,
+  availableTime: [],
+  selectedDate: appDayjs().add(1, 'day'),
+  selectedPeriod: undefined,
+  people: 0,
+  username: '',
+  phone: '',
+  email: '',
+  gender: Gender.OTHER,
+  remark: '',
+  isAgreedPrivacyPolicy: false,
+
+  token: '',
+  dialog: undefined,
 };
 
-export const getBookingPeriods = createAppAsyncThunk(`${name}/getBookingPeriods`, async (arg, { rejectWithValue }) => {
-  try {
-    const { result } = await PeriodApi.getAvailablePeriods();
-    const availableBookings = [
-      ...new Set(result?.periods?.map((item: any) => formatDateOnly(item.startTime)) ?? []),
-    ] as string[];
-    return { availableBookings };
-  } catch (error) {
-    if (error instanceof Error) {
-      return rejectWithValue({ message: error.message });
-    } else {
-      return rejectWithValue({ message: 'unknown error' });
-    }
-  }
-});
-
-export const getBookingPeriodByDate = createAppAsyncThunk(
-  `${name}/getBookingPeriodByDate`,
-  async (arg, { getState, rejectWithValue }) => {
+export const getAvailablePeriods = createAppAsyncThunk(
+  `${name}/getAvailablePeriods`,
+  async (_, { rejectWithValue }) => {
     try {
-      const choosedDate = getState().customerReservation.choosedDate;
-      const { result } = await PeriodApi.getPeriodByDate({
-        date: convertToDatePayload(choosedDate),
-        excludeTime: false,
-      });
-      const availablePeriods = result?.periods ?? [];
-      return { availablePeriods };
+      const result = await PeriodApi.getAvailablePeriods();
+      return result;
     } catch (error) {
       if (error instanceof Error) {
         return rejectWithValue({ message: error.message });
@@ -94,19 +71,18 @@ export const postBookingReservation = createAppAsyncThunk(
   `${name}/postBookingReservation`,
   async (arg, { getState, rejectWithValue }) => {
     try {
-      const reservationParams = getState().customerReservation.reservationParams;
+      const { username, gender, phone, email, remark, people, selectedPeriod } = getState().booking;
       const socket = getState().socket.socket;
 
-      const response = await ReservationApi.postReservation({
-        type: 'OnlineBooking',
-        amount: reservationParams.user.adults + reservationParams.user.children,
-        options: reservationParams.user,
-        startTime: new Date(reservationParams.reservedAt),
-      });
+      // const response = await ReservationApi.postReservation({
+      //   type: 'OnlineBooking',
+      //   amount: people,
+      //   startTime: new Date(reservationParams.reservedAt),
+      // });
 
-      socket && socket.emit(SocketTopic.RESERVATION, response);
+      // socket && socket.emit(SocketTopic.RESERVATION, response);
 
-      return response.result;
+      // return response.result;
     } catch (error) {
       if (error instanceof Error) {
         return rejectWithValue({ message: error.message });
@@ -119,10 +95,10 @@ export const postBookingReservation = createAppAsyncThunk(
 
 export const getBookingRecord = createAppAsyncThunk(
   `${name}/getBookingRecord`,
-  async (reservationPhone: string, { rejectWithValue, dispatch }) => {
+  async (phone: string, { rejectWithValue, dispatch }) => {
     try {
       // [TODO]
-      // const { result } = await ReservationApi.getReservationByPhone(reservationPhone);
+      // const { result } = await ReservationApi.getReservationByPhone(phone);
       const bookingRecordRes = await fetch(`/data/dummyBookingRecord.json`);
       const bookingRecord = (await bookingRecordRes.json()) as IBookingInfo;
       dispatch(setDialog(CustomerBookingDialog.REMINDER));
@@ -137,7 +113,7 @@ export const getBookingRecord = createAppAsyncThunk(
   },
 );
 
-export const customerBookingSlice = createSlice({
+export const bookingSlice = createSlice({
   name,
   initialState,
   reducers: {
@@ -147,36 +123,32 @@ export const customerBookingSlice = createSlice({
     setToken: (state, action: PayloadAction<ICustomerBookingSliceState['token']>) => {
       state.token = action.payload;
     },
-    setDate: (state, action: PayloadAction<ICustomerBookingSliceState['choosedDate']>) => {
-      state.choosedDate = action.payload;
-      state.reservationParams.reservedAt =
-        state.availablePeriods[0]?.startTime ?? initialState.reservationParams.reservedAt;
-      state.reservationParams.user.adults = initialState.reservationParams.user.adults;
+    setSelectedDate: (state, action: PayloadAction<ICustomerBookingSliceState['selectedDate']>) => {
+      state.selectedDate = action.payload;
+      state.selectedPeriod = initialState.selectedPeriod;
+      state.people = initialState.people;
     },
-    setReservedAt: (state, action: PayloadAction<IBookingInfo['reservedAt']>) => {
-      state.reservationParams.reservedAt = action.payload;
-      state.reservationParams.user.adults = initialState.reservationParams.user.adults;
+    setSelectedPeriod: (state, action: PayloadAction<ICustomerBookingSliceState['selectedPeriod']>) => {
+      state.selectedPeriod = action.payload;
+      state.people = initialState.people;
+    },
+    setSelectedPeople: (state, action: PayloadAction<IBookingInfo['adults']>) => {
+      state.people = action.payload;
     },
     setName: (state, action: PayloadAction<IBookingInfo['name']>) => {
-      state.reservationParams.user.name = action.payload;
+      state.username = action.payload;
     },
     setGender: (state, action: PayloadAction<IBookingInfo['gender']>) => {
-      state.reservationParams.user.gender = action.payload;
+      state.gender = action.payload;
     },
     setPhone: (state, action: PayloadAction<IBookingInfo['phone']>) => {
-      state.reservationParams.user.phone = action.payload;
+      state.phone = action.payload;
     },
     setEmail: (state, action: PayloadAction<IBookingInfo['email']>) => {
-      state.reservationParams.user.email = action.payload;
+      state.email = action.payload;
     },
     setRemark: (state, action: PayloadAction<IBookingInfo['remark']>) => {
-      state.reservationParams.user.remark = action.payload;
-    },
-    setAdultsAmount: (state, action: PayloadAction<IBookingInfo['adults']>) => {
-      state.reservationParams.user.adults = action.payload;
-    },
-    setReservationPhone: (state, action) => {
-      state.reservationPhone = action.payload;
+      state.remark = action.payload;
     },
     setDialog: (state, action: PayloadAction<ICustomerBookingSliceState['dialog']>) => {
       state.dialog = action.payload;
@@ -184,25 +156,30 @@ export const customerBookingSlice = createSlice({
     setAgreedPolicy: (state, action: PayloadAction<ICustomerBookingSliceState['isAgreedPrivacyPolicy']>) => {
       state.isAgreedPrivacyPolicy = action.payload;
     },
-    resetUserInfo: (state) => {
-      state.reservationParams.user = initialState.reservationParams.user;
+    finishBooking: (state) => {
+      state = initialState;
+    },
+    confirmPrivacyPolicyDialog: (state) => {
+      state.dialog = initialState.dialog;
+      state.isAgreedPrivacyPolicy = true;
+    },
+    closeBookingRecordQueryDialog: (state) => {
+      state.phone = initialState.phone;
+      state.dialog = initialState.dialog;
     },
   },
   extraReducers: (builder) => {
     builder
-      .addCase(getBookingPeriods.pending, (state, action) => {
+      .addCase(getAvailablePeriods.pending, (state, action) => {
         state.isLoading = true;
       })
-      .addCase(getBookingPeriods.fulfilled, (state, action) => {
-        state.availableBookings = action.payload.availableBookings;
+      .addCase(getAvailablePeriods.fulfilled, (state, action) => {
         state.isLoading = false;
+        state.availableTime = action.payload?.result ?? [];
       })
-      .addCase(getBookingPeriodByDate.pending, (state, action) => {
-        state.isLoading = true;
-      })
-      .addCase(getBookingPeriodByDate.fulfilled, (state, action) => {
-        state.availablePeriods = action.payload.availablePeriods;
-        state.isLoading = false;
+      .addCase(getAvailablePeriods.rejected, (state, action) => {
+        state.isLoading = initialState.isLoading;
+        state.availableTime = initialState.availableTime;
       })
       .addCase(postBookingReservation.fulfilled, (state, action) => {
         // const { token, id, startTime, options } = action.payload;
@@ -218,20 +195,14 @@ export const customerBookingSlice = createSlice({
       .addCase(postBookingReservation.rejected, (state, action) => {
         state.isLoading = false;
       })
-      .addCase(getBookingPeriods.rejected, (state) => {
-        state.isLoading = false;
-      })
-      .addCase(getBookingPeriodByDate.rejected, (state) => {
-        state.isLoading = false;
-      })
       .addCase(getBookingRecord.pending, (state) => {
         state.isLoading = true;
       })
       .addCase(getBookingRecord.fulfilled, (state, action) => {
         const { id, reservedAt, ...rest } = action.payload.bookingRecord;
-        state.reservationParams.id = id;
-        state.reservationParams.reservedAt = reservedAt;
-        state.reservationParams.user = rest;
+        // state.reservationParams.id = id;
+        // state.reservationParams.reservedAt = reservedAt;
+        // state.reservationParams.user = rest;
         state.isLoading = false;
       })
       .addCase(getBookingRecord.rejected, (state, action) => {
@@ -242,16 +213,17 @@ export const customerBookingSlice = createSlice({
 
 export const {
   setStep,
-  setDate,
-  setReservedAt,
+  setSelectedDate,
+  setSelectedPeriod,
   setName,
   setGender,
   setPhone,
   setEmail,
   setRemark,
-  setAdultsAmount,
-  setReservationPhone,
+  setSelectedPeople,
   setDialog,
   setAgreedPolicy,
-  resetUserInfo,
-} = customerBookingSlice.actions;
+  finishBooking,
+  closeBookingRecordQueryDialog,
+  confirmPrivacyPolicyDialog,
+} = bookingSlice.actions;

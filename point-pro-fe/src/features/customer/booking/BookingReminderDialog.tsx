@@ -1,0 +1,148 @@
+import { FC } from 'react';
+import { Box, Button, Typography } from '@mui/material';
+import {
+  Event as EventIcon,
+  Directions as DirectionsIcon,
+  Info as InfoIcon,
+  QrCode as QrCodeIcon,
+  LocalPhone as LocalPhoneIcon,
+  MapSharp as MapSharpIcon,
+} from '@mui/icons-material';
+import { MobileDialogLayout, Loading, BaseButton } from '~/components';
+import { CustomerBookingDialog } from '~/types';
+import { appDayjs, genderObj } from '~/utils';
+import { useAppDispatch, useAppSelector } from '~/hooks';
+import { setDialog, finishBooking } from '~/store/slices';
+import { ConfirmBookingInfo, ConfirmBookingTextField } from './ConfirmBookingInfo';
+
+interface IAtionIconProps {
+  icon: React.ReactNode;
+  title: string;
+  onClick: () => void;
+}
+export const ActionIcon: FC<IAtionIconProps> = (props) => {
+  const { icon, title, onClick } = props;
+  return (
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+      }}
+    >
+      <BaseButton
+        sx={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          padding: '2rem',
+          borderRadius: '50%',
+          bgcolor: 'common.white',
+          marginBottom: '.5rem',
+        }}
+        onClick={onClick}
+      >
+        {icon}
+      </BaseButton>
+      <Typography fontWeight={700}>{title}</Typography>
+    </Box>
+  );
+};
+
+interface IBookingReminderProps {}
+
+export const BookingReminderDialog: FC<IBookingReminderProps> = () => {
+  const dispatch = useAppDispatch();
+
+  const dialog = useAppSelector(({ booking }) => booking.dialog);
+  const isLoading = useAppSelector(({ booking }) => booking.isLoading);
+  const username = useAppSelector(({ booking }) => booking.username);
+  const gender = useAppSelector(({ booking }) => booking.gender);
+
+  const handleClose = () => {
+    dispatch(finishBooking());
+  };
+
+  const handleQRCode = () => {
+    dispatch(setDialog(CustomerBookingDialog.QRCODE));
+  };
+
+  const handlePhoneCall = () => {
+    const link = document.createElement('a');
+    link.setAttribute('href', 'tel:+886-2-1234-5678');
+    link.click();
+  };
+
+  const handleOpenGoogleMaps = () => {
+    const encodedAddress = encodeURIComponent('港都熱炒+中山旗艦店');
+    const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodedAddress}`;
+    window.open(googleMapsUrl, '_blank');
+  };
+
+  return isLoading ? (
+    <Loading open={true} />
+  ) : (
+    <MobileDialogLayout
+      title={
+        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+          <EventIcon sx={{ width: '1rem', height: '1rem' }} />
+          <Box sx={{ marginLeft: '.5rem', fontSize: 'body1.fontSize' }}>已為您安排訂位</Box>
+        </Box>
+      }
+      titleSize='h6'
+      isShowCloseIcon={false}
+      isOpen={dialog === CustomerBookingDialog.REMINDER}
+      onCloseDialog={handleClose}
+      actionButton={<Button onClick={handleClose}>關閉</Button>}
+      dialogTitleProps={{
+        sx: { '.MuiTypography-h6': { textAlign: 'center' }, bgcolor: 'primary.main' },
+      }}
+    >
+      <Box sx={{ paddingBottom: '2rem' }}>
+        <br />
+        <Typography variant='h3' fontWeight={900}>
+          港都熱炒
+        </Typography>
+        <br />
+        <Typography>
+          親愛的 {username} {genderObj[gender]},
+        </Typography>
+        <br />
+        <Typography>您的訂位已經成功囉, 感謝您選擇港都熱炒！</Typography>
+        <br />
+        <Typography>
+          我們會竭誠為您提供美味佳餚和貼心的服務。請留意並保存以下資訊，並準時到達。 如需更改或取消，提前聯繫我們。
+        </Typography>
+        <br />
+        <ConfirmBookingInfo isReminder />
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            gap: '2rem',
+            marginBottom: '2rem',
+          }}
+        >
+          <ActionIcon icon={<QrCodeIcon />} title='QR Code' onClick={handleQRCode} />
+          <ActionIcon icon={<LocalPhoneIcon />} title='撥打電話' onClick={handlePhoneCall} />
+          <ActionIcon icon={<MapSharpIcon />} title='地址' onClick={handleOpenGoogleMaps} />
+        </Box>
+        <ConfirmBookingTextField label='位置' value='台北市中山區民生東路一段52號' icon={<DirectionsIcon />} />
+        <ConfirmBookingTextField
+          label='溫馨提醒'
+          value='請您準時到達,如有遲到情況,請提前告知,以免影響您的用餐體驗。如遇特殊天氣或交通狀況,請提前安排出行,確保您能夠準時抵達餐廳。如果有特殊飲食需求或過敏情況,請在抵達餐廳時告知我們的服務人員。再次感謝您選擇港都熱炒,期待您的光臨!'
+          icon={<InfoIcon />}
+          multiline
+          rows={7}
+        />
+        <Typography color='text.disabled' sx={{ padding: '3rem', textAlign: 'center', bgcolor: 'common.black_20' }}>
+          Copyright © {appDayjs().year()} PointPro.
+          <br />
+          All Rights Reserved
+        </Typography>
+      </Box>
+    </MobileDialogLayout>
+  );
+};

@@ -3,22 +3,17 @@ import { Box, Button, Typography } from '@mui/material';
 import { MobileDialogLayout } from '~/components';
 import { CustomerBookingDialog } from '~/types';
 import { useAppDispatch, useAppSelector } from '~/hooks';
-import { setDialog, setAgreedPolicy } from '~/store/slices';
+import { confirmPrivacyPolicyDialog } from '~/store/slices';
 
-interface IPrivacyPolicyModalProps {}
+interface IPrivacyPolicyDialogProps {}
 
-export const PrivacyPolicyModal: FC<IPrivacyPolicyModalProps> = () => {
+export const PrivacyPolicyDialog: FC<IPrivacyPolicyDialogProps> = () => {
   const dispatch = useAppDispatch();
 
-  const dialog = useAppSelector(({ customerReservation }) => customerReservation.dialog);
-
-  const handleClose = () => {
-    dispatch(setDialog());
-  };
+  const dialog = useAppSelector(({ booking }) => booking.dialog);
 
   const handleConfirm = () => {
-    dispatch(setAgreedPolicy(true));
-    dispatch(setDialog());
+    dispatch(confirmPrivacyPolicyDialog());
   };
 
   return (
@@ -31,17 +26,9 @@ export const PrivacyPolicyModal: FC<IPrivacyPolicyModalProps> = () => {
       }
       titleSize='h1'
       isOpen={dialog === CustomerBookingDialog.PRIVACY_POLICY}
-      onCloseDialog={handleClose}
+      isShowCloseIcon={false}
       actionButton={<Button onClick={handleConfirm}>確認同意</Button>}
     >
-      <Typography variant='h6' color='text.disabled'>
-        最後更新日期：2023年3月12日
-      </Typography>
-      <br />
-      <Typography fontWeight={700}>
-        請注意，以下為一篇純屬虛構的網站隱私權政策，因為我快被Miro的loading搞瘋，所以請你們這邊自行替換。
-      </Typography>
-      <br />
       <Typography>我們非常尊重您的隱私，因此我們採用各種措施來保護您的個人資料。</Typography>
       <br />
       <Typography>您使用本網站即表示您同意本隱私權政策的條款。如果您不同意本政策，請停止使用本網站。</Typography>

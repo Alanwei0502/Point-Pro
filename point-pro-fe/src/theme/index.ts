@@ -1,7 +1,7 @@
-import { CSSProperties } from "react";
-import { createTheme } from "@mui/material/styles";
+import { CSSProperties } from 'react';
+import { createTheme } from '@mui/material/styles';
 
-declare module "@mui/material/styles" {
+declare module '@mui/material/styles' {
   interface CommonColors {
     black_80: string;
     black_60: string;
@@ -26,7 +26,7 @@ declare module "@mui/material/styles" {
     tiny?: CSSProperties;
   }
 }
-declare module "@mui/material/Typography" {
+declare module '@mui/material/Typography' {
   interface TypographyPropsVariantOverrides {
     display1: true;
     display2: true;
@@ -40,58 +40,58 @@ declare module "@mui/material/Typography" {
 export const theme = createTheme({
   palette: {
     common: {
-      black: "#020202",
-      black_80: "#525252",
-      black_60: "#919191",
-      black_40: "#D1D1D1",
-      black_20: "#F2F2F2"
+      black: '#020202',
+      black_80: '#525252',
+      black_60: '#919191',
+      black_40: '#D1D1D1',
+      black_20: '#F2F2F2',
     },
     primary: {
-      light: "#fadf8d",
-      main: "#F7C324",
-      dark: "#c59c1c",
-      contrastText: "#020202"
+      light: '#fadf8d',
+      main: '#F7C324',
+      dark: '#c59c1c',
+      contrastText: '#020202',
     },
     secondary: {
-      main: "#020202",
-      contrastText: "#ffffff"
+      main: '#020202',
+      contrastText: '#ffffff',
     },
     text: {
-      primary: "#020202",
-      disabled: "#D1D1D1"
+      primary: '#020202',
+      disabled: '#D1D1D1',
     },
-    divider: "#D1D1D1",
+    divider: '#D1D1D1',
     background: {
-      paper: "#F8F8F8"
-    }
+      paper: '#F8F8F8',
+    },
   },
   typography: {
     fontSize: 16,
-    fontFamily: ["Noto Sans TC", "Inter", " system-ui", "Avenir", "Helvetica", "Arial", "sans-serif"].join(","),
-    display1: { fontSize: "10rem" },
-    display2: { fontSize: "7.5rem" },
-    display3: { fontSize: "5rem" },
-    h1: { fontSize: "3rem" },
-    h2: { fontSize: "2.5rem", fontWeight: 900, lineHeight: "48px" }, // 40px
-    h3: { fontSize: "2rem", fontWeight: 900, lineHeight: "38.4px" }, // 32px
-    h4: { fontSize: "1.75rem" },
-    h5: { fontSize: "1.5rem" }, // 24px
-    h6: { fontSize: "1.25rem" }, // 20px
-    body1: { fontSize: "1rem" }, // 16px
-    small: { fontSize: "0.875rem" }, // 14px
-    tiny: { fontSize: "0.75rem" }, // 12px
+    fontFamily: ['Noto Sans TC', 'Inter', ' system-ui', 'Avenir', 'Helvetica', 'Arial', 'sans-serif'].join(','),
+    display1: { fontSize: '10rem' },
+    display2: { fontSize: '7.5rem' },
+    display3: { fontSize: '5rem' },
+    h1: { fontSize: '3rem' },
+    h2: { fontSize: '2.5rem', fontWeight: 900, lineHeight: '48px' }, // 40px
+    h3: { fontSize: '2rem', fontWeight: 900, lineHeight: '38.4px' }, // 32px
+    h4: { fontSize: '1.75rem' },
+    h5: { fontSize: '1.5rem' }, // 24px
+    h6: { fontSize: '1.25rem' }, // 20px
+    body1: { fontSize: '1rem' }, // 16px
+    small: { fontSize: '0.875rem' }, // 14px
+    tiny: { fontSize: '0.75rem' }, // 12px
     button: {
-      fontSize: "20px"
-    }
+      fontSize: '20px',
+    },
   },
   components: {
     MuiTypography: {
       defaultProps: {
         variantMapping: {
-          small: "p",
-          body1: "p"
-        }
-      }
-    }
-  }
+          small: 'p',
+          body1: 'p',
+        },
+      },
+    },
+  },
 });

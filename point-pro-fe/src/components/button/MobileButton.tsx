@@ -1,18 +1,22 @@
-import styled from "@emotion/styled";
-import { BaseButton } from "~/components";
+import { FC } from 'react';
+import { Button, ButtonProps, styled } from '@mui/material';
 
-export const MobileButton = styled(BaseButton)(({ theme }) => ({
-  width: "100%",
+export const StyleMobileButton = styled(Button)(({ theme }) => ({
+  width: '100%',
   margin: 0,
   backgroundColor: theme.palette.primary.main,
   color: theme.palette.common.black,
   fontWeight: 700,
-  fontSize: "1.25rem",
-  "&:hover": {
-    backgroundColor: theme.palette.primary.main
+  fontSize: '1.25rem',
+  '&:hover': {
+    backgroundColor: theme.palette.primary.main,
   },
-  "&.Mui-disabled": {
+  '&.Mui-disabled': {
     backgroundColor: theme.palette.common.black_20,
-    color: theme.palette.common.black_60
-  }
+    color: theme.palette.common.black_60,
+  },
 }));
+
+export const MobileButton: FC<ButtonProps> = (props) => {
+  return <StyleMobileButton {...props}>{props.children}</StyleMobileButton>;
+};
