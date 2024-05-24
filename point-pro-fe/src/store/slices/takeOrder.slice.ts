@@ -10,7 +10,7 @@ import {
   UserInfo,
   GetMenuResponseCategory,
   GetMenuResponseMeal,
-  GetMenuResponseSpecialty,
+  GetMenuResponseSpecialtiesWithItems,
   GetMenuResponseSpecialtyItem,
   ICartItem,
   MobileModalState,
@@ -24,7 +24,7 @@ type TakeOrderSliceState = {
   currentCategory: ICategory['id'];
   categories: GetMenuResponseCategory[];
   meals: GetMenuResponseMeal[];
-  specialties: GetMenuResponseSpecialty[];
+  specialtiesWithItems: GetMenuResponseSpecialtiesWithItems[];
   modal: MobileModalState;
   dialog: MobileDialogState;
 
@@ -39,7 +39,7 @@ const initialState: TakeOrderSliceState = {
   currentCategory: '',
   categories: [],
   meals: [],
-  specialties: [],
+  specialtiesWithItems: [],
   cart: [],
   modal: {
     type: '',
@@ -93,7 +93,7 @@ export const takeOrderSlice = createSlice({
     updateSpecialty: (
       state,
       action: PayloadAction<{
-        selectedSpecialty: GetMenuResponseSpecialty;
+        selectedSpecialty: GetMenuResponseSpecialtiesWithItems;
         selectedItem: GetMenuResponseSpecialtyItem;
       }>,
     ) => {
@@ -175,7 +175,7 @@ export const takeOrderSlice = createSlice({
         }
         state.categories = action.payload?.categories ?? [];
         state.meals = action.payload?.meals ?? [];
-        state.specialties = action.payload?.specialties ?? [];
+        state.specialtiesWithItems = action.payload?.specialtiesWithItems ?? [];
         state.isLoading = false;
       })
       .addCase(getMenu.rejected, (state) => {

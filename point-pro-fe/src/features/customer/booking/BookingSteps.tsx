@@ -3,7 +3,7 @@ import { MobileStepper } from '@mui/material';
 import { MobileButton } from '~/components';
 import { CustomerBookingDialog } from '~/types';
 import { useAppDispatch, useAppSelector } from '~/hooks';
-import { setStep, setDialog } from '~/store/slices';
+import { setStep, setDialog, postReservation } from '~/store/slices';
 
 interface IBookingStepsProps {
   stepLength: number;
@@ -47,8 +47,7 @@ export const BookingSteps: FC<IBookingStepsProps> = (props) => {
   };
 
   const handleConfirm = async () => {
-    // TODO: post reservation
-    // await dispatch(postReservation());
+    await dispatch(postReservation());
     dispatch(setDialog(CustomerBookingDialog.REMINDER));
   };
 

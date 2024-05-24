@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Box, Button, Card, CardActionArea, Typography } from '@mui/material';
 import { useAppDispatch, useAppSelector } from '~/hooks';
 import { clearNotifications, removeNotification } from '~/store/slices';
-import { BookingType, OrderType, SocketTopic, MenuMessage, OrderMessage, ReservationMessage } from '~/types';
+import { ReservationType, OrderType, SocketTopic, MenuMessage, OrderMessage, ReservationMessage } from '~/types';
 import { appDayjs, genderObj } from '~/utils';
 import { BaseDraw } from '~/components';
 
@@ -31,8 +31,8 @@ const reservationTitle1 = {
 };
 
 const reservationTypeTitle = {
-  [BookingType.ONLINE]: '線上訂位',
-  [BookingType.PHONE]: '電話訂位',
+  [ReservationType.ONLINE]: '線上訂位',
+  [ReservationType.PHONE]: '電話訂位',
 };
 
 export const NotificationDrawer: FC<INotificationDrawerProps> = ({ open, setOpen }) => {

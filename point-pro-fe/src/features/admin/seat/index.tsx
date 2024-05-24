@@ -1,5 +1,5 @@
 import { FC, useState } from 'react';
-import { AdminLayout, BookingQRCodeDialog, PanelTabs } from '~/components';
+import { AdminLayout, PanelTabs } from '~/components';
 import { SeatTabs } from './SeatTabs';
 import { SeatSearchBar } from './SeatSearchBar';
 import { TabTable, TabList } from './tab';
@@ -34,7 +34,7 @@ export const AdminSeat: FC<SeatContainerProps> = () => {
       <PanelTabs value={view} index={1}>
         <TabList date={date} search={search} />
       </PanelTabs>
-      <BookingQRCodeDialog />
+      {/* <BookingQRCodeDialog /> */}
     </AdminLayout>
   );
 };

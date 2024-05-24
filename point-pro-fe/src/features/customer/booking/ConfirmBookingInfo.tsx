@@ -75,7 +75,7 @@ export const ConfirmBookingInfo = (props: IConfirmBookingInfoProps) => {
       html,
     };
 
-    isReminder && dispatch(sendMail(request));
+    // isReminder && dispatch(sendMail(request));
   }, [dispatch, email, gender, isReminder, people, phone, remark, selectedPeriod?.startTime, username]);
 
   return (
@@ -104,7 +104,7 @@ export const ConfirmBookingInfo = (props: IConfirmBookingInfoProps) => {
       </Grid>
       <ConfirmBookingTextField label='姓名' value={`${username} ${genderObj[gender]}`} icon={<AccessibilityIcon />} />
       <ConfirmBookingTextField label='手機號碼' value={phone} icon={<PhoneIphoneIcon />} />
-      <ConfirmBookingTextField label='電子信箱' value={email} icon={<EmailIcon />} />
+      <ConfirmBookingTextField label='電子信箱' value={email ?? ''} icon={<EmailIcon />} />
       <ConfirmBookingTextField label='備註' value={remark || '無'} icon={<StickyNote2Icon />} multiline maxRows={4} />
     </Box>
   );

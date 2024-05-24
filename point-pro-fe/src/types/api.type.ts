@@ -5,12 +5,12 @@ import {
   IOrder,
   IOrderMeal,
   IPeriod,
+  IReservation,
   ISpecialty,
   ISpecialtyItem,
-  Member,
+  IUser,
   OrderStatus,
   OrderType,
-  ReservationInfo,
   SeatDetails,
   SeatInfo,
   UserInfo,
@@ -28,7 +28,7 @@ export interface LoginPayload {
 }
 export type LoginResponse = ApiResponse<{
   authToken: string;
-  member: Member;
+  IUser: IUser;
 }>;
 
 // Generate Token
@@ -81,14 +81,14 @@ export type GetMenuResponseMeal = Pick<IMeal, 'id' | 'title' | 'coverUrl' | 'des
   mealSpecialtyItems: Array<{ specialtyItemId: ISpecialtyItem['id'] }>;
 };
 export type GetMenuResponseSpecialtyItem = Pick<ISpecialtyItem, 'id' | 'title' | 'price'>;
-export type GetMenuResponseSpecialty = Pick<ISpecialty, 'id' | 'title' | 'selectionType'> & {
+export type GetMenuResponseSpecialtiesWithItems = Pick<ISpecialty, 'id' | 'title' | 'selectionType'> & {
   specialtyItems: Array<GetMenuResponseSpecialtyItem>;
 };
 
 export type GetMenuResponse = ApiResponse<{
   categories: GetMenuResponseCategory[];
   meals: GetMenuResponseMeal[];
-  specialties: GetMenuResponseSpecialty[];
+  specialtiesWithItems: GetMenuResponseSpecialtiesWithItems[];
 }>;
 
 // Order
@@ -278,12 +278,12 @@ export type CashPaymentResponse = ApiResponse<{
 }>;
 
 // Reservation
-export interface PostReservationPayload {
-  type: string;
-  options: { [key: string]: any };
-  amount: number;
-  startTime: Date;
-}
+export type PostReservationPayload = Pick<IUser, 'username' | 'gender' | 'phone' | 'email' | 'role'> & {
+  periodId: IPeriod['id'];
+  remark: IReservation['remark'];
+  people: IReservation['people'];
+  type: IReservation['type'];
+};
 
 export interface PatchReservation {
   startOfMeal?: Date | null;
@@ -296,8 +296,14 @@ export interface PatchReservationPayload {
   payload: PatchReservation;
 }
 
-export type ReservationsResponse = ApiResponse<ReservationInfo[]>;
-export type ReservationResponse = ApiResponse<ReservationInfo>;
+export type ReservationInfo = Pick<IUser, 'username' | 'gender' | 'phone' | 'email'> &
+  Pick<IReservation, 'people' | 'remark'> & { period: Pick<IPeriod, 'id' | 'startTime'> };
+
+export type PostReservationResponse = ApiResponse<IReservation['id']>;
+
+export type GetReservationByPhoneResponse = ApiResponse<ReservationInfo>;
+export type ReservationsResponse = ApiResponse<IReservation[]>;
+export type ReservationResponse = ApiResponse<IReservation>;
 
 // Seat
 export interface SeatsPayload {

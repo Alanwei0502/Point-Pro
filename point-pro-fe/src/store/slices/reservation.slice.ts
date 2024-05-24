@@ -1,15 +1,15 @@
-import { createSlice } from "@reduxjs/toolkit";
-import { ReservationApi } from "~/api";
-import { createAppAsyncThunk } from "~/hooks";
+import { createSlice } from '@reduxjs/toolkit';
+import { ReservationApi } from '~/api';
+import { createAppAsyncThunk } from '~/hooks';
 import {
   SocketTopic,
   ReservationsResponse,
   ReservationResponse,
   PostReservationPayload,
-  PatchReservationPayload
-} from "~/types";
+  PatchReservationPayload,
+} from '~/types';
 
-const name = "reservation";
+const name = 'reservation';
 
 interface IReservationState {}
 
@@ -24,44 +24,29 @@ export const getReservations = createAppAsyncThunk<ReservationsResponse, Date>(
       if (error instanceof Error) {
         return rejectWithValue({ message: error.message });
       } else {
-        return rejectWithValue({ message: "unknown error" });
+        return rejectWithValue({ message: 'unknown error' });
       }
     }
-  }
+  },
 );
 
-export const postReservation = createAppAsyncThunk<ReservationResponse, PostReservationPayload>(
-  `${name}/postReservation`,
-  async (payload, { getState, rejectWithValue }) => {
-    try {
-      const socket = getState().socket.socket;
-      const response = await ReservationApi.postReservation(payload);
-      socket && socket.emit(SocketTopic.RESERVATION, response);
-      return response;
-    } catch (error) {
-      if (error instanceof Error) {
-        return rejectWithValue({ message: error.message });
-      } else {
-        return rejectWithValue({ message: "unknown error" });
-      }
-    }
-  }
-);
-
-export const getReservationById = createAppAsyncThunk<ReservationResponse, string>(
-  `${name}/getReservationById`,
-  async (payload, { rejectWithValue }) => {
-    try {
-      return await ReservationApi.getReservationById(payload);
-    } catch (error) {
-      if (error instanceof Error) {
-        return rejectWithValue({ message: error.message });
-      } else {
-        return rejectWithValue({ message: "unknown error" });
-      }
-    }
-  }
-);
+// export const postReservation = createAppAsyncThunk<ReservationResponse, PostReservationPayload>(
+//   `${name}/postReservation`,
+//   async (payload, { getState, rejectWithValue }) => {
+//     try {
+//       const socket = getState().socket.socket;
+//       const response = await ReservationApi.postReservation(payload);
+//       socket && socket.emit(SocketTopic.RESERVATION, response);
+//       return response;
+//     } catch (error) {
+//       if (error instanceof Error) {
+//         return rejectWithValue({ message: error.message });
+//       } else {
+//         return rejectWithValue({ message: "unknown error" });
+//       }
+//     }
+//   }
+// );
 
 export const patchReservationById = createAppAsyncThunk<ReservationResponse, PatchReservationPayload>(
   `${name}/patchReservationById`,
@@ -75,17 +60,17 @@ export const patchReservationById = createAppAsyncThunk<ReservationResponse, Pat
       if (error instanceof Error) {
         return rejectWithValue({ message: error.message });
       } else {
-        return rejectWithValue({ message: "unknown error" });
+        return rejectWithValue({ message: 'unknown error' });
       }
     }
-  }
+  },
 );
 
 export const reservationSlice = createSlice({
   name,
   initialState,
   reducers: {},
-  extraReducers: {}
+  extraReducers: {},
 });
 
 export const {} = reservationSlice.actions;

@@ -6,7 +6,7 @@ import { DateCalendar } from '@mui/x-date-pickers';
 import { BaseButton, Loading } from '~/components';
 import { appDayjs, formatTimeOnly, formatDateOnly } from '~/utils';
 import { useAppDispatch, useAppSelector } from '~/hooks';
-import { setSelectedPeople, setSelectedDate, setSelectedPeriod, getAvailablePeriods, setDialog } from '~/store/slices';
+import { setPeople, setSelectedDate, setSelectedPeriod, getAvailablePeriods, setDialog } from '~/store/slices';
 import { CustomerBookingDialog } from '~/types';
 
 const formLabelStyle: SxProps<Theme> | undefined = { fontWeight: 700, color: 'common.black' };
@@ -37,7 +37,7 @@ export const PeopleAndTime: FC<IPeopleAndTimeProps> = () => {
     if (!choosedPeriodInfo) return [];
 
     return choosedPeriodInfo.available > 10
-      ? [1, 2, 3, 4, 7, 8, 9, 10]
+      ? [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
       : Array.from({ length: choosedPeriodInfo.available }, (_, i) => i + 1);
   }, [availableTime, selectedPeriod]);
 
@@ -46,7 +46,7 @@ export const PeopleAndTime: FC<IPeopleAndTimeProps> = () => {
   }, [dispatch]);
 
   const handleSelectedPeople = (e: SelectChangeEvent<`${number}`>) => {
-    dispatch(setSelectedPeople(+e.target.value));
+    dispatch(setPeople(+e.target.value));
   };
 
   const handleSelectedDate = (value: appDayjs.Dayjs | null) => {
@@ -57,7 +57,8 @@ export const PeopleAndTime: FC<IPeopleAndTimeProps> = () => {
   const handleSelectedPeriod = (e: SelectChangeEvent<string>) => {
     const selectedStartTime = e.target.value;
     const selectedPeriod = availablePeriods.find((p) => `${p.startTime}` === selectedStartTime);
-    dispatch(setSelectedPeriod(selectedPeriod));
+    if (!selectedPeriod) return;
+    dispatch(setSelectedPeriod({ id: selectedPeriod.id, startTime: selectedPeriod.startTime }));
   };
 
   const handleOpenBookingSearch = () => {

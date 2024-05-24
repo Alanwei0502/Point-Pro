@@ -1,4 +1,4 @@
-import { IOrderMeal, OrderStatus, OrderType, BookingType, Gender, IBookingInfo } from '~/types';
+import { IOrderMeal, OrderStatus, OrderType, ReservationType, Gender, IBookingInfo } from '~/types';
 
 export enum SocketTopic {
   MENU = 'MENU',
@@ -77,11 +77,11 @@ export interface IMenuResult {
 export interface IReservationResult {
   id: string;
   reservedAt: string;
-  type: BookingType;
+  type: ReservationType;
   options: {
     name: string;
     gender: Gender;
-    type: BookingType;
+    type: ReservationType;
     phone: string;
     email: string;
     remark: string;

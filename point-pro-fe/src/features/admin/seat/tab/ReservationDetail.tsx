@@ -2,7 +2,7 @@ import { FC, useEffect, useReducer, useState } from 'react';
 import { Stack } from '@mui/material';
 import { FieldContainer, BaseDraw } from '~/components';
 import { useAppDispatch, useAppSelector } from '~/hooks';
-import { getPeriodByDate, patchReservationById, postReservation } from '~/store/slices';
+import { getPeriodByDate, patchReservationById } from '~/store/slices';
 import { PatchReservation, IPeriod, ReservationMessage } from '~/types';
 import mainReducer, {
   initialState,
@@ -130,7 +130,7 @@ export const ReservationDetail: FC<IReservationDetailProps> = ({ open, onClose, 
               periods.find((e) => e.id === state.period.value)?.startTime as Date,
             );
             console.log({ payload });
-            await dispatch(postReservation(payload));
+            // await dispatch(postReservation(payload));
             onClose(true);
           } else {
             reducerDispatch(validator());

@@ -4,7 +4,7 @@ import { MobileDialogLayout } from '~/components';
 import { CustomerBookingDialog } from '~/types';
 import { phoneRegex } from '~/utils';
 import { useAppDispatch, useAppSelector } from '~/hooks';
-import { closeBookingRecordQueryDialog, getBookingRecord, setPhone } from '~/store/slices';
+import { closeBookingRecordQueryDialog, getReservationByPhone, setPhone } from '~/store/slices';
 
 interface BookingRecordQueryDialogProps {}
 
@@ -23,7 +23,7 @@ export const BookingRecordQueryDialog: FC<BookingRecordQueryDialogProps> = () =>
 
   const handleQuery = () => {
     if (!phone) return;
-    dispatch(getBookingRecord(phone));
+    dispatch(getReservationByPhone(phone));
   };
 
   const handleQueryString = (e: React.ChangeEvent<HTMLInputElement>) => {

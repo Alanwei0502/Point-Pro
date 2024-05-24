@@ -10,7 +10,7 @@ import { ConfirmBookingInfo } from './ConfirmBookingInfo';
 import { PrivacyPolicyDialog } from './PrivacyPolicyDialog';
 import { BookingRecordQueryDialog } from './BookingRecordQueryDialog';
 import { BookingReminderDialog } from './BookingReminderDialog';
-import { BookingQRCodeDialog } from './BookingQrCodeDialog';
+// import { BookingQRCodeDialog } from './BookingQrCodeDialog';
 
 const stepTitle = ['訂位時間', '訂位資訊', '請確認訂位資訊'];
 

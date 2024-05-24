@@ -1,12 +1,5 @@
-import { BookingType, Gender } from './common.type';
+import { ReservationType, Gender, IPeriod } from './common.type';
 import { PartialSeat } from './seat.type';
-
-export interface IPeriod {
-  id: string;
-  startTime: Date;
-  endTime: Date;
-  available: number;
-}
 
 export interface CreateReservation {
   id: string;
@@ -36,7 +29,7 @@ export interface ReservationRecord {
 export interface ReservationInfo {
   id: string;
   reservedAt: Date;
-  type: BookingType;
+  type: ReservationType;
   options: { [key: string]: any };
   startTime: Date;
   endTime: Date;
@@ -51,7 +44,7 @@ export interface IBookingInfo {
   reservedAt: string;
   name: string;
   gender: Gender;
-  type: BookingType;
+  type: ReservationType;
   phone: string;
   email: string;
   remark: string;

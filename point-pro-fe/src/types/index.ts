@@ -5,4 +5,3 @@ export * from './order.type';
 export * from './seat.type';
 export * from './socket.type';
 export * from './ui.type';
-export * from './user.type';

@@ -11,24 +11,24 @@ import {
   createCartItem,
   updateCartItem,
 } from '~/store/slices';
-import { MobileDialog, GetMenuResponseSpecialty, GetMenuResponseSpecialtyItem } from '~/types';
+import { MobileDialog, GetMenuResponseSpecialtiesWithItems, GetMenuResponseSpecialtyItem } from '~/types';
 
 interface ICustomizedSpecialtiesProps {}
 
 const CustomizedSpecialties: FC<ICustomizedSpecialtiesProps> = () => {
   const dispatch = useAppDispatch();
   const token = getToken();
-  const specialties = useAppSelector(({ takeOrder }) => takeOrder.specialties);
+  const specialtiesWithItems = useAppSelector(({ takeOrder }) => takeOrder.specialtiesWithItems);
   const customizedDialogData = useAppSelector(({ takeOrder }) => takeOrder.dialog.data);
 
   const mealSpecialtyItemIds = customizedDialogData?.mealSpecialtyItems.map((s) => s.specialtyItemId) ?? [];
 
-  const customizedSpecialties = specialties
+  const customizedSpecialties = specialtiesWithItems
     .map((s) => ({ ...s, specialtyItems: s.specialtyItems.filter((si) => mealSpecialtyItemIds.includes(si.id)) }))
     .filter((s) => s.specialtyItems.length > 0);
 
   const handleClickItem =
-    (selectedSpecialty: GetMenuResponseSpecialty, selectedItem: GetMenuResponseSpecialtyItem) => () => {
+    (selectedSpecialty: GetMenuResponseSpecialtiesWithItems, selectedItem: GetMenuResponseSpecialtyItem) => () => {
       // TODO: recover token
       // if (!token) return;
       dispatch(updateSpecialty({ selectedSpecialty, selectedItem }));

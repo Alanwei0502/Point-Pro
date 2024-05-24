@@ -11,9 +11,15 @@ export enum Gender {
   OTHER = 'OTHER',
 }
 
-export enum BookingType {
+export enum ReservationType {
   ONLINE = 'ONLINE',
   PHONE = 'PHONE',
+}
+
+export enum Role {
+  CUSTOMER = 'CUSTOMER',
+  STAFF = 'STAFF',
+  ADMIN = 'ADMIN',
 }
 
 export interface ICategory {
@@ -21,7 +27,7 @@ export interface ICategory {
   title: string;
   position: number;
   createAt: Date;
-  updatedAt?: Date;
+  updatedAt: Date | null;
 }
 
 export interface IMeal {
@@ -32,9 +38,9 @@ export interface IMeal {
   isPopular: boolean;
   price: number;
   position: number;
-  publishedAt?: Date;
+  publishedAt: Date | null;
   createdAt: Date;
-  updatedAt?: Date;
+  updatedAt: Date | null;
 }
 
 export interface ISpecialty {
@@ -43,7 +49,7 @@ export interface ISpecialty {
   selectionType: SelectionType;
   position: number;
   createAt: Date;
-  updatedAt?: Date;
+  updatedAt: Date | null;
 }
 
 export interface ISpecialtyItem {
@@ -52,10 +58,55 @@ export interface ISpecialtyItem {
   price: number;
   position: number;
   createAt: Date;
-  updatedAt?: Date;
+  updatedAt: Date | null;
 }
 
 export interface ICartItem extends GetMenuResponseMeal {
   amount: number;
   selectedSpecialtyItems: GetMenuResponseSpecialtyItem[];
+}
+
+export interface IUser {
+  id: string;
+  username: string;
+  phone: string;
+  email: string | null;
+  gender: Gender;
+  passwordHash: string | null;
+  role: Role;
+  createdAt: Date;
+  updatedAt: Date | null;
+}
+
+export interface UserInfo {
+  periodEndTime: string;
+  periodStartTime: string;
+  seatNo: string;
+  startTime: string;
+  reservationType: ReservationType;
+  reservationId: string;
+  iat: number;
+  exp: number;
+  role: 'USER';
+}
+
+export interface IPeriod {
+  id: string;
+  startTime: Date;
+  endTime: Date;
+  available: number;
+  createdAt: Date;
+  updatedAt: Date | null;
+}
+
+export interface IReservation {
+  id: string;
+  type: ReservationType;
+  isCancelled: boolean;
+  people: number;
+  startAt: Date | null;
+  endAt: Date | null;
+  createdAt: Date;
+  updatedAt: Date | null;
+  remark: string | null;
 }

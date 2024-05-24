@@ -1,19 +1,25 @@
-import { http } from "./http";
-import { ReservationsResponse, ReservationResponse, PostReservationPayload, PatchReservationPayload } from "~/types";
+import { http } from './http';
+import {
+  ReservationsResponse,
+  PostReservationPayload,
+  PatchReservationPayload,
+  GetReservationByPhoneResponse,
+  PostReservationResponse,
+} from '~/types';
 
 export class ReservationApi {
-  public static path = "reservation";
+  public static path = 'reservation';
 
   static getReservations(date: Date) {
     return http.get<string, ReservationsResponse>(`${ReservationApi.path}`, { params: { date: date ?? new Date() } });
   }
 
-  static getReservationById(reservationId: string) {
-    return http.get<string, ReservationResponse>(`${ReservationApi.path}/${reservationId}`);
+  static getReservationByPhone(phone: string) {
+    return http.get<string, GetReservationByPhoneResponse>(`${ReservationApi.path}/${phone}`);
   }
 
   static postReservation(payload: PostReservationPayload) {
-    return http.post<string, ReservationsResponse>(`${ReservationApi.path}`, payload);
+    return http.post<string, PostReservationResponse>(`${ReservationApi.path}`, payload);
   }
 
   static patchReservationById({ reservationId, payload }: PatchReservationPayload) {
