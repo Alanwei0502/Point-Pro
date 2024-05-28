@@ -1,8 +1,9 @@
 import { date, object, string } from 'yup';
 import { z } from 'zod';
 import { ReservationType } from '@prisma/client';
-import { createUserSchema } from './user.validator';
+import { createCustomerSchema } from './user.validator';
 
+// TODO: delete
 export const verifyReservationSchema = object({
   reservationId: string().required(),
   reservationType: string().optional(),
@@ -22,7 +23,7 @@ export const createReservationSchema = z.object({
 
 export const createReservationRequestBodySchema = z
   .intersection(
-    createUserSchema,
+    createCustomerSchema,
     z.object({
       periodId: z.string(),
       remark: z.string().optional(),

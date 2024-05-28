@@ -6,1324 +6,1176 @@ export function insertMeals() {
       DELETE FROM meals;
     `,
     prisma.$executeRaw`
+      DO $$
+      DECLARE
+        claypot_id UUID;
+        stir_fried_assorted_id UUID;
+        iron_plate_id UUID;
+        rice_noodles_id UUID;
+        hot_pot_id UUID;
+        fire_roasted_id UUID;
+        stir_fried_meat_id UUID;
+        stir_fired_seafood_id UUID;
+        soup_id UUID;
+        deep_fried_id UUID;
+        three_cups_id UUID;
+        vegetables_id UUID;
+        a_la_carte_non_alcoholic_id UUID;
+      BEGIN
+      SELECT id INTO claypot_id FROM categories WHERE title = '煲類';
+      SELECT id INTO stir_fried_assorted_id FROM categories WHERE title = '熱炒什錦類';
+      SELECT id INTO iron_plate_id FROM categories WHERE title = '鐵板類';
+      SELECT id INTO rice_noodles_id FROM categories WHERE title = '飯麵類';
+      SELECT id INTO hot_pot_id FROM categories WHERE title = '火鍋類';
+      SELECT id INTO fire_roasted_id FROM categories WHERE title = '火烤類';
+      SELECT id INTO stir_fried_meat_id FROM categories WHERE title = '熱炒肉類';
+      SELECT id INTO stir_fired_seafood_id FROM categories WHERE title = '熱炒海鮮類';
+      SELECT id INTO soup_id FROM categories WHERE title = '湯類';
+      SELECT id INTO deep_fried_id FROM categories WHERE title = '酥炸類';
+      SELECT id INTO three_cups_id FROM categories WHERE title = '三杯類';
+      SELECT id INTO vegetables_id FROM categories WHERE title = '青菜類';
+      SELECT id INTO a_la_carte_non_alcoholic_id FROM categories WHERE title = '單點及無酒精飲料';
+
       INSERT INTO
-      meals (title, price, cover_url, description, is_popular)
+      meals (title, price, cover_url, description, is_popular, category_id)
       VALUES
         (
           '烤魚下巴',
           180,
           'https://i.imgur.com/SsrcH2i.jpeg',
           '現烤現做需要25分左右',
-          TRUE
+          TRUE,
+          fire_roasted_id
         ),
         (
           '秋刀魚',
           180,
           'https://i.imgur.com/FDrlO96.jpeg',
           '現烤現做需要25分左右',
-          FALSE
+          FALSE,
+          fire_roasted_id
         ),
         (
           '烤日式鯖魚',
           180,
           'https://i.imgur.com/sLQsZc3.jpeg',
           '現烤現做需要25分左右',
-          TRUE
+          TRUE,
+          fire_roasted_id
         ),
         (
           '鹽豬肉',
           210,
           'https://i.imgur.com/VzfQT5q.jpeg',
           '現烤現做需要25分左右\n肉品原產地：臺灣豬肉',
-          FALSE
+          FALSE,
+          fire_roasted_id
         ),
         (
           '牛小排',
           220,
           'https://i.imgur.com/v7BHxN2.jpeg',
           '現烤現做需要25分左右',
-          TRUE
+          TRUE,
+          fire_roasted_id
         ),
         (
           '烤松阪豬肉',
           270,
           'https://i.imgur.com/10Tk9Xh.jpeg',
           '現烤現做需要25分左右\n肉品原產地：西班牙豬肉',
-          TRUE
+          TRUE,
+          fire_roasted_id
         ),
         (
           '烤櫻桃鴨肉串(4串)',
           230,
           'https://i.imgur.com/co8cbdi.jpeg',
           '現烤現做需要25分左右',
-          FALSE
+          FALSE,
+          fire_roasted_id
         ),
         (
           '安格斯牛小排',
           520,
           'https://i.imgur.com/eGVnVm2.jpeg',
           '',
-          FALSE
+          FALSE,
+          fire_roasted_id
         ),
         (
           '烤鮭魚肚',
           320,
           'https://i.imgur.com/9H7L6k0.jpeg',
           '約250g',
-          TRUE
+          TRUE,
+          fire_roasted_id
         ),
         (
           '烤鮭魚頭(半顆)',
           350,
           'https://i.imgur.com/tlDsEVz.jpeg',
           '',
-          FALSE
+          FALSE,
+          fire_roasted_id
         ),
         (
           '港都海產鍋(大)',
           1100,
           'https://i.imgur.com/8cU1c2M.jpeg',
           '使用產銷履歷鱸魚\n此餐點需要25分以上',
-          FALSE
+          FALSE,
+          hot_pot_id
         ),
         (
           '港都海產鍋(小)',
           600,
           'https://i.imgur.com/8cU1c2M.jpeg',
           '使用產銷履歷鱸魚',
-          FALSE
+          FALSE,
+          hot_pot_id
         ),
         (
           '生綠竹筍雞鍋(大)',
           800,
           'https://i.imgur.com/43rzL41.jpeg',
           '使用產銷履歷雞肉\n生綠竹筍為季節限定',
-          FALSE
+          FALSE,
+          hot_pot_id
         ),
         (
           '生綠竹筍雞鍋(小)',
           480,
           'https://i.imgur.com/43rzL41.jpeg',
           '使用產銷履歷雞肉\n生綠竹筍為季節限定',
-          FALSE
+          FALSE,
+          hot_pot_id
         ),
         (
           '鰱魚頭鍋(大)',
           1100,
           'https://i.imgur.com/RJxF0iI.jpeg',
           '',
-          FALSE
+          FALSE,
+          hot_pot_id
         ),
         (
           '鰱魚頭鍋(小)',
           600,
           'https://i.imgur.com/RJxF0iI.jpeg',
           '',
-          FALSE
+          FALSE,
+          hot_pot_id
         ),
         (
           '鳳梨苦瓜雞鍋(大)',
           800,
           'https://i.imgur.com/2MqFg8g.jpeg',
           '使用產銷履歷雞肉',
-          FALSE
+          FALSE,
+          hot_pot_id
         ),
         (
           '鳳梨苦瓜雞鍋(小)',
           480,
           'https://i.imgur.com/2MqFg8g.jpeg',
           '使用產銷履歷雞肉',
-          FALSE
+          FALSE,
+          hot_pot_id
         ),
         (
           '陳年菜甫雞鍋(大)',
           800,
           'https://i.imgur.com/ohplXoI.jpeg',
           '使用產銷履歷雞肉',
-          FALSE
+          FALSE,
+          hot_pot_id
         ),
         (
           '陳年菜甫雞鍋(小)',
           480,
           'https://i.imgur.com/ohplXoI.jpeg',
           '使用產銷履歷雞肉',
-          FALSE
+          FALSE,
+          hot_pot_id
         ),
         (
           '養生百菇雞鍋(大)',
           980,
           'https://i.imgur.com/6Zj8MPZ.jpeg',
           '使用產銷履歷雞肉',
-          FALSE
+          FALSE,
+          hot_pot_id
         ),
         (
           '養生百菇雞鍋(小)',
           565,
           'https://i.imgur.com/6Zj8MPZ.jpeg',
           '使用產銷履歷雞肉',
-          FALSE
+          FALSE,
+          hot_pot_id
         ),
         (
           '肉絲炒飯',
           110,
           'https://i.imgur.com/RwHVLzC.jpeg',
           '肉品原產地：臺灣豬肉',
-          FALSE
+          FALSE,
+          rice_noodles_id
         ),
         (
           '肉絲炒麵',
           110,
           'https://i.imgur.com/NM9o2cv.jpeg',
           '肉品原產地：臺灣豬肉',
-          FALSE
+          FALSE,
+          rice_noodles_id
         ),
         (
           '牛肉炒飯',
           135,
           'https://i.imgur.com/4aUb6UJ.jpeg',
           '',
-          FALSE
+          FALSE,
+          rice_noodles_id
         ),
         (
           '牛肉炒麵',
           135,
           'https://i.imgur.com/htGhlxb.jpeg',
           '',
-          FALSE
+          FALSE,
+          rice_noodles_id
         ),
         (
           '羊肉炒飯',
           135,
           'https://i.imgur.com/BbJgd8I.jpeg',
           '',
-          FALSE
+          FALSE,
+          rice_noodles_id
         ),
         (
           '羊肉炒麵',
           135,
           'https://i.imgur.com/9IIJkwm.jpeg',
           '',
-          FALSE
+          FALSE,
+          rice_noodles_id
         ),
         (
           '蝦仁炒飯',
           150,
           'https://i.imgur.com/GVtTeGY.jpeg',
           '使用產銷履歷白蝦',
-          FALSE
+          FALSE,
+          rice_noodles_id
         ),
         (
           '蝦仁炒麵',
           150,
           'https://i.imgur.com/ImZS2At.jpeg',
           '使用產銷履歷白蝦',
-          FALSE
+          FALSE,
+          rice_noodles_id
         ),
         (
           '沙茶炒羊肉',
           195,
           'https://i.imgur.com/Auj0h27.jpeg',
           '一般會用空心菜，用完會改用高麗菜。',
-          FALSE
+          FALSE,
+          stir_fried_meat_id
         ),
         (
           '沙茶炒牛肉',
           195,
           'https://i.imgur.com/tGdjNpB.jpeg',
           '一般會用空心菜，用完會改用高麗菜。',
-          FALSE
+          FALSE,
+          stir_fried_meat_id
         ),
         (
           '蔥爆牛肉',
           220,
           'https://i.imgur.com/SZlq6Ab.jpeg',
           '肉品原產地：澳洲',
-          FALSE
+          FALSE,
+          stir_fried_meat_id
         ),
         (
           '糖醋排骨',
           190,
           'https://i.imgur.com/hZGJrsD.jpeg',
           '肉品原產地：臺灣豬肉',
-          FALSE
+          FALSE,
+          stir_fried_meat_id
         ),
         (
           '糖醋里肌',
           190,
           'https://i.imgur.com/DwbNIYR.jpeg',
           '肉品原產地：臺灣豬肉',
-          TRUE
+          TRUE,
+          stir_fried_meat_id
         ),
         (
           '炒回鍋肉',
           195,
           'https://i.imgur.com/PE7VeeR.jpeg',
           '肉品原產地：臺灣豬肉',
-          TRUE
+          TRUE,
+          stir_fried_meat_id
         ),
         (
           '蒜泥白肉',
           190,
           'https://i.imgur.com/teb6CFs.jpeg',
           '肉品原產地：臺灣豬肉',
-          FALSE
+          FALSE,
+          stir_fried_meat_id
         ),
         (
           '宮保雞丁',
           190,
           'https://i.imgur.com/akhO10q.jpeg',
           '',
-          TRUE
+          TRUE,
+          stir_fried_meat_id
         ),
         (
           '橙汁排骨',
           190,
           'https://i.imgur.com/dvBO9xT.jpeg',
           '肉品原產地：臺灣豬肉',
-          FALSE
+          FALSE,
+          stir_fried_meat_id
         ),
         (
           '地芋肥腸',
           250,
           'https://i.imgur.com/diMvg9E.jpeg',
           '肉品原產地：臺灣豬肉',
-          TRUE
+          TRUE,
+          stir_fried_assorted_id
         ),
         (
           '蒼蠅頭',
           180,
           'https://i.imgur.com/BOeICS7.jpeg',
           '肉品原產地：臺灣豬肉',
-          FALSE
+          FALSE,
+          stir_fried_assorted_id
         ),
         (
           '鹹蛋炒苦瓜',
           180,
           'https://i.imgur.com/ujbco02.jpeg',
           '使用產銷履歷苦瓜',
-          FALSE
+          FALSE,
+          stir_fried_assorted_id
         ),
         (
           '鹹蛋炒竹筍',
           195,
           'https://i.imgur.com/zkUogOO.jpeg',
           '',
-          FALSE
+          FALSE,
+          stir_fried_assorted_id
         ),
         (
           '蚵仔炒蛋',
           210,
           'https://i.imgur.com/J08RMmP.jpeg',
           '',
-          FALSE
+          FALSE,
+          stir_fried_assorted_id
         ),
         (
           '蝦仁炒蛋',
           240,
           'https://i.imgur.com/oxChdEI.jpeg',
           '使用產銷履歷白蝦',
-          FALSE
+          FALSE,
+          stir_fried_assorted_id
         ),
         (
           '菜脯炒蛋',
           160,
           'https://i.imgur.com/pcvNG5d.jpeg',
           '',
-          FALSE
+          FALSE,
+          stir_fried_assorted_id
         ),
         (
           '客家小炒',
           195,
           'https://i.imgur.com/lIWi4t9.jpeg',
           '肉品原產地：臺灣豬肉',
-          TRUE
+          TRUE,
+          stir_fried_assorted_id
         ),
         (
           '丁香炒花生',
           200,
           'https://i.imgur.com/RHEezIn.jpeg',
           '',
-          FALSE
+          FALSE,
+          stir_fried_assorted_id
         ),
         (
           '老皮嫩肉',
           200,
           'https://i.imgur.com/2jdlVtn.jpeg',
           '肉品原產地：臺灣豬肉',
-          FALSE
+          FALSE,
+          stir_fried_assorted_id
         ),
         (
           '麻婆豆腐',
           180,
           'https://i.imgur.com/QguT1kG.jpeg',
           '肉品原產地：臺灣豬肉',
-          FALSE
+          FALSE,
+          stir_fried_assorted_id
         ),
         (
           '紅燒豆腐',
           180,
           'https://i.imgur.com/6pJOqou.jpeg',
           '肉品原產地：臺灣豬肉',
-          FALSE
+          FALSE,
+          stir_fried_assorted_id
         ),
         (
           '蟹黃豆腐',
           190,
           'https://i.imgur.com/H306uDg.jpeg',
           '',
-          FALSE
+          FALSE,
+          stir_fried_assorted_id
         ),
         (
           '四季肥腸',
           250,
           'https://i.imgur.com/1u1A0Xp.jpeg',
           '肉品原產地：歐洲豬肉',
-          TRUE
+          TRUE,
+          stir_fried_assorted_id
         ),
         (
           '薑絲大腸',
           190,
           'https://i.imgur.com/Pqfe9gi.jpeg',
           '肉品原產地：臺灣豬肉',
-          FALSE
+          FALSE,
+          stir_fried_assorted_id
         ),
         (
           '麻油腰花',
           280,
           'https://i.imgur.com/MFOPFYI.jpeg',
           '肉品原產地：臺灣豬肉',
-          TRUE
+          TRUE,
+          stir_fried_assorted_id
         ),
         (
           '蠔油豬肝',
           180,
           'https://i.imgur.com/kFKh9Zd.jpeg',
           '肉品原產地：臺灣豬肉',
-          FALSE
+          FALSE,
+          stir_fried_assorted_id
         ),
         (
           '絲瓜蛤仔',
           240,
           'https://i.imgur.com/S75xrWh.jpeg',
           '使用產銷履歷絲瓜',
-          FALSE
+          FALSE,
+          stir_fried_assorted_id
         ),
         (
           'XO將頻果炒生干貝',
           390,
           'https://i.imgur.com/6iDfPs4.jpeg',
           '',
-          FALSE
+          FALSE,
+          stir_fried_assorted_id
         ),
         (
           '白灼(燙)蝦',
           320,
           'https://i.imgur.com/hA6Dvv2.jpeg',
           '使用產銷履歷蝦',
-          FALSE
+          FALSE,
+          stir_fired_seafood_id
         ),
         (
           '芹菜炒花枝',
           240,
           'https://i.imgur.com/sWRha3k.jpeg',
           '',
-          FALSE
+          FALSE,
+          stir_fired_seafood_id
         ),
         (
           '川燙透抽',
           380,
           'https://i.imgur.com/a03W4Dz.jpeg',
           '',
-          TRUE
+          TRUE,
+          stir_fired_seafood_id
         ),
         (
           '塔香炒螺肉',
           180,
           'https://i.imgur.com/DpiKkMI.jpeg',
           '',
-          FALSE
+          FALSE,
+          stir_fired_seafood_id
         ),
         (
           '炒海瓜子',
           250,
           'https://i.imgur.com/guhrBeS.jpeg',
           '',
-          TRUE
+          TRUE,
+          stir_fired_seafood_id
         ),
         (
           '蒜泥大草蝦',
           450,
           'https://i.imgur.com/d9FOB7k.jpeg',
           '',
-          FALSE
+          FALSE,
+          stir_fired_seafood_id
         ),
         (
           '蒜泥蚵仔',
           210,
           'https://i.imgur.com/VIhig1B.jpeg',
           '',
-          FALSE
+          FALSE,
+          stir_fired_seafood_id
         ),
         (
           '生炒三鮮',
           230,
           'https://i.imgur.com/afOcNrk.jpeg',
           '(水鯊、花枝、魷魚)',
-          FALSE
+          FALSE,
+          stir_fired_seafood_id
         ),
         (
           '泰式檸檬鱸魚',
           430,
           'https://i.imgur.com/84JXbxN.jpeg',
           '',
-          TRUE
+          TRUE,
+          stir_fired_seafood_id
         ),
         (
           '泰式檸檬蝦',
           450,
           'https://i.imgur.com/cOgMs8G.jpeg',
           '',
-          FALSE
+          FALSE,
+          stir_fired_seafood_id
         ),
         (
           '清蒸鱈魚',
           300,
           'https://i.imgur.com/QmW6WkJ.jpeg',
           '',
-          FALSE
+          FALSE,
+          stir_fired_seafood_id
         ),
         (
           '豆酥鱈魚',
           300,
           'https://i.imgur.com/VUzcuK1.jpeg',
           '',
-          TRUE
+          TRUE,
+          stir_fired_seafood_id
         ),
         (
           '橙汁鱸魚片',
           240,
           'https://i.imgur.com/lxwZHS9.jpeg',
           '使用產銷履歷鱸魚',
-          FALSE
+          FALSE,
+          stir_fired_seafood_id
         ),
         (
           '糖醋鱸魚片',
           240,
           'https://i.imgur.com/k10qwU7.jpeg',
           '使用產銷履歷鱸魚',
-          FALSE
+          FALSE,
+          stir_fired_seafood_id
         ),
         (
           '蔥燒炒蟹',
           450,
           'https://i.imgur.com/we4K60c.jpeg',
           '',
-          FALSE
+          FALSE,
+          stir_fired_seafood_id
         ),
         (
           '避風塘炒蟹',
           450,
           'https://i.imgur.com/gsZ329X.jpeg',
           '',
-          TRUE
+          TRUE,
+          stir_fired_seafood_id
         ),
         (
           '炒蛤仔',
           190,
           'https://i.imgur.com/Is28U1o.jpeg',
           '',
-          FALSE
+          FALSE,
+          stir_fired_seafood_id
         ),
         (
           '泰式椒麻雞',
           250,
           'https://i.imgur.com/IjGyewz.jpeg',
           '',
-          TRUE
+          TRUE,
+          deep_fried_id
         ),
         (
           '鹽酥蝦',
           280,
           'https://i.imgur.com/tJcCmxx.jpeg',
           '使用產銷履歷蝦',
-          FALSE
+          FALSE,
+          deep_fried_id
         ),
         (
           '鹽酥龍珠',
           210,
           'https://i.imgur.com/cB6JP1S.jpeg',
           '',
-          FALSE
+          FALSE,
+          deep_fried_id
         ),
         (
           '鳳梨蝦球',
           290,
           'https://i.imgur.com/1l2Z5wT.jpeg',
           '',
-          TRUE
+          TRUE,
+          deep_fried_id
         ),
         (
           '脆皮炸肥腸',
           225,
           'https://i.imgur.com/jQVoEzK.jpeg',
           '肉品原產地：歐洲豬肉',
-          FALSE
+          FALSE,
+          deep_fried_id
         ),
         (
           '蚵仔酥',
           210,
           'https://i.imgur.com/pfosyHK.jpeg',
           '',
-          FALSE
+          FALSE,
+          deep_fried_id
         ),
         (
           '椒鹽大草蝦',
           450,
           'https://i.imgur.com/VXI0GYa.jpeg',
           '',
-          FALSE
+          FALSE,
+          deep_fried_id
         ),
         (
           '五味炸豆腐',
           150,
           'https://i.imgur.com/EF7Cgxx.jpeg',
           '',
-          FALSE
+          FALSE,
+          deep_fried_id
         ),
         (
           '酥炸三鮮(蝦仁、花枝、蚵仔)',
           300,
           'https://i.imgur.com/wk6cnu4.jpeg',
           '使用產銷履歷白蝦',
-          FALSE
+          FALSE,
+          deep_fried_id
         ),
         (
           '酥炸絲瓜',
           180,
           'https://i.imgur.com/xrHuWbj.jpeg',
           '使用產銷履歷絲瓜',
-          FALSE
+          FALSE,
+          deep_fried_id
         ),
         (
           '爆漿熔岩蝦球(7粒)',
           270,
           'https://i.imgur.com/BKLzADx.jpeg',
           '',
-          FALSE
+          FALSE,
+          deep_fried_id
         ),
         (
           '鹽酥中卷',
           280,
           'https://i.imgur.com/BFJrz0e.jpeg',
           '',
-          FALSE
+          FALSE,
+          deep_fried_id
         ),
         (
           '三杯雞',
           250,
           'https://i.imgur.com/ruzfLp7.jpeg',
           '',
-          TRUE
+          TRUE,
+          three_cups_id
         ),
         (
           '三杯中卷',
           280,
           'https://i.imgur.com/qIhN7Hx.jpeg',
           '',
-          TRUE
+          TRUE,
+          three_cups_id
         ),
         (
           '三杯豬肝',
           200,
           'https://i.imgur.com/e1yPMtT.jpeg',
           '肉品原產地：臺灣豬肉',
-          FALSE
+          FALSE,
+          three_cups_id
         ),
         (
           '三杯皮蛋',
           200,
           'https://i.imgur.com/2afO497.jpeg',
           '',
-          FALSE
+          FALSE,
+          three_cups_id
         ),
         (
           '三杯田雞',
           300,
           'https://i.imgur.com/ruzfLp7.jpeg',
           '',
-          FALSE
+          FALSE,
+          three_cups_id
         ),
         (
           '鐵板牛柳',
           280,
           'https://i.imgur.com/pcfE1TZ.jpeg',
           '肉品原產地：澳洲',
-          TRUE
+          TRUE,
+          iron_plate_id
         ),
         (
           '鐵板豆腐',
           230,
           'https://i.imgur.com/UpLLtvV.jpeg',
           '肉品原產地：臺灣豬肉',
-          FALSE
+          FALSE,
+          iron_plate_id
         ),
         (
           '鐵板蚵仔',
           250,
           'https://i.imgur.com/QwCG5rm.jpeg',
           '',
-          FALSE
+          FALSE,
+          iron_plate_id
         ),
         (
           '鐵板豬肝',
           200,
           'https://i.imgur.com/eDG0xD4.jpeg',
           '肉品原產地：臺灣豬肉',
-          FALSE
+          FALSE,
+          iron_plate_id
         ),
         (
           '五更腸旺',
           250,
           'https://i.imgur.com/nWauxcd.jpeg',
           '肉品原產地：歐洲豬肉',
-          TRUE
+          TRUE,
+          claypot_id
         ),
         (
           '茄子腸煲',
           270,
           'https://i.imgur.com/NNErkAV.jpeg',
           '肉品原產地：歐洲豬肉',
-          FALSE
+          FALSE,
+          claypot_id
         ),
         (
           '茄子雞煲',
           280,
           'https://i.imgur.com/E8241zO.jpeg',
           '',
-          FALSE
+          FALSE,
+          claypot_id
         ),
         (
           '花雕雞煲',
           300,
           'https://i.imgur.com/BrOBoaf.jpeg',
           '',
-          TRUE
+          TRUE,
+          claypot_id
         ),
         (
           '炒高麗菜',
           135,
           'https://i.imgur.com/cn6icJ3.jpeg',
           '豬脂(油)原產地：臺灣豬肉',
-          TRUE
+          TRUE ,
+          vegetables_id
         ),
         (
           '炒空心菜',
           135,
           'https://i.imgur.com/yxymCHz.jpeg',
           '豬脂(油)原產地：臺灣豬肉',
-          FALSE
+          FALSE,
+          vegetables_id
         ),
         (
           '炒水蓮菜',
           180,
           'https://i.imgur.com/QD3c3A9.jpeg',
           '肉品原產地：臺灣豬肉',
-          FALSE
+          FALSE,
+          vegetables_id
         ),
         (
           '杞子炒川七',
           160,
           'https://i.imgur.com/sW8GjTg.jpeg',
           '',
-          FALSE
+          FALSE,
+          vegetables_id
         ),
         (
           '紅燒茄子',
           160,
           'https://i.imgur.com/wgiSjYf.jpeg',
           '肉品原產地：臺灣豬肉',
-          FALSE
+          FALSE,
+          vegetables_id
         ),
         (
           '皮蛋地瓜葉',
           195,
           'https://i.imgur.com/YO65EOw.jpeg',
           '肉品原產地：臺灣豬肉',
-          FALSE
+          FALSE,
+          vegetables_id
         ),
         (
           '燙地瓜葉',
           160,
           'https://i.imgur.com/Y6d0IJA.jpeg',
           '肉品原產地：臺灣豬肉',
-          TRUE
+          TRUE ,
+          vegetables_id
         ),
         (
           '乾煸四季豆',
           185,
           'https://i.imgur.com/Ls7qekQ.jpeg',
           '肉品原產地：臺灣豬肉',
-          FALSE
+          FALSE,
+          vegetables_id
         ),
         (
           '炒菠菜',
           150,
           'https://i.imgur.com/na39irO.jpeg',
           '',
-          FALSE
+          FALSE,
+          vegetables_id
         ),
         (
           '薑絲鱸魚湯(大)',
           380,
           'https://i.imgur.com/WjvaiL7.jpeg',
           '使用產銷履歷鱸魚',
-          FALSE
+          FALSE,
+          soup_id
         ),
         (
           '薑絲鱸魚湯(中)',
           200,
           'https://i.imgur.com/WjvaiL7.jpeg',
           '使用產銷履歷鱸魚',
-          FALSE
+          FALSE,
+          soup_id
         ),
         (
           '薑絲鱸魚湯(小)',
           110,
           'https://i.imgur.com/WjvaiL7.jpeg',
           '使用產銷履歷鱸魚',
-          FALSE
+          FALSE,
+          soup_id
         ),
         (
           '味噌鱸魚湯(大)',
           380,
           'https://i.imgur.com/KUt74zI.jpeg',
           '使用產銷履歷鱸魚',
-          FALSE
+          FALSE,
+          soup_id
         ),
         (
           '味噌鱸魚湯(中)',
           200,
           'https://i.imgur.com/KUt74zI.jpeg',
           '使用產銷履歷鱸魚',
-          FALSE
+          FALSE,
+          soup_id
         ),
         (
           '味噌鱸魚湯(小)',
           110,
           'https://i.imgur.com/KUt74zI.jpeg',
           '使用產銷履歷鱸魚',
-          FALSE
+          FALSE,
+          soup_id
         ),
         (
           '蛤蠣湯(大)',
           355,
           'https://i.imgur.com/lqfRpav.jpeg',
           '',
-          TRUE
+          TRUE,
+          soup_id
         ),
         (
           '蛤蠣湯(中)',
           185,
           'https://i.imgur.com/lqfRpav.jpeg',
           '',
-          TRUE
+          TRUE,
+          soup_id
         ),
         (
           '蛤蠣湯(小)',
           100,
           'https://i.imgur.com/lqfRpav.jpeg',
           '',
-          TRUE
+          TRUE,
+          soup_id
         ),
         (
           '蚵仔湯(大)',
           355,
           'https://i.imgur.com/zApUg0Q.jpeg',
           '',
-          FALSE
+          FALSE,
+          soup_id
         ),
         (
           '蚵仔湯(中)',
           185,
           'https://i.imgur.com/zApUg0Q.jpeg',
           '',
-          FALSE
+          FALSE,
+          soup_id
         ),
         (
           '蚵仔湯(小)',
           100,
           'https://i.imgur.com/zApUg0Q.jpeg',
           '',
-          FALSE
+          FALSE,
+          soup_id
         ),
         (
           '豬肝湯(大)',
           260,
           'https://i.imgur.com/HKveDXB.jpeg',
           '肉品原產地：臺灣豬肉',
-          FALSE
+          FALSE,
+          soup_id
         ),
         (
           '豬肝湯(中)',
           130,
           'https://i.imgur.com/HKveDXB.jpeg',
           '肉品原產地：臺灣豬肉',
-          FALSE
+          FALSE,
+          soup_id
         ),
         (
           '豬肝湯(小)',
           80,
           'https://i.imgur.com/HKveDXB.jpeg',
           '肉品原產地：臺灣豬肉',
-          FALSE
+          FALSE,
+          soup_id
         ),
         (
           '番茄豆腐蛋花湯(大)',
           260,
           'https://i.imgur.com/539SUUI.jpeg',
           '',
-          FALSE
+          FALSE,
+          soup_id
         ),
         (
           '番茄豆腐蛋花湯(中)',
           130,
           'https://i.imgur.com/539SUUI.jpeg',
           '',
-          FALSE
+          FALSE,
+          soup_id
         ),
         (
           '番茄豆腐蛋花湯(小)',
           80,
           'https://i.imgur.com/539SUUI.jpeg',
           '',
-          FALSE
+          FALSE,
+          soup_id
         ),
         (
           '白飯',
           20,
           'https://i.imgur.com/hoVBigZ.jpeg',
           '168g，每滿＄200有贈送1碗白飯(不包含炒飯麵、白飯及運費)，請再結帳頁面的附註上說明。這邊提供額外加點的服務',
-          FALSE
+          FALSE,
+          a_la_carte_non_alcoholic_id
         ),
         (
           '小菜毛豆',
           50,
           'https://i.imgur.com/MlyTrYZ.jpeg',
           '',
-          FALSE
+          FALSE,
+          a_la_carte_non_alcoholic_id
         ),
         (
           '聖沛黎洛 天然氣泡水',
           100,
           'https://i.imgur.com/IQWt8l3.jpeg',
           '750ml',
-          FALSE
+          FALSE,
+          a_la_carte_non_alcoholic_id
         ),
         (
           '老北京御品酸梅湯',
           100,
           'https://i.imgur.com/bH7DuNj.jpeg',
           '900ml',
-          FALSE
+          FALSE,
+          a_la_carte_non_alcoholic_id
         ),
         (
           '愛之味麥仔茶',
           60,
           'https://i.imgur.com/oMs9SXT.jpeg',
           '990ml',
-          FALSE
+          FALSE,
+          a_la_carte_non_alcoholic_id
         ),
         (
           '御茶園日式綠茶',
           60,
           'https://i.imgur.com/L71w6Qx.jpeg',
           '980ml',
-          FALSE
+          FALSE,
+          a_la_carte_non_alcoholic_id
         ),
         (
           '蘋果西打',
           50,
           'https://i.imgur.com/9Q2PYwc.jpeg',
           '600ml',
-          FALSE
+          FALSE,
+          a_la_carte_non_alcoholic_id
         ),
         (
           '可口可樂',
           50,
           'https://i.imgur.com/pNs8cD9.jpeg',
           '600ml',
-          FALSE
+          FALSE,
+          a_la_carte_non_alcoholic_id
         ),
         (
           '半天水椰子汁',
           70,
           'https://i.imgur.com/HxPFJnf.jpeg',
           '520ml',
-          FALSE
+          FALSE,
+          a_la_carte_non_alcoholic_id
         ),
         (
           '泰山冰鎮紅茶',
           60,
           'https://i.imgur.com/0XeFGTK.jpeg',
           '900ml',
-          FALSE
+          FALSE,
+          a_la_carte_non_alcoholic_id
         ),
         (
           '優鮮沛蔓越莓',
           60,
           'https://i.imgur.com/wsZ64Po.jpeg',
           '900ml',
-          FALSE
+          FALSE,
+          a_la_carte_non_alcoholic_id
         ),
         (
           'Sunkist芭樂汁',
           60,
           'https://i.imgur.com/RFlw1nq.jpeg',
           '900ml',
-          FALSE
+          FALSE,
+          a_la_carte_non_alcoholic_id
         ),
         (
           'Sunkist柳橙汁',
           60,
           'https://i.imgur.com/XmLOAMv.jpeg',
           '900ml',
-          FALSE
+          FALSE,
+          a_la_carte_non_alcoholic_id
         ),
         (
           '蜂蜜檸檬(小)',
           130,
           'https://i.imgur.com/qHyHAiJ.jpeg',
           '500ml',
-          FALSE
+          FALSE,
+          a_la_carte_non_alcoholic_id
         ),
         (
           '蜂蜜檸檬(大)',
           200,
           'https://i.imgur.com/4xf2wX4.jpeg',
           '800ml',
-          FALSE
+          FALSE,
+          a_la_carte_non_alcoholic_id
         );
-    `,
-    prisma.$executeRaw`
-      UPDATE meals
-      SET
-        category_id = (
-          SELECT
-            id
-          FROM
-            categories
-          WHERE
-            title = '煲類'
-        )
-      WHERE
-        title IN ('五更腸旺', '茄子腸煲', '茄子雞煲', '花雕雞煲');
-    `,
-    prisma.$executeRaw`
-      UPDATE meals
-      SET
-        category_id = (
-          SELECT
-            id
-          FROM
-            categories
-          WHERE
-            title = '熱炒什錦類'
-        )
-      WHERE
-        title IN (
-          '地芋肥腸',
-          '蒼蠅頭',
-          '鹹蛋炒苦瓜',
-          '鹹蛋炒竹筍',
-          '蚵仔炒蛋',
-          '蝦仁炒蛋',
-          '菜脯炒蛋',
-          '客家小炒',
-          '丁香炒花生',
-          '老皮嫩肉',
-          '麻婆豆腐',
-          '紅燒豆腐',
-          '蟹黃豆腐',
-          '四季肥腸',
-          '薑絲大腸',
-          '麻油腰花',
-          '蠔油豬肝',
-          '絲瓜蛤仔',
-          'XO將頻果炒生干貝'
-        );
-    `,
-    prisma.$executeRaw`
-      UPDATE meals
-      SET
-        category_id = (
-          SELECT
-            id
-          FROM
-            categories
-          WHERE
-            title = '鐵板類'
-        )
-      WHERE
-        title IN ('鐵板牛柳', '鐵板豆腐', '鐵板蚵仔', '鐵板豬肝');
-    `,
-    prisma.$executeRaw`
-      UPDATE meals
-      SET
-        category_id = (
-          SELECT
-            id
-          FROM
-            categories
-          WHERE
-            title = '飯麵類'
-        )
-      WHERE
-        title IN (
-          '肉絲炒飯',
-          '肉絲炒麵',
-          '牛肉炒飯',
-          '牛肉炒麵',
-          '羊肉炒飯',
-          '羊肉炒麵',
-          '蝦仁炒飯',
-          '蝦仁炒麵'
-        );
-    `,
-    prisma.$executeRaw`
-      UPDATE meals
-      SET
-        category_id = (
-          SELECT
-            id
-          FROM
-            categories
-          WHERE
-            title = '火鍋類'
-        )
-      WHERE
-        title IN (
-          '港都海產鍋(大)',
-          '港都海產鍋(小)',
-          '生綠竹筍雞鍋(大)',
-          '生綠竹筍雞鍋(小)',
-          '鰱魚頭鍋(大)',
-          '鰱魚頭鍋(小)',
-          '鳳梨苦瓜雞鍋(大)',
-          '鳳梨苦瓜雞鍋(小)',
-          '陳年菜甫雞鍋(大)',
-          '陳年菜甫雞鍋(小)',
-          '養生百菇雞鍋(大)',
-          '養生百菇雞鍋(小)'
-        );
-    `,
-    prisma.$executeRaw`
-      UPDATE meals
-      SET
-        category_id = (
-          SELECT
-            id
-          FROM
-            categories
-          WHERE
-            title = '火烤類'
-        )
-      WHERE
-        title IN (
-          '烤魚下巴',
-          '秋刀魚',
-          '烤日式鯖魚',
-          '鹽豬肉',
-          '牛小排',
-          '烤松阪豬肉',
-          '烤櫻桃鴨肉串(4串)',
-          '安格斯牛小排',
-          '烤鮭魚肚',
-          '烤鮭魚頭(半顆)'
-        );
-    `,
-    prisma.$executeRaw`
-      UPDATE meals
-      SET
-        category_id = (
-          SELECT
-            id
-          FROM
-            categories
-          WHERE
-            title = '熱炒肉類'
-        )
-      WHERE
-        title IN (
-          '沙茶炒羊肉',
-          '沙茶炒牛肉',
-          '蔥爆牛肉',
-          '糖醋排骨',
-          '糖醋里肌',
-          '炒回鍋肉',
-          '蒜泥白肉',
-          '宮保雞丁',
-          '橙汁排骨'
-        );
-    `,
-    prisma.$executeRaw`
-      UPDATE meals
-      SET
-        category_id = (
-          SELECT
-            id
-          FROM
-            categories
-          WHERE
-            title = '熱炒海鮮類'
-        )
-      WHERE
-        title IN (
-          '白灼(燙)蝦',
-          '芹菜炒花枝',
-          '川燙透抽',
-          '塔香炒螺肉',
-          '炒海瓜子',
-          '蒜泥大草蝦',
-          '蒜泥蚵仔',
-          '生炒三鮮',
-          '泰式檸檬鱸魚',
-          '泰式檸檬蝦',
-          '清蒸鱈魚',
-          '豆酥鱈魚',
-          '橙汁鱸魚片',
-          '糖醋鱸魚片',
-          '蔥燒炒蟹',
-          '避風塘炒蟹',
-          '炒蛤仔'
-        );
-    `,
-    prisma.$executeRaw`
-      UPDATE meals
-      SET
-        category_id = (
-          SELECT
-            id
-          FROM
-            categories
-          WHERE
-            title = '湯類'
-        )
-      WHERE
-        title IN (
-          '薑絲鱸魚湯(大)',
-          '薑絲鱸魚湯(中)',
-          '薑絲鱸魚湯(小)',
-          '味噌鱸魚湯(大)',
-          '味噌鱸魚湯(中)',
-          '味噌鱸魚湯(小)',
-          '蛤蠣湯(大)',
-          '蛤蠣湯(中)',
-          '蛤蠣湯(小)',
-          '蚵仔湯(大)',
-          '蚵仔湯(中)',
-          '蚵仔湯(小)',
-          '豬肝湯(大)',
-          '豬肝湯(中)',
-          '豬肝湯(小)',
-          '番茄豆腐蛋花湯(大)',
-          '番茄豆腐蛋花湯(中)',
-          '番茄豆腐蛋花湯(小)'
-        );
-    `,
-    prisma.$executeRaw`
-      UPDATE meals
-      SET
-        category_id = (
-          SELECT
-            id
-          FROM
-            categories
-          WHERE
-            title = '酥炸類'
-        )
-      WHERE
-        title IN (
-          '泰式椒麻雞',
-          '鹽酥蝦',
-          '鹽酥龍珠',
-          '鳳梨蝦球',
-          '脆皮炸肥腸',
-          '蚵仔酥',
-          '椒鹽大草蝦',
-          '五味炸豆腐',
-          '酥炸三鮮(蝦仁、花枝、蚵仔)',
-          '酥炸絲瓜',
-          '爆漿熔岩蝦球(7粒)',
-          '鹽酥中卷'
-        );
-    `,
-    prisma.$executeRaw`
-      UPDATE meals
-      SET
-        category_id = (
-          SELECT
-            id
-          FROM
-            categories
-          WHERE
-            title = '三杯類'
-        )
-      WHERE
-        title IN ('三杯雞', '三杯中卷', '三杯豬肝', '三杯皮蛋', '三杯田雞');
-    `,
-    prisma.$executeRaw`
-      UPDATE meals
-      SET
-        category_id = (
-          SELECT
-            id
-          FROM
-            categories
-          WHERE
-            title = '青菜類'
-        )
-      WHERE
-        title IN (
-          '炒高麗菜',
-          '炒空心菜',
-          '炒水蓮菜',
-          '杞子炒川七',
-          '紅燒茄子',
-          '皮蛋地瓜葉',
-          '燙地瓜葉',
-          '乾煸四季豆',
-          '炒菠菜'
-        );
-    `,
-    prisma.$executeRaw`
-      UPDATE meals
-      SET
-        category_id = (
-          SELECT
-            id
-          FROM
-            categories
-          WHERE
-            title = '單點及無酒精飲料'
-        )
-      WHERE
-        title IN (
-          '白飯',
-          '小菜毛豆',
-          '聖沛黎洛 天然氣泡水',
-          '老北京御品酸梅湯',
-          '愛之味麥仔茶',
-          '御茶園日式綠茶',
-          '蘋果西打',
-          '可口可樂',
-          '半天水椰子汁',
-          '泰山冰鎮紅茶',
-          '優鮮沛蔓越莓',
-          'Sunkist芭樂汁',
-          'Sunkist柳橙汁',
-          '蜂蜜檸檬(小)',
-          '蜂蜜檸檬(大)'
-        );
+      END $$;
     `,
   ]);
 }

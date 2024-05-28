@@ -1,4 +1,4 @@
-// export * from './auth.controller';
+export * from './auth.controller';
 export * from './order.controller';
 // export * from './meal.controller';
 // export * from './category.controller';

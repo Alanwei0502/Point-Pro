@@ -47,7 +47,7 @@ export class ReservationController {
   static createReservationHandler = async (req: Request, res: ApiResponse, next: NextFunction) => {
     try {
       const { username, gender, phone, email, role, periodId, remark, people, type } = req.body;
-      const user = await userModel.createUser({ username, gender, phone, email, role });
+      const user = await userModel.createCustomerUser({ username, gender, phone, email, role });
       const reservation = await reservationModel.createReservation({ type, people, remark, periodId, userId: user.id });
 
       return res.status(StatusCodes.CREATED).json({

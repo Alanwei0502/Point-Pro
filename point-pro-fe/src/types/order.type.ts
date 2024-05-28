@@ -1,20 +1,15 @@
 import { IBookingInfo } from './book.type';
-import { ICategory, IMeal, ISpecialty } from './common.type';
+import { ICategory, IMeal, ISpecialty, OrderStatus, OrderType, PaymentStatus } from './common.type';
 
-export enum OrderType {
-  DINE_IN = 'DINE_IN',
-  TAKE_OUT = 'TAKE_OUT',
-}
-
-export enum OrderStatus {
-  PENDING = 'PENDING',
-  UNPAID = 'UNPAID',
-  SUCCESS = 'SUCCESS',
-  CANCEL = 'CANCEL',
-}
+// export enum OrderStatus {
+//   WORKING = 'WORKING',
+//   UNPAID = 'UNPAID',
+//   SUCCESS = 'SUCCESS',
+//   CANCEL = 'CANCEL',
+// }
 
 export enum OrderStatusTitle {
-  PENDING = '準備中',
+  WORKING = '準備中',
   UNPAID = '未付款',
   SUCCESS = '已付款',
   CANCEL = '已取消',
@@ -42,7 +37,7 @@ export interface IPaymentLog {
   paymentNo: string;
   price: number;
   gateway: PaymentGateway;
-  status: OrderStatus.UNPAID | OrderStatus.SUCCESS;
+  status: PaymentStatus;
 }
 
 export interface IOrder {

@@ -65,7 +65,7 @@ export const OrderMealItem: FC<IOrderMealItemProps> = (props) => {
         <List sx={{ margin: 0, padding: 0, flexGrow: 1 }}>
           {specialties.map((specialty) => (
             <ListItem key={specialty.id} sx={{ margin: 0, padding: 0, color: theme.palette.text.secondary }}>
-              [{specialty.title}]: {specialty.items.map((item) => item.title).join('、')}
+              {/* [{specialty.title}]: {specialty.items.map((item) => item.title).join('、')} */}
             </ListItem>
           ))}
         </List>
@@ -193,7 +193,7 @@ export const PendingAndCancelOrderItem: FC<IPendingAndCancelOrderItemProps> = (p
           </Column>
           <VerticalDivider />
           <Typography sx={{ flex: '0 50%' }}>{appDayjs(createdAt).format('YYYY/MM/DD HH:mm')}</Typography>
-          {status === OrderStatus.PENDING && (
+          {status === OrderStatus.WORKING && (
             <>
               <VerticalDivider />
               <Box sx={{ flex: '0 50%' }}>
@@ -212,14 +212,14 @@ export const PendingAndCancelOrderItem: FC<IPendingAndCancelOrderItemProps> = (p
               key={orderMeal.id}
               status={status}
               orderMeal={orderMeal}
-              isShowServedAmount={status === OrderStatus.PENDING}
+              isShowServedAmount={status === OrderStatus.WORKING}
               tempServedAmount={tempServedAmount}
               handleChangeServedAmount={handleChangeServedAmount}
             />
           ))}
         </List>
         <Box sx={{ display: 'flex' }}>
-          {status === OrderStatus.PENDING && (
+          {status === OrderStatus.WORKING && (
             <>
               {progress === 0 && (
                 <Button
@@ -304,7 +304,7 @@ export const UnpaidAndSuccessOrderItem: FC<IUnpaidAndSuccessOrderItemProps> = (p
                 <Typography>訂單編號</Typography>
                 <Typography>{id.slice(-5)}</Typography>
               </Column>
-              {status === OrderStatus.SUCCESS && (
+              {status === OrderStatus.FINISHED && (
                 <>
                   <VerticalDivider />
                   <Column sx={{ minWidth: '13rem' }}>
@@ -320,7 +320,7 @@ export const UnpaidAndSuccessOrderItem: FC<IUnpaidAndSuccessOrderItemProps> = (p
               總金額：{totalPrice}元
             </Typography>
           </Column>
-          {status === OrderStatus.UNPAID && (
+          {status === OrderStatus.FINISHED && (
             <>
               <VerticalDivider />
               <Button
@@ -353,7 +353,7 @@ export const UnpaidAndSuccessOrderItem: FC<IUnpaidAndSuccessOrderItemProps> = (p
                     <Typography sx={{ minWidth: '13rem' }}>
                       {appDayjs(order.createdAt).format('YYYY/MM/DD HH:mm')}
                     </Typography>
-                    {status === OrderStatus.SUCCESS && (
+                    {status === OrderStatus.FINISHED && (
                       <>
                         <VerticalDivider />
                         <Column sx={{ minWidth: '13rem' }}>

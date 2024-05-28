@@ -1,5 +1,16 @@
 import { Request } from 'express';
 import { ReservationAuth, UserAuth } from './shared';
+import { z } from 'zod';
+import { loginSchema, registerSchema } from '../validators';
+import {
+  createCategoryRequestSchema,
+  createSpecialtyRequestSchema,
+  deleteSpecialtyRequestSchema,
+  getCategoryByIdRequestSchema,
+  getSpecialtyByIdRequestSchema,
+  updateCategoriesOrderRequestSchema,
+  updateSpecialtyRequestSchema,
+} from '../validators/menu.validator';
 
 // Request
 
@@ -56,3 +67,48 @@ export interface IGetAllMealsRequest<
   R = any,
   S = any,
 > extends AuthRequest<P, T, R, S> {}
+
+export interface ILoginRequest extends Request {
+  body: z.infer<typeof loginSchema>;
+}
+
+export interface IRegisterRequest extends Request {
+  body: z.infer<typeof registerSchema>;
+}
+
+export interface IGetCategoryByIdRequest extends Request {
+  params: z.infer<typeof getCategoryByIdRequestSchema>;
+}
+
+export interface ICreateCategoryRequest extends Request {
+  body: z.infer<typeof createCategoryRequestSchema>;
+}
+
+export interface IUpdateCategoryRequest extends Request {
+  body: z.infer<typeof createCategoryRequestSchema>;
+  params: z.infer<typeof getCategoryByIdRequestSchema>;
+}
+
+export interface IUpdateCategoriesOrderRequest extends Request {
+  body: z.infer<typeof updateCategoriesOrderRequestSchema>;
+}
+
+export interface IDeleteCategoryRequest extends Request {
+  params: z.infer<typeof getCategoryByIdRequestSchema>;
+}
+export interface IGetSpecialtyByIdRequest extends Request {
+  params: z.infer<typeof getSpecialtyByIdRequestSchema>;
+}
+
+export interface ICreateSpecialtyRequest extends Request {
+  body: z.infer<typeof createSpecialtyRequestSchema>;
+}
+
+export interface IUpdateSpecialtyRequest extends Request {
+  body: z.infer<typeof updateSpecialtyRequestSchema>;
+  params: z.infer<typeof getSpecialtyByIdRequestSchema>;
+}
+
+export interface IDeleteSpecialtyRequest extends Request {
+  params: z.infer<typeof deleteSpecialtyRequestSchema>;
+}

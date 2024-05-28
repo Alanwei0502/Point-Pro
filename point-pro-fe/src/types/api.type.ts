@@ -2,12 +2,14 @@ import {
   DatePeriodInfo,
   ICategory,
   IMeal,
+  IMealWithCategoryAndSpecialtyItems,
   IOrder,
   IOrderMeal,
   IPeriod,
   IReservation,
   ISpecialty,
   ISpecialtyItem,
+  ISpecialtyWithSpecialtyItems,
   IUser,
   OrderStatus,
   OrderType,
@@ -23,12 +25,11 @@ export interface ApiResponse<Result> {
 
 // Login
 export interface LoginPayload {
-  account: string;
-  password: string;
+  username: IUser['username'];
+  password: IUser['password'];
 }
 export type LoginResponse = ApiResponse<{
   authToken: string;
-  IUser: IUser;
 }>;
 
 // Generate Token
@@ -51,7 +52,7 @@ export interface MealDetails {
   items?: MealDetails[];
 }
 export type MealResponse = ApiResponse<IMeal>;
-export type MealsResponse = ApiResponse<IMeal[]>;
+export type MealsResponse = ApiResponse<IMealWithCategoryAndSpecialtyItems[]>;
 
 export interface PatchMealByIdPayload {
   mealId: string;
@@ -59,18 +60,17 @@ export interface PatchMealByIdPayload {
 }
 
 // Category
-export interface PostCategoryPayload {
-  title: ICategory['title'];
-}
+export type PostCategoryPayload = Pick<ICategory, 'title' | 'position'>;
+export type PatchCategoryPayload = Pick<ICategory, 'title'>;
+export type PostCategoiesOrderPayload = Pick<ICategory, 'id' | 'position'>[];
+
 export type CategoryResponse = ApiResponse<ICategory>;
+export type PatchCategoriesOrderResponse = ApiResponse<null>;
 export type CategoriesResponse = ApiResponse<ICategory[]>;
 
 // Specialty
-export interface PatchSpecialtyPayload {
-  specialtyId: string;
-  payload: ISpecialty;
-}
-export type SpecialtiesResponse = ApiResponse<ISpecialty[]>;
+export type PatchSpecialtyPayload = Pick<ISpecialty, 'id' | 'title' | 'selectionType'>;
+export type GetSpecialtyWithSpecialtyItemsResponse = ApiResponse<ISpecialtyWithSpecialtyItems[]>;
 export type SpecialtyResponse = ApiResponse<ISpecialty>;
 export type SpecialtyItemsResponse = ApiResponse<ISpecialtyItem[]>;
 

@@ -1,3 +1,3 @@
-export * from './AuthService';
-export * from './ReservationService';
-export * from './PeriodService';
+export * from './auth.service';
+export * from './reservation.service';
+export * from './period.service';

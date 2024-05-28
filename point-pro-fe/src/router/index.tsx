@@ -3,13 +3,11 @@ import { Home } from '~/features/home';
 import { Login } from '~/features/admin/login';
 import { ProtectedRoute } from './protected';
 import { AdminOrders } from '~/features/admin/orders';
-import { AdminMenu } from '~/features/admin/menu';
-import { AdminMealListDetail } from '~/features/admin/meal/list/detail';
-import { AdminMealSettings } from '~/features/admin/meal/settings';
-import { AdminMealList } from '~/features/admin/meal/list';
+import { AdminTakeOrder } from '~/features/admin/take-order';
+import { AdminMenuSettings } from '~/features/admin/menu';
 import { AdminSeat } from '~/features/admin/seat';
 import { Booking } from '~/features/customer/booking';
-import { TakeOrders } from '~/features/customer/takeOrders';
+import { TakeOrders } from '~/features/customer/take-order';
 import { PaymentCancel, PaymentConfirm } from '~/features/customer/payment';
 
 const router = createBrowserRouter([
@@ -45,42 +43,24 @@ const router = createBrowserRouter([
     element: <Login />,
   },
   {
-    element: <ProtectedRoute />,
     path: 'admin',
+    element: <ProtectedRoute />,
     children: [
       {
         path: 'orders',
         element: <AdminOrders />,
       },
       {
-        path: 'menu',
-        element: <AdminMenu />,
+        path: 'take-order',
+        element: <AdminTakeOrder />,
       },
       {
         path: 'seat',
         element: <AdminSeat />,
       },
       {
-        path: 'meal',
-        children: [
-          {
-            path: 'list',
-            children: [
-              {
-                path: '',
-                element: <AdminMealList />,
-              },
-              {
-                path: ':meal_id',
-                element: <AdminMealListDetail />,
-              },
-            ],
-          },
-          {
-            path: 'settings',
-            element: <AdminMealSettings />,
-          },
-        ],
+        path: 'menu',
+        element: <AdminMenuSettings />,
       },
     ],
   },

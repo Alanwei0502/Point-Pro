@@ -31,7 +31,6 @@ export * from './input/NumberInput';
 // Layout
 export * from './layout/Layout';
 export * from './layout/MobileLayout';
-export * from './layout/AdminLayout';
 // Loading
 export * from './loading/Loading';
 // Modal
@@ -49,6 +48,11 @@ export * from './select/BaseSelect';
 export * from './select/LabelSelect';
 // Switch
 export * from './switch/BaseSwitch';
-// TAbs
+// Tabs
 export * from './tabs/BaseTabs';
 export * from './tabs/PanelTabs';
+// Transfer
+export * from './transfer/BaseTransfer';
+// Table
+export * from './table/StyledTableCell';
+export * from './table/StyledTableRow';

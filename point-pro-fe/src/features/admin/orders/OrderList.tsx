@@ -1,10 +1,10 @@
-import { FC, useEffect } from "react";
-import { Typography, Box } from "@mui/material";
-import { useAppDispatch, useAppSelector } from "~/hooks";
-import { getOrders } from "~/store/slices";
-import { OrderStatus, GatherOrder } from "~/types";
-import { headerHeight, Column, CancelOrderConfirmModal } from "~/components";
-import { PendingAndCancelOrderItem, UnpaidAndSuccessOrderItem } from "./OrderItem";
+import { FC, useEffect } from 'react';
+import { Typography, Box } from '@mui/material';
+import { useAppDispatch, useAppSelector } from '~/hooks';
+import { getOrders } from '~/store/slices';
+import { OrderStatus, GatherOrder } from '~/types';
+import { headerHeight, Column, CancelOrderConfirmModal } from '~/components';
+import { PendingAndCancelOrderItem, UnpaidAndSuccessOrderItem } from './OrderItem';
 
 export const OrderList: FC = () => {
   const dispatch = useAppDispatch();
@@ -36,24 +36,24 @@ export const OrderList: FC = () => {
     return showNewOrders;
   };
 
-  const isPendingOrCancelOrder = tabStatus === OrderStatus.PENDING || tabStatus === OrderStatus.CANCEL;
+  const isPendingOrCancelOrder = tabStatus === OrderStatus.WORKING || tabStatus === OrderStatus.CANCEL;
   const isShowOrders = (isPendingOrCancelOrder ? orders.length : gatherOrders().length) > 0;
 
   useEffect(() => {
     dispatch(getOrders({ status: tabStatus }));
-  }, [tabStatus]);
+  }, [dispatch, tabStatus]);
 
   return (
     <>
       {isShowOrders ? (
         <Box
           sx={{
-            display: "flex",
-            flexDirection: "column",
-            gap: "0.75rem",
-            padding: "0.75rem",
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '0.75rem',
+            padding: '0.75rem',
             height: `calc(100vh - ${headerHeight} - 54px)`,
-            userSelect: "none"
+            userSelect: 'none',
           }}
         >
           {isPendingOrCancelOrder
@@ -64,14 +64,14 @@ export const OrderList: FC = () => {
         </Box>
       ) : (
         <Column
-          justifyContent="center"
-          bgcolor="background.paper"
+          justifyContent='center'
+          bgcolor='background.paper'
           height={`calc(100vh - ${headerHeight} - 54px)`}
           sx={{
-            userSelect: "none"
+            userSelect: 'none',
           }}
         >
-          <Typography variant="h4" textAlign="center" color="text.disabled">
+          <Typography variant='h4' textAlign='center' color='text.disabled'>
             無此分類訂單
           </Typography>
         </Column>

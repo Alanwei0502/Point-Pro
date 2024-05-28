@@ -45,6 +45,7 @@ export const theme = createTheme({
       black_60: '#919191',
       black_40: '#D1D1D1',
       black_20: '#F2F2F2',
+      white: '#FFFFFF',
     },
     primary: {
       light: '#fadf8d',

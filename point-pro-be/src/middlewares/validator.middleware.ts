@@ -5,7 +5,7 @@ import { StatusCodes } from 'http-status-codes';
 export function validateMiddleware<Z extends z.ZodTypeAny>(schema: Z, dataFrom: 'body' | 'query' | 'params' = 'body') {
   return (req: Request, res: Response, next: NextFunction) => {
     try {
-      schema.parse(req[dataFrom]);
+      req[dataFrom] = schema.parse(req[dataFrom]);
       next();
     } catch (error) {
       if (error instanceof ZodError) {

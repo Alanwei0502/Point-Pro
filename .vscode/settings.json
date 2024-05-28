@@ -5,7 +5,7 @@
   "prettier.tabWidth": 2,
   "prettier.semi": true,
   "prettier.singleQuote": true,
-  "prettier.printWidth": 120,
+  "prettier.printWidth": 150,
   "prettier.arrowParens": "always",
   "[json]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"

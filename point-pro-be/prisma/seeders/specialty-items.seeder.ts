@@ -6,78 +6,35 @@ export function insertSpecialtyItems() {
       DELETE FROM specialty_items;
     `,
     prisma.$executeRaw`
+      DO $$
+      DECLARE
+          spicy_specialty_id UUID;
+          speical_specialty_id UUID;
+          add_amount_specialty_id UUID;
+      BEGIN
+      SELECT id INTO spicy_specialty_id FROM specialties WHERE title = '辣度';
+      SELECT id INTO speical_specialty_id FROM specialties WHERE title = '特別調整';
+      SELECT id INTO add_amount_specialty_id FROM specialties WHERE title = '加量';
       INSERT INTO
-        specialty_items (title, price, position)
+        specialty_items (title, price, position, specialty_id)
       VALUES
-        ('不辣', 0, 1),
-        ('小辣', 0, 2),
-        ('中辣', 0, 3),
-        ('大辣', 0, 4),
-        ('少油', 0, 5),
-        ('少鹽', 0, 6),
-        ('無味素', 0, 7),
-        ('不加蔥', 0, 8),
-        ('不加洋蔥', 0, 9),
-        ('不加香菜', 0, 10),
-        ('不加薑', 0, 11),
-        ('不加胡椒', 0, 12),
-        ('吃素', 0, 13),
-        ('蛋奶素', 0, 14),
-        ('加10元', 10, 15),
-        ('加20元', 20, 16);
-    `,
-    prisma.$executeRaw`
-      UPDATE specialty_items
-      SET
-        specialty_id = (
-          SELECT
-            id
-          FROM
-            specialties
-          WHERE
-            title = '辣度'
-        )
-      WHERE
-        title IN ('不辣', '小辣', '中辣', '大辣');
-    `,
-    prisma.$executeRaw`
-      UPDATE specialty_items
-      SET
-        specialty_id = (
-          SELECT
-            id
-          FROM
-            specialties
-          WHERE
-            title = '特別調整'
-        )
-      WHERE
-        title IN (
-          '少油',
-          '少鹽',
-          '無味素',
-          '不加蔥',
-          '不加洋蔥',
-          '不加香菜',
-          '不加薑',
-          '不加胡椒',
-          '吃素',
-          '蛋奶素'
-        );
-    `,
-    prisma.$executeRaw`
-      UPDATE specialty_items
-      SET
-        specialty_id = (
-          SELECT
-            id
-          FROM
-            specialties
-          WHERE
-            title = '加量'
-        )
-      WHERE
-        title IN ('加10元', '加20元');
+        ('不辣', 0, 1, spicy_specialty_id),
+        ('小辣', 0, 2, spicy_specialty_id),
+        ('中辣', 0, 3, spicy_specialty_id),
+        ('大辣', 0, 4, spicy_specialty_id),
+        ('少油', 0, 5, speical_specialty_id),
+        ('少鹽', 0, 6, speical_specialty_id),
+        ('無味素', 0, 7, speical_specialty_id),
+        ('不加蔥', 0, 8, speical_specialty_id),
+        ('不加洋蔥', 0, 9, speical_specialty_id),
+        ('不加香菜', 0, 10, speical_specialty_id),
+        ('不加薑', 0, 11, speical_specialty_id),
+        ('不加胡椒', 0, 12, speical_specialty_id),
+        ('吃素', 0, 13, speical_specialty_id),
+        ('蛋奶素', 0, 14, speical_specialty_id),
+        ('加10元', 10, 15, add_amount_specialty_id),
+        ('加20元', 20, 16, add_amount_specialty_id);
+      END $$;
     `,
   ]);
 }

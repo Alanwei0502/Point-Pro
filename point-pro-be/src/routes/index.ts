@@ -3,9 +3,6 @@ import { Logger } from '../helpers/utils.helper';
 import { ApiResponse } from '../types/shared';
 import authRouter from './auth.router';
 import orderRouter from './order.router';
-import mealRouter from './meal.router';
-import categoryRouter from './category.router';
-import specialtyRouter from './specialty.router';
 import menuRouter from './menu.router';
 import imgurRouter from './imgur.router';
 import paymentRouter from './payment.router';
@@ -29,11 +26,8 @@ apiRouter.use((error: Error, req: Request, res: ApiResponse, next: NextFunction)
   }
 });
 
-// apiRouter.use('/auth', authRouter);
+apiRouter.use('/auth', authRouter);
 // apiRouter.use('/order', orderRouter);
-// apiRouter.use('/meal', mealRouter);
-// apiRouter.use('/category', categoryRouter);
-// apiRouter.use('/specialty', specialtyRouter);
 apiRouter.use('/menu', menuRouter);
 // apiRouter.use('/imgur', imgurRouter);
 // apiRouter.use('/payment', paymentRouter);

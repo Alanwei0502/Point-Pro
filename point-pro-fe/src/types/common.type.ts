@@ -1,14 +1,31 @@
 import { GetMenuResponseMeal, GetMenuResponseSpecialtyItem } from './api.type';
 
-export enum SelectionType {
-  SINGLE = 'SINGLE',
-  MULTIPLE = 'MULTIPLE',
-}
-
 export enum Gender {
   MALE = 'MALE',
   FEMALE = 'FEMALE',
   OTHER = 'OTHER',
+}
+
+export enum LoginType {
+  LOGIN = 'LOGIN',
+  LOGOUT = 'LOGOUT',
+}
+
+export enum OrderStatus {
+  WORKING = 'WORKING',
+  FINISHED = 'FINISHED',
+  CANCEL = 'CANCEL',
+}
+
+export enum OrderType {
+  DINE_IN = 'DINE_IN',
+  TAKE_OUT = 'TAKE_OUT',
+}
+
+export enum PaymentStatus {
+  UNPAID = 'UNPAID',
+  PAID = 'PAID',
+  CANCEL = 'CANCEL',
 }
 
 export enum ReservationType {
@@ -20,6 +37,11 @@ export enum Role {
   CUSTOMER = 'CUSTOMER',
   STAFF = 'STAFF',
   ADMIN = 'ADMIN',
+}
+
+export enum SelectionType {
+  SINGLE = 'SINGLE',
+  MULTIPLE = 'MULTIPLE',
 }
 
 export interface ICategory {
@@ -72,7 +94,7 @@ export interface IUser {
   phone: string;
   email: string | null;
   gender: Gender;
-  passwordHash: string | null;
+  password: string | null;
   role: Role;
   createdAt: Date;
   updatedAt: Date | null;
@@ -109,4 +131,14 @@ export interface IReservation {
   createdAt: Date;
   updatedAt: Date | null;
   remark: string | null;
+}
+
+export interface IMealWithCategoryAndSpecialtyItems extends IMeal {
+  categories: ICategory;
+  categoryId: ICategory['id'];
+  specialtyItems: (ISpecialtyItem & { specialtyId: ISpecialty['id'] })[];
+}
+
+export interface ISpecialtyWithSpecialtyItems extends ISpecialty {
+  specialtyItems: (ISpecialtyItem & { specialtyId: ISpecialty['id'] })[];
 }

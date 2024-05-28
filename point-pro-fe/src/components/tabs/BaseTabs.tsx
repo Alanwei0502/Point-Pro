@@ -1,37 +1,37 @@
-import { CSSProperties, ChangeEvent, FC } from "react";
-import { Box, Tab, Tabs } from "@mui/material";
-import { ICategory } from "~/types";
+import { CSSProperties, ChangeEvent, FC } from 'react';
+import { Box, Tab, Tabs } from '@mui/material';
+import { ICategory } from '~/types';
 
 interface IBaseTabsProps {
   value: number | string;
-  tabs: ICategory[];
-  onChange: (event: ChangeEvent<{}>, newValue: string) => void;
+  tabs: { id: string; title: string; value: string }[];
+  onChange: (event: React.SyntheticEvent<Element, Event>, value: any) => void;
   sx?: CSSProperties;
 }
 
 export const BaseTabs: FC<IBaseTabsProps> = ({ value, tabs, onChange, sx }) => {
   return (
     <>
-      <Box sx={{ width: "100%", borderBottom: 0.5, borderColor: "divider", ...sx }}>
+      <Box sx={{ width: '100%', borderBottom: 0.5, borderColor: 'divider', ...sx }}>
         <Tabs
           sx={{
-            "& .MuiTabs-indicator": {
-              display: "relative",
-              backgroundColor: "transparent",
-              height: 4
+            '& .MuiTabs-indicator': {
+              display: 'relative',
+              backgroundColor: 'transparent',
+              height: 4,
             },
-            "& .MuiTabs-indicator::after": {
+            '& .MuiTabs-indicator::after': {
               content: "''",
-              position: "absolute",
-              width: "1.5rem",
-              height: "100%",
-              left: "50%",
+              position: 'absolute',
+              width: '1.5rem',
+              height: '100%',
+              left: '50%',
               top: 0,
-              transform: "translateX(-50%)",
-              backgroundColor: "common.black"
-            }
+              transform: 'translateX(-50%)',
+              backgroundColor: 'common.black',
+            },
           }}
-          variant="scrollable"
+          variant='scrollable'
           value={value}
           onChange={onChange}
         >
@@ -39,19 +39,19 @@ export const BaseTabs: FC<IBaseTabsProps> = ({ value, tabs, onChange, sx }) => {
             <Tab
               sx={{
                 fontWeight: 400,
-                fontSize: "1.5rem",
-                color: "common.black_80",
-                "&.Mui-selected": {
+                fontSize: '1.5rem',
+                color: 'common.black_80',
+                '&.Mui-selected': {
                   fontWeight: 900,
-                  color: "common.black"
+                  color: 'common.black',
                 },
-                "&.Mui-focusVisible": {
-                  backgroundColor: "common.black"
-                }
+                '&.Mui-focusVisible': {
+                  backgroundColor: 'common.black',
+                },
               }}
               key={list.id}
               label={list.title}
-              value={list.id}
+              value={list.value}
             />
           ))}
         </Tabs>

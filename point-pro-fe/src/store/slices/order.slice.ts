@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { OrderApi } from '~/api';
 import { createAppAsyncThunk } from '~/hooks';
-import { clearCart, openDialog } from '~/store/slices/takeOrder.slice';
+import { clearCart, openDialog } from '~/store/slices/customer/takeOrder.slice';
 import { appDayjs, calculateCartItemPrice } from '~/utils';
 import { MobileDialog, IOrder, OrderStatus, SocketTopic, GatherOrder } from '~/types';
 import { openPaymentDrawer } from './payment.slice';
@@ -18,7 +18,7 @@ interface IOrderSliceState {
 }
 
 const initialState: IOrderSliceState = {
-  status: OrderStatus.PENDING,
+  status: OrderStatus.WORKING,
   orders: [],
   currentOrder: null,
   mobileOrderStatusTab: 0,
@@ -26,26 +26,21 @@ const initialState: IOrderSliceState = {
   isLoading: false,
 };
 
-export const getOrders = createAppAsyncThunk(
-  `${name}/getOrders`,
-  async (payload: { status: OrderStatus }, { rejectWithValue }) => {
-    try {
-      const orderRes = await OrderApi.getOrders(payload);
-      const { result = [] } = orderRes;
-      const orders = result?.sort(
-        (a: IOrder, b: IOrder) => appDayjs(b.createdAt).valueOf() - appDayjs(a.createdAt).valueOf(),
-      );
+export const getOrders = createAppAsyncThunk(`${name}/getOrders`, async (payload: { status: OrderStatus }, { rejectWithValue }) => {
+  try {
+    const orderRes = await OrderApi.getOrders(payload);
+    const { result = [] } = orderRes;
+    const orders = result?.sort((a: IOrder, b: IOrder) => appDayjs(b.createdAt).valueOf() - appDayjs(a.createdAt).valueOf());
 
-      return { orders };
-    } catch (error) {
-      if (error instanceof Error) {
-        return rejectWithValue({ message: error.message });
-      } else {
-        return rejectWithValue({ message: 'unknown error' });
-      }
+    return { orders };
+  } catch (error) {
+    if (error instanceof Error) {
+      return rejectWithValue({ message: error.message });
+    } else {
+      return rejectWithValue({ message: 'unknown error' });
     }
-  },
-);
+  }
+});
 
 export const postOrder = createAppAsyncThunk(
   `${name}/postOrder`,
@@ -95,42 +90,36 @@ export const postOrder = createAppAsyncThunk(
   },
 );
 
-export const cancelOrder = createAppAsyncThunk(
-  `${name}/cancelOrder`,
-  async (arg, { getState, dispatch, rejectWithValue }) => {
-    try {
-      const orderId = getState()[name].cancelOrderId;
-      const socket = getState().socket.socket;
-      const cancelOrder = await OrderApi.deleteOrder({ orderId });
-      socket && socket.emit(SocketTopic.ORDER, cancelOrder);
-      dispatch(getOrders({ status: getState()[name].status }));
-    } catch (error) {
-      if (error instanceof Error) {
-        return rejectWithValue({ message: error.message });
-      } else {
-        return rejectWithValue({ message: 'unknown error' });
-      }
+export const cancelOrder = createAppAsyncThunk(`${name}/cancelOrder`, async (arg, { getState, dispatch, rejectWithValue }) => {
+  try {
+    const orderId = getState()[name].cancelOrderId;
+    const socket = getState().socket.socket;
+    const cancelOrder = await OrderApi.deleteOrder({ orderId });
+    socket && socket.emit(SocketTopic.ORDER, cancelOrder);
+    dispatch(getOrders({ status: getState()[name].status }));
+  } catch (error) {
+    if (error instanceof Error) {
+      return rejectWithValue({ message: error.message });
+    } else {
+      return rejectWithValue({ message: 'unknown error' });
     }
-  },
-);
+  }
+});
 
-export const patchOrder = createAppAsyncThunk(
-  `${name}/patchOrder`,
-  async (order: IOrder, { getState, dispatch, rejectWithValue }) => {
-    try {
-      const socket = getState().socket.socket;
-      const updatedOrder = await OrderApi.patchOrder(order);
-      socket && socket.emit(SocketTopic.ORDER, updatedOrder);
-      dispatch(getOrders({ status: getState()[name].status }));
-    } catch (error) {
-      if (error instanceof Error) {
-        return rejectWithValue({ message: error.message });
-      } else {
-        return rejectWithValue({ message: 'unknown error' });
-      }
+export const patchOrder = createAppAsyncThunk(`${name}/patchOrder`, async (order: IOrder, { getState, dispatch, rejectWithValue }) => {
+  try {
+    const socket = getState().socket.socket;
+    const updatedOrder = await OrderApi.patchOrder(order);
+    socket && socket.emit(SocketTopic.ORDER, updatedOrder);
+    dispatch(getOrders({ status: getState()[name].status }));
+  } catch (error) {
+    if (error instanceof Error) {
+      return rejectWithValue({ message: error.message });
+    } else {
+      return rejectWithValue({ message: 'unknown error' });
     }
-  },
-);
+  }
+});
 
 export const orderSlice = createSlice({
   name,

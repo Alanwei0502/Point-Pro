@@ -1,7 +1,7 @@
-import { useEffect, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import Visibility from "@mui/icons-material/Visibility";
-import VisibilityOff from "@mui/icons-material/VisibilityOff";
+import { useEffect, useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import {
   Box,
   Typography,
@@ -10,88 +10,89 @@ import {
   OutlinedInput,
   FormControl,
   InputLabel,
-  Button
-} from "@mui/material";
-import { useAppDispatch, useAppSelector } from "~/hooks";
-import { login } from "~/store/slices";
-import HeaderLogo from "~/assets/images/header-logo.svg";
+  Button,
+} from '@mui/material';
+import { useAppDispatch, useAppSelector } from '~/hooks';
+import { login } from '~/store/slices';
+import HeaderLogo from '~/assets/images/header-logo.svg';
 
 export const Login = () => {
-  const dispatch = useAppDispatch();
-  const isAuthenticated = useAppSelector(({ auth }) => auth.isAuthenticated);
-  const accountRef = useRef<HTMLInputElement>(null);
-  const passwordRef = useRef<HTMLInputElement>(null);
-
-  const [showPassword, setShowPassword] = useState(false);
-
-  const handleClickShowPassword = () => setShowPassword((show) => !show);
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+  const usernameRef = useRef<HTMLInputElement>(null);
+  const passwordRef = useRef<HTMLInputElement>(null);
+  const [showPassword, setShowPassword] = useState(false);
+  const isAuthenticated = useAppSelector(({ auth }) => auth.isAuthenticated);
+
+  const handleClickShowPassword = () => {
+    setShowPassword((show) => !show);
+  };
 
   const handleConfirm = () => {
-    if (accountRef.current && passwordRef.current) {
-      dispatch(login({ account: accountRef.current.value, password: passwordRef.current.value }));
+    if (usernameRef.current && passwordRef.current) {
+      dispatch(login({ username: usernameRef.current.value, password: passwordRef.current.value }));
     }
   };
 
   useEffect(() => {
     if (isAuthenticated) {
-      navigate("/admin/orders");
+      navigate('/admin/orders');
     }
-  }, [isAuthenticated]);
+  }, [isAuthenticated, navigate]);
 
   return (
     <Box
       sx={{
-        width: "100vw",
-        height: "100vh",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center"
+        width: '100vw',
+        height: '100vh',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
       }}
     >
       <Box
         sx={{
-          width: "100%",
-          maxWidth: "400px",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center"
+          width: '100%',
+          maxWidth: '400px',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
         }}
       >
-        <Box component="img" src={HeaderLogo} sx={{ width: "200px", height: "200px" }} />
-        <Typography variant="h2" component="div" sx={{ my: 3 }}>
+        <Box component='img' src={HeaderLogo} sx={{ width: '200px', height: '200px' }} />
+        <Typography variant='h2' component='div' sx={{ my: 3 }}>
           後台登入
         </Typography>
-        {/* Account */}
-        <FormControl sx={{ my: 2, width: "100%" }} variant="outlined">
-          <InputLabel htmlFor="account">Account</InputLabel>
+        {/* Username */}
+        <FormControl sx={{ my: 2, width: '100%' }} variant='outlined'>
+          <InputLabel htmlFor='username'>Username</InputLabel>
           <OutlinedInput
-            inputProps={{ ref: accountRef }}
-            id="account"
-            placeholder="Please enter account"
-            label="Account"
+            inputProps={{ ref: usernameRef }}
+            id='username'
+            placeholder='Please enter username'
+            label='Username'
           />
         </FormControl>
         {/* Password */}
-        <FormControl sx={{ my: 2, width: "100%" }} variant="outlined">
-          <InputLabel htmlFor="password">Password</InputLabel>
+        <FormControl sx={{ my: 2, width: '100%' }} variant='outlined'>
+          <InputLabel htmlFor='password'>Password</InputLabel>
           <OutlinedInput
             inputProps={{ ref: passwordRef }}
-            id="password"
-            type={showPassword ? "text" : "password"}
-            placeholder="Please enter password"
+            id='password'
+            type={showPassword ? 'text' : 'password'}
+            placeholder='Please enter password'
             endAdornment={
-              <InputAdornment position="end">
-                <IconButton aria-label="toggle password visibility" onClick={handleClickShowPassword} edge="end">
+              <InputAdornment position='end'>
+                <IconButton aria-label='toggle password visibility' onClick={handleClickShowPassword} edge='end'>
                   {showPassword ? <VisibilityOff /> : <Visibility />}
                 </IconButton>
               </InputAdornment>
             }
-            label="Password"
+            label='Password'
           />
         </FormControl>
-        <Button variant="contained" sx={{ my: 3, width: "100%" }} onClick={handleConfirm}>
+        <Button variant='contained' sx={{ my: 3, width: '100%' }} onClick={handleConfirm}>
           Confirm
         </Button>
       </Box>

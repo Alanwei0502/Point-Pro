@@ -1,11 +1,42 @@
-import React, { Fragment, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
-import { Box, List, ListItem, ListItemButton, ListItemIcon, ListItemText } from "@mui/material";
-import LabelIcon from "@mui/icons-material/Label";
-import { KeyboardArrowDown } from "@mui/icons-material";
-import { BaseDraw } from "~/components";
-import { SideBarItemType, sideBarItemList } from "~/utils";
-import { theme } from "~/theme";
+import React, { Fragment, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { Box, List, ListItem, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
+import LabelIcon from '@mui/icons-material/Label';
+import { KeyboardArrowDown } from '@mui/icons-material';
+import RestaurantMenuIcon from '@mui/icons-material/RestaurantMenu';
+import StickyNote2Icon from '@mui/icons-material/StickyNote2';
+import MenuBookIcon from '@mui/icons-material/MenuBook';
+import EventSeatIcon from '@mui/icons-material/EventSeat';
+import { BaseDraw } from '~/components';
+import { SideBarItemType } from '~/utils';
+import { theme } from '~/theme';
+
+export const sideBarItemList: SideBarItemType[] = [
+  {
+    id: 'orders',
+    name: '訂單系統',
+    src: RestaurantMenuIcon,
+    path: '/admin/orders',
+  },
+  {
+    id: 'menu',
+    name: '點餐系統',
+    src: StickyNote2Icon,
+    path: '/admin/menu',
+  },
+  {
+    id: 'seat',
+    name: '座位系統',
+    src: EventSeatIcon,
+    path: '/admin/seat',
+  },
+  {
+    id: 'meal',
+    name: '菜單系統',
+    src: MenuBookIcon,
+    path: '/admin/meal',
+  },
+];
 
 interface ILeftMenuDrawerProps {
   drawerWidth: string;
@@ -32,22 +63,20 @@ export const LeftMenuDrawer = (props: ILeftMenuDrawerProps) => {
   };
 
   return (
-    <BaseDraw anchor="left" open={open} width={drawerWidth} onClose={() => setOpen(false)} hideCloseButton sx={{}}>
-      <Box sx={{ overflow: "auto", height: "100%" }}>
+    <BaseDraw anchor='left' open={open} width={drawerWidth} onClose={() => setOpen(false)} hideCloseButton sx={{}}>
+      <Box sx={{ overflow: 'auto', height: '100%' }}>
         <List sx={{ padding: 0 }}>
           {sideBarItemList.map((item) => (
             <Fragment key={item.id}>
               <ListItem
                 disablePadding
                 onClick={() => handleClick(item)}
-                sx={{ bgcolor: pathname === item.path ? theme.palette.primary.light : "inherit" }}
+                sx={{ bgcolor: pathname === item.path ? theme.palette.primary.light : 'inherit' }}
               >
                 <ListItemButton>
                   <ListItemIcon>{item.src ? <item.src /> : null}</ListItemIcon>
                   <ListItemText primary={item.name} />
-                  {item.list ? (
-                    <KeyboardArrowDown sx={{ transform: `rotate(${openList[item.id] ? 180 : 0}deg)` }} />
-                  ) : null}
+                  {item.list ? <KeyboardArrowDown sx={{ transform: `rotate(${openList[item.id] ? 180 : 0}deg)` }} /> : null}
                 </ListItemButton>
               </ListItem>
               {item.list ? (
@@ -59,7 +88,7 @@ export const LeftMenuDrawer = (props: ILeftMenuDrawerProps) => {
                         disablePadding
                         onClick={() => handleClick(subMenuItem)}
                         sx={{
-                          bgcolor: pathname === subMenuItem.path ? theme.palette.primary.light : "inherit"
+                          bgcolor: pathname === subMenuItem.path ? theme.palette.primary.light : 'inherit',
                         }}
                       >
                         <ListItemButton sx={{ pl: 9 }}>

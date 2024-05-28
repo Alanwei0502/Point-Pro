@@ -16,7 +16,7 @@ export function insertUsers() {
         END AS "username",
         CASE
           WHEN seq <= 1 THEN '0987654321'
-          ELSE '09' || LPAD(TRUNC(RANDOM() * 100000000)::VARCHAR, 8, '0')
+          ELSE '098' || LPAD(TRUNC(RANDOM() * 10000000)::VARCHAR, 7, '0')
         END AS "phone",
         CASE
           WHEN seq <= 1 THEN 'admin_email_' || (seq -1)::TEXT || '@example.com'
@@ -35,6 +35,12 @@ export function insertUsers() {
         END AS "role"
       FROM
         GENERATE_SERIES(1, 100) AS seq;
+    `,
+    prisma.$executeRaw`
+      INSERT INTO
+        "users" ("username", "phone", "email", "gender", "role")
+      VALUES
+        ('alan', '0912341234', 'test_alan@gmail.com', 'MALE', 'ADMIN')
     `,
   ]);
 }

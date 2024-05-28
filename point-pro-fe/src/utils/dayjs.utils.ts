@@ -28,6 +28,7 @@ appDayjs.locale('zh-tw');
 appDayjs.tz.setDefault('Asia/Taipei');
 
 export const dateForm = {
+  fullDateWithSecond: 'YYYY/MM/DD HH:mm:ss',
   fullDateWithTime: 'YYYY/MM/DD HH:mm',
   fullDate: 'YYYY/MM/DD',
   dateWithTime: 'MM/DD HH:mm',

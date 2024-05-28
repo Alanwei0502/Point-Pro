@@ -7,7 +7,7 @@ export const BaseButton = styled(Button)<ButtonProps>(({ theme, size }) => ({
   flexDirection: 'row',
   justifyContent: 'center',
   '&.Mui-disabled': {
-    color: theme.palette.primary.main,
-    backgroundColor: theme.palette.secondary.main,
+    color: theme.palette.common.black_80,
+    backgroundColor: theme.palette.common.black_40,
   },
 }));

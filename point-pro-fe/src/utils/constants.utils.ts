@@ -1,3 +1,5 @@
+import { OverridableComponent } from '@mui/material/OverridableComponent';
+import { SvgIconTypeMap } from '@mui/material';
 import { OrderStatus, SelectionType, OrderStatusTitle, Gender, SeatStatus } from '~/types';
 
 // 專門放固定參數
@@ -7,27 +9,27 @@ export const genderObj = {
   [Gender.OTHER]: '',
 };
 
-export const SpecialtyTypeList = [
-  { id: SelectionType.SINGLE, title: '單選' },
-  { id: SelectionType.MULTIPLE, title: '多選' },
-];
+export const selectionTypeObj = {
+  [SelectionType.SINGLE]: '單選',
+  [SelectionType.MULTIPLE]: '多選',
+};
 
 export const ORDER_STATUS = [
   {
-    id: OrderStatus.PENDING,
-    value: OrderStatus.PENDING,
-    title: OrderStatusTitle.PENDING,
+    id: OrderStatus.WORKING,
+    value: OrderStatus.WORKING,
+    title: OrderStatusTitle.WORKING,
   },
 
   {
-    id: OrderStatus.UNPAID,
-    value: OrderStatus.UNPAID,
+    id: OrderStatus.WORKING,
+    value: OrderStatus.WORKING,
     title: OrderStatusTitle.UNPAID,
   },
 
   {
-    id: OrderStatus.SUCCESS,
-    value: OrderStatus.SUCCESS,
+    id: OrderStatus.FINISHED,
+    value: OrderStatus.FINISHED,
     title: OrderStatusTitle.SUCCESS,
   },
 
@@ -40,11 +42,11 @@ export const ORDER_STATUS = [
 
 export const MOBILE_ORDER_STATUS_TAB = [
   {
-    type: [OrderStatus.PENDING, OrderStatus.UNPAID],
+    type: [OrderStatus.WORKING, OrderStatus.FINISHED],
     title: OrderStatusTitle.UNPAID,
   },
   {
-    type: [OrderStatus.SUCCESS],
+    type: [OrderStatus.FINISHED],
     title: OrderStatusTitle.SUCCESS,
   },
   {
@@ -53,65 +55,13 @@ export const MOBILE_ORDER_STATUS_TAB = [
   },
 ];
 
-// route
-import RestaurantMenuIcon from '@mui/icons-material/RestaurantMenu';
-import StickyNote2Icon from '@mui/icons-material/StickyNote2';
-import MenuBookIcon from '@mui/icons-material/MenuBook';
-import EventSeatIcon from '@mui/icons-material/EventSeat';
-import { OverridableComponent } from '@mui/material/OverridableComponent';
-import { SvgIconTypeMap } from '@mui/material';
-
 export type SideBarItemType = {
   id: string;
   name: string;
-  src?: OverridableComponent<SvgIconTypeMap<{}, 'svg'>> & {
-    muiName: string;
-  };
+  src?: OverridableComponent<SvgIconTypeMap> & { muiName: string };
   path?: string;
   list?: SideBarItemType[];
 };
-
-export const sideBarItemList: SideBarItemType[] = [
-  {
-    id: 'orders',
-    name: '訂單系統',
-    src: RestaurantMenuIcon,
-    path: '/admin/orders',
-  },
-  {
-    id: 'menu',
-    name: '點餐系統',
-    src: StickyNote2Icon,
-    path: '/admin/menu',
-  },
-  {
-    id: 'seat',
-    name: '座位系統',
-    src: EventSeatIcon,
-    path: '/admin/seat',
-  },
-  {
-    id: 'meal',
-    name: '菜單系統',
-    src: MenuBookIcon,
-    list: [
-      {
-        id: 'list',
-        name: '菜單列表',
-        path: '/admin/meal/list',
-      },
-      {
-        id: 'settings',
-        name: '菜單設置',
-        path: '/admin/meal/settings',
-      },
-    ],
-  },
-];
-
-export const flatSideBarItemList = sideBarItemList.flatMap((item) => {
-  return item.list ? item.list : item;
-});
 
 export const cityList = [
   '臺北市',
@@ -146,10 +96,7 @@ export const seatStatusList = [
   { id: SeatStatus.INUSE, title: '使用中', color: '#FEE391' },
 ];
 
-export const seatStatusListObj = seatStatusList.reduce(
-  (obj: { [key: string]: any }, currnt) => ({ ...obj, [currnt.id]: currnt }),
-  {},
-);
+export const seatStatusListObj = seatStatusList.reduce((obj: { [key: string]: any }, currnt) => ({ ...obj, [currnt.id]: currnt }), {});
 
 export const reservationStatusList = [
   { id: 'NOT_ATTENDED', title: '未入席', color: '#CFF561' },
@@ -157,7 +104,4 @@ export const reservationStatusList = [
   { id: 'COMPLETED', title: '已完成', color: '#D1D1D1' },
 ];
 
-export const reservationStatusListObj = reservationStatusList.reduce(
-  (obj: { [key: string]: any }, currnt) => ({ ...obj, [currnt.id]: currnt }),
-  {},
-);
+export const reservationStatusListObj = reservationStatusList.reduce((obj: { [key: string]: any }, currnt) => ({ ...obj, [currnt.id]: currnt }), {});
