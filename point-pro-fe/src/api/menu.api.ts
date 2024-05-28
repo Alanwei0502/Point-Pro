@@ -12,11 +12,14 @@ import {
   SpecialtyResponse,
   SpecialtyItemsResponse,
   ISpecialty,
-  PostCategoiesOrderPayload,
+  PatchCategoiesOrderPayload,
   PatchCategoriesOrderResponse,
   PatchCategoryPayload,
   ICategory,
   PatchSpecialtyPayload,
+  PatchSpecialtiesOrderPayload,
+  PostSpecialtyPayload,
+  DeleteSpecialtyResponse,
 } from '~/types';
 
 export class MenuApi {
@@ -24,35 +27,34 @@ export class MenuApi {
   static categoryPath = `${MenuApi.path}/category`;
   static mealPath = `${MenuApi.path}/meal`;
   static specialtyPath = `${MenuApi.path}/specialty`;
+  static specialtyItemsPath = `${MenuApi.specialtyPath}/specialtyItems`;
 
   static getMenu() {
     return http.get<string, GetMenuResponse>(MenuApi.path);
   }
 
+  // CATEGORY
   static getCategories() {
     return http.get<string, CategoriesResponse>(MenuApi.categoryPath);
-  }
-
-  // TODO: delete
-  static getCategoryById(categoryId: string) {
-    return http.get<string, CategoryResponse>(`${MenuApi.categoryPath}/${categoryId}`);
   }
 
   static postCategory(payload: PostCategoryPayload) {
     return http.post<string, CategoryResponse>(MenuApi.categoryPath, payload);
   }
 
-  static patchCategory(categoryId: ICategory['id'], payload: PatchCategoryPayload) {
-    return http.patch<string, CategoryResponse>(`${MenuApi.categoryPath}/${categoryId}`, payload);
+  static patchCategory({ id, title }: PatchCategoryPayload) {
+    return http.patch<string, CategoryResponse>(`${MenuApi.categoryPath}/${id}`, { title });
   }
 
-  static deleteCategory(categoryId: string) {
-    return http.delete<string, CategoryResponse>(`${MenuApi.categoryPath}/${categoryId}`);
+  static deleteCategory(categoryId: ICategory['id']) {
+    return http.delete<string, ''>(`${MenuApi.categoryPath}/${categoryId}`);
   }
 
-  static patchCategoriesOrder(payload: PostCategoiesOrderPayload) {
+  static patchCategoriesOrder(payload: PatchCategoiesOrderPayload) {
     return http.patch<string, PatchCategoriesOrderResponse>(MenuApi.categoryPath, payload);
   }
+
+  // MEAL
   static getMeals() {
     return http.get<string, MealsResponse>(MenuApi.mealPath);
   }
@@ -73,15 +75,12 @@ export class MenuApi {
     return http.delete<string, MealResponse>(`${MenuApi.mealPath}/${mealId}`);
   }
 
+  // SPECIALTY
   static getSpecialties() {
     return http.get<string, GetSpecialtyWithSpecialtyItemsResponse>(`${MenuApi.specialtyPath}`);
   }
 
-  static getSpecialtyById(id: string) {
-    return http.get<string, SpecialtyResponse>(`${MenuApi.specialtyPath}/${id}`);
-  }
-
-  static postSpecialty(payload: ISpecialty) {
+  static postSpecialty(payload: PostSpecialtyPayload) {
     return http.post<string, SpecialtyResponse>(`${MenuApi.specialtyPath}`, payload);
   }
 
@@ -90,11 +89,16 @@ export class MenuApi {
     return http.patch<string, SpecialtyResponse>(`${MenuApi.specialtyPath}/${id}`, { title, selectionType });
   }
 
-  static deleteSpecialty(id: string) {
-    return http.delete<string, SpecialtyResponse>(`${MenuApi.specialtyPath}/${id}`);
+  static deleteSpecialty(id: ISpecialty['id']) {
+    return http.delete<string, DeleteSpecialtyResponse>(`${MenuApi.specialtyPath}/${id}`);
   }
 
-  static getSpecialtyItems() {
-    return http.get<string, SpecialtyItemsResponse>(`${MenuApi.specialtyPath}/specialtyItems`);
+  static patchSpecialtiesOrder(payload: PatchSpecialtiesOrderPayload) {
+    return http.patch<string, PatchSpecialtiesOrderPayload>(MenuApi.specialtyPath, payload);
+  }
+
+  // SPECIALTY ITEMS
+  static patchSpecialtyItemsOrder() {
+    return http.patch<string>(`${MenuApi.specialtyItemsPath}`, []);
   }
 }

@@ -1,6 +1,6 @@
 import { SelectionType } from '@prisma/client';
 import { prisma } from '../helpers';
-import { updateCategoriesOrderRequestSchema } from '../validators';
+import { updateCategoriesOrderRequestSchema, updateSpecialtiesOrderRequestSchema } from '../validators';
 import { z } from 'zod';
 
 const getCustomerCategories = async () => {
@@ -208,7 +208,7 @@ const getSpecialtyItems = async () => {
   return specialtyItems;
 };
 
-const createSpecialty = async (title: string, selectionType: SelectionType, position?: number) => {
+const createSpecialty = async (title: string, selectionType: SelectionType, position: number) => {
   const specialty = await prisma.specialty.create({
     data: {
       title,
@@ -241,6 +241,21 @@ const deleteSpecialtyById = async (specialtyId: string) => {
   });
 };
 
+const updateSpecialtiesOrder = async (specialties: z.infer<typeof updateSpecialtiesOrderRequestSchema>) => {
+  const updatePromises = specialties.map((s) => {
+    return prisma.specialty.update({
+      where: {
+        id: s.id,
+      },
+      data: {
+        position: s.position,
+      },
+    });
+  });
+
+  await Promise.all(updatePromises);
+};
+
 export const MenuModel = {
   getCustomerCategories,
   getCustomerMeals,
@@ -257,5 +272,6 @@ export const MenuModel = {
   createSpecialty,
   updateSpecialty,
   deleteSpecialtyById,
+  updateSpecialtiesOrder,
   getMealsWithCategoryAndSpecialtyItems,
 };

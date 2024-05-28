@@ -7,14 +7,14 @@ import {
   ICreateSpecialtyRequest,
   IDeleteCategoryRequest,
   IDeleteSpecialtyRequest,
-  IGetCategoryByIdRequest,
-  IGetSpecialtyByIdRequest,
   IUpdateCategoriesOrderRequest,
   IUpdateCategoryRequest,
+  IUpdateSpecialtiesOrderRequest,
   IUpdateSpecialtyRequest,
 } from '../types/handler.type';
 
 export class MenuController {
+  // CATEGORY
   static getMenuHandler = async (req: Request, res: ApiResponse, next: NextFunction) => {
     try {
       const categories = await MenuModel.getCustomerCategories();
@@ -41,28 +41,6 @@ export class MenuController {
       res.status(StatusCodes.OK).send({
         message: ReasonPhrases.OK,
         result: categories,
-      });
-    } catch (error) {
-      next(error);
-    }
-  };
-
-  // TODO: delete
-  static getCategoryByIdHandler = async (req: IGetCategoryByIdRequest, res: ApiResponse, next: NextFunction) => {
-    try {
-      const { categoryId } = req.params;
-      const category = await MenuModel.getCategoryById(categoryId);
-
-      if (!category) {
-        res.status(StatusCodes.NOT_FOUND).send({
-          message: ReasonPhrases.NOT_FOUND,
-          result: null,
-        });
-      }
-
-      res.status(StatusCodes.OK).send({
-        message: ReasonPhrases.OK,
-        result: category,
       });
     } catch (error) {
       next(error);
@@ -151,6 +129,7 @@ export class MenuController {
     }
   };
 
+  // MEAL
   static getMealsHandler = async (req: Request, res: ApiResponse, next: NextFunction) => {
     try {
       const meals = await MenuModel.getMealsWithCategoryAndSpecialtyItems();
@@ -164,6 +143,7 @@ export class MenuController {
     }
   };
 
+  // SPECIALTY
   static getSpecialtiesHandler = async (req: Request, res: ApiResponse, next: NextFunction) => {
     try {
       const specialties = await MenuModel.getSpecialtiesWithItems();
@@ -177,100 +157,7 @@ export class MenuController {
     }
   };
 
-  // TODO: delete
-  static getSpecialtyByIdHandler = async (req: IGetSpecialtyByIdRequest, res: ApiResponse, next: NextFunction) => {
-    try {
-      const { specialtyId } = req.params;
-      const specialty = await MenuModel.getSpecialtyById(specialtyId);
-
-      if (!specialty) {
-        res.status(StatusCodes.NOT_FOUND).send({
-          message: ReasonPhrases.NOT_FOUND,
-          result: null,
-        });
-      }
-
-      res.status(StatusCodes.OK).send({
-        message: ReasonPhrases.OK,
-        result: specialty,
-      });
-    } catch (error) {
-      next(error);
-    }
-  };
-
-  // TODO: delete
-  static getSpecialtyItemsHandler = async (req: Request, res: ApiResponse, next: NextFunction) => {
-    try {
-      const specialtyItems = await MenuModel.getSpecialtyItems();
-
-      res.status(StatusCodes.OK).send({
-        message: ReasonPhrases.OK,
-        result: specialtyItems,
-      });
-    } catch (error) {
-      next(error);
-    }
-  };
-
   static createSpecialtyHandler = async (req: ICreateSpecialtyRequest, res: ApiResponse, next: NextFunction) => {
-    // try {
-    //  let { title, type, items }: any = inputSchema.cast(req.body);
-    //  let newSpecialtyItems = items.filter((item: SpecialtyItem) => !item.id);
-    //  let specialtyItems = clone(items);
-    //   if (newSpecialtyItems.length > 0) {
-    //     const updatedSpecialtyItems = await prisma.specialtyItem.createMany({
-    //       data: newSpecialtyItems.map((item: SpecialtyItem) => ({
-    //         title: item.title,
-    //         price: item.price,
-    //       })),
-    //       skipDuplicates: true,
-    //     });
-    //     if (updatedSpecialtyItems.count !== newSpecialtyItems.length) {
-    //       return res.status(400).send({
-    //         message: 'specialtyItem create error',
-    //         result: null,
-    //       });
-    //     }
-    //     specialtyItems = await prisma.specialtyItem.findMany({
-    //       where: {
-    //         OR: items.map((item: SpecialtyItem) =>
-    //           item.id
-    //             ? {
-    //                 id: item.id,
-    //               }
-    //             : {
-    //                 title: item.title,
-    //               },
-    //         ),
-    //       },
-    //     });
-    //   }
-
-    //   const specialty = await prisma.specialty.create({
-    //     data: {
-    //       title,
-    //       type,
-    //       items: {
-    //         createMany: {
-    //           data: specialtyItems.map((item: SpecialtyItem) => ({
-    //             specialtyItemId: item.id,
-    //           })),
-    //           skipDuplicates: true,
-    //         },
-    //       },
-    //     },
-    //     include: { items: true },
-    //   });
-
-    //   res.status(StatusCodes.CREATED).send({
-    //     message: ReasonPhrases.CREATED,
-    //     result: specialty,
-    //   });
-    // } catch (error) {
-    //   next(error);
-    // }
-
     try {
       const { title, selectionType, position } = req.body;
       const newSpecialty = await MenuModel.createSpecialty(title, selectionType, position);
@@ -448,6 +335,7 @@ export class MenuController {
 
       // Check if specialty exists
       const specialty = await MenuModel.getSpecialtyById(specialtyId);
+
       if (!specialty) {
         res.status(StatusCodes.NOT_FOUND).send({
           message: ReasonPhrases.NOT_FOUND,
@@ -461,6 +349,35 @@ export class MenuController {
       res.status(StatusCodes.NO_CONTENT).send({
         message: ReasonPhrases.NO_CONTENT,
         result: null,
+      });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  static updateSpecialtiesOrderHandler = async (req: IUpdateSpecialtiesOrderRequest, res: ApiResponse, next: NextFunction) => {
+    try {
+      const specialties = req.body;
+      await MenuModel.updateSpecialtiesOrder(specialties);
+
+      res.status(StatusCodes.NO_CONTENT).send({
+        message: ReasonPhrases.NO_CONTENT,
+        result: null,
+      });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  // SPECIALTY ITEM
+  // TODO: delete
+  static getSpecialtyItemsHandler = async (req: Request, res: ApiResponse, next: NextFunction) => {
+    try {
+      const specialtyItems = await MenuModel.getSpecialtyItems();
+
+      res.status(StatusCodes.OK).send({
+        message: ReasonPhrases.OK,
+        result: specialtyItems,
       });
     } catch (error) {
       next(error);

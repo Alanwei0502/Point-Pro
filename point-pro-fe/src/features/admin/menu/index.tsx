@@ -7,6 +7,8 @@ import { MenuSettingTable } from './tables/MenuSettingTable';
 import { SpecialtySettingModal } from './modals/SpecialtySettingModal';
 import { CreateCategoryModal } from './modals/CreateCategoryModal';
 import { DeleteCategoryConfirmModal } from './modals/DeleteCategoryConfirmModal';
+import { CreateSpecialtyModal } from './modals/CreateSpecialtyModal';
+import { DeleteSpecialtyConfirmModal } from './modals/DeleteSpecialtyConfirmModal';
 
 interface IAdminMenuSettingsProps {}
 
@@ -24,10 +26,14 @@ export const AdminMenuSettings: FC<IAdminMenuSettingsProps> = () => {
           客製化設定
         </BaseButton>
       </Box>
+
       <MenuSettingTable />
+
       <CreateCategoryModal />
       <DeleteCategoryConfirmModal />
       <SpecialtySettingModal />
+      <CreateSpecialtyModal />
+      <DeleteSpecialtyConfirmModal />
     </>
   );
 };

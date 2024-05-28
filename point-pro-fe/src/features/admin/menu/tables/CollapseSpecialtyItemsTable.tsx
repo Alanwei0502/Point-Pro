@@ -2,10 +2,12 @@ import { FC } from 'react';
 import { Box, Collapse, Table, TableBody, TableCell, TableFooter, TableHead, TableRow } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import { DndContext, DragEndEvent, KeyboardSensor, MouseSensor, TouchSensor, useSensor, useSensors } from '@dnd-kit/core';
-import { SortableContext } from '@dnd-kit/sortable';
+import { SortableContext, arrayMove } from '@dnd-kit/sortable';
 import { BaseButton, StyledTableCell, StyledTableRow } from '~/components';
 import { ISpecialty, ISpecialtyItem } from '~/types';
 import { SpecialtyItemRow } from '../rows/SpecialtyItemRow';
+import { useAppDispatch } from '~/hooks';
+import { setSpecialtyItems } from '~/store/slices';
 
 interface ICollapseSpecialtyItemsTableProps {
   isOpen: boolean;
@@ -13,21 +15,24 @@ interface ICollapseSpecialtyItemsTableProps {
 }
 
 export const CollapseSpecialtyItemsTable: FC<ICollapseSpecialtyItemsTableProps> = (props) => {
+  const dispatch = useAppDispatch();
+
   const { isOpen, specialtyItems } = props;
 
   const sensors = useSensors(useSensor(MouseSensor), useSensor(TouchSensor), useSensor(KeyboardSensor));
 
   const handleDragEnd = (event: DragEndEvent) => {
-    // const { active, over } = event;
-    // if (active && over && active.id !== over.id) {
-    //   const oldIndex = categories.findIndex((c) => c.id === active.id);
-    //   const newIndex = categories.findIndex((c) => c.id === over.id);
-    //   const newCategoriesOrder = arrayMove(categories, oldIndex, newIndex).map((c, idx) => ({
-    //     ...c,
-    //     position: idx,
-    //   }));
-    //   dispatch(setCategories(newCategoriesOrder));
-    //   dispatch(patchCategoriesOrder());
+    const { active, over } = event;
+    if (active && over && active.id !== over.id) {
+      const oldIndex = specialtyItems.findIndex((si) => si.id === active.id);
+      const newIndex = specialtyItems.findIndex((si) => si.id === over.id);
+      const newSpecialtiesOrder = arrayMove(specialtyItems, oldIndex, newIndex).map((si, idx) => ({
+        ...si,
+        position: idx,
+      }));
+      dispatch(setSpecialtyItems(newSpecialtiesOrder));
+      // dispatch(patchSpecialtyItemsOrder());
+    }
   };
 
   return (

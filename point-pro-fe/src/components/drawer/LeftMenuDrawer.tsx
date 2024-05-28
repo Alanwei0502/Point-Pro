@@ -19,10 +19,10 @@ export const sideBarItemList: SideBarItemType[] = [
     path: '/admin/orders',
   },
   {
-    id: 'menu',
+    id: 'take-order',
     name: '點餐系統',
     src: StickyNote2Icon,
-    path: '/admin/menu',
+    path: '/admin/take-order',
   },
   {
     id: 'seat',
@@ -31,10 +31,10 @@ export const sideBarItemList: SideBarItemType[] = [
     path: '/admin/seat',
   },
   {
-    id: 'meal',
+    id: 'menu',
     name: '菜單系統',
     src: MenuBookIcon,
-    path: '/admin/meal',
+    path: '/admin/menu',
   },
 ];
 
@@ -56,6 +56,7 @@ export const LeftMenuDrawer = (props: ILeftMenuDrawerProps) => {
     if (item.path) {
       if (pathname !== item.path) {
         navigate(item.path);
+        setOpen((prev) => !prev);
       }
     } else {
       setOpenList((value) => ({ ...value, [item.id]: !value[item.id] }));

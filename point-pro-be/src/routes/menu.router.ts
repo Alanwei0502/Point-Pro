@@ -11,19 +11,21 @@ import {
   updateCategoryRequestSchema,
   updateCategoriesOrderRequestSchema,
   updateSpecialtyRequestSchema,
+  updateSpecialtiesOrderRequestSchema,
 } from '../validators';
 
 const menuRouter = Router();
 menuRouter.get('/', MenuController.getMenuHandler);
 
+// CATEGORY
 const categoryRouter = Router();
 categoryRouter.get('/', MenuController.getCategoriesHandler);
-categoryRouter.get('/:categoryId', validateMiddleware(getCategoryByIdRequestSchema, 'params'), MenuController.getCategoryByIdHandler);
 categoryRouter.post('/', validateMiddleware(createCategoryRequestSchema), MenuController.createCategoryHandler);
 categoryRouter.patch('/:categoryId', validateMiddleware(updateCategoryRequestSchema), MenuController.updateCategoryHandler);
 categoryRouter.delete('/:categoryId', validateMiddleware(deleteCategoryRequestSchema, 'params'), MenuController.deleteCategoryHandler);
 categoryRouter.patch('/', validateMiddleware(updateCategoriesOrderRequestSchema), MenuController.updateCategoriesOrderHander);
 
+// MEAL
 const mealRouter = Router();
 mealRouter.get('/', MenuController.getMealsHandler);
 // mealRouter.get('/:mealId', MenuController.getMealHandler);
@@ -31,12 +33,13 @@ mealRouter.get('/', MenuController.getMealsHandler);
 // mealRouter.patch('/:mealId', MenuController.updateMealHandler);
 // mealRouter.delete('/:mealId', MenuController.deleteMealHandler);
 
+// SPECIALTY
 const specialtyRouter = Router();
 specialtyRouter.get('/', MenuController.getSpecialtiesHandler);
-specialtyRouter.get('/:specialtyId', validateMiddleware(getSpecialtyByIdRequestSchema), MenuController.getSpecialtyByIdHandler);
 specialtyRouter.post('/', validateMiddleware(createSpecialtyRequestSchema), MenuController.createSpecialtyHandler);
 specialtyRouter.patch('/:specialtyId', validateMiddleware(updateSpecialtyRequestSchema), MenuController.updateSpecialtyHandler);
-specialtyRouter.delete('/:specialtyId', validateMiddleware(deleteSpecialtyRequestSchema), MenuController.deleteSpecialtyHandler);
+specialtyRouter.delete('/:specialtyId', validateMiddleware(deleteSpecialtyRequestSchema, 'params'), MenuController.deleteSpecialtyHandler);
+specialtyRouter.patch('/', validateMiddleware(updateSpecialtiesOrderRequestSchema), MenuController.updateSpecialtiesOrderHandler);
 
 menuRouter.use('/category', categoryRouter);
 menuRouter.use('/meal', mealRouter);

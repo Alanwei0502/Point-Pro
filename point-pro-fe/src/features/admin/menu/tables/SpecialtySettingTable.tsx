@@ -4,12 +4,15 @@ import AddIcon from '@mui/icons-material/Add';
 import { DndContext, DragEndEvent, KeyboardSensor, MouseSensor, TouchSensor, useSensor, useSensors } from '@dnd-kit/core';
 import { SortableContext, arrayMove, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { BaseButton, StyledTableCell, StyledTableRow } from '~/components';
-import { useAppSelector } from '~/hooks';
+import { useAppDispatch, useAppSelector } from '~/hooks';
 import { SpecialtyRow } from '../rows/SpecialtyRow';
+import { openCreateSpecialtyModal, patchSpecialtiesOrder, setSpecialties } from '~/store/slices';
 
 interface ISpecialtySettingTableProps {}
 
 export const SpecialtySettingTable: FC<ISpecialtySettingTableProps> = () => {
+  const dispatch = useAppDispatch();
+
   const speicalties = useAppSelector((state) => state.menu.specialties);
 
   const sensors = useSensors(useSensor(MouseSensor), useSensor(TouchSensor), useSensor(KeyboardSensor));
@@ -23,12 +26,14 @@ export const SpecialtySettingTable: FC<ISpecialtySettingTableProps> = () => {
         ...s,
         position: idx,
       }));
-      //   dispatch(setCategories(newCategoriesOrder));
-      //   dispatch(patchCategoriesOrder());
+      dispatch(setSpecialties(newSpecialtiesOrder));
+      dispatch(patchSpecialtiesOrder());
     }
   };
 
-  const handleCreateSpecialty = () => {};
+  const handleCreateSpecialty = () => {
+    dispatch(openCreateSpecialtyModal());
+  };
 
   return (
     <DndContext sensors={sensors} onDragEnd={handleDragEnd}>

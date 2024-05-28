@@ -32,11 +32,10 @@ export const getSpecialtyByIdRequestSchema = z.object({
 export const createSpecialtyRequestSchema = z.object({
   title: z.string(),
   selectionType: z.nativeEnum(SelectionType),
-  position: z.number().optional(),
+  position: z.number(),
 });
 
 export const updateSpecialtyRequestSchema = z.object({
-  id: z.string(),
   title: z.string().optional(),
   selectionType: z.nativeEnum(SelectionType).optional(),
   position: z.number().optional(),
@@ -45,3 +44,10 @@ export const updateSpecialtyRequestSchema = z.object({
 export const deleteSpecialtyRequestSchema = z.object({
   specialtyId: z.string(),
 });
+
+export const updateSpecialtiesOrderRequestSchema = z.array(
+  z.object({
+    id: z.string(),
+    position: z.number(),
+  }),
+);

@@ -9,6 +9,7 @@ import {
   getCategoryByIdRequestSchema,
   getSpecialtyByIdRequestSchema,
   updateCategoriesOrderRequestSchema,
+  updateSpecialtiesOrderRequestSchema,
   updateSpecialtyRequestSchema,
 } from '../validators/menu.validator';
 
@@ -76,6 +77,7 @@ export interface IRegisterRequest extends Request {
   body: z.infer<typeof registerSchema>;
 }
 
+// CATEGORY
 export interface IGetCategoryByIdRequest extends Request {
   params: z.infer<typeof getCategoryByIdRequestSchema>;
 }
@@ -96,10 +98,8 @@ export interface IUpdateCategoriesOrderRequest extends Request {
 export interface IDeleteCategoryRequest extends Request {
   params: z.infer<typeof getCategoryByIdRequestSchema>;
 }
-export interface IGetSpecialtyByIdRequest extends Request {
-  params: z.infer<typeof getSpecialtyByIdRequestSchema>;
-}
 
+// SPECIALTY
 export interface ICreateSpecialtyRequest extends Request {
   body: z.infer<typeof createSpecialtyRequestSchema>;
 }
@@ -111,4 +111,8 @@ export interface IUpdateSpecialtyRequest extends Request {
 
 export interface IDeleteSpecialtyRequest extends Request {
   params: z.infer<typeof deleteSpecialtyRequestSchema>;
+}
+
+export interface IUpdateSpecialtiesOrderRequest extends Request {
+  body: z.infer<typeof updateSpecialtiesOrderRequestSchema>;
 }

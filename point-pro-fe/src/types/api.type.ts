@@ -43,7 +43,16 @@ export type GenerateTokenResponse = ApiResponse<{
 // Get User Info
 export type GetUserInfoResponse = ApiResponse<UserInfo>;
 
-// Meal
+// CATEGORY
+export type PostCategoryPayload = Pick<ICategory, 'title' | 'position'>;
+export type PatchCategoryPayload = Pick<ICategory, 'id' | 'title'>;
+export type PatchCategoiesOrderPayload = Pick<ICategory, 'id' | 'position'>[];
+
+export type CategoryResponse = ApiResponse<ICategory>;
+export type PatchCategoriesOrderResponse = ApiResponse<null>;
+export type CategoriesResponse = ApiResponse<ICategory[]>;
+
+// MEAL
 export interface MealDetails {
   id: string;
   title: string;
@@ -59,22 +68,19 @@ export interface PatchMealByIdPayload {
   payload: Partial<IMeal>; // TODO
 }
 
-// Category
-export type PostCategoryPayload = Pick<ICategory, 'title' | 'position'>;
-export type PatchCategoryPayload = Pick<ICategory, 'title'>;
-export type PostCategoiesOrderPayload = Pick<ICategory, 'id' | 'position'>[];
-
-export type CategoryResponse = ApiResponse<ICategory>;
-export type PatchCategoriesOrderResponse = ApiResponse<null>;
-export type CategoriesResponse = ApiResponse<ICategory[]>;
-
-// Specialty
+// SPECIALTY
+export type PostSpecialtyPayload = Pick<ISpecialty, 'title' | 'selectionType' | 'position'>;
 export type PatchSpecialtyPayload = Pick<ISpecialty, 'id' | 'title' | 'selectionType'>;
+export type PatchSpecialtiesOrderPayload = Pick<ISpecialty, 'id' | 'position'>[];
+
 export type GetSpecialtyWithSpecialtyItemsResponse = ApiResponse<ISpecialtyWithSpecialtyItems[]>;
+export type PatchSpecialtiesOrderResponse = ApiResponse<null>;
 export type SpecialtyResponse = ApiResponse<ISpecialty>;
+export type DeleteSpecialtyResponse = ApiResponse<null>;
+
 export type SpecialtyItemsResponse = ApiResponse<ISpecialtyItem[]>;
 
-// Menu
+// MENU
 export type GetMenuResponseCategory = Pick<ICategory, 'id' | 'title'>;
 export type GetMenuResponseMeal = Pick<IMeal, 'id' | 'title' | 'coverUrl' | 'description' | 'isPopular' | 'price'> & {
   categoryId: ICategory['id'];

@@ -1,5 +1,5 @@
-import { FC, useState } from "react";
-import { MenuItem, Select, SelectChangeEvent } from "@mui/material";
+import { FC, useState } from 'react';
+import { MenuItem, Select, SelectChangeEvent } from '@mui/material';
 
 interface ISelectItem {
   id: string;
@@ -19,7 +19,7 @@ interface IBaseSelectProps {
 }
 
 export const BaseSelect: FC<IBaseSelectProps> = ({ list, onChange, includeAll = false, ...props }) => {
-  const [select, setSelect] = useState("");
+  const [select, setSelect] = useState('');
 
   const handleSelectChange = (event: SelectChangeEvent<string>) => {
     const payload = { id: props.id, value: event.target.value };
@@ -29,7 +29,7 @@ export const BaseSelect: FC<IBaseSelectProps> = ({ list, onChange, includeAll = 
 
   return (
     <Select value={select} onChange={handleSelectChange} {...props}>
-      {includeAll ? <MenuItem value="all">全部</MenuItem> : null}
+      {includeAll ? <MenuItem value='all'>全部</MenuItem> : null}
       {list?.map((item) => (
         <MenuItem key={`${item.id}`} value={item.id}>
           {item.title}
