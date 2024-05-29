@@ -11,30 +11,43 @@ import { BaseDraw } from '~/components';
 import { SideBarItemType } from '~/utils';
 import { theme } from '~/theme';
 
+export const pathObj = {
+  booking: 'booking',
+  takeOrders: 'take-orders',
+  payment: 'payment',
+  confirm: 'confirm',
+  cancel: 'cancel',
+  admin: 'admin',
+  orders: 'orders',
+  takeOrder: 'take-order',
+  seat: 'seat',
+  menu: 'menu',
+};
+
 export const sideBarItemList: SideBarItemType[] = [
   {
-    id: 'orders',
+    id: pathObj.orders,
     name: '訂單系統',
     src: RestaurantMenuIcon,
-    path: '/admin/orders',
+    path: `/${pathObj.admin}/${pathObj.orders}`,
   },
   {
-    id: 'take-order',
+    id: pathObj.takeOrder,
     name: '點餐系統',
     src: StickyNote2Icon,
-    path: '/admin/take-order',
+    path: `/${pathObj.admin}/${pathObj.takeOrder}`,
   },
   {
-    id: 'seat',
+    id: pathObj.seat,
     name: '座位系統',
     src: EventSeatIcon,
-    path: '/admin/seat',
+    path: `/${pathObj.admin}/${pathObj.seat}`,
   },
   {
-    id: 'menu',
+    id: pathObj.menu,
     name: '菜單系統',
     src: MenuBookIcon,
-    path: '/admin/menu',
+    path: `/${pathObj.admin}/${pathObj.menu}`,
   },
 ];
 

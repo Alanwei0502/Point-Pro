@@ -1,7 +1,7 @@
 // import { RequestHandler } from 'express';
 // import { array, boolean, date, number, object, string } from 'yup';
 // import { ApiResponse, AuthRequest } from '../types/shared';
-// import { ignoreUndefined, prisma } from '../helpers';
+// import { ignoreUndefined, prismaClient } from '../helpers';
 // import { Prisma, Meal } from '@prisma/client';
 // import { difference } from 'ramda';
 // import { IGetAllMealsRequest } from '../types/handler.type';
@@ -27,7 +27,7 @@
 //     // const { maxResult } = querySchema.cast(req.query);
 
 //     try {
-//       const meals = await prisma.meal.findMany({
+//       const meals = await prismaClient.meal.findMany({
 //         include: {
 //           categories: {
 //             select: {
@@ -57,7 +57,7 @@
 //     // validate input
 //     try {
 //       const { mealId } = req.params;
-//       const meal = await prisma.meal.findUnique({
+//       const meal = await prismaClient.meal.findUnique({
 //         where: { id: mealId },
 //         include: { categories: true, mealSpecialties: true },
 //       });
@@ -119,7 +119,7 @@
 //         req.body,
 //       );
 
-//       const meal = await prisma.meal.create({
+//       const meal = await prismaClient.meal.create({
 //         data: {
 //           title,
 //           coverUrl,
@@ -199,7 +199,7 @@
 //     let targetMeal: Meal | null = null;
 
 //     try {
-//       targetMeal = await prisma.meal.findUniqueOrThrow<Prisma.MealFindUniqueOrThrowArgs>({
+//       targetMeal = await prismaClient.meal.findUniqueOrThrow<Prisma.MealFindUniqueOrThrowArgs>({
 //         where: { id: mealId },
 //         include: {
 //           categories: true,
@@ -208,12 +208,12 @@
 //       });
 //       if (categoryIds !== undefined) {
 //         if (categoryIds.length === 0) {
-//           await prisma.categoriesOnMeals.deleteMany({
+//           await prismaClient.categoriesOnMeals.deleteMany({
 //             where: { mealId },
 //           });
 //         }
 //         if (categoryIds.length > 0) {
-//           await prisma.categoriesOnMeals.createMany({
+//           await prismaClient.categoriesOnMeals.createMany({
 //             data:
 //               categoryIds?.map((id) => ({
 //                 mealId,
@@ -221,10 +221,10 @@
 //               })) || [],
 //             skipDuplicates: true,
 //           });
-//           let oldCategoriesOnMeals = await prisma.categoriesOnMeals.findMany({
+//           let oldCategoriesOnMeals = await prismaClient.categoriesOnMeals.findMany({
 //             where: { mealId },
 //           });
-//           let newCategoriesOnMeals = await prisma.categoriesOnMeals.findMany({
+//           let newCategoriesOnMeals = await prismaClient.categoriesOnMeals.findMany({
 //             where: {
 //               mealId,
 //               OR: categoryIds.map((id) => ({
@@ -234,7 +234,7 @@
 //           });
 //           let diff = difference(oldCategoriesOnMeals, newCategoriesOnMeals);
 //           if (diff.length > 0) {
-//             await prisma.categoriesOnMeals.deleteMany({
+//             await prismaClient.categoriesOnMeals.deleteMany({
 //               where: {
 //                 OR: diff.map((e) => ({
 //                   mealId,
@@ -248,12 +248,12 @@
 
 //       if (specialtyIds !== undefined) {
 //         if (specialtyIds.length === 0) {
-//           await prisma.specialtiesOnMeals.deleteMany({
+//           await prismaClient.specialtiesOnMeals.deleteMany({
 //             where: { mealId },
 //           });
 //         }
 //         if (specialtyIds.length > 0) {
-//           await prisma.specialtiesOnMeals.createMany({
+//           await prismaClient.specialtiesOnMeals.createMany({
 //             data:
 //               specialtyIds?.map((id) => ({
 //                 mealId: mealId,
@@ -261,10 +261,10 @@
 //               })) || [],
 //             skipDuplicates: true,
 //           });
-//           let oldSpecialtiesOnMeals = await prisma.specialtiesOnMeals.findMany({
+//           let oldSpecialtiesOnMeals = await prismaClient.specialtiesOnMeals.findMany({
 //             where: { mealId },
 //           });
-//           let newSpecialtiesOnMeals = await prisma.specialtiesOnMeals.findMany({
+//           let newSpecialtiesOnMeals = await prismaClient.specialtiesOnMeals.findMany({
 //             where: {
 //               mealId,
 //               OR: specialtyIds.map((id) => ({
@@ -274,7 +274,7 @@
 //           });
 //           let diff = difference(oldSpecialtiesOnMeals, newSpecialtiesOnMeals);
 //           if (diff.length > 0) {
-//             await prisma.specialtiesOnMeals.deleteMany({
+//             await prismaClient.specialtiesOnMeals.deleteMany({
 //               where: {
 //                 OR: diff.map((e) => ({
 //                   mealId,
@@ -296,7 +296,7 @@
 //         publishedAt: ignoreUndefined(publishedAt, targetMeal?.publishedAt),
 //       };
 
-//       const updatedMeal = await prisma.meal.update({
+//       const updatedMeal = await prismaClient.meal.update({
 //         where: {
 //           id: mealId,
 //         },
@@ -333,7 +333,7 @@
 //     try {
 //       const { mealId } = req.params;
 
-//       const meal = await prisma.meal.delete({
+//       const meal = await prismaClient.meal.delete({
 //         where: { id: mealId },
 //         include: {
 //           categories: {

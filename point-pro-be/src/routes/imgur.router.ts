@@ -1,9 +1,10 @@
 import { Router } from 'express';
 import { ImgurController } from '../controllers';
+import { multerUploadMiddleware } from '../middlewares/multer.middleware';
 
 const imgurRouter = Router();
 
-imgurRouter.post('/', ImgurController.createImgurHandler);
-imgurRouter.delete('/', ImgurController.deleteImgurHandler);
+imgurRouter.post('/', multerUploadMiddleware, ImgurController.uploadImageHandler);
+imgurRouter.delete('/', ImgurController.deleteImageHandler);
 
 export default imgurRouter;

@@ -2,7 +2,7 @@ import { NextFunction, Request } from 'express';
 import { ReasonPhrases, StatusCodes } from 'http-status-codes';
 import { Prisma, ReservationType } from '@prisma/client';
 import { date, number, object, string } from 'yup';
-import { getDateOnly, ignoreUndefined, prisma } from '../helpers';
+import { getDateOnly, ignoreUndefined, prismaClient } from '../helpers';
 import { ApiResponse, AuthRequest } from '../types/shared';
 import { AuthService, PeriodService, ReservationService } from '../services';
 import { v4 as uuidv4 } from 'uuid';
@@ -81,7 +81,7 @@ export class ReservationController {
 
   //     console.log(date, nextTargetDate);
 
-  //     const reservations = await prisma.reservationLog.findMany({
+  //     const reservations = await prismaClient.reservationLog.findMany({
   //       where: {
   //         bookedSeats: {
   //           every: {
@@ -157,7 +157,7 @@ export class ReservationController {
   // public static getReservationDetailsHandler = async (req: AuthRequest, res: ApiResponse) => {
   //   const { reservationId } = req.params;
   //   try {
-  //     const reservation = await prisma.reservationLog.findUnique({
+  //     const reservation = await prismaClient.reservationLog.findUnique({
   //       where: { id: reservationId },
   //       include: {
   //         bookedSeats: {
@@ -223,7 +223,7 @@ export class ReservationController {
   //   const { options, startOfMeal, endOfMeal } = inputSchema.cast(req.body);
 
   //   try {
-  //     const reservationLog = await prisma.reservationLog.findUniqueOrThrow({
+  //     const reservationLog = await prismaClient.reservationLog.findUniqueOrThrow({
   //       where: { id: reservationId },
   //     });
 
@@ -238,7 +238,7 @@ export class ReservationController {
   //       endOfMeal: ignoreUndefined(endOfMeal, reservationLog.endOfMeal),
   //     };
 
-  //     const updatedReservation = await prisma.reservationLog.update({
+  //     const updatedReservation = await prismaClient.reservationLog.update({
   //       where: {
   //         id: reservationId,
   //       },

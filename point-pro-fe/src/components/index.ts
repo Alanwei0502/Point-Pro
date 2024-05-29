@@ -3,6 +3,7 @@ export * from './button/BaseButton';
 export * from './button/IconButton';
 export * from './button/MobileButton';
 export * from './button/CloseButton';
+export * from './button/UploadButton';
 // Checkbox
 export * from './checkbox/BaseCheckbox';
 // Date Picker

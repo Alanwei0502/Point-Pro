@@ -1,17 +1,24 @@
 import { Request } from 'express';
-import { ReservationAuth, UserAuth } from './shared';
 import { z } from 'zod';
-import { loginSchema, registerSchema } from '../validators';
+import { ReservationAuth, UserAuth } from './shared';
 import {
+  loginSchema,
+  registerSchema,
   createCategoryRequestSchema,
+  createSpecialtyItemRequestSchema,
   createSpecialtyRequestSchema,
+  deleteSpecialtyItemRequestSchema,
   deleteSpecialtyRequestSchema,
   getCategoryByIdRequestSchema,
   getSpecialtyByIdRequestSchema,
-  updateCategoriesOrderRequestSchema,
-  updateSpecialtiesOrderRequestSchema,
+  updateCategoryOrderRequestSchema,
+  updateSpecialtyOrderRequestSchema,
+  updateSpecialtyItemOrderRequestSchema,
   updateSpecialtyRequestSchema,
-} from '../validators/menu.validator';
+  updateMealOrderRequestSchema,
+  deleteMealRequestSchma,
+  deleteCategoryRequestSchema,
+} from '../validators';
 
 // Request
 
@@ -92,11 +99,20 @@ export interface IUpdateCategoryRequest extends Request {
 }
 
 export interface IUpdateCategoriesOrderRequest extends Request {
-  body: z.infer<typeof updateCategoriesOrderRequestSchema>;
+  body: z.infer<typeof updateCategoryOrderRequestSchema>;
 }
 
 export interface IDeleteCategoryRequest extends Request {
-  params: z.infer<typeof getCategoryByIdRequestSchema>;
+  params: z.infer<typeof deleteCategoryRequestSchema>;
+}
+
+// MEAL
+export interface IUpdateMealOrderRequest extends Request {
+  body: z.infer<typeof updateMealOrderRequestSchema>;
+}
+
+export interface IDeleteMealRequest extends Request {
+  params: z.infer<typeof deleteMealRequestSchma>;
 }
 
 // SPECIALTY
@@ -113,6 +129,24 @@ export interface IDeleteSpecialtyRequest extends Request {
   params: z.infer<typeof deleteSpecialtyRequestSchema>;
 }
 
-export interface IUpdateSpecialtiesOrderRequest extends Request {
-  body: z.infer<typeof updateSpecialtiesOrderRequestSchema>;
+export interface IUpdateSpecialtyOrderRequest extends Request {
+  body: z.infer<typeof updateSpecialtyOrderRequestSchema>;
+}
+
+// SPECIALTY ITEM
+export interface ICreateSpecialtyItemRequest extends Request {
+  body: z.infer<typeof createSpecialtyItemRequestSchema>;
+}
+
+export interface IUpdateSpecialtyItemsOrderRequest extends Request {
+  body: z.infer<typeof updateSpecialtyItemOrderRequestSchema>;
+}
+
+export interface IDeleteSpecialtyItemRequest extends Request {
+  params: z.infer<typeof deleteSpecialtyItemRequestSchema>;
+}
+
+// IMGUR
+export interface IUploadImageRequest extends Request {
+  file?: Express.Multer.File;
 }

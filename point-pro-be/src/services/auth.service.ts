@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken';
-import { prisma, throwError } from '../helpers';
+import { prismaClient, throwError } from '../helpers';
 
 export class AuthService {
   static signJWT = async (
@@ -30,7 +30,7 @@ export class AuthService {
 
   static generateReservationToken = async (reservationId: string) => {
     try {
-      const reservation = await prisma.reservationPeriodSeat.findFirst({
+      const reservation = await prismaClient.reservationPeriodSeat.findFirst({
         where: {
           reservationId: reservationId,
         },
@@ -50,7 +50,7 @@ export class AuthService {
 
         const reservationType = reservations?.type;
 
-        const seatAndPeriod = await prisma.periodSeat.findFirst({
+        const seatAndPeriod = await prismaClient.periodSeat.findFirst({
           where: {
             periodId,
             seatId: periodSeats.seatId,

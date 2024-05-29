@@ -1,5 +1,4 @@
 import {
-  DatePeriodInfo,
   ICategory,
   IMeal,
   IMealWithCategoryAndSpecialtyItems,
@@ -44,15 +43,22 @@ export type GenerateTokenResponse = ApiResponse<{
 export type GetUserInfoResponse = ApiResponse<UserInfo>;
 
 // CATEGORY
+export type GetCategoriesResponse = ApiResponse<ICategory[]>;
 export type PostCategoryPayload = Pick<ICategory, 'title' | 'position'>;
 export type PatchCategoryPayload = Pick<ICategory, 'id' | 'title'>;
-export type PatchCategoiesOrderPayload = Pick<ICategory, 'id' | 'position'>[];
-
-export type CategoryResponse = ApiResponse<ICategory>;
-export type PatchCategoriesOrderResponse = ApiResponse<null>;
-export type CategoriesResponse = ApiResponse<ICategory[]>;
+export type PatchCategoryOrderPayload = Pick<ICategory, 'id' | 'position'>[];
+export type DeleteCategoryPayload = ICategory['id'];
 
 // MEAL
+export type GetMealsWithCategoryAndSpecialtyItemsResponse = ApiResponse<IMealWithCategoryAndSpecialtyItems[]>;
+export type MealResponse = ApiResponse<IMeal>;
+export type PostMealPayload = Pick<IMeal, 'title' | 'price' | 'position' | 'isPopular' | 'description' | 'publishedAt'> & {
+  categoryId: ICategory['id'];
+  specialtyItems: ISpecialtyItem['id'][];
+};
+export type PatchMealOrderPayload = Pick<IMeal, 'id' | 'position'>[];
+export type DeleteMealPaylaod = IMeal['id'];
+
 export interface MealDetails {
   id: string;
   title: string;
@@ -60,8 +66,6 @@ export interface MealDetails {
   price?: number;
   items?: MealDetails[];
 }
-export type MealResponse = ApiResponse<IMeal>;
-export type MealsResponse = ApiResponse<IMealWithCategoryAndSpecialtyItems[]>;
 
 export interface PatchMealByIdPayload {
   mealId: string;
@@ -71,14 +75,16 @@ export interface PatchMealByIdPayload {
 // SPECIALTY
 export type PostSpecialtyPayload = Pick<ISpecialty, 'title' | 'selectionType' | 'position'>;
 export type PatchSpecialtyPayload = Pick<ISpecialty, 'id' | 'title' | 'selectionType'>;
-export type PatchSpecialtiesOrderPayload = Pick<ISpecialty, 'id' | 'position'>[];
-
+export type PatchSpecialtyOrderPayload = Pick<ISpecialty, 'id' | 'position'>[];
+export type DeleteSpecialtyPayload = ISpecialty['id'];
 export type GetSpecialtyWithSpecialtyItemsResponse = ApiResponse<ISpecialtyWithSpecialtyItems[]>;
-export type PatchSpecialtiesOrderResponse = ApiResponse<null>;
 export type SpecialtyResponse = ApiResponse<ISpecialty>;
-export type DeleteSpecialtyResponse = ApiResponse<null>;
 
-export type SpecialtyItemsResponse = ApiResponse<ISpecialtyItem[]>;
+// SPECIALTY ITEM
+export type PostSpecialtyItemPayload = Pick<ISpecialtyItem, 'title' | 'price' | 'position'> & { specialtyId: ISpecialty['id'] };
+export type PatchSpecialtyItemPayload = Pick<ISpecialtyItem, 'id' | 'title' | 'price'>;
+export type PatchSpecialtyItemOrderPayload = Pick<ISpecialtyItem, 'id' | 'position'>[];
+export type DeleteSpecialtyItemPayload = ISpecialtyItem['id'];
 
 // MENU
 export type GetMenuResponseCategory = Pick<ICategory, 'id' | 'title'>;

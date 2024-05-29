@@ -4,7 +4,7 @@ export * from './order.controller';
 // export * from './category.controller';
 // export * from './specialty.controller';
 export * from './menu.controller';
-// export * from './imgur.controller';
+export * from './imgur.controller';
 // export * from './payment.controller';
 // export * from './seat.controller';
 export * from './period.controller';

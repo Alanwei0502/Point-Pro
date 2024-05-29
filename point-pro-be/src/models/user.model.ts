@@ -1,10 +1,10 @@
 import { z } from 'zod';
-import { prisma } from '../helpers';
+import { prismaClient } from '../helpers';
 import { createCustomerSchema, createStaffSchema, registerSchema } from '../validators';
 import { LogType } from '@prisma/client';
 
 const createCustomerUser = async (params: z.infer<typeof createCustomerSchema>) => {
-  const user = await prisma.user.create({
+  const user = await prismaClient.user.create({
     data: {
       username: params.username,
       gender: params.gender,
@@ -18,7 +18,7 @@ const createCustomerUser = async (params: z.infer<typeof createCustomerSchema>) 
 };
 
 const createStaffUser = async (params: z.infer<typeof createStaffSchema>) => {
-  const user = await prisma.user.create({
+  const user = await prismaClient.user.create({
     data: {
       username: params.username,
       gender: params.gender,
@@ -33,7 +33,7 @@ const createStaffUser = async (params: z.infer<typeof createStaffSchema>) => {
 };
 
 const findUserByUsername = async (params: { username: string }) => {
-  const user = await prisma.user.findUnique({
+  const user = await prismaClient.user.findUnique({
     where: {
       username: params.username,
     },
@@ -43,7 +43,7 @@ const findUserByUsername = async (params: { username: string }) => {
 };
 
 const createLoginLog = async (params: { userId: string }) => {
-  const loginLog = await prisma.loginLog.create({
+  const loginLog = await prismaClient.loginLog.create({
     data: {
       userId: params.userId,
       logType: LogType.LOGIN,

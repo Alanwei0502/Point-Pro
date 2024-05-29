@@ -2,7 +2,7 @@ import { ChangeEvent, FC, useMemo, useState } from 'react';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import styled from '@emotion/styled';
-import { Box, IconButton, TableRow } from '@mui/material';
+import { Box, IconButton, TableRow, Typography } from '@mui/material';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import ReorderIcon from '@mui/icons-material/Reorder';
@@ -39,10 +39,13 @@ export const CategoryRow: FC<ICategoryRowProps> = (props) => {
   const [isEdit, setIsEdit] = useState(false);
   const [newTitle, setNewTitle] = useState(category.title);
 
+  const categories = useAppSelector((state) => state.menu.categories);
   const meals = useAppSelector((state) => state.menu.meals);
   const filterMeals = useMemo(() => meals.filter((m) => m.categoryId === category.id), [meals, category.id]);
 
-  const confirmEditDisabled = !newTitle || category.title === newTitle;
+  const isCategoryTitleExist = categories.some((c) => c.title === newTitle && c.id != category.id);
+  const isNotChanged = category.title === newTitle;
+  const isInvalid = !newTitle || isNotChanged || isCategoryTitleExist;
 
   const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: category.id });
 
@@ -68,7 +71,7 @@ export const CategoryRow: FC<ICategoryRowProps> = (props) => {
   };
 
   const handleConfirmEdit = () => {
-    if (confirmEditDisabled) return;
+    if (isInvalid) return;
 
     dispatch(patchCategory({ id: category.id, title: newTitle }));
     setIsEdit(false);
@@ -92,13 +95,26 @@ export const CategoryRow: FC<ICategoryRowProps> = (props) => {
             <ReorderIcon />
           </IconButton>
         </StyledTableCell>
-        <StyledTableCell>{isEdit ? <TextInput autoFocus value={newTitle} onChange={handleChangeTitle} /> : newTitle}</StyledTableCell>
+        <StyledTableCell>
+          {isEdit ? (
+            <>
+              <TextInput autoFocus value={newTitle} onChange={handleChangeTitle} />
+              {isCategoryTitleExist && (
+                <Typography variant='small' color='error'>
+                  已有相同的種類
+                </Typography>
+              )}
+            </>
+          ) : (
+            newTitle
+          )}
+        </StyledTableCell>
         <StyledTableCell padding='checkbox'>
           <Box sx={{ display: 'flex', gap: 1 }}>
             {isEdit ? (
               <>
-                <IconButton size='small' onClick={handleConfirmEdit} disabled={confirmEditDisabled}>
-                  <CheckIcon color={confirmEditDisabled ? 'disabled' : 'success'} />
+                <IconButton size='small' onClick={handleConfirmEdit} disabled={isInvalid}>
+                  <CheckIcon color={isInvalid ? 'disabled' : 'success'} />
                 </IconButton>
                 <IconButton size='small' onClick={handleCancelEdit}>
                   <CloseIcon color='error' />

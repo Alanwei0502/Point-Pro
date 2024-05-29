@@ -1,10 +1,17 @@
 import { SelectionType } from '@prisma/client';
-import { prisma } from '../helpers';
-import { updateCategoriesOrderRequestSchema, updateSpecialtiesOrderRequestSchema } from '../validators';
 import { z } from 'zod';
+import { prismaClient } from '../helpers';
+import {
+  createSpecialtyItemRequestSchema,
+  createSpecialtyRequestSchema,
+  updateCategoryOrderRequestSchema,
+  updateSpecialtyOrderRequestSchema,
+  updateSpecialtyItemOrderRequestSchema,
+  updateMealOrderRequestSchema,
+} from '../validators';
 
 const getCustomerCategories = async () => {
-  const categories = await prisma.category.findMany({
+  const categories = await prismaClient.category.findMany({
     select: {
       id: true,
       title: true,
@@ -18,7 +25,7 @@ const getCustomerCategories = async () => {
 };
 
 const getCustomerMeals = async () => {
-  const meals = await prisma.meal.findMany({
+  const meals = await prismaClient.meal.findMany({
     select: {
       id: true,
       title: true,
@@ -44,7 +51,7 @@ const getCustomerMeals = async () => {
 };
 
 const getCustomerSpecialtiesWithItems = async () => {
-  const specialtiesWithItems = await prisma.specialty.findMany({
+  const specialtiesWithItems = await prismaClient.specialty.findMany({
     select: {
       id: true,
       title: true,
@@ -68,8 +75,9 @@ const getCustomerSpecialtiesWithItems = async () => {
   return specialtiesWithItems;
 };
 
+// CATEGORY
 const getCategories = async () => {
-  const categories = await prisma.category.findMany({
+  const categories = await prismaClient.category.findMany({
     orderBy: {
       position: 'asc',
     },
@@ -78,18 +86,18 @@ const getCategories = async () => {
   return categories;
 };
 
-const getCategoryById = async (categoryId: string) => {
-  const category = await prisma.category.findUnique({
+const getCategoryById = async (id: string) => {
+  const category = await prismaClient.category.findUnique({
     where: {
-      id: categoryId,
+      id,
     },
   });
 
   return category;
 };
 
-const createCategory = async (title: string, position?: number) => {
-  const category = await prisma.category.create({
+const createCategory = async (title: string, position: number) => {
+  const category = await prismaClient.category.create({
     data: {
       title,
       position,
@@ -99,10 +107,10 @@ const createCategory = async (title: string, position?: number) => {
   return category;
 };
 
-const updateCateogry = async (categoryId: string, title: string) => {
-  await prisma.category.update({
+const updateCateogry = async (id: string, title: string) => {
+  await prismaClient.category.update({
     where: {
-      id: categoryId,
+      id,
     },
     data: {
       title,
@@ -110,17 +118,17 @@ const updateCateogry = async (categoryId: string, title: string) => {
   });
 };
 
-const deleteCategoryById = async (categoryId: string) => {
-  await prisma.category.delete({
+const deleteCategoryById = async (id: string) => {
+  await prismaClient.category.delete({
     where: {
-      id: categoryId,
+      id,
     },
   });
 };
 
-const updateCategoriesOrder = async (categories: z.infer<typeof updateCategoriesOrderRequestSchema>) => {
+const updateCategoriesOrder = async (categories: z.infer<typeof updateCategoryOrderRequestSchema>) => {
   const updatePromises = categories.map((c) => {
-    return prisma.category.update({
+    return prismaClient.category.update({
       where: {
         id: c.id,
       },
@@ -133,8 +141,19 @@ const updateCategoriesOrder = async (categories: z.infer<typeof updateCategories
   await Promise.all(updatePromises);
 };
 
+// MEAL
+const getMealById = async (id: string) => {
+  const meal = await prismaClient.meal.findUnique({
+    where: {
+      id,
+    },
+  });
+
+  return meal;
+};
+
 const getMealsWithCategoryAndSpecialtyItems = async () => {
-  const meals = await prisma.meal.findMany({
+  const meals = await prismaClient.meal.findMany({
     include: {
       categories: true,
       mealSpecialtyItems: {
@@ -164,8 +183,32 @@ const getMealsWithCategoryAndSpecialtyItems = async () => {
   return result;
 };
 
+const updateMealsOrder = async (meals: z.infer<typeof updateMealOrderRequestSchema>) => {
+  const updatePromises = meals.map((m) => {
+    return prismaClient.meal.update({
+      where: {
+        id: m.id,
+      },
+      data: {
+        position: m.position,
+      },
+    });
+  });
+
+  await Promise.all(updatePromises);
+};
+
+const deleteMealById = async (id: string) => {
+  await prismaClient.meal.delete({
+    where: {
+      id,
+    },
+  });
+};
+
+// SPECIALTY
 const getSpecialtiesWithItems = async () => {
-  const specialtiesWithItems = await prisma.specialty.findMany({
+  const specialtiesWithItems = await prismaClient.specialty.findMany({
     include: {
       specialtyItems: {
         orderBy: {
@@ -181,10 +224,10 @@ const getSpecialtiesWithItems = async () => {
   return specialtiesWithItems;
 };
 
-const getSpecialtyById = async (specialtyId: string) => {
-  const specialty = await prisma.specialty.findUnique({
+const getSpecialtyById = async (id: string) => {
+  const specialty = await prismaClient.specialty.findUnique({
     where: {
-      id: specialtyId,
+      id,
     },
     include: {
       specialtyItems: {
@@ -198,52 +241,34 @@ const getSpecialtyById = async (specialtyId: string) => {
   return specialty;
 };
 
-const getSpecialtyItems = async () => {
-  const specialtyItems = await prisma.specialtyItem.findMany({
-    orderBy: {
-      position: 'asc',
-    },
-  });
-
-  return specialtyItems;
-};
-
-const createSpecialty = async (title: string, selectionType: SelectionType, position: number) => {
-  const specialty = await prisma.specialty.create({
-    data: {
-      title,
-      selectionType,
-      position,
-    },
-  });
-
+const createSpecialty = async (data: z.infer<typeof createSpecialtyRequestSchema>) => {
+  const specialty = await prismaClient.specialty.create({ data });
   return specialty;
 };
 
-const updateSpecialty = async (specialtyId: string, title?: string, selectionType?: SelectionType, position?: number) => {
-  await prisma.specialty.update({
+const updateSpecialty = async (id: string, title: string, selectionType: SelectionType) => {
+  await prismaClient.specialty.update({
     where: {
-      id: specialtyId,
+      id,
     },
     data: {
       title,
       selectionType,
-      position,
     },
   });
 };
 
-const deleteSpecialtyById = async (specialtyId: string) => {
-  await prisma.specialty.delete({
+const deleteSpecialtyById = async (id: string) => {
+  await prismaClient.specialty.delete({
     where: {
-      id: specialtyId,
+      id,
     },
   });
 };
 
-const updateSpecialtiesOrder = async (specialties: z.infer<typeof updateSpecialtiesOrderRequestSchema>) => {
+const updateSpecialtiesOrder = async (specialties: z.infer<typeof updateSpecialtyOrderRequestSchema>) => {
   const updatePromises = specialties.map((s) => {
-    return prisma.specialty.update({
+    return prismaClient.specialty.update({
       where: {
         id: s.id,
       },
@@ -256,7 +281,69 @@ const updateSpecialtiesOrder = async (specialties: z.infer<typeof updateSpecialt
   await Promise.all(updatePromises);
 };
 
+// SPECIALTY ITEM
+const getSpecialtyItems = async () => {
+  const specialtyItems = await prismaClient.specialtyItem.findMany({
+    orderBy: {
+      position: 'asc',
+    },
+  });
+
+  return specialtyItems;
+};
+
+const createSpecialtyItem = async (data: z.infer<typeof createSpecialtyItemRequestSchema>) => {
+  const specialtyItem = await prismaClient.specialtyItem.create({ data });
+  return specialtyItem;
+};
+
+const getSpecialtyItemById = async (id: string) => {
+  const specialtyItem = await prismaClient.specialtyItem.findUnique({
+    where: {
+      id,
+    },
+  });
+
+  return specialtyItem;
+};
+
+const updateSpecialtyItem = async (id: string, title: string, price: number) => {
+  await prismaClient.specialtyItem.update({
+    where: {
+      id,
+    },
+    data: {
+      title,
+      price,
+    },
+  });
+};
+
+const updateSpecialtyItemsOrder = async (specialtyItems: z.infer<typeof updateSpecialtyItemOrderRequestSchema>) => {
+  const updatePromises = specialtyItems.map((si) => {
+    return prismaClient.specialtyItem.update({
+      where: {
+        id: si.id,
+      },
+      data: {
+        position: si.position,
+      },
+    });
+  });
+
+  await Promise.all(updatePromises);
+};
+
+const deleteSpecialtyItemById = async (id: string) => {
+  await prismaClient.specialtyItem.delete({
+    where: {
+      id,
+    },
+  });
+};
+
 export const MenuModel = {
+  // CATEGORY
   getCustomerCategories,
   getCustomerMeals,
   getCustomerSpecialtiesWithItems,
@@ -266,12 +353,23 @@ export const MenuModel = {
   updateCateogry,
   updateCategoriesOrder,
   deleteCategoryById,
+  // MEAL
+  getMealById,
+  getMealsWithCategoryAndSpecialtyItems,
+  updateMealsOrder,
+  deleteMealById,
+  // SPECIALTY
   getSpecialtiesWithItems,
   getSpecialtyById,
-  getSpecialtyItems,
   createSpecialty,
   updateSpecialty,
-  deleteSpecialtyById,
   updateSpecialtiesOrder,
-  getMealsWithCategoryAndSpecialtyItems,
+  deleteSpecialtyById,
+  // SPECIALTY ITEM
+  getSpecialtyItems,
+  getSpecialtyItemById,
+  createSpecialtyItem,
+  updateSpecialtyItem,
+  updateSpecialtyItemsOrder,
+  deleteSpecialtyItemById,
 };

@@ -2,7 +2,7 @@ import { NextFunction, RequestHandler } from 'express';
 import { OrderStatus, OrderType, Prisma } from '@prisma/client';
 import { DefaultArgs } from '@prisma/client/runtime/library';
 import { ApiResponse, AuthRequest } from '../types/shared';
-import { prisma } from '../helpers';
+import { prismaClient } from '../helpers';
 import {
   orderIdValidatedSchema,
   reservationValidatedSchema,
@@ -47,14 +47,14 @@ export class OrderController {
   //   try {
   //     const { reservationId } = reservationValidatedSchema.cast(req.auth);
   //     const orderMeals = createOrderReqBodySchema.cast(req.body);
-  //     const order = await prisma.order.create({
+  //     const order = await prismaClient.order.create({
   //       data: {
   //         reservationId: reservationId,
   //         type: reservationId ? OrderType.DINE_IN : OrderType.TAKE_OUT,
   //       },
   //       // include: commonInclude,
   //     });
-  //     // await prisma.orderMeal.createMany({
+  //     // await prismaClient.orderMeal.createMany({
   //     //   data:
   //     // })
   //     // const result = {
@@ -84,7 +84,7 @@ export class OrderController {
   //   if (req.auth.role === 'USER') {
   //     try {
   //       const { reservationId } = reservationValidatedSchema.cast(req.auth);
-  //       const orders = await prisma.order.findMany({
+  //       const orders = await prismaClient.order.findMany({
   //         where: {
   //           reservationId: reservationId,
   //         },
@@ -115,7 +115,7 @@ export class OrderController {
   //   if (req.auth.role === 'MERCHANT') {
   //     try {
   //       const { status } = orderStatusValidatedSchema.cast(req.query);
-  //       const orders = await prisma.order.findMany({
+  //       const orders = await prismaClient.order.findMany({
   //         where: {
   //           status,
   //         },
@@ -154,7 +154,7 @@ export class OrderController {
   // public static cancelOrderHandler: RequestHandler = async (req: AuthRequest, res: ApiResponse, next) => {
   //   try {
   //     const { orderId } = orderIdValidatedSchema.cast(req.query);
-  //     const result = await prisma.order.update({
+  //     const result = await prismaClient.order.update({
   //       where: { id: orderId },
   //       data: {
   //         status: OrderStatus.CANCEL,
@@ -180,7 +180,7 @@ export class OrderController {
   //       }
   //     });
   //     // is order payment set
-  //     const isPaid = await prisma.paymentLog.findFirst({
+  //     const isPaid = await prismaClient.paymentLog.findFirst({
   //       where: {
   //         orderId: id,
   //       },
@@ -198,8 +198,8 @@ export class OrderController {
   //     } else {
   //       newStatus = OrderStatus.PENDING;
   //     }
-  //     const result = await prisma.$transaction(async (prisma) => {
-  //       const updatedOrderLog = await prisma.order.update({
+  //     const result = await prismaClient.$transaction(async (prisma) => {
+  //       const updatedOrderLog = await prismaClient.order.update({
   //         where: { id },
   //         data: {
   //           status: newStatus,
@@ -208,7 +208,7 @@ export class OrderController {
   //       });
   //       // [TODO] is looping the only way?
   //       for (const meal of orderMeals) {
-  //         await prisma.orderMeal.update({
+  //         await prismaClient.orderMeal.update({
   //           where: { id: meal.id },
   //           data: {
   //             servedAmount: meal.servedAmount,

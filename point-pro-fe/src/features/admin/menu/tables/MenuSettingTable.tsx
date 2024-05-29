@@ -8,6 +8,7 @@ import { useAppDispatch, useAppSelector } from '~/hooks';
 import { BaseButton, StyledTableCell, StyledTableRow } from '~/components';
 import { openCreateCategoryModal, patchCategoriesOrder, setCategories } from '~/store/slices';
 import { CategoryRow } from '../rows/CategoryRow';
+import { PatchCategoryOrderPayload } from '~/types';
 
 interface IMenuSettingTableProps {}
 
@@ -23,17 +24,19 @@ export const MenuSettingTable: FC<IMenuSettingTableProps> = () => {
     if (active && over && active.id !== over.id) {
       const oldIndex = categories.findIndex((c) => c.id === active.id);
       const newIndex = categories.findIndex((c) => c.id === over.id);
-      const newCategoriesOrder = arrayMove(categories, oldIndex, newIndex).map((c, idx) => ({
-        ...c,
-        position: idx,
-      }));
+      const movedCategories = arrayMove(categories, oldIndex, newIndex);
+      const payload: PatchCategoryOrderPayload = [];
+      const newCategoriesOrder = movedCategories.map((c, idx) => {
+        payload.push({ id: c.id, position: idx });
+        return { ...c, position: idx };
+      });
 
       dispatch(setCategories(newCategoriesOrder));
-      dispatch(patchCategoriesOrder());
+      dispatch(patchCategoriesOrder(payload));
     }
   };
 
-  const handleCreateCategory = () => {
+  const handleOpenCreateCategoryModal = () => {
     dispatch(openCreateCategoryModal());
   };
 
@@ -56,7 +59,7 @@ export const MenuSettingTable: FC<IMenuSettingTableProps> = () => {
           <TableFooter>
             <TableRow>
               <TableCell colSpan={4}>
-                <BaseButton variant='outlined' color='inherit' fullWidth onClick={handleCreateCategory} startIcon={<AddIcon />}>
+                <BaseButton variant='outlined' color='inherit' fullWidth onClick={handleOpenCreateCategoryModal} startIcon={<AddIcon />}>
                   新增種類
                 </BaseButton>
               </TableCell>

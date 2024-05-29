@@ -4,20 +4,21 @@ import AddIcon from '@mui/icons-material/Add';
 import { DndContext, DragEndEvent, KeyboardSensor, MouseSensor, TouchSensor, useSensor, useSensors } from '@dnd-kit/core';
 import { SortableContext, arrayMove } from '@dnd-kit/sortable';
 import { BaseButton, StyledTableCell, StyledTableRow } from '~/components';
-import { ISpecialty, ISpecialtyItem } from '~/types';
+import { ISpecialty, ISpecialtyItem, ISpecialtyWithSpecialtyItems, PatchSpecialtyItemOrderPayload } from '~/types';
 import { SpecialtyItemRow } from '../rows/SpecialtyItemRow';
 import { useAppDispatch } from '~/hooks';
-import { setSpecialtyItems } from '~/store/slices';
+import { openCreateSpecialtyItemModal, patchSpecialtyItemsOrder, setSpecialtyItems } from '~/store/slices';
 
 interface ICollapseSpecialtyItemsTableProps {
   isOpen: boolean;
-  specialtyItems: (ISpecialtyItem & { specialtyId: ISpecialty['id'] })[];
+  specialty: ISpecialtyWithSpecialtyItems;
 }
 
 export const CollapseSpecialtyItemsTable: FC<ICollapseSpecialtyItemsTableProps> = (props) => {
   const dispatch = useAppDispatch();
 
-  const { isOpen, specialtyItems } = props;
+  const { isOpen, specialty } = props;
+  const { specialtyItems } = specialty;
 
   const sensors = useSensors(useSensor(MouseSensor), useSensor(TouchSensor), useSensor(KeyboardSensor));
 
@@ -26,13 +27,20 @@ export const CollapseSpecialtyItemsTable: FC<ICollapseSpecialtyItemsTableProps> 
     if (active && over && active.id !== over.id) {
       const oldIndex = specialtyItems.findIndex((si) => si.id === active.id);
       const newIndex = specialtyItems.findIndex((si) => si.id === over.id);
-      const newSpecialtiesOrder = arrayMove(specialtyItems, oldIndex, newIndex).map((si, idx) => ({
-        ...si,
-        position: idx,
-      }));
+      const movedSpecialtyItems = arrayMove(specialtyItems, oldIndex, newIndex);
+      const payload: PatchSpecialtyItemOrderPayload = [];
+      const newSpecialtiesOrder = movedSpecialtyItems.map((si, idx) => {
+        payload.push({ id: si.id, position: idx });
+        return { ...si, position: idx };
+      });
+
       dispatch(setSpecialtyItems(newSpecialtiesOrder));
-      // dispatch(patchSpecialtyItemsOrder());
+      dispatch(patchSpecialtyItemsOrder(payload));
     }
+  };
+
+  const handleOpenCreateSpecialtyItemModal = () => {
+    dispatch(openCreateSpecialtyItemModal(specialty));
   };
 
   return (
@@ -58,7 +66,7 @@ export const CollapseSpecialtyItemsTable: FC<ICollapseSpecialtyItemsTableProps> 
                   <TableRow>
                     <TableCell colSpan={5}>
                       <Box>
-                        <BaseButton variant='outlined' color='inherit' fullWidth startIcon={<AddIcon />}>
+                        <BaseButton variant='outlined' color='inherit' fullWidth startIcon={<AddIcon />} onClick={handleOpenCreateSpecialtyItemModal}>
                           新增選項
                         </BaseButton>
                       </Box>

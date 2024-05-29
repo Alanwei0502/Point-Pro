@@ -1,85 +1,66 @@
-// import { RequestHandler } from 'express';
-// import { ImgurClient } from 'imgur';
-// import { ApiResponse } from '../types/shared';
-// import { prisma } from '../helpers';
-// import { differenceWith } from 'ramda';
-// import multer from 'multer';
-// import path from 'path';
+import { NextFunction, Request } from 'express';
+import { ReasonPhrases, StatusCodes } from 'http-status-codes';
+import { differenceWith } from 'ramda';
+import { ApiResponse } from '../types/shared';
+import { imgurClient, prismaClient } from '../helpers';
+import { IUploadImageRequest } from '../types';
 
-// const client = new ImgurClient({
-//   clientId: process.env.IMGUR_CLIENTID,
-//   clientSecret: process.env.IMGUR_CLIENT_SECRET,
-//   refreshToken: process.env.IMGUR_REFRESH_TOKEN,
-// });
+export class ImgurController {
+  static uploadImageHandler = async (req: IUploadImageRequest, res: ApiResponse, next: NextFunction) => {
+    try {
+      if (req.file === undefined) {
+        res.status(StatusCodes.BAD_REQUEST).send({
+          message: ReasonPhrases.BAD_REQUEST,
+          result: 'Please upload a file!',
+        });
+        return;
+      }
 
-// const upload = multer({
-//   limits: {
-//     fileSize: 2 * 1024 * 1024,
-//   },
-//   fileFilter(req, file, cb) {
-//     const ext = path.extname(file.originalname).toLowerCase();
-//     if (ext !== '.jpg' && ext !== '.png' && ext !== '.jpeg') {
-//       cb(Error('檔案格式錯誤，僅限上傳 jpg、jpeg 與 png 格式。'));
-//     }
-//     cb(null, true);
-//   },
-// }).any();
+      const response = await imgurClient.upload({
+        image: req.file.buffer.toString('base64'),
+        type: 'base64',
+        album: process.env.IMGUR_ALBUM_ID,
+      });
 
-// export class ImgurController {
-//   public static createImgurHandler: RequestHandler = async (req: any, res: ApiResponse) => {
-//     // validate input
+      res.status(StatusCodes.CREATED).send({
+        message: ReasonPhrases.CREATED,
+        result: response.data.link,
+      });
+    } catch (error) {
+      next(error);
+    }
+  };
 
-//     try {
-//       upload(req, res, async () => {
-//         const response = await client.upload({
-//           image: req.files[0].buffer.toString('base64'),
-//           type: 'base64',
-//           album: process.env.IMGUR_ALBUM_ID,
-//         });
-//         return res.status(201).send({
-//           message: 'successfully update to imgur',
-//           result: response.data.link,
-//         });
-//       });
-//     } catch (error) {
-//       if (error instanceof Error) {
-//         return res.status(400).send({
-//           message: error.message,
-//           result: null,
-//         });
-//       }
-//     }
-//   };
-//   public static deleteImgurHandler: RequestHandler = async (req, res: ApiResponse) => {
-//     // validate input
-//     try {
-//       const album = await client.getAlbum(process.env.IMGUR_ALBUM_ID as string);
-//       let albumImages = album.data.images.map((e) => ({
-//         link: e.link,
-//         deletehash: e.deletehash,
-//       }));
-//       const meals = await prisma.meal.findMany();
-//       let mealImages = meals.map((e) => ({ link: e.coverUrl, deletehash: null }));
+  static deleteImageHandler = async (_: Request, res: ApiResponse) => {
+    // validate input
+    try {
+      const album = await imgurClient.getAlbum(process.env.IMGUR_ALBUM_ID as string);
+      let albumImages = album.data.images.map((e) => ({
+        link: e.link,
+        deletehash: e.deletehash,
+      }));
+      const meals = await prismaClient.meal.findMany();
+      let mealImages = meals.map((e) => ({ link: e.coverUrl, deletehash: null }));
 
-//       let diff = differenceWith((x, y) => x.link === y.link, albumImages, mealImages);
+      let diff = differenceWith((x, y) => x.link === y.link, albumImages, mealImages);
 
-//       album.data.images.forEach((e) => {
-//         client.deleteImage(e.deletehash as string);
-//       });
+      album.data.images.forEach((e) => {
+        imgurClient.deleteImage(e.deletehash as string);
+      });
 
-//       let result = await Promise.all(diff.map((e) => client.deleteImage(e.deletehash as string)));
+      let result = await Promise.all(diff.map((e) => imgurClient.deleteImage(e.deletehash as string)));
 
-//       return res.status(204).send({
-//         message: 'successfully delete a images',
-//         result,
-//       });
-//     } catch (error) {
-//       if (error instanceof Error) {
-//         return res.status(400).send({
-//           message: error.message,
-//           result: null,
-//         });
-//       }
-//     }
-//   };
-// }
+      return res.status(204).send({
+        message: 'successfully delete a images',
+        result,
+      });
+    } catch (error) {
+      if (error instanceof Error) {
+        return res.status(400).send({
+          message: error.message,
+          result: null,
+        });
+      }
+    }
+  };
+}

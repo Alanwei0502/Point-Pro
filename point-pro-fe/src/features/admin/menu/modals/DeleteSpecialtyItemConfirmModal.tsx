@@ -2,32 +2,32 @@ import { Card, CardActions, CardContent, CardHeader, Typography } from '@mui/mat
 import { FC } from 'react';
 import { BaseButton, TabletModalLayout } from '~/components';
 import { useAppDispatch, useAppSelector } from '~/hooks';
-import { closeDeleteSpecialtyConfirmModal, deleteSpecialty } from '~/store/slices';
+import { closeDeleteSpecialtyItemConfirmModal, deleteSpecialtyItem } from '~/store/slices';
 import { theme } from '~/theme';
 
-interface IDeleteSpecialtyConfirmModalProps {}
+interface IDeleteSpecialtyItemConfirmModalProps {}
 
-export const DeleteSpecialtyConfirmModal: FC<IDeleteSpecialtyConfirmModalProps> = () => {
+export const DeleteSpecialtyItemConfirmModal: FC<IDeleteSpecialtyItemConfirmModalProps> = () => {
   const dispatch = useAppDispatch();
 
-  const { isOpen, data } = useAppSelector((state) => state.menu.deleteSpecialtyConfirmModal);
+  const { isOpen, data } = useAppSelector((state) => state.menu.deleteSpecialtyItemConfirmModal);
 
   const handleCancel = () => {
-    dispatch(closeDeleteSpecialtyConfirmModal());
+    dispatch(closeDeleteSpecialtyItemConfirmModal());
   };
 
   const handleConfirmDelete = () => {
     if (!data) return;
-    dispatch(deleteSpecialty(data.id));
+    dispatch(deleteSpecialtyItem(data.id));
   };
 
-  return (
+  return isOpen ? (
     <TabletModalLayout open={isOpen}>
       <Card>
         <CardHeader title='確定刪除' sx={{ backgroundColor: theme.palette.primary.main, textAlign: 'center' }} />
         <CardContent sx={{ padding: '1rem', width: '50cqw' }}>
           <Typography component='p' variant='body1' textAlign={'center'}>
-            確定要刪除整個「{data?.title}」種類？
+            確定要刪除「{data?.title}」項目？
           </Typography>
         </CardContent>
         <CardActions>
@@ -40,5 +40,5 @@ export const DeleteSpecialtyConfirmModal: FC<IDeleteSpecialtyConfirmModalProps> 
         </CardActions>
       </Card>
     </TabletModalLayout>
-  );
+  ) : null;
 };

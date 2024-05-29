@@ -1,5 +1,5 @@
 import { Period, Prisma, ReservationType, Seat, PeriodSeat } from '@prisma/client';
-import { appDayjs, prisma } from '../helpers';
+import { appDayjs, prismaClient } from '../helpers';
 import { CreateRecord } from '../types/reservation';
 
 export class ReservationService {
@@ -17,7 +17,7 @@ export class ReservationService {
   //       reservationId: '',
   //     };
   //   }
-  //   const period = await prisma.period.findFirst({
+  //   const period = await prismaClient.period.findFirst({
   //     where: {
   //       startTime: appDayjs(periodStartedAt).toISOString(),
   //     },
@@ -29,7 +29,7 @@ export class ReservationService {
   //       reservationId: '',
   //     };
   //   }
-  //   const seatPeriods = await prisma.periodSeat.findMany({
+  //   const seatPeriods = await prismaClient.periodSeat.findMany({
   //     where: {
   //       periodId: period?.id,
   //       canOnlineBooked: type === 'OnlineBooking',
@@ -80,9 +80,9 @@ export class ReservationService {
   //     const updateSeatPeriod: Prisma.SeatPeriodUpdateInput = {
   //       canBooked: { set: false },
   //     };
-  //     await prisma.$transaction([
-  //       prisma.reservationLog.create({ data: createReservationLog }),
-  //       prisma.periodSeat.update({ data: updateSeatPeriod, where: { id: targetSeatPeriod.id } }),
+  //     await prismaClient.$transaction([
+  //       prismaClient.reservationLog.create({ data: createReservationLog }),
+  //       prismaClient.periodSeat.update({ data: updateSeatPeriod, where: { id: targetSeatPeriod.id } }),
   //     ]);
   //   } else if (amount === 3 || amount === 4) {
   //     const twoSeatPeriods = seatPeriods.filter((periodSeat) => {
@@ -131,7 +131,7 @@ export class ReservationService {
   //         },
   //       },
   //     ];
-  //     const nextSeatPeriod = await prisma.periodSeat.findFirst({
+  //     const nextSeatPeriod = await prismaClient.periodSeat.findFirst({
   //       where: {
   //         seatId: targetSeatPeriod.seat.siblings[0].nextSeatId,
   //         periodId: targetSeatPeriod.periodId,
@@ -148,11 +148,11 @@ export class ReservationService {
   //     const updateSeatPeriod: Prisma.SeatPeriodUpdateInput = {
   //       canBooked: { set: false },
   //     };
-  //     await prisma.$transaction([
-  //       prisma.reservationLog.create({ data: createReservationLog }),
-  //       ...createReservationSeats.map((reservationSeat) => prisma.reservationSeat.create({ data: reservationSeat })),
-  //       prisma.periodSeat.update({ data: updateSeatPeriod, where: { id: targetSeatPeriod.id } }),
-  //       prisma.periodSeat.update({ data: updateSeatPeriod, where: { id: nextSeatPeriod.id } }),
+  //     await prismaClient.$transaction([
+  //       prismaClient.reservationLog.create({ data: createReservationLog }),
+  //       ...createReservationSeats.map((reservationSeat) => prismaClient.reservationSeat.create({ data: reservationSeat })),
+  //       prismaClient.periodSeat.update({ data: updateSeatPeriod, where: { id: targetSeatPeriod.id } }),
+  //       prismaClient.periodSeat.update({ data: updateSeatPeriod, where: { id: nextSeatPeriod.id } }),
   //     ]);
   //   } else if (amount < 11 && amount > 6) {
   //     const targetSeatPeriods = seatPeriods.filter((periodSeat) => {
@@ -185,9 +185,9 @@ export class ReservationService {
   //     const updateSeatPeriod: Prisma.SeatPeriodUpdateInput = {
   //       canBooked: { set: false },
   //     };
-  //     await prisma.$transaction([
-  //       prisma.reservationLog.create({ data: createReservationLog }),
-  //       prisma.periodSeat.update({ data: updateSeatPeriod, where: { id: targetSeatPeriod.id } }),
+  //     await prismaClient.$transaction([
+  //       prismaClient.reservationLog.create({ data: createReservationLog }),
+  //       prismaClient.periodSeat.update({ data: updateSeatPeriod, where: { id: targetSeatPeriod.id } }),
   //     ]);
   //   } else {
   //     return {
@@ -196,7 +196,7 @@ export class ReservationService {
   //       reservationId: '',
   //     };
   //   }
-  //   const reservation = await prisma.reservationSeat.findFirst({
+  //   const reservation = await prismaClient.reservationSeat.findFirst({
   //     where: {
   //       seatId: targetSeatPeriod?.seatId,
   //       periodId: targetSeatPeriod?.periodId,

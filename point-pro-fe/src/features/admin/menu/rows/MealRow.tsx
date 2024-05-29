@@ -100,7 +100,7 @@ export const MealRow: FC<IMealRowProps> = (props) => {
         <Box component='img' src={updateMeal.coverUrl.split('.jpeg')[0] + 's.jpeg'} alt={updateMeal.title} />
       </StyledTableCell>
       <StyledTableCell sx={{ whiteSpace: 'nowrap' }}>
-        {isEdit ? <TextInput type='number' value={updateMeal.price} onChange={handleChangePrice} /> : updateMeal.price}
+        {isEdit ? <TextInput type='number' value={updateMeal.price.toString()} onChange={handleChangePrice} /> : updateMeal.price}
       </StyledTableCell>
       <StyledTableCell>
         {isEdit ? <TextareaInput value={updateMeal.description} sx={{ width: 100 }} onChange={handleChangeDescription} /> : updateMeal.description}
@@ -116,7 +116,6 @@ export const MealRow: FC<IMealRowProps> = (props) => {
                 <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
                   {selected.map((value) => {
                     const si = specialtyItems.find((si) => si.id === value);
-
                     return <Chip key={value} label={si?.title} variant='outlined' size='small' />;
                   })}
                 </Box>

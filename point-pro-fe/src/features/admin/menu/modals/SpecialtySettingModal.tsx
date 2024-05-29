@@ -2,7 +2,7 @@ import { FC } from 'react';
 import { Card, CardActions, CardContent, CardHeader } from '@mui/material';
 import { BaseButton, TabletModalLayout } from '~/components';
 import { useAppDispatch, useAppSelector } from '~/hooks';
-import { closeSpecialtyItemsSettingModal } from '~/store/slices';
+import { closeSpecialtySettingModal } from '~/store/slices';
 import { theme } from '~/theme';
 import { SpecialtySettingTable } from '../tables/SpecialtySettingTable';
 
@@ -11,10 +11,10 @@ interface ISpecialtyItemsSettingModalProps {}
 export const SpecialtySettingModal: FC<ISpecialtyItemsSettingModalProps> = () => {
   const dispatch = useAppDispatch();
 
-  const isOpen = useAppSelector((state) => state.menu.specialtyItemsSettingModal.isOpen);
+  const isOpen = useAppSelector((state) => state.menu.specialtySettingModal.isOpen);
 
   const handleCloseModal = () => {
-    dispatch(closeSpecialtyItemsSettingModal());
+    dispatch(closeSpecialtySettingModal());
   };
 
   return (

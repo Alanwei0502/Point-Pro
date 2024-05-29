@@ -1,7 +1,7 @@
 import { Prisma } from '@prisma/client';
 import SingletonRedis from '../helpers/SingletonRedis';
 import { DatePeriodInfo, PeriodInfo } from '../types/shared';
-import { appDayjs, prisma } from '../helpers';
+import { appDayjs, prismaClient } from '../helpers';
 
 export class PeriodService {
   // static getPeriods = async (isOnlineBooking: boolean, dateFrom: Date, dateTo: Date, excludeTime: boolean) => {
@@ -21,7 +21,7 @@ export class PeriodService {
   //     const isOnlineFilter: Prisma.PeriodSeatWhereInput = isOnlineBooking
   //       ? { canOnlineBooked: true }
   //       : { canOnlineBooked: { not: true } };
-  //     const periods = await prisma.period.findMany({
+  //     const periods = await prismaClient.period.findMany({
   //       where: {
   //         startTime: {
   //           gte: dateFrom,

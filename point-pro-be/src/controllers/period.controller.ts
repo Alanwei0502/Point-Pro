@@ -1,8 +1,10 @@
 import { object, date as dateSchema, boolean } from 'yup';
-import { getDateOnly, getDefaultDate, prisma } from '../helpers';
+import { getDateOnly, getDefaultDate, prismaClient } from '../helpers';
 import { ApiResponse, AuthRequest, PeriodInfo, DatePeriodInfo } from '../types/shared';
 import { Period, Prisma } from '@prisma/client';
 import { PeriodService } from '../services';
+import { ReasonPhrases, StatusCodes } from 'http-status-codes';
+import { NextFunction } from 'express';
 
 export class PeriodController {
   // public static getPeriods = async (req: AuthRequest, res: ApiResponse<DatePeriodInfo[]>) => {
@@ -62,7 +64,7 @@ export class PeriodController {
   //   // const isOnlineFilter: Prisma.SeatPeriodWhereInput = isOnlineBooking
   //   //   ? { canOnlineBooked: true }
   //   //   : { canOnlineBooked: { not: true } };
-  //   // const periods = await prisma.period.findMany({
+  //   // const periods = await prismaClient.period.findMany({
   //   //   where: {
   //   //     startedAt: {
   //   //       gte: targetDate,
@@ -143,12 +145,9 @@ export class PeriodController {
   //   });
   // };
 
-  static getAvailablePeriods = async (
-    req: AuthRequest,
-    res: ApiResponse<Pick<Period, 'id' | 'startTime' | 'endTime'>[]>,
-  ) => {
+  static getAvailablePeriods = async (req: AuthRequest, res: ApiResponse<Pick<Period, 'id' | 'startTime' | 'endTime'>[]>, next: NextFunction) => {
     try {
-      const periods = await prisma.period.findMany({
+      const periods = await prismaClient.period.findMany({
         select: {
           id: true,
           startTime: true,
@@ -188,15 +187,12 @@ export class PeriodController {
         return { ...rest, available };
       });
 
-      return res.status(200).json({
-        message: 'success',
+      res.status(StatusCodes.OK).send({
+        message: ReasonPhrases.OK,
         result,
       });
     } catch (error) {
-      return res.status(500).json({
-        message: (error as Error).message,
-        result: null,
-      });
+      next(error);
     }
   };
 }

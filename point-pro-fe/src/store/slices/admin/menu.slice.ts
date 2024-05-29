@@ -3,27 +3,27 @@ import { MenuApi } from '~/api';
 import { createAppAsyncThunk } from '~/hooks';
 import {
   ICategory,
-  CategoryResponse,
-  CategoriesResponse,
   PostCategoryPayload,
   ISpecialty,
-  GetSpecialtyWithSpecialtyItemsResponse,
-  SpecialtyResponse,
-  SpecialtyItemsResponse,
-  MealsResponse,
-  MealResponse,
   IMeal,
   SocketTopic,
   PatchMealByIdPayload,
   IMealWithCategoryAndSpecialtyItems,
-  PatchCategoriesOrderResponse,
   ISpecialtyItem,
   ISpecialtyWithSpecialtyItems,
   PatchSpecialtyPayload,
   PostSpecialtyPayload,
   PatchCategoryPayload,
-  PatchSpecialtiesOrderResponse,
-  DeleteSpecialtyResponse,
+  PatchSpecialtyItemOrderPayload,
+  PatchSpecialtyItemPayload,
+  PostSpecialtyItemPayload,
+  PatchCategoryOrderPayload,
+  PatchMealOrderPayload,
+  PatchSpecialtyOrderPayload,
+  DeleteCategoryPayload,
+  DeleteMealPaylaod,
+  DeleteSpecialtyPayload,
+  PostMealPayload,
 } from '~/types';
 
 const name = 'menu';
@@ -32,10 +32,7 @@ interface IMenuSliceState {
   categories: ICategory[];
   meals: IMealWithCategoryAndSpecialtyItems[];
   specialties: ISpecialtyWithSpecialtyItems[];
-  editMealSpecialtyItemsModal: {
-    isOpen: boolean;
-    data: Pick<ISpecialtyItem, 'title' | 'price' | 'position'> | null;
-  };
+  // CATEGORY
   createCategoryModal: {
     isOpen: boolean;
   };
@@ -43,7 +40,17 @@ interface IMenuSliceState {
     isOpen: boolean;
     data: ICategory | null;
   };
-  specialtyItemsSettingModal: {
+  // MEAL
+  createMealModal: {
+    isOpen: boolean;
+    data: ICategory['id'] | null;
+  };
+  deleteMealConfirmModal: {
+    isOpen: boolean;
+    data: IMeal | null;
+  };
+  // SPECIALTY
+  specialtySettingModal: {
     isOpen: boolean;
     data: ISpecialtyWithSpecialtyItems[] | null;
   };
@@ -54,16 +61,22 @@ interface IMenuSliceState {
     isOpen: boolean;
     data: ISpecialty | null;
   };
+  // SPECIALTY ITEM
+  deleteSpecialtyItemConfirmModal: {
+    isOpen: boolean;
+    data: ISpecialtyWithSpecialtyItems['specialtyItems'][0] | null;
+  };
+  createSpecialtyItemModal: {
+    isOpen: boolean;
+    data: ISpecialtyWithSpecialtyItems | null;
+  };
 }
 
 const initialState: IMenuSliceState = {
   categories: [],
   meals: [],
   specialties: [],
-  editMealSpecialtyItemsModal: {
-    isOpen: false,
-    data: null,
-  },
+  // CATEGORY
   createCategoryModal: {
     isOpen: false,
   },
@@ -71,7 +84,17 @@ const initialState: IMenuSliceState = {
     isOpen: false,
     data: null,
   },
-  specialtyItemsSettingModal: {
+  // MEAL
+  createMealModal: {
+    isOpen: false,
+    data: null,
+  },
+  deleteMealConfirmModal: {
+    isOpen: false,
+    data: null,
+  },
+  // SPECIALTY
+  specialtySettingModal: {
     isOpen: false,
     data: null,
   },
@@ -79,6 +102,15 @@ const initialState: IMenuSliceState = {
     isOpen: false,
   },
   deleteSpecialtyConfirmModal: {
+    isOpen: false,
+    data: null,
+  },
+  // SPECIALTY ITEM
+  deleteSpecialtyItemConfirmModal: {
+    isOpen: false,
+    data: null,
+  },
+  createSpecialtyItemModal: {
     isOpen: false,
     data: null,
   },
@@ -97,11 +129,9 @@ export const getCategories = createAppAsyncThunk(`${name}/getCategories`, async 
   }
 });
 
-export const postCategory = createAppAsyncThunk(`${name}/postCategory`, async (payload: PostCategoryPayload, { rejectWithValue, dispatch }) => {
+export const postCategory = createAppAsyncThunk(`${name}/postCategory`, async (payload: PostCategoryPayload, { rejectWithValue }) => {
   try {
     await MenuApi.postCategory(payload);
-    dispatch(closeCreateCategoryModal());
-    dispatch(getCategories());
   } catch (error) {
     if (error instanceof Error) {
       return rejectWithValue({ message: error.message });
@@ -124,7 +154,23 @@ export const patchCategory = createAppAsyncThunk(`${name}/patchCategory`, async 
   }
 });
 
-export const deleteCategory = createAppAsyncThunk(`${name}/deleteCategory`, async (payload: ICategory['id'], { rejectWithValue, dispatch }) => {
+export const patchCategoriesOrder = createAppAsyncThunk(
+  `${name}/patchCategoriesOrder`,
+  async (payload: PatchCategoryOrderPayload, { rejectWithValue, dispatch }) => {
+    try {
+      await MenuApi.patchCategoriesOrder(payload);
+      dispatch(getCategories());
+    } catch (error) {
+      if (error instanceof Error) {
+        return rejectWithValue({ message: error.message });
+      } else {
+        return rejectWithValue({ message: 'unknown error' });
+      }
+    }
+  },
+);
+
+export const deleteCategory = createAppAsyncThunk(`${name}/deleteCategory`, async (payload: DeleteCategoryPayload, { rejectWithValue, dispatch }) => {
   try {
     await MenuApi.deleteCategory(payload);
     dispatch(closeDeleteCategoryConfirmModal());
@@ -138,22 +184,8 @@ export const deleteCategory = createAppAsyncThunk(`${name}/deleteCategory`, asyn
   }
 });
 
-export const patchCategoriesOrder = createAppAsyncThunk(`${name}/patchCategoriesOrder`, async (_, { rejectWithValue, dispatch, getState }) => {
-  try {
-    const payload = getState().menu.categories.map((c) => ({ id: c.id, position: c.position }));
-    await MenuApi.patchCategoriesOrder(payload);
-    dispatch(getCategories());
-  } catch (error) {
-    if (error instanceof Error) {
-      return rejectWithValue({ message: error.message });
-    } else {
-      return rejectWithValue({ message: 'unknown error' });
-    }
-  }
-});
-
 // MEAL
-export const getMeals = createAppAsyncThunk<MealsResponse>(`${name}/getMeals`, async (_, { rejectWithValue }) => {
+export const getMeals = createAppAsyncThunk(`${name}/getMeals`, async (_, { rejectWithValue }) => {
   try {
     return await MenuApi.getMeals();
   } catch (error) {
@@ -165,7 +197,7 @@ export const getMeals = createAppAsyncThunk<MealsResponse>(`${name}/getMeals`, a
   }
 });
 
-export const getMealById = createAppAsyncThunk<MealResponse, string>(`${name}/getMealById`, async (payload, { rejectWithValue }) => {
+export const getMealById = createAppAsyncThunk(`${name}/getMealById`, async (payload: IMeal['id'], { rejectWithValue }) => {
   try {
     return await MenuApi.getMealById(payload);
   } catch (error) {
@@ -177,12 +209,11 @@ export const getMealById = createAppAsyncThunk<MealResponse, string>(`${name}/ge
   }
 });
 
-export const postMeal = createAppAsyncThunk<MealResponse, IMeal>(`${name}/postMeal`, async (payload, { getState, rejectWithValue }) => {
+export const postMeal = createAppAsyncThunk(`${name}/postMeal`, async (payload: PostMealPayload, { getState, rejectWithValue }) => {
   try {
     const socket = getState().socket.socket;
     const newMeal = await MenuApi.postMeal(payload);
     socket && socket.emit(SocketTopic.MENU, newMeal);
-    return newMeal;
   } catch (error) {
     if (error instanceof Error) {
       return rejectWithValue({ message: error.message });
@@ -192,14 +223,14 @@ export const postMeal = createAppAsyncThunk<MealResponse, IMeal>(`${name}/postMe
   }
 });
 
-export const patchMealById = createAppAsyncThunk<MealResponse, PatchMealByIdPayload>(
+export const patchMealById = createAppAsyncThunk(
   `${name}/patchMealById`,
-  async (payload, { getState, rejectWithValue }) => {
+  async (payload: PatchMealByIdPayload, { getState, rejectWithValue, dispatch }) => {
     try {
       const socket = getState().socket.socket;
       const updatedMeal = await MenuApi.patchMealById(payload);
       socket && socket.emit(SocketTopic.MENU, updatedMeal);
-      return updatedMeal;
+      dispatch(getMeals);
     } catch (error) {
       if (error instanceof Error) {
         return rejectWithValue({ message: error.message });
@@ -210,12 +241,28 @@ export const patchMealById = createAppAsyncThunk<MealResponse, PatchMealByIdPayl
   },
 );
 
-export const deleteMeal = createAppAsyncThunk<MealResponse, string>(`${name}/deleteMeal`, async (payload, { getState, rejectWithValue }) => {
+export const patchMealsOrder = createAppAsyncThunk(
+  `${name}/patchMealsOrder`,
+  async (payload: PatchMealOrderPayload, { rejectWithValue, dispatch }) => {
+    try {
+      await MenuApi.patchMealsOrder(payload);
+      dispatch(getMeals());
+    } catch (error) {
+      if (error instanceof Error) {
+        return rejectWithValue({ message: error.message });
+      } else {
+        return rejectWithValue({ message: 'unknown error' });
+      }
+    }
+  },
+);
+
+export const deleteMeal = createAppAsyncThunk(`${name}/deleteMeal`, async (payload: DeleteMealPaylaod, { getState, rejectWithValue, dispatch }) => {
   try {
     const socket = getState().socket.socket;
     const deletedMeal = await MenuApi.deleteMeal(payload);
     socket && socket.emit(SocketTopic.MENU, deletedMeal);
-    return deletedMeal;
+    dispatch(getMeals());
   } catch (error) {
     if (error instanceof Error) {
       return rejectWithValue({ message: error.message });
@@ -238,11 +285,9 @@ export const getSpecialties = createAppAsyncThunk(`${name}/getSpecialties`, asyn
   }
 });
 
-export const postSpecialty = createAppAsyncThunk(`${name}/postSpecialty`, async (payload: PostSpecialtyPayload, { rejectWithValue, dispatch }) => {
+export const postSpecialty = createAppAsyncThunk(`${name}/postSpecialty`, async (payload: PostSpecialtyPayload, { rejectWithValue }) => {
   try {
     await MenuApi.postSpecialty(payload);
-    dispatch(getSpecialties());
-    dispatch(closeCreateSpecialtyModal());
   } catch (error) {
     if (error instanceof Error) {
       return rejectWithValue({ message: error.message });
@@ -265,42 +310,91 @@ export const patchSpecialty = createAppAsyncThunk(`${name}/patchSpecialty`, asyn
   }
 });
 
-export const deleteSpecialty = createAppAsyncThunk(`${name}/deleteSpecialty`, async (payload: ISpecialty['id'], { rejectWithValue, dispatch }) => {
-  try {
-    await MenuApi.deleteSpecialty(payload);
-    dispatch(closeDeleteSpecialtyConfirmModal());
-    dispatch(getSpecialties());
-  } catch (error) {
-    if (error instanceof Error) {
-      return rejectWithValue({ message: error.message });
-    } else {
-      return rejectWithValue({ message: 'unknown error' });
+export const patchSpecialtiesOrder = createAppAsyncThunk(
+  `${name}/patchSpecialtiesOrder`,
+  async (payload: PatchSpecialtyOrderPayload, { rejectWithValue, dispatch }) => {
+    try {
+      await MenuApi.patchSpecialtiesOrder(payload);
+      dispatch(getSpecialties());
+    } catch (error) {
+      if (error instanceof Error) {
+        return rejectWithValue({ message: error.message });
+      } else {
+        return rejectWithValue({ message: 'unknown error' });
+      }
     }
-  }
-});
+  },
+);
 
-export const patchSpecialtiesOrder = createAppAsyncThunk(`${name}/patchSpecialtiesOrder`, async (_, { rejectWithValue, dispatch, getState }) => {
-  try {
-    const payload = getState().menu.specialties.map((s) => ({ id: s.id, position: s.position }));
-    await MenuApi.patchSpecialtiesOrder(payload);
-    dispatch(getSpecialties());
-  } catch (error) {
-    if (error instanceof Error) {
-      return rejectWithValue({ message: error.message });
-    } else {
-      return rejectWithValue({ message: 'unknown error' });
+export const deleteSpecialty = createAppAsyncThunk(
+  `${name}/deleteSpecialty`,
+  async (payload: DeleteSpecialtyPayload, { rejectWithValue, dispatch }) => {
+    try {
+      await MenuApi.deleteSpecialty(payload);
+      dispatch(closeDeleteSpecialtyConfirmModal());
+      dispatch(getSpecialties());
+    } catch (error) {
+      if (error instanceof Error) {
+        return rejectWithValue({ message: error.message });
+      } else {
+        return rejectWithValue({ message: 'unknown error' });
+      }
     }
-  }
-});
+  },
+);
 
 // SPECIALTY ITEM
+export const postSpecialtyItem = createAppAsyncThunk(`${name}/postSpecialtyItem`, async (payload: PostSpecialtyItemPayload, { rejectWithValue }) => {
+  try {
+    await MenuApi.postSpecialtyItem(payload);
+  } catch (error) {
+    if (error instanceof Error) {
+      return rejectWithValue({ message: error.message });
+    } else {
+      return rejectWithValue({ message: 'unknown error' });
+    }
+  }
+});
+
+export const patchSpecialtyItem = createAppAsyncThunk(
+  `${name}/patchSpecialtyItem`,
+  async (payload: PatchSpecialtyItemPayload, { rejectWithValue, dispatch }) => {
+    try {
+      await MenuApi.patchSpecialtyItem(payload);
+      dispatch(closeCreateSpecialtyItemModal());
+      dispatch(getSpecialties());
+    } catch (error) {
+      if (error instanceof Error) {
+        return rejectWithValue({ message: error.message });
+      } else {
+        return rejectWithValue({ message: 'unknown error' });
+      }
+    }
+  },
+);
+
 export const patchSpecialtyItemsOrder = createAppAsyncThunk(
   `${name}/patchSpecialtyItemsOrder`,
-  async (_, { rejectWithValue, dispatch, getState }) => {
+  async (payload: PatchSpecialtyItemOrderPayload, { rejectWithValue, dispatch }) => {
     try {
-      const specialties = getState().menu.specialties;
-      const payload = specialties.flatMap((s) => s.specialtyItems.map((si) => ({ id: si.id, position: si.position })));
-      // await MenuApi.patchSpecialtyItemsOrder(payload);
+      await MenuApi.patchSpecialtyItemsOrder(payload);
+      dispatch(getSpecialties());
+    } catch (error) {
+      if (error instanceof Error) {
+        return rejectWithValue({ message: error.message });
+      } else {
+        return rejectWithValue({ message: 'unknown error' });
+      }
+    }
+  },
+);
+
+export const deleteSpecialtyItem = createAppAsyncThunk(
+  `${name}/deleteSpecialtyItem`,
+  async (payload: ISpecialtyItem['id'], { rejectWithValue, dispatch }) => {
+    try {
+      await MenuApi.deleteSpecialtyItem(payload);
+      dispatch(closeDeleteSpecialtyItemConfirmModal());
       dispatch(getSpecialties());
     } catch (error) {
       if (error instanceof Error) {
@@ -337,6 +431,12 @@ export const menuSlice = createSlice({
     setMeals: (state, action: PayloadAction<IMenuSliceState['meals']>) => {
       state.meals = action.payload;
     },
+    openCreateMealModal: (state) => {
+      state.createMealModal.isOpen = true;
+    },
+    closeCreateMealModal: (state) => {
+      state.createMealModal = initialState.createMealModal;
+    },
     // SPECIALTY
     setSpecialties: (state, action: PayloadAction<IMenuSliceState['specialties']>) => {
       state.specialties = action.payload;
@@ -364,15 +464,29 @@ export const menuSlice = createSlice({
         return s;
       });
     },
-    openSpecialtyItemsSettingModal: (state) => {
-      state.specialtyItemsSettingModal.isOpen = true;
-      state.specialtyItemsSettingModal.data = state.specialties;
+    openSpecialtySettingModal: (state) => {
+      state.specialtySettingModal.isOpen = true;
+      state.specialtySettingModal.data = state.specialties;
     },
-    setSpecialtyItemsSettingModalData: (state, action: PayloadAction<ISpecialtyWithSpecialtyItems[]>) => {
-      state.specialtyItemsSettingModal.data = action.payload;
+    setSpecialtySettingModalData: (state, action: PayloadAction<ISpecialtyWithSpecialtyItems[]>) => {
+      state.specialtySettingModal.data = action.payload;
     },
-    closeSpecialtyItemsSettingModal: (state) => {
-      state.specialtyItemsSettingModal = initialState.specialtyItemsSettingModal;
+    closeSpecialtySettingModal: (state) => {
+      state.specialtySettingModal = initialState.specialtySettingModal;
+    },
+    openCreateSpecialtyItemModal: (state, action: PayloadAction<ISpecialtyWithSpecialtyItems>) => {
+      state.createSpecialtyItemModal.isOpen = true;
+      state.createSpecialtyItemModal.data = action.payload;
+    },
+    closeCreateSpecialtyItemModal: (state) => {
+      state.createSpecialtyItemModal = initialState.createSpecialtyItemModal;
+    },
+    openDeleteSpecialtyItemConfirmModal: (state, action: PayloadAction<ISpecialtyWithSpecialtyItems['specialtyItems'][0]>) => {
+      state.deleteSpecialtyItemConfirmModal.isOpen = true;
+      state.deleteSpecialtyItemConfirmModal.data = action.payload;
+    },
+    closeDeleteSpecialtyItemConfirmModal: (state) => {
+      state.deleteSpecialtyItemConfirmModal = initialState.deleteSpecialtyItemConfirmModal;
     },
   },
   extraReducers: (builder) => {
@@ -398,15 +512,21 @@ export const {
   closeDeleteCategoryConfirmModal,
   // MEAL
   setMeals,
+  openCreateMealModal,
+  closeCreateMealModal,
   // SPECIALTY
   setSpecialties,
+  setSpecialtySettingModalData,
+  openSpecialtySettingModal,
+  closeSpecialtySettingModal,
   openCreateSpecialtyModal,
   closeCreateSpecialtyModal,
   openDeleteSpecialtyConfirmModal,
   closeDeleteSpecialtyConfirmModal,
   // SPECIALTY ITEM
   setSpecialtyItems,
-  setSpecialtyItemsSettingModalData,
-  openSpecialtyItemsSettingModal,
-  closeSpecialtyItemsSettingModal,
+  openCreateSpecialtyItemModal,
+  closeCreateSpecialtyItemModal,
+  openDeleteSpecialtyItemConfirmModal,
+  closeDeleteSpecialtyItemConfirmModal,
 } = menuSlice.actions;

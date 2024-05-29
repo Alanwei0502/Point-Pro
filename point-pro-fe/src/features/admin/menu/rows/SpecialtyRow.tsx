@@ -1,6 +1,6 @@
 import React, { ChangeEvent, FC, ReactNode, useEffect, useState } from 'react';
 import styled from '@emotion/styled';
-import { Box, IconButton, MenuItem, SelectChangeEvent, TableRow } from '@mui/material';
+import { Box, IconButton, MenuItem, SelectChangeEvent, TableRow, Typography } from '@mui/material';
 import ReorderIcon from '@mui/icons-material/Reorder';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -11,7 +11,7 @@ import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { MySelect, StyledTableCell, TextInput } from '~/components';
-import { useAppDispatch } from '~/hooks';
+import { useAppDispatch, useAppSelector } from '~/hooks';
 import { ISpecialtyWithSpecialtyItems, SelectionType } from '~/types';
 import { theme } from '~/theme';
 import { CollapseSpecialtyItemsTable } from '../tables/CollapseSpecialtyItemsTable';
@@ -35,13 +35,16 @@ export const SpecialtyRow: FC<ISpecialtyRowProps> = (props) => {
 
   const dispatch = useAppDispatch();
 
+  const specialties = useAppSelector((state) => state.menu.specialties);
   const [isExpand, setIsExpanded] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
   const [newTitle, setNewTitle] = useState(specialty.title);
   const [newSelectionType, setNewSelectionType] = useState(specialty.selectionType);
 
   const isNotChanged = newTitle === specialty.title && newSelectionType === specialty.selectionType;
+  const isSpecialtyExist = specialties.some((item) => item.title === newTitle && item.id !== specialty.id);
   const isIncompleteInfo = !newTitle || !newSelectionType;
+  const isInvalid = isNotChanged || isSpecialtyExist || isIncompleteInfo;
 
   const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: specialty.id });
 
@@ -71,13 +74,12 @@ export const SpecialtyRow: FC<ISpecialtyRowProps> = (props) => {
     setNewSelectionType(e.target.value as SelectionType);
   };
 
-  const handleOpenDeleteSpecialtyRowConfirmModal = () => {
+  const handleOpenDeleteSpecialtyConfirmModal = () => {
     dispatch(openDeleteSpecialtyConfirmModal(specialty));
   };
 
   const handleConfirmEdit = () => {
-    if (isNotChanged || isIncompleteInfo) return;
-
+    if (isInvalid) return;
     dispatch(
       patchSpecialty({
         id: specialty.id,
@@ -105,7 +107,20 @@ export const SpecialtyRow: FC<ISpecialtyRowProps> = (props) => {
             <ReorderIcon />
           </IconButton>
         </StyledTableCell>
-        <StyledTableCell>{isEdit ? <TextInput autoFocus value={newTitle} onChange={handleChangeTitle} /> : newTitle}</StyledTableCell>
+        <StyledTableCell>
+          {isEdit ? (
+            <>
+              <TextInput autoFocus value={newTitle} onChange={handleChangeTitle} />
+              {isSpecialtyExist && (
+                <Typography variant='small' color='error'>
+                  已有相同的種類
+                </Typography>
+              )}
+            </>
+          ) : (
+            newTitle
+          )}
+        </StyledTableCell>
         <StyledTableCell>
           {isEdit ? (
             <MySelect value={newSelectionType} onChange={handleChangeSelectionType}>
@@ -123,8 +138,8 @@ export const SpecialtyRow: FC<ISpecialtyRowProps> = (props) => {
           <Box sx={{ display: 'flex', gap: 1 }}>
             {isEdit ? (
               <>
-                <IconButton size='small' onClick={handleConfirmEdit} disabled={isNotChanged || isIncompleteInfo}>
-                  <CheckIcon color={isNotChanged || isIncompleteInfo ? 'disabled' : 'success'} />
+                <IconButton size='small' onClick={handleConfirmEdit} disabled={isInvalid}>
+                  <CheckIcon color={isInvalid ? 'disabled' : 'success'} />
                 </IconButton>
                 <IconButton size='small' onClick={handleCancelEdit}>
                   <CloseIcon color='error' />
@@ -135,7 +150,7 @@ export const SpecialtyRow: FC<ISpecialtyRowProps> = (props) => {
                 <IconButton size='small' onClick={handleEditSpecialtyRow}>
                   <EditIcon />
                 </IconButton>
-                <IconButton size='small' onClick={handleOpenDeleteSpecialtyRowConfirmModal}>
+                <IconButton size='small' onClick={handleOpenDeleteSpecialtyConfirmModal}>
                   <DeleteIcon />
                 </IconButton>
               </>
@@ -143,7 +158,7 @@ export const SpecialtyRow: FC<ISpecialtyRowProps> = (props) => {
           </Box>
         </StyledTableCell>
       </StyledSpecialtyRow>
-      <CollapseSpecialtyItemsTable isOpen={isExpand} specialtyItems={specialty.specialtyItems} />
+      <CollapseSpecialtyItemsTable isOpen={isExpand} specialty={specialty} />
     </>
   );
 };

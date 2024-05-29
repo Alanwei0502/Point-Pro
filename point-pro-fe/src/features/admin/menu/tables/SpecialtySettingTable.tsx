@@ -7,6 +7,7 @@ import { BaseButton, StyledTableCell, StyledTableRow } from '~/components';
 import { useAppDispatch, useAppSelector } from '~/hooks';
 import { SpecialtyRow } from '../rows/SpecialtyRow';
 import { openCreateSpecialtyModal, patchSpecialtiesOrder, setSpecialties } from '~/store/slices';
+import { PatchSpecialtyOrderPayload } from '~/types';
 
 interface ISpecialtySettingTableProps {}
 
@@ -22,16 +23,18 @@ export const SpecialtySettingTable: FC<ISpecialtySettingTableProps> = () => {
     if (active && over && active.id !== over.id) {
       const oldIndex = speicalties.findIndex((s) => s.id === active.id);
       const newIndex = speicalties.findIndex((s) => s.id === over.id);
-      const newSpecialtiesOrder = arrayMove(speicalties, oldIndex, newIndex).map((s, idx) => ({
-        ...s,
-        position: idx,
-      }));
+      const movedSpecialties = arrayMove(speicalties, oldIndex, newIndex);
+      const payload: PatchSpecialtyOrderPayload = [];
+      const newSpecialtiesOrder = movedSpecialties.map((s, idx) => {
+        payload.push({ id: s.id, position: idx });
+        return { ...s, position: idx };
+      });
       dispatch(setSpecialties(newSpecialtiesOrder));
-      dispatch(patchSpecialtiesOrder());
+      dispatch(patchSpecialtiesOrder(payload));
     }
   };
 
-  const handleCreateSpecialty = () => {
+  const handleOpenCreateSpecialtyModal = () => {
     dispatch(openCreateSpecialtyModal());
   };
 
@@ -54,7 +57,7 @@ export const SpecialtySettingTable: FC<ISpecialtySettingTableProps> = () => {
           <TableFooter>
             <TableRow>
               <TableCell colSpan={5}>
-                <BaseButton variant='outlined' color='inherit' fullWidth onClick={handleCreateSpecialty} startIcon={<AddIcon />}>
+                <BaseButton variant='outlined' color='inherit' fullWidth onClick={handleOpenCreateSpecialtyModal} startIcon={<AddIcon />}>
                   新增種類
                 </BaseButton>
               </TableCell>

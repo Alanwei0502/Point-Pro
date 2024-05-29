@@ -1,14 +1,12 @@
 import { FC } from 'react';
 import { DndContext, DragEndEvent, KeyboardSensor, MouseSensor, TouchSensor, useSensor, useSensors } from '@dnd-kit/core';
-import { SortableContext, arrayMove } from '@dnd-kit/sortable';
+import { SortableContext, arrayMove, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { Box, Collapse, Table, TableBody, TableCell, TableFooter, TableHead, TableRow } from '@mui/material';
-import ChecklistIcon from '@mui/icons-material/Checklist';
 import AddIcon from '@mui/icons-material/Add';
-
 import { useAppDispatch } from '~/hooks';
-import { ICategory, IMealWithCategoryAndSpecialtyItems } from '~/types';
+import { IMealWithCategoryAndSpecialtyItems, PatchMealOrderPayload } from '~/types';
 import { BaseButton, StyledTableCell, StyledTableRow } from '~/components';
-import { setMeals } from '~/store/slices';
+import { openCreateMealModal, patchMealsOrder, setMeals } from '~/store/slices';
 import { MealRow } from '../rows/MealRow';
 
 interface ICollapseMealsTableProps {
@@ -29,12 +27,20 @@ export const CollapseMealsTable: FC<ICollapseMealsTableProps> = (props) => {
     if (active && over && active.id !== over.id) {
       const oldIndex = meals.findIndex((m) => m.id === active.id);
       const newIndex = meals.findIndex((m) => m.id === over.id);
-      const newFilterMealsOrder = arrayMove(meals, oldIndex, newIndex).map((m, idx) => ({
-        ...m,
-        position: idx,
-      }));
+      const movedMeals = arrayMove(meals, oldIndex, newIndex);
+      const payload: PatchMealOrderPayload = [];
+      const newFilterMealsOrder = movedMeals.map((m, idx) => {
+        payload.push({ id: m.id, position: idx });
+        return { ...m, position: idx };
+      });
+
       dispatch(setMeals(newFilterMealsOrder));
+      dispatch(patchMealsOrder(payload));
     }
+  };
+
+  const handleOpenCreateMealModal = () => {
+    dispatch(openCreateMealModal());
   };
 
   return (
@@ -42,7 +48,7 @@ export const CollapseMealsTable: FC<ICollapseMealsTableProps> = (props) => {
       <StyledTableCell colSpan={4} sx={{ padding: 0 }}>
         <Collapse in={isOpen} timeout='auto' unmountOnExit>
           <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
-            <SortableContext items={meals}>
+            <SortableContext items={meals} strategy={verticalListSortingStrategy}>
               <Table stickyHeader size='small'>
                 <TableHead>
                   <StyledTableRow>
@@ -60,7 +66,7 @@ export const CollapseMealsTable: FC<ICollapseMealsTableProps> = (props) => {
                   <TableRow>
                     <TableCell colSpan={9}>
                       <Box>
-                        <BaseButton variant='outlined' color='inherit' fullWidth startIcon={<AddIcon />}>
+                        <BaseButton variant='outlined' color='inherit' fullWidth startIcon={<AddIcon />} onClick={handleOpenCreateMealModal}>
                           新增餐點
                         </BaseButton>
                       </Box>

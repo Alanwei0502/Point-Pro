@@ -1,9 +1,9 @@
 import { z } from 'zod';
-import { prisma } from '../helpers';
+import { prismaClient } from '../helpers';
 import { createReservationSchema } from '../validators';
 
 const getReservationByUserPhone = async (phone: string) => {
-  const reservations = await prisma.user.findMany({
+  const reservations = await prismaClient.user.findMany({
     where: {
       phone,
     },
@@ -20,7 +20,7 @@ const getReservationByUserPhone = async (phone: string) => {
 };
 
 const createReservation = async (params: z.infer<typeof createReservationSchema>) => {
-  const reservation = await prisma.reservation.create({
+  const reservation = await prismaClient.reservation.create({
     data: {
       type: params.type,
       people: params.people,

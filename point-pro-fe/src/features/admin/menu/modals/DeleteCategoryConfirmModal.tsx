@@ -24,9 +24,9 @@ export const DeleteCategoryConfirmModal: FC<IDeleteCategoryConfirmModalProps> = 
     <TabletModalLayout open={isOpen}>
       <Card>
         <CardHeader title='確定刪除' sx={{ backgroundColor: theme.palette.primary.main, textAlign: 'center' }} />
-        <CardContent sx={{ padding: '1.5rem 1.25rem', minWidth: '50cqw' }}>
+        <CardContent sx={{ padding: '1rem', width: '50cqw' }}>
           <Typography component='p' variant='body1' textAlign={'center'}>
-            確定要刪除「{data?.title}」？
+            確定要刪除整個「{data?.title}」種類？
           </Typography>
         </CardContent>
         <CardActions>

@@ -9,6 +9,7 @@ import { AdminSeat } from '~/features/admin/seat';
 import { Booking } from '~/features/customer/booking';
 import { TakeOrders } from '~/features/customer/take-order';
 import { PaymentCancel, PaymentConfirm } from '~/features/customer/payment';
+import { pathObj } from '~/components';
 
 const router = createBrowserRouter([
   // User
@@ -17,49 +18,49 @@ const router = createBrowserRouter([
     element: <Home />,
   },
   {
-    path: 'booking',
+    path: pathObj.booking,
     element: <Booking />,
   },
   {
-    path: 'take-orders',
+    path: pathObj.takeOrders,
     element: <TakeOrders />,
   },
   {
-    path: 'payment',
+    path: pathObj.payment,
     children: [
       {
-        path: 'confirm',
+        path: pathObj.confirm,
         element: <PaymentConfirm />,
       },
       {
-        path: 'cancel',
+        path: pathObj.cancel,
         element: <PaymentCancel />,
       },
     ],
   },
   // Admin
   {
-    path: 'admin',
+    path: pathObj.admin,
     element: <Login />,
   },
   {
-    path: 'admin',
+    path: pathObj.admin,
     element: <ProtectedRoute />,
     children: [
       {
-        path: 'orders',
+        path: pathObj.orders,
         element: <AdminOrders />,
       },
       {
-        path: 'take-order',
+        path: pathObj.takeOrder,
         element: <AdminTakeOrder />,
       },
       {
-        path: 'seat',
+        path: pathObj.seat,
         element: <AdminSeat />,
       },
       {
-        path: 'menu',
+        path: pathObj.menu,
         element: <AdminMenuSettings />,
       },
     ],
