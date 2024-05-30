@@ -41,6 +41,7 @@ export const CategoryRow: FC<ICategoryRowProps> = (props) => {
 
   const categories = useAppSelector((state) => state.menu.categories);
   const meals = useAppSelector((state) => state.menu.meals);
+
   const filterMeals = useMemo(() => meals.filter((m) => m.categoryId === category.id), [meals, category.id]);
 
   const isCategoryTitleExist = categories.some((c) => c.title === newTitle && c.id != category.id);
@@ -62,7 +63,7 @@ export const CategoryRow: FC<ICategoryRowProps> = (props) => {
     setIsEdit(true);
   };
 
-  const handleOpenDeleteCategoryRowConfirmModal = () => {
+  const handleOpenDeleteCategoryConfirmModal = () => {
     dispatch(openDeleteCategoryConfirmModal(category));
   };
 
@@ -125,7 +126,7 @@ export const CategoryRow: FC<ICategoryRowProps> = (props) => {
                 <IconButton size='small' onClick={handleEditCategoryRow}>
                   <EditIcon />
                 </IconButton>
-                <IconButton size='small' onClick={handleOpenDeleteCategoryRowConfirmModal}>
+                <IconButton size='small' onClick={handleOpenDeleteCategoryConfirmModal}>
                   <DeleteIcon />
                 </IconButton>
               </>
@@ -133,7 +134,7 @@ export const CategoryRow: FC<ICategoryRowProps> = (props) => {
           </Box>
         </StyledTableCell>
       </StyledCategoryRow>
-      <CollapseMealsTable isOpen={isExpand} meals={filterMeals} />
+      <CollapseMealsTable isOpen={isExpand} meals={filterMeals} categoryId={category.id} />
     </>
   );
 };

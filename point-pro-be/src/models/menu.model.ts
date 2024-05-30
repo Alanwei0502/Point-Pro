@@ -8,6 +8,7 @@ import {
   updateSpecialtyOrderRequestSchema,
   updateSpecialtyItemOrderRequestSchema,
   updateMealOrderRequestSchema,
+  createMealRequestSchema,
 } from '../validators';
 
 const getCustomerCategories = async () => {
@@ -29,7 +30,7 @@ const getCustomerMeals = async () => {
     select: {
       id: true,
       title: true,
-      coverUrl: true,
+      imageId: true,
       description: true,
       isPopular: true,
       price: true,
@@ -181,6 +182,39 @@ const getMealsWithCategoryAndSpecialtyItems = async () => {
   });
 
   return result;
+};
+
+const createMeal = async (data: z.infer<typeof createMealRequestSchema>) => {
+  const { specialtyItems, ...rest } = data;
+  const specialties = await prismaClient.specialtyItem.findMany({
+    select: {
+      specialtyId: true,
+    },
+    where: {
+      id: {
+        in: specialtyItems,
+      },
+    },
+    distinct: ['specialtyId'],
+  });
+  const meal = await prismaClient.meal.create({
+    data: {
+      ...rest,
+      mealSpecialties: {
+        createMany: {
+          data: specialties,
+        },
+      },
+      mealSpecialtyItems: {
+        createMany: {
+          data: specialtyItems.map((si) => ({
+            specialtyItemId: si,
+          })),
+        },
+      },
+    },
+  });
+  return meal;
 };
 
 const updateMealsOrder = async (meals: z.infer<typeof updateMealOrderRequestSchema>) => {
@@ -356,6 +390,7 @@ export const MenuModel = {
   // MEAL
   getMealById,
   getMealsWithCategoryAndSpecialtyItems,
+  createMeal,
   updateMealsOrder,
   deleteMealById,
   // SPECIALTY

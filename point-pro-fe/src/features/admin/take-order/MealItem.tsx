@@ -34,17 +34,13 @@ export const MealItem: FC<MealItemProps> = (props) => {
       }}
       onClick={handleSelectedMeal}
     >
-      <Typography
-        fontWeight={600}
-        textAlign='center'
-        sx={{ textOverflow: 'ellipsis', whiteSpace: 'nowrap', overflow: 'hidden', padding: '.3rem' }}
-      >
+      <Typography fontWeight={600} textAlign='center' sx={{ textOverflow: 'ellipsis', whiteSpace: 'nowrap', overflow: 'hidden', padding: '.3rem' }}>
         {meal.title}
       </Typography>
       <Box height='6rem' sx={{ bgcolor: theme.palette.common.black, textAlign: 'center' }}>
         <Box
           component='img'
-          src={meal.coverUrl.split('.jpeg')[0] + 'b' + '.jpeg'}
+          src={`https://i.imgur.com/${meal.imageId}b.jpg`}
           alt={meal.title}
           sx={{ objectFit: 'fill', height: '100%', maxWidth: '100%' }}
         />

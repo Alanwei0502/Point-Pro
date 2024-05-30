@@ -17,10 +17,7 @@ export const Meals: FC<IMealsProps> = () => {
   const showMeals = meals.filter((meal) => meal.categoryId === currentCategory);
   const cart = useAppSelector(({ takeOrder }) => takeOrder.cart);
 
-  const getItemAmountInCart = useCallback(
-    (mealId: string) => cart.reduce((acc, cur) => (cur.id === mealId ? acc + cur.amount : acc), 0),
-    [cart],
-  );
+  const getItemAmountInCart = useCallback((mealId: string) => cart.reduce((acc, cur) => (cur.id === mealId ? acc + cur.amount : acc), 0), [cart]);
 
   const handleSelectedMeal = (meal: GetMenuResponseMeal) => () => {
     dispatch(openDialog({ type: MobileDialog.CUSTOMIZED, data: { ...meal, amount: 1, selectedSpecialtyItems: [] } }));
@@ -45,7 +42,7 @@ export const Meals: FC<IMealsProps> = () => {
                     <Grid item sx={{ position: 'relative' }}>
                       <Box
                         component='img'
-                        src={meal.coverUrl.split('.jpeg')[0] + 's' + '.jpeg'}
+                        src={`https://i.imgur.com/${meal.imageId}s.jpg`}
                         alt={`${meal.title}-img`}
                         sx={{ width: '5rem', verticalAlign: 'middle' }}
                       />

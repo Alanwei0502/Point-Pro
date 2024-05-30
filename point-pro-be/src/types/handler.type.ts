@@ -18,6 +18,7 @@ import {
   updateMealOrderRequestSchema,
   deleteMealRequestSchma,
   deleteCategoryRequestSchema,
+  createMealRequestSchema,
 } from '../validators';
 
 // Request
@@ -111,6 +112,10 @@ export interface IUpdateMealOrderRequest extends Request {
   body: z.infer<typeof updateMealOrderRequestSchema>;
 }
 
+export interface ICreateMealRequest extends Request {
+  body: z.infer<typeof createMealRequestSchema>;
+}
+
 export interface IDeleteMealRequest extends Request {
   params: z.infer<typeof deleteMealRequestSchma>;
 }
@@ -149,4 +154,5 @@ export interface IDeleteSpecialtyItemRequest extends Request {
 // IMGUR
 export interface IUploadImageRequest extends Request {
   file?: Express.Multer.File;
+  body: z.infer<typeof createMealRequestSchema>;
 }

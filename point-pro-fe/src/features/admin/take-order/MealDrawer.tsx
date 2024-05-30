@@ -5,14 +5,7 @@ import DoneIcon from '@mui/icons-material/Done';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import { BaseButton, CloseButton, NumberInput } from '~/components';
 import { useAppDispatch, useAppSelector } from '~/hooks';
-import {
-  closeDialog,
-  createCartItem,
-  decreaseMealAmount,
-  increaseMealAmount,
-  updateCartItem,
-  updateSpecialty,
-} from '~/store/slices';
+import { closeDialog, createCartItem, decreaseMealAmount, increaseMealAmount, updateCartItem, updateSpecialty } from '~/store/slices';
 import { theme } from '~/theme';
 import { ISpecialty, ISpecialtyItem } from '~/types';
 
@@ -89,11 +82,7 @@ export const MealDrawer: FC<IMealDrawerProps> = () => {
           {customizedSpecialties.length
             ? customizedSpecialties.map((specialty) => (
                 <Box key={specialty.id}>
-                  <Typography
-                    variant='h6'
-                    key={specialty.id}
-                    sx={{ fontWeight: 900, padding: '1rem 0 1rem', color: theme.palette.common.black_80 }}
-                  >
+                  <Typography variant='h6' key={specialty.id} sx={{ fontWeight: 900, padding: '1rem 0 1rem', color: theme.palette.common.black_80 }}>
                     {specialty.title}
                   </Typography>
                   <Box

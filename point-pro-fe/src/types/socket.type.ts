@@ -62,7 +62,8 @@ export interface IOrderResult {
 export interface IMenuResult {
   id: string;
   title: string;
-  coverUrl: string;
+  imageId: string;
+  imageDeleteHash: string;
   description: string;
   price: number;
   position: number;

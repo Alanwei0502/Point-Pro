@@ -12,6 +12,7 @@ import { DeleteSpecialtyConfirmModal } from './modals/DeleteSpecialtyConfirmModa
 import { DeleteSpecialtyItemConfirmModal } from './modals/DeleteSpecialtyItemConfirmModal';
 import { CreateSpecialtyItemModal } from './modals/CreateSpecialtyItemModal';
 import { CreateMealModal } from './modals/CreateMealModal';
+import { DeleteMealConfirmModal } from './modals/DeleteMealConfirmModal';
 
 interface IAdminMenuSettingsProps {}
 
@@ -36,6 +37,7 @@ export const AdminMenuSettings: FC<IAdminMenuSettingsProps> = () => {
       <DeleteCategoryConfirmModal />
       {/* MEAL */}
       <CreateMealModal />
+      <DeleteMealConfirmModal />
       {/* SPECIALTY */}
       <SpecialtySettingModal />
       <CreateSpecialtyModal />

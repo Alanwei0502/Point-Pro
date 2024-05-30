@@ -1,17 +1,5 @@
 import { FC, useCallback, useEffect, useState } from 'react';
-import {
-  Accordion,
-  AccordionSummary,
-  AccordionDetails,
-  Button,
-  Typography,
-  List,
-  ListItem,
-  Box,
-  Select,
-  MenuItem,
-  styled,
-} from '@mui/material';
+import { Accordion, AccordionSummary, AccordionDetails, Button, Typography, List, ListItem, Box, Select, MenuItem, styled } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 import { Column, Row } from '~/components';
@@ -323,11 +311,7 @@ export const UnpaidAndSuccessOrderItem: FC<IUnpaidAndSuccessOrderItemProps> = (p
           {status === OrderStatus.FINISHED && (
             <>
               <VerticalDivider />
-              <Button
-                variant='contained'
-                onClick={handlePayment}
-                sx={{ fontSize: theme.typography.body1.fontSize, fontWeight: 700, height: '100%' }}
-              >
+              <Button variant='contained' onClick={handlePayment} sx={{ fontSize: theme.typography.body1.fontSize, fontWeight: 700, height: '100%' }}>
                 收款
               </Button>
             </>
@@ -350,9 +334,7 @@ export const UnpaidAndSuccessOrderItem: FC<IUnpaidAndSuccessOrderItemProps> = (p
                       <Typography>{order.id.slice(-5)}</Typography>
                     </Column>
                     <VerticalDivider />
-                    <Typography sx={{ minWidth: '13rem' }}>
-                      {appDayjs(order.createdAt).format('YYYY/MM/DD HH:mm')}
-                    </Typography>
+                    <Typography sx={{ minWidth: '13rem' }}>{appDayjs(order.createdAt).format('YYYY/MM/DD HH:mm')}</Typography>
                     {status === OrderStatus.FINISHED && (
                       <>
                         <VerticalDivider />

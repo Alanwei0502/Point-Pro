@@ -20,6 +20,8 @@ import { closeCreateMealModal, getMeals, postMeal } from '~/store/slices';
 import { theme } from '~/theme';
 import { IMeal, ISpecialtyItem } from '~/types';
 
+const imageType = ['image/jpeg', 'image/jpg', 'image/png'];
+
 interface ICreateMealModalProps {}
 
 export const CreateMealModal: FC<ICreateMealModalProps> = () => {
@@ -33,15 +35,16 @@ export const CreateMealModal: FC<ICreateMealModalProps> = () => {
 
   const [title, setTitle] = useState<IMeal['title']>('');
   const [price, setPrice] = useState<IMeal['price']>(0);
-  const [currentImage, setCurrentImage] = useState<File>();
-  const [previewImage, setPreviewImage] = useState('');
+  const [image, setImage] = useState<File>();
+  const [isImageFormatError, setIsImageFormatError] = useState(false);
+  const [previewImage, setPreviewImage] = useState<string>();
   const [description, setDescription] = useState<IMeal['description']>('');
   const [specialtyItems, setSpecialtyItems] = useState<ISpecialtyItem['id'][]>([]);
   const [isPopular, setIsPopular] = useState<IMeal['isPopular']>(false);
   const [publishedAt, setPublisedAt] = useState<IMeal['publishedAt']>(new Date());
 
   const hasSameMealExist = meals.some((m) => m.title === title);
-  const isIncompleteInfo = !title;
+  const isIncompleteInfo = !title || !image;
   const isInvalid = !categoryId || isIncompleteInfo || hasSameMealExist;
 
   const handleChangeTitle = (e: ChangeEvent<HTMLInputElement>) => {
@@ -50,8 +53,16 @@ export const CreateMealModal: FC<ICreateMealModalProps> = () => {
 
   const handleChangeImage = (e: ChangeEvent<HTMLInputElement>) => {
     const selectedFiles = e.target.files as FileList;
-    setCurrentImage(selectedFiles?.[0]);
-    setPreviewImage(URL.createObjectURL(selectedFiles?.[0]));
+    const imageFile = selectedFiles?.[0];
+    if (imageFile.size > 2 * 1024 * 1024 || !imageType.includes(imageFile.type)) {
+      setIsImageFormatError(true);
+      return;
+    }
+
+    if (imageFile) {
+      setImage(imageFile);
+      setPreviewImage(URL.createObjectURL(imageFile));
+    }
   };
 
   const handleChangePrice = (e: ChangeEvent<HTMLInputElement>) => {
@@ -81,11 +92,13 @@ export const CreateMealModal: FC<ICreateMealModalProps> = () => {
 
   const handleCancel = () => {
     setTitle('');
+    setImage(undefined);
+    setPreviewImage(undefined);
     setPrice(0);
     setDescription('');
     setSpecialtyItems([]);
     setIsPopular(false);
-    setPublisedAt(null);
+    setPublisedAt(new Date());
     dispatch(closeCreateMealModal());
   };
 
@@ -96,6 +109,7 @@ export const CreateMealModal: FC<ICreateMealModalProps> = () => {
       postMeal({
         categoryId,
         title,
+        image,
         price,
         description,
         isPopular,
@@ -113,7 +127,7 @@ export const CreateMealModal: FC<ICreateMealModalProps> = () => {
     <TabletModalLayout open={isOpen}>
       <Card>
         <CardHeader title='新增餐點' sx={{ backgroundColor: theme.palette.primary.main, textAlign: 'center' }} />
-        <CardContent sx={{ padding: '1rem', width: '50cqw', maxHeight: 640, overflow: 'scroll' }}>
+        <CardContent sx={{ padding: '1rem', width: '50cqw', height: 640, overflow: 'scroll' }}>
           <FormControl margin='dense' required fullWidth>
             <FormLabel>名稱</FormLabel>
             <TextField
@@ -129,15 +143,12 @@ export const CreateMealModal: FC<ICreateMealModalProps> = () => {
             <FormLabel>照片</FormLabel>
             <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 5 }}>
               <Box sx={{ display: 'flex', flexDirection: 'column', width: '50%' }}>
-                <UploadButton
-                  btn={{ sx: { width: 200 } }}
-                  input={{ onChange: handleChangeImage, inputProps: { accept: 'image/jpeg, image/jpg, image/png' } }}
-                />
-                <Typography variant='caption' color='textSecondary'>
+                <UploadButton btn={{ sx: { width: 200 } }} input={{ onChange: handleChangeImage, inputProps: { accept: imageType.join(',') } }} />
+                <Typography variant='caption' color='error'>
                   圖片大小不得超過 2MB，格式為 .jpg、.jpeg 或 .png
                 </Typography>
               </Box>
-              <Box component='img' id='previewImage' sx={{ width: 140, height: 140, objectFit: 'cover' }} src={previewImage || undefined} />
+              <Box component='img' id='previewImage' sx={{ width: 130, height: 130, objectFit: 'cover' }} src={previewImage} />
             </Box>
           </FormControl>
           <FormControl margin='dense' required fullWidth>
@@ -151,8 +162,8 @@ export const CreateMealModal: FC<ICreateMealModalProps> = () => {
           <FormControl margin='dense' fullWidth>
             <FormLabel>客製化選項</FormLabel>
             <Select
-              size='small'
               multiple
+              size='small'
               value={specialtyItems}
               onChange={handleChangeSpecialtyItems}
               renderValue={(selected) => (
@@ -165,7 +176,11 @@ export const CreateMealModal: FC<ICreateMealModalProps> = () => {
               )}
             >
               {allDpecialtyItems.map((si) => (
-                <MenuItem key={si.id} value={si.id}>
+                <MenuItem
+                  key={si.id}
+                  value={si.id}
+                  sx={{ '&.Mui-selected': { bgcolor: theme.palette.primary.light, '&:hover': { bgcolor: theme.palette.primary.light } } }}
+                >
                   {si.title}({si.price}元)
                 </MenuItem>
               ))}

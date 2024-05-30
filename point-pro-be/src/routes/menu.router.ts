@@ -1,10 +1,9 @@
 import { Router } from 'express';
-import { MenuController } from '../controllers';
-import { validateMiddleware } from '../middlewares';
+import { ImgurController, MenuController } from '../controllers';
+import { validateMiddleware, multerUploadMiddleware, transformFormDataMiddleware } from '../middlewares';
 import {
   createCategoryRequestSchema,
   createSpecialtyRequestSchema,
-  deleteCategoryRequestSchema,
   updateCategoryRequestSchema,
   updateCategoryOrderRequestSchema,
   updateSpecialtyRequestSchema,
@@ -12,6 +11,8 @@ import {
   updateSpecialtyItemOrderRequestSchema,
   updateSpecialtyItemRequestSchema,
   createSpecialtyItemRequestSchema,
+  createMealRequestSchema,
+  deleteMealRequestSchma,
 } from '../validators';
 
 const menuRouter = Router();
@@ -29,10 +30,22 @@ categoryRouter.delete('/:categoryId', MenuController.deleteCategoryHandler);
 const mealRouter = Router();
 mealRouter.get('/', MenuController.getMealsHandler);
 // mealRouter.get('/:mealId', MenuController.getMealHandler);
-// mealRouter.post('/', MenuController.createMealHandler);
+mealRouter.post(
+  '/',
+  multerUploadMiddleware,
+  transformFormDataMiddleware,
+  ImgurController.uploadImageHandler,
+  validateMiddleware(createMealRequestSchema),
+  MenuController.createMealHandler,
+);
 // mealRouter.patch('/:mealId', MenuController.updateMealHandler);
 mealRouter.patch('/', MenuController.updateMealOrderHandler);
-mealRouter.delete('/:mealId', MenuController.deleteMealHandler);
+mealRouter.delete(
+  '/:id/:imageDeleteHash',
+  validateMiddleware(deleteMealRequestSchma, 'params'),
+  ImgurController.deleteImageHandler,
+  MenuController.deleteMealHandler,
+);
 
 // SPECIALTY
 const specialtyRouter = Router();

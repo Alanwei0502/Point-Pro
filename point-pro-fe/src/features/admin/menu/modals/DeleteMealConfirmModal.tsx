@@ -2,26 +2,32 @@ import { Card, CardActions, CardContent, CardHeader, Typography } from '@mui/mat
 import { FC } from 'react';
 import { BaseButton, TabletModalLayout } from '~/components';
 import { useAppDispatch, useAppSelector } from '~/hooks';
-import { closeDeleteSpecialtyItemConfirmModal, deleteSpecialtyItem } from '~/store/slices';
+import { closeDeleteMealConfirmModal, deleteMeal } from '~/store/slices';
 import { theme } from '~/theme';
 
-interface IDeleteSpecialtyItemConfirmModalProps {}
+interface IDeleteMealConfirmModalProps {}
 
-export const DeleteSpecialtyItemConfirmModal: FC<IDeleteSpecialtyItemConfirmModalProps> = () => {
+export const DeleteMealConfirmModal: FC<IDeleteMealConfirmModalProps> = () => {
   const dispatch = useAppDispatch();
-
-  const { isOpen, data } = useAppSelector((state) => state.menu.deleteSpecialtyItemConfirmModal);
+  const { isOpen, data } = useAppSelector((state) => state.menu.deleteMealConfirmModal);
 
   const handleCancel = () => {
-    dispatch(closeDeleteSpecialtyItemConfirmModal());
+    dispatch(closeDeleteMealConfirmModal());
   };
 
   const handleConfirmDelete = () => {
     if (!data) return;
-    dispatch(deleteSpecialtyItem(data.id));
+    dispatch(
+      deleteMeal({
+        id: data.id,
+        imageDeleteHash: data.imageDeleteHash,
+      }),
+    ).then(() => {
+      handleCancel();
+    });
   };
 
-  return isOpen ? (
+  return (
     <TabletModalLayout open={isOpen}>
       <Card>
         <CardHeader title='確定刪除' sx={{ backgroundColor: theme.palette.primary.main, textAlign: 'center' }} />
@@ -40,5 +46,5 @@ export const DeleteSpecialtyItemConfirmModal: FC<IDeleteSpecialtyItemConfirmModa
         </CardActions>
       </Card>
     </TabletModalLayout>
-  ) : null;
+  );
 };

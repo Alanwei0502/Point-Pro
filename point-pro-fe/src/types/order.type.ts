@@ -21,16 +21,6 @@ export enum PaymentGateway {
   EC_PAY = 'EC_PAY',
 }
 
-// export interface ICartItem {
-//   id: string;
-//   title: string;
-//   coverUrl: string;
-//   price: number;
-//   isPopular: boolean;
-//   specialties: ISpecialty[];
-//   amount: number;
-// }
-
 export interface IPaymentLog {
   order: any;
   orderId: IOrder['id'];

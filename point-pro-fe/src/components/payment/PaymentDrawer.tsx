@@ -1,15 +1,5 @@
 import { ChangeEvent, FC, useEffect, useState } from 'react';
-import {
-  Accordion,
-  AccordionDetails,
-  AccordionSummary,
-  Box,
-  Button,
-  Divider,
-  FormControl,
-  Input,
-  Typography,
-} from '@mui/material';
+import { Accordion, AccordionDetails, AccordionSummary, Box, Button, Divider, FormControl, Input, Typography } from '@mui/material';
 import MoneyIcon from '@mui/icons-material/Money';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { Column, Row, BaseDraw, CashPaymentDialog } from '~/components';
@@ -85,9 +75,7 @@ export const PaymentDrawer: FC<IPaymentDrawerProps> = () => {
       await dispatch(
         requestLinePay({
           orderId: id,
-          confirmUrl: import.meta.env.DEV
-            ? `http://${host}/payment/confirm?from=linePay&`
-            : `https://${host}/payment/confirm?from=linePay&`,
+          confirmUrl: import.meta.env.DEV ? `http://${host}/payment/confirm?from=linePay&` : `https://${host}/payment/confirm?from=linePay&`,
           cancelUrl: import.meta.env.DEV ? `http://${host}/payment/cancel` : `https://${host}/payment/cancel`,
         }),
       );
@@ -250,22 +238,14 @@ export const PaymentDrawer: FC<IPaymentDrawerProps> = () => {
                         </Typography>
                       </Row>
                     </AccordionSummary>
-                    {payment.content ? (
-                      <AccordionDetails sx={{ padding: '1rem' }}>{payment.content()}</AccordionDetails>
-                    ) : null}
+                    {payment.content ? <AccordionDetails sx={{ padding: '1rem' }}>{payment.content()}</AccordionDetails> : null}
                   </Accordion>
                 </Row>
               )
             ),
           )}
         </Column>
-        <Row
-          mt={'auto'}
-          justifyContent={'space-between'}
-          px={3}
-          py={2}
-          sx={{ borderTop: `1px dashed ${theme.palette.common.black_40}` }}
-        >
+        <Row mt={'auto'} justifyContent={'space-between'} px={3} py={2} sx={{ borderTop: `1px dashed ${theme.palette.common.black_40}` }}>
           <Typography variant='h6' fontWeight={700}>
             總金額
           </Typography>

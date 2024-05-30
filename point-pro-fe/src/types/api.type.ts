@@ -54,10 +54,11 @@ export type GetMealsWithCategoryAndSpecialtyItemsResponse = ApiResponse<IMealWit
 export type MealResponse = ApiResponse<IMeal>;
 export type PostMealPayload = Pick<IMeal, 'title' | 'price' | 'position' | 'isPopular' | 'description' | 'publishedAt'> & {
   categoryId: ICategory['id'];
+  image: File;
   specialtyItems: ISpecialtyItem['id'][];
 };
 export type PatchMealOrderPayload = Pick<IMeal, 'id' | 'position'>[];
-export type DeleteMealPaylaod = IMeal['id'];
+export type DeleteMealPaylaod = Pick<IMeal, 'id' | 'imageDeleteHash'>;
 
 export interface MealDetails {
   id: string;
@@ -88,7 +89,7 @@ export type DeleteSpecialtyItemPayload = ISpecialtyItem['id'];
 
 // MENU
 export type GetMenuResponseCategory = Pick<ICategory, 'id' | 'title'>;
-export type GetMenuResponseMeal = Pick<IMeal, 'id' | 'title' | 'coverUrl' | 'description' | 'isPopular' | 'price'> & {
+export type GetMenuResponseMeal = Pick<IMeal, 'id' | 'title' | 'imageId' | 'description' | 'isPopular' | 'price'> & {
   categoryId: ICategory['id'];
   mealSpecialtyItems: Array<{ specialtyItemId: ISpecialtyItem['id'] }>;
 };

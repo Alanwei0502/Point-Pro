@@ -1,4 +1,4 @@
-import { SelectionType, Category, SpecialtyItem } from '@prisma/client';
+import { SelectionType } from '@prisma/client';
 import { z } from 'zod';
 
 // CATEGORY
@@ -34,8 +34,22 @@ export const updateMealOrderRequestSchema = z.array(
   }),
 );
 
+export const createMealRequestSchema = z.object({
+  title: z.string(),
+  price: z.number(),
+  imageId: z.string(),
+  imageDeleteHash: z.string(),
+  position: z.number(),
+  isPopular: z.boolean(),
+  description: z.string(),
+  publishedAt: z.union([z.string(), z.null()]),
+  categoryId: z.string(),
+  specialtyItems: z.array(z.string()),
+});
+
 export const deleteMealRequestSchma = z.object({
-  mealId: z.string(),
+  id: z.string(),
+  imageDeleteHash: z.string(),
 });
 
 // SPECIALTY

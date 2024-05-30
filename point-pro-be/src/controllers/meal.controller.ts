@@ -95,7 +95,7 @@
 //     // validate input
 //     const inputSchema = object({
 //       title: string().required(),
-//       coverUrl: string().optional(),
+//       imageId: string().optional(),
 //       description: string().optional(),
 //       price: number().optional(),
 //       position: number().positive().optional(),
@@ -115,14 +115,14 @@
 //     }
 
 //     try {
-//       const { title, coverUrl, description, price, publishedAt, categoryIds, specialtyIds } = inputSchema.cast(
+//       const { title, imageId, description, price, publishedAt, categoryIds, specialtyIds } = inputSchema.cast(
 //         req.body,
 //       );
 
 //       const meal = await prismaClient.meal.create({
 //         data: {
 //           title,
-//           coverUrl,
+//           imageId,
 //           description,
 //           price,
 //           publishedAt,
@@ -173,7 +173,7 @@
 //     // validate input
 //     const inputSchema = object({
 //       title: string().optional(),
-//       coverUrl: string().optional(),
+//       imageId: string().optional(),
 //       description: string().optional(),
 //       price: number().optional(),
 //       position: number().positive().optional(),
@@ -193,7 +193,7 @@
 //     }
 //     const { mealId } = req.params;
 
-//     const { title, coverUrl, description, price, position, isPopular, publishedAt, categoryIds, specialtyIds } =
+//     const { title, imageId, description, price, position, isPopular, publishedAt, categoryIds, specialtyIds } =
 //       inputSchema.cast(req.body);
 
 //     let targetMeal: Meal | null = null;
@@ -288,7 +288,7 @@
 
 //       const newMeal: Prisma.MealUpdateInput = {
 //         title: ignoreUndefined(title, targetMeal?.title),
-//         coverUrl: ignoreUndefined(coverUrl, targetMeal?.coverUrl),
+//         imageId: ignoreUndefined(imageId, targetMeal?.imageId),
 //         description: ignoreUndefined(description, targetMeal?.description),
 //         price: ignoreUndefined(price, targetMeal?.price),
 //         position: ignoreUndefined(position, targetMeal?.position),

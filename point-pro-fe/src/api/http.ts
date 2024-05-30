@@ -1,5 +1,5 @@
-import axios, { AxiosRequestConfig } from "axios";
-import { getToken } from "~/utils/token.utils";
+import axios, { AxiosRequestConfig } from 'axios';
+import { getToken } from '~/utils/token.utils';
 
 export const apiHost = import.meta.env.VITE_API_HOST;
 
@@ -14,7 +14,7 @@ http.interceptors.request.use(
   },
   (error) => {
     return Promise.reject(error);
-  }
+  },
 );
 
 http.interceptors.response.use(
@@ -28,16 +28,16 @@ http.interceptors.response.use(
     log(response.config, response.data, true);
     errorCodeCheck(response.status);
     return Promise.reject(response);
-  }
+  },
 );
 
 const errorCodeCheck = (status: number) => {
   switch (status) {
     case 401:
     case 403:
-    case 500:
-      sessionStorage.removeItem("token");
-      if (location.href.includes("admin")) {
+      // case 500:
+      sessionStorage.removeItem('token');
+      if (location.href.includes('admin')) {
         location.replace(`${location.origin}/admin`);
       }
       break;
@@ -47,5 +47,5 @@ const errorCodeCheck = (status: number) => {
 };
 
 function log({ method, url }: AxiosRequestConfig, text: string, error = false) {
-  console.log(`%c ${method}/${url} `, `color: white; background-color: #${error ? "f66361" : "95B46A"}`, text);
+  console.log(`%c ${method}/${url} `, `color: white; background-color: #${error ? 'f66361' : '95B46A'}`, text);
 }

@@ -8,8 +8,9 @@ import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
 import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove';
 import { BaseSwitch, StyledTableCell, StyledTableRow, TextInput, TextareaInput } from '~/components';
-import { IMealWithCategoryAndSpecialtyItems, ISpecialtyItem } from '~/types';
-import { useAppSelector } from '~/hooks';
+import { IMealWithCategoryAndSpecialtyItems } from '~/types';
+import { useAppDispatch, useAppSelector } from '~/hooks';
+import { openDeleteMealConfirmModal } from '~/store/slices';
 
 interface IMealRowProps {
   meal: IMealWithCategoryAndSpecialtyItems;
@@ -17,6 +18,8 @@ interface IMealRowProps {
 
 export const MealRow: FC<IMealRowProps> = (props) => {
   const { meal } = props;
+
+  const dispatch = useAppDispatch();
 
   const [updateMeal, setUpdateMeal] = useState(meal);
   const [isEdit, setIsEdit] = useState(false);
@@ -72,8 +75,9 @@ export const MealRow: FC<IMealRowProps> = (props) => {
     setIsEdit(true);
   };
 
-  const handleRemoveMealFromCategory = () => {
+  const handleOpenDeleteMealConfirmModal = () => {
     // TODO
+    dispatch(openDeleteMealConfirmModal(meal));
   };
 
   const handleConfirmEdit = () => {
@@ -96,8 +100,8 @@ export const MealRow: FC<IMealRowProps> = (props) => {
         {isEdit ? <TextareaInput value={updateMeal.title} sx={{ width: 100 }} onChange={handleChangeTitle} /> : updateMeal.title}
       </StyledTableCell>
       <StyledTableCell>
-        {/* TODO: update coverUrl */}
-        <Box component='img' src={updateMeal.coverUrl.split('.jpeg')[0] + 's.jpeg'} alt={updateMeal.title} />
+        {/* TODO: update imageId */}
+        <Box component='img' src={`https://i.imgur.com/${meal.imageId}s.jpg`} alt={updateMeal.title} />
       </StyledTableCell>
       <StyledTableCell sx={{ whiteSpace: 'nowrap' }}>
         {isEdit ? <TextInput type='number' value={updateMeal.price.toString()} onChange={handleChangePrice} /> : updateMeal.price}
@@ -156,7 +160,7 @@ export const MealRow: FC<IMealRowProps> = (props) => {
               <IconButton size='small' onClick={handleEditMeal}>
                 <EditIcon />
               </IconButton>
-              <IconButton size='small' onClick={handleRemoveMealFromCategory}>
+              <IconButton size='small' onClick={handleOpenDeleteMealConfirmModal}>
                 <PlaylistRemoveIcon />
               </IconButton>
             </>

@@ -55,7 +55,8 @@ export interface ICategory {
 export interface IMeal {
   id: string;
   title: string;
-  coverUrl: string;
+  imageId: string;
+  imageDeleteHash: string;
   description: string;
   isPopular: boolean;
   price: number;

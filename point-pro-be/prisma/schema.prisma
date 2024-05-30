@@ -57,7 +57,8 @@ model MealSpecialtyItem {
 model Meal {
   id                 String              @id @default(dbgenerated("uuid_generate_v1mc()")) @db.Uuid
   title              String              @unique @db.VarChar(50)
-  coverUrl           String              @default("") @map("cover_url") @db.VarChar(255)
+  imageId            String              @default("") @map("image_id") @db.VarChar(50)
+  imageDeleteHash    String              @default("") @map("image_delete_hash") @db.VarChar(50)
   description        String              @default("")
   isPopular          Boolean             @default(false) @map("is_popular")
   price              Int                 @default(0)

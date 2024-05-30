@@ -2,6 +2,7 @@ import { Prisma } from '@prisma/client';
 import { ResponseError } from '../types/shared';
 import { appDayjs } from './dayjs.helper';
 import { date as dateSchema, object } from 'yup';
+import { z } from 'zod';
 
 export const secret = process.env.POINT_PRO_SECRET || 'point-proo';
 
@@ -64,9 +65,7 @@ export const getDefaultDate = () => {
   return date;
 };
 
-export const throwError = (
-  options: { code?: number; message: string; sendError?: boolean } = { message: '', sendError: true },
-) => {
+export const throwError = (options: { code?: number; message: string; sendError?: boolean } = { message: '', sendError: true }) => {
   const error: ResponseError = new Error(options.message);
   error.code = options.code;
   if (options.sendError) {

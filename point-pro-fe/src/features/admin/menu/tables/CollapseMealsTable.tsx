@@ -4,7 +4,7 @@ import { SortableContext, arrayMove, verticalListSortingStrategy } from '@dnd-ki
 import { Box, Collapse, Table, TableBody, TableCell, TableFooter, TableHead, TableRow } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import { useAppDispatch } from '~/hooks';
-import { IMealWithCategoryAndSpecialtyItems, PatchMealOrderPayload } from '~/types';
+import { ICategory, IMealWithCategoryAndSpecialtyItems, PatchMealOrderPayload } from '~/types';
 import { BaseButton, StyledTableCell, StyledTableRow } from '~/components';
 import { openCreateMealModal, patchMealsOrder, setMeals } from '~/store/slices';
 import { MealRow } from '../rows/MealRow';
@@ -12,10 +12,11 @@ import { MealRow } from '../rows/MealRow';
 interface ICollapseMealsTableProps {
   isOpen: boolean;
   meals: IMealWithCategoryAndSpecialtyItems[];
+  categoryId: ICategory['id'];
 }
 
 export const CollapseMealsTable: FC<ICollapseMealsTableProps> = (props) => {
-  const { isOpen, meals } = props;
+  const { isOpen, meals, categoryId } = props;
 
   const dispatch = useAppDispatch();
 
@@ -40,7 +41,7 @@ export const CollapseMealsTable: FC<ICollapseMealsTableProps> = (props) => {
   };
 
   const handleOpenCreateMealModal = () => {
-    dispatch(openCreateMealModal());
+    dispatch(openCreateMealModal(categoryId));
   };
 
   return (

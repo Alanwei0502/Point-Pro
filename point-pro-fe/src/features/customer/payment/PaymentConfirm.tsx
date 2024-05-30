@@ -47,12 +47,7 @@ const PaymentReturnData: FC<IPaymentReturnDataProps> = (props) => {
         {result &&
           result.paymentLogs.map((paymentLog) =>
             paymentLog.order.orderMeals.map((orderMeal: IOrderMeal) => (
-              <Column
-                key={orderMeal.id}
-                bgcolor={'white'}
-                borderBottom={`1px solid ${theme.palette.common.black_20}`}
-                p={3}
-              >
+              <Column key={orderMeal.id} bgcolor={'white'} borderBottom={`1px solid ${theme.palette.common.black_20}`} p={3}>
                 <Column justifyContent={'flex-start'} gap={2} marginBottom={2}>
                   <Row justifyContent={'space-between'} flexWrap={deviceType === 'mobile' ? 'wrap' : 'nowrap'} gap={2}>
                     <Box
@@ -61,7 +56,7 @@ const PaymentReturnData: FC<IPaymentReturnDataProps> = (props) => {
                       maxWidth={deviceType === 'tablet' ? '6rem' : '100%'}
                     >
                       <img
-                        src={orderMeal.meal?.coverUrl as string}
+                        src={orderMeal.meal?.imageId as string}
                         alt={orderMeal.title}
                         style={{
                           width: '100%',
@@ -72,18 +67,10 @@ const PaymentReturnData: FC<IPaymentReturnDataProps> = (props) => {
                     </Box>
                     <Row gap={2} justifyContent={'space-between'} width={'100%'}>
                       <Column alignItems={'flex-start'} gap={1}>
-                        <Typography
-                          variant='h3'
-                          fontWeight={700}
-                          fontSize={deviceType === 'tablet' ? '2rem' : '1.25rem'}
-                        >
+                        <Typography variant='h3' fontWeight={700} fontSize={deviceType === 'tablet' ? '2rem' : '1.25rem'}>
                           {orderMeal.title}
                         </Typography>
-                        <Typography
-                          variant='h4'
-                          fontWeight={700}
-                          fontSize={deviceType === 'tablet' ? '2rem' : '1.25rem'}
-                        >
+                        <Typography variant='h4' fontWeight={700} fontSize={deviceType === 'tablet' ? '2rem' : '1.25rem'}>
                           ${orderMeal.meal?.price}
                         </Typography>
                       </Column>
@@ -112,27 +99,16 @@ const PaymentReturnData: FC<IPaymentReturnDataProps> = (props) => {
                           fontWeight: 600,
                         }}
                       >
-                        [{mealDetail.title}]:{' '}
-                        {mealDetail.items && mealDetail.items.map((item) => item.title).join('、')}
+                        [{mealDetail.title}]: {mealDetail.items && mealDetail.items.map((item) => item.title).join('、')}
                       </ListItem>
                     ))}
                   </List>
                 </Column>
                 <Row justifyContent={'flex-end'} gap={2}>
-                  <Typography
-                    variant='h4'
-                    textAlign={'center'}
-                    fontWeight={700}
-                    fontSize={deviceType === 'tablet' ? '2rem' : '1.5rem'}
-                  >
+                  <Typography variant='h4' textAlign={'center'} fontWeight={700} fontSize={deviceType === 'tablet' ? '2rem' : '1.5rem'}>
                     小計
                   </Typography>
-                  <Typography
-                    variant='h4'
-                    textAlign={'center'}
-                    fontWeight={700}
-                    fontSize={deviceType === 'tablet' ? '1.5rem' : '1.25rem'}
-                  >
+                  <Typography variant='h4' textAlign={'center'} fontWeight={700} fontSize={deviceType === 'tablet' ? '1.5rem' : '1.25rem'}>
                     ${orderMeal.price}
                   </Typography>
                 </Row>
@@ -142,12 +118,7 @@ const PaymentReturnData: FC<IPaymentReturnDataProps> = (props) => {
       </Column>
       {result && (
         <Row justifyContent={'space-between'} marginBottom={2} bgcolor={'white'} p={3}>
-          <Row
-            justifyContent={'flex-start'}
-            alignItems={'center'}
-            flexWrap={deviceType === 'tablet' ? 'nowrap' : 'wrap'}
-            gap={1}
-          >
+          <Row justifyContent={'flex-start'} alignItems={'center'} flexWrap={deviceType === 'tablet' ? 'nowrap' : 'wrap'} gap={1}>
             <Typography
               variant='h3'
               textAlign={'center'}
@@ -157,21 +128,11 @@ const PaymentReturnData: FC<IPaymentReturnDataProps> = (props) => {
             >
               付款方式
             </Typography>
-            <Typography
-              variant='h4'
-              textAlign={'center'}
-              fontWeight={700}
-              fontSize={deviceType === 'tablet' ? '2rem' : '1.5rem'}
-            >
+            <Typography variant='h4' textAlign={'center'} fontWeight={700} fontSize={deviceType === 'tablet' ? '2rem' : '1.5rem'}>
               {result.paymentLogs[0].gateway === 'LINE_PAY' ? 'LINE Pay' : 'EC Pay'}
             </Typography>
           </Row>
-          <Typography
-            variant='h4'
-            textAlign={'center'}
-            fontWeight={900}
-            fontSize={deviceType === 'tablet' ? '2rem' : '1.5rem'}
-          >
+          <Typography variant='h4' textAlign={'center'} fontWeight={900} fontSize={deviceType === 'tablet' ? '2rem' : '1.5rem'}>
             ${result.paymentLogs.reduce((total, paymentLog) => total + paymentLog.price, 0)}
           </Typography>
         </Row>

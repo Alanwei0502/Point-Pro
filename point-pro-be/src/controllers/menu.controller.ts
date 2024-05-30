@@ -16,6 +16,7 @@ import {
   IUpdateSpecialtyOrderRequest,
   IUpdateSpecialtyItemsOrderRequest,
   IUpdateSpecialtyRequest,
+  ICreateMealRequest,
 } from '../types';
 
 export class MenuController {
@@ -150,14 +151,13 @@ export class MenuController {
     }
   };
 
-  static createMealHandler = async (req: Request, res: ApiResponse, next: NextFunction) => {
-    //
+  static createMealHandler = async (req: ICreateMealRequest, res: ApiResponse, next: NextFunction) => {
     try {
-      // const newMeal = await MenuModel.createMeal(req.body);
-      // res.status(StatusCodes.CREATED).send({
-      //   message: ReasonPhrases.CREATED,
-      //   result: newMeal,
-      // });
+      const newMeal = await MenuModel.createMeal(req.body);
+      res.status(StatusCodes.CREATED).send({
+        message: ReasonPhrases.CREATED,
+        result: newMeal,
+      });
     } catch (error) {
       next(error);
     }
@@ -180,10 +180,10 @@ export class MenuController {
 
   static deleteMealHandler = async (req: IDeleteMealRequest, res: ApiResponse, next: NextFunction) => {
     try {
-      const { mealId } = req.params;
+      const { id } = req.params;
 
       // Check if meal exists
-      const meal = await MenuModel.getMealById(mealId);
+      const meal = await MenuModel.getMealById(id);
 
       if (!meal) {
         res.status(StatusCodes.NOT_FOUND).send({
@@ -194,7 +194,7 @@ export class MenuController {
       }
 
       // Delete meal
-      await MenuModel.deleteMealById(mealId);
+      await MenuModel.deleteMealById(id);
 
       res.status(StatusCodes.NO_CONTENT).send({
         message: ReasonPhrases.NO_CONTENT,

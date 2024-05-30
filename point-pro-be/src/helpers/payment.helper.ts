@@ -122,7 +122,7 @@
 //   //           products: [
 //   //             {
 //   //               name: meal.mealTitle,
-//   //               imageUrl: meal.meal.coverUrl,
+//   //               imageUrl: meal.meal.imageId,
 //   //               quantity: meal.amount,
 //   //               price: meal.meal.price + mealDetailPrice,
 //   //             },

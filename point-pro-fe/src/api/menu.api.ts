@@ -68,7 +68,28 @@ export class MenuApi {
   }
 
   static postMeal(payload: PostMealPayload) {
-    return http.post(MenuApi.mealPath, payload);
+    const formData = new FormData();
+
+    const keys = Object.keys(payload) as (keyof PostMealPayload)[];
+    keys.forEach((k) => {
+      const value = payload[k];
+
+      if (k === 'specialtyItems') {
+        payload.specialtyItems.forEach((specialtyItemId) => {
+          formData.append('specialtyItems', specialtyItemId);
+        });
+      } else if (k === 'image' && value instanceof File) {
+        formData.append(k, value);
+      } else {
+        formData.append(k, value?.toString() ?? '');
+      }
+    });
+
+    return http.post(MenuApi.mealPath, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
   }
 
   static patchMealById({ mealId, payload }: PatchMealByIdPayload) {
@@ -79,8 +100,9 @@ export class MenuApi {
     return http.patch(MenuApi.mealPath, payload);
   }
 
-  static deleteMeal(mealId: DeleteMealPaylaod) {
-    return http.delete(`${MenuApi.mealPath}/${mealId}`);
+  static deleteMeal(payload: DeleteMealPaylaod) {
+    const { id, imageDeleteHash } = payload;
+    return http.delete(`${MenuApi.mealPath}/${id}/${imageDeleteHash}`);
   }
 
   // SPECIALTY

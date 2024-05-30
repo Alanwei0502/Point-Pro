@@ -47,7 +47,7 @@ interface IMenuSliceState {
   };
   deleteMealConfirmModal: {
     isOpen: boolean;
-    data: IMeal | null;
+    data: IMealWithCategoryAndSpecialtyItems | null;
   };
   // SPECIALTY
   specialtySettingModal: {
@@ -431,11 +431,19 @@ export const menuSlice = createSlice({
     setMeals: (state, action: PayloadAction<IMenuSliceState['meals']>) => {
       state.meals = action.payload;
     },
-    openCreateMealModal: (state) => {
+    openCreateMealModal: (state, action: PayloadAction<ICategory['id']>) => {
       state.createMealModal.isOpen = true;
+      state.createMealModal.data = action.payload;
     },
     closeCreateMealModal: (state) => {
       state.createMealModal = initialState.createMealModal;
+    },
+    openDeleteMealConfirmModal: (state, action: PayloadAction<IMealWithCategoryAndSpecialtyItems>) => {
+      state.deleteMealConfirmModal.isOpen = true;
+      state.deleteMealConfirmModal.data = action.payload;
+    },
+    closeDeleteMealConfirmModal: (state) => {
+      state.deleteMealConfirmModal = initialState.deleteMealConfirmModal;
     },
     // SPECIALTY
     setSpecialties: (state, action: PayloadAction<IMenuSliceState['specialties']>) => {
@@ -514,6 +522,8 @@ export const {
   setMeals,
   openCreateMealModal,
   closeCreateMealModal,
+  openDeleteMealConfirmModal,
+  closeDeleteMealConfirmModal,
   // SPECIALTY
   setSpecialties,
   setSpecialtySettingModalData,
