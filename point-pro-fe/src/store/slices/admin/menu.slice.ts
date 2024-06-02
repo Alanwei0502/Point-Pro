@@ -1,15 +1,15 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
+import axios, { AxiosError } from 'axios';
+import { toast } from 'react-toastify';
 import { MenuApi } from '~/api';
 import { createAppAsyncThunk } from '~/hooks';
+import { errorHandler } from '~/store/errorHandler';
 import {
   ICategory,
   PostCategoryPayload,
   ISpecialty,
-  IMeal,
   SocketTopic,
-  PatchMealByIdPayload,
   IMealWithCategoryAndSpecialtyItems,
-  ISpecialtyItem,
   ISpecialtyWithSpecialtyItems,
   PatchSpecialtyPayload,
   PostSpecialtyPayload,
@@ -24,6 +24,8 @@ import {
   DeleteMealPaylaod,
   DeleteSpecialtyPayload,
   PostMealPayload,
+  PatchMealPayload,
+  DeleteSpecialtyItemPayload,
 } from '~/types';
 
 const name = 'menu';
@@ -117,294 +119,217 @@ const initialState: IMenuSliceState = {
 };
 
 // CATEGORY
-export const getCategories = createAppAsyncThunk(`${name}/getCategories`, async (_, { rejectWithValue }) => {
+export const getCategories = createAppAsyncThunk(`${name}/getCategories`, async (_, thunkApi) => {
   try {
     return await MenuApi.getCategories();
   } catch (error) {
-    if (error instanceof Error) {
-      return rejectWithValue({ message: error.message });
-    } else {
-      return rejectWithValue({ message: 'unknown error' });
-    }
+    errorHandler(error);
+    return thunkApi.rejectWithValue(error);
   }
 });
 
-export const postCategory = createAppAsyncThunk(`${name}/postCategory`, async (payload: PostCategoryPayload, { rejectWithValue }) => {
+export const postCategory = createAppAsyncThunk(`${name}/postCategory`, async (payload: PostCategoryPayload, thunkApi) => {
   try {
-    await MenuApi.postCategory(payload);
+    const newCategory = await MenuApi.postCategory(payload);
+    // TODO: socket
+    // const socket = thunkApi.getState().socket.socket;
+    // socket?.emit(SocketTopic.MENU, newCategory);
   } catch (error) {
-    if (error instanceof Error) {
-      return rejectWithValue({ message: error.message });
-    } else {
-      return rejectWithValue({ message: 'unknown error' });
-    }
+    errorHandler(error);
+    return thunkApi.rejectWithValue(error);
   }
 });
 
-export const patchCategory = createAppAsyncThunk(`${name}/patchCategory`, async (payload: PatchCategoryPayload, { rejectWithValue, dispatch }) => {
+export const patchCategory = createAppAsyncThunk(`${name}/patchCategory`, async (payload: PatchCategoryPayload, thunkApi) => {
   try {
-    await MenuApi.patchCategory(payload);
-    dispatch(getCategories());
+    const updateCategory = await MenuApi.patchCategory(payload);
+    // TODO: socket
+    // const socket = thunkApi.getState().socket.socket;
+    // socket?.emit(SocketTopic.MENU, updateCategory);
   } catch (error) {
-    if (error instanceof Error) {
-      return rejectWithValue({ message: error.message });
-    } else {
-      return rejectWithValue({ message: 'unknown error' });
-    }
+    errorHandler(error);
+    return thunkApi.rejectWithValue(error);
   }
 });
 
-export const patchCategoriesOrder = createAppAsyncThunk(
-  `${name}/patchCategoriesOrder`,
-  async (payload: PatchCategoryOrderPayload, { rejectWithValue, dispatch }) => {
-    try {
-      await MenuApi.patchCategoriesOrder(payload);
-      dispatch(getCategories());
-    } catch (error) {
-      if (error instanceof Error) {
-        return rejectWithValue({ message: error.message });
-      } else {
-        return rejectWithValue({ message: 'unknown error' });
-      }
-    }
-  },
-);
-
-export const deleteCategory = createAppAsyncThunk(`${name}/deleteCategory`, async (payload: DeleteCategoryPayload, { rejectWithValue, dispatch }) => {
+export const patchCategoryOrder = createAppAsyncThunk(`${name}/patchCategoryOrder`, async (payload: PatchCategoryOrderPayload, thunkApi) => {
   try {
-    await MenuApi.deleteCategory(payload);
-    dispatch(closeDeleteCategoryConfirmModal());
-    dispatch(getCategories());
+    await MenuApi.patchCategoryOrder(payload);
   } catch (error) {
-    if (error instanceof Error) {
-      return rejectWithValue({ message: error.message });
-    } else {
-      return rejectWithValue({ message: 'unknown error' });
-    }
+    errorHandler(error);
+    return thunkApi.rejectWithValue(error);
+  }
+});
+
+export const deleteCategory = createAppAsyncThunk(`${name}/deleteCategory`, async (payload: DeleteCategoryPayload, thunkApi) => {
+  try {
+    const deleteCategory = await MenuApi.deleteCategory(payload);
+    thunkApi.dispatch(closeDeleteCategoryConfirmModal());
+    thunkApi.dispatch(getCategories());
+    // TODO: socket
+    // const socket = thunkApi.getState().socket.socket;
+    // socket?.emit(SocketTopic.MENU, deleteCategory);
+  } catch (error) {
+    errorHandler(error);
+    return thunkApi.rejectWithValue(error);
   }
 });
 
 // MEAL
-export const getMeals = createAppAsyncThunk(`${name}/getMeals`, async (_, { rejectWithValue }) => {
+export const getMeals = createAppAsyncThunk(`${name}/getMeals`, async (_, thunkApi) => {
   try {
     return await MenuApi.getMeals();
   } catch (error) {
-    if (error instanceof Error) {
-      return rejectWithValue({ message: error.message });
-    } else {
-      return rejectWithValue({ message: 'unknown error' });
-    }
+    errorHandler(error);
+    return thunkApi.rejectWithValue(error);
   }
 });
 
-export const getMealById = createAppAsyncThunk(`${name}/getMealById`, async (payload: IMeal['id'], { rejectWithValue }) => {
+export const postMeal = createAppAsyncThunk(`${name}/postMeal`, async (payload: PostMealPayload, thunkApi) => {
   try {
-    return await MenuApi.getMealById(payload);
-  } catch (error) {
-    if (error instanceof Error) {
-      return rejectWithValue({ message: error.message });
-    } else {
-      return rejectWithValue({ message: 'unknown error' });
-    }
-  }
-});
-
-export const postMeal = createAppAsyncThunk(`${name}/postMeal`, async (payload: PostMealPayload, { getState, rejectWithValue }) => {
-  try {
-    const socket = getState().socket.socket;
     const newMeal = await MenuApi.postMeal(payload);
-    socket && socket.emit(SocketTopic.MENU, newMeal);
+    const socket = thunkApi.getState().socket.socket;
+    socket?.emit(SocketTopic.MENU, newMeal);
   } catch (error) {
-    if (error instanceof Error) {
-      return rejectWithValue({ message: error.message });
-    } else {
-      return rejectWithValue({ message: 'unknown error' });
-    }
+    errorHandler(error);
+    return thunkApi.rejectWithValue(error);
   }
 });
 
-export const patchMealById = createAppAsyncThunk(
-  `${name}/patchMealById`,
-  async (payload: PatchMealByIdPayload, { getState, rejectWithValue, dispatch }) => {
-    try {
-      const socket = getState().socket.socket;
-      const updatedMeal = await MenuApi.patchMealById(payload);
-      socket && socket.emit(SocketTopic.MENU, updatedMeal);
-      dispatch(getMeals);
-    } catch (error) {
-      if (error instanceof Error) {
-        return rejectWithValue({ message: error.message });
-      } else {
-        return rejectWithValue({ message: 'unknown error' });
-      }
-    }
-  },
-);
-
-export const patchMealsOrder = createAppAsyncThunk(
-  `${name}/patchMealsOrder`,
-  async (payload: PatchMealOrderPayload, { rejectWithValue, dispatch }) => {
-    try {
-      await MenuApi.patchMealsOrder(payload);
-      dispatch(getMeals());
-    } catch (error) {
-      if (error instanceof Error) {
-        return rejectWithValue({ message: error.message });
-      } else {
-        return rejectWithValue({ message: 'unknown error' });
-      }
-    }
-  },
-);
-
-export const deleteMeal = createAppAsyncThunk(`${name}/deleteMeal`, async (payload: DeleteMealPaylaod, { getState, rejectWithValue, dispatch }) => {
+export const patchMeal = createAppAsyncThunk(`${name}/patchMeal`, async (payload: PatchMealPayload, thunkApi) => {
   try {
-    const socket = getState().socket.socket;
-    const deletedMeal = await MenuApi.deleteMeal(payload);
-    socket && socket.emit(SocketTopic.MENU, deletedMeal);
-    dispatch(getMeals());
+    const updateMeal = await MenuApi.patchMeal(payload);
+    const socket = thunkApi.getState().socket.socket;
+    socket?.emit(SocketTopic.MENU, updateMeal);
   } catch (error) {
-    if (error instanceof Error) {
-      return rejectWithValue({ message: error.message });
-    } else {
-      return rejectWithValue({ message: 'unknown error' });
-    }
+    errorHandler(error);
+    return thunkApi.rejectWithValue(error);
+  }
+});
+
+export const patchMealOrder = createAppAsyncThunk(`${name}/patchMealOrder`, async (payload: PatchMealOrderPayload, thunkApi) => {
+  try {
+    await MenuApi.patchMealOrder(payload);
+  } catch (error) {
+    errorHandler(error);
+    return thunkApi.rejectWithValue(error);
+  }
+});
+
+export const deleteMeal = createAppAsyncThunk(`${name}/deleteMeal`, async (payload: DeleteMealPaylaod, thunkApi) => {
+  try {
+    const deletedMeal = await MenuApi.deleteMeal(payload);
+    const socket = thunkApi.getState().socket.socket;
+    socket?.emit(SocketTopic.MENU, deletedMeal);
+  } catch (error) {
+    errorHandler(error);
+    return thunkApi.rejectWithValue(error);
   }
 });
 
 // SPECIALTY
-export const getSpecialties = createAppAsyncThunk(`${name}/getSpecialties`, async (_, { rejectWithValue }) => {
+export const getSpecialties = createAppAsyncThunk(`${name}/getSpecialties`, async (_, thunkApi) => {
   try {
     return await MenuApi.getSpecialties();
   } catch (error) {
-    if (error instanceof Error) {
-      return rejectWithValue({ message: error.message });
-    } else {
-      return rejectWithValue({ message: 'unknown error' });
-    }
+    errorHandler(error);
+    return thunkApi.rejectWithValue(error);
   }
 });
 
-export const postSpecialty = createAppAsyncThunk(`${name}/postSpecialty`, async (payload: PostSpecialtyPayload, { rejectWithValue }) => {
+export const postSpecialty = createAppAsyncThunk(`${name}/postSpecialty`, async (payload: PostSpecialtyPayload, thunkApi) => {
   try {
-    await MenuApi.postSpecialty(payload);
+    const newSpecialty = await MenuApi.postSpecialty(payload);
+    // TODO: socket
+    // const socket = thunkApi.getState().socket.socket;
+    // socket?.emit(SocketTopic.MENU, newSpecialty);
   } catch (error) {
-    if (error instanceof Error) {
-      return rejectWithValue({ message: error.message });
-    } else {
-      return rejectWithValue({ message: 'unknown error' });
-    }
+    errorHandler(error);
+    return thunkApi.rejectWithValue(error);
   }
 });
 
-export const patchSpecialty = createAppAsyncThunk(`${name}/patchSpecialty`, async (payload: PatchSpecialtyPayload, { rejectWithValue, dispatch }) => {
+export const patchSpecialty = createAppAsyncThunk(`${name}/patchSpecialty`, async (payload: PatchSpecialtyPayload, thunkApi) => {
   try {
-    await MenuApi.patchSpecialty(payload);
-    dispatch(getSpecialties());
+    const updateSpecialty = await MenuApi.patchSpecialty(payload);
+    // TODO: socket
+    // const socket = thunkApi.getState().socket.socket;
+    // socket?.emit(SocketTopic.MENU, updateSpecialty);
   } catch (error) {
-    if (error instanceof Error) {
-      return rejectWithValue({ message: error.message });
-    } else {
-      return rejectWithValue({ message: 'unknown error' });
-    }
+    errorHandler(error);
+    return thunkApi.rejectWithValue(error);
   }
 });
 
-export const patchSpecialtiesOrder = createAppAsyncThunk(
-  `${name}/patchSpecialtiesOrder`,
-  async (payload: PatchSpecialtyOrderPayload, { rejectWithValue, dispatch }) => {
-    try {
-      await MenuApi.patchSpecialtiesOrder(payload);
-      dispatch(getSpecialties());
-    } catch (error) {
-      if (error instanceof Error) {
-        return rejectWithValue({ message: error.message });
-      } else {
-        return rejectWithValue({ message: 'unknown error' });
-      }
-    }
-  },
-);
+export const patchSpecialtyOrder = createAppAsyncThunk(`${name}/patchSpecialtyOrder`, async (payload: PatchSpecialtyOrderPayload, thunkApi) => {
+  try {
+    await MenuApi.patchSpecialtyOrder(payload);
+  } catch (error) {
+    errorHandler(error);
+    return thunkApi.rejectWithValue(error);
+  }
+});
 
-export const deleteSpecialty = createAppAsyncThunk(
-  `${name}/deleteSpecialty`,
-  async (payload: DeleteSpecialtyPayload, { rejectWithValue, dispatch }) => {
-    try {
-      await MenuApi.deleteSpecialty(payload);
-      dispatch(closeDeleteSpecialtyConfirmModal());
-      dispatch(getSpecialties());
-    } catch (error) {
-      if (error instanceof Error) {
-        return rejectWithValue({ message: error.message });
-      } else {
-        return rejectWithValue({ message: 'unknown error' });
-      }
-    }
-  },
-);
+export const deleteSpecialty = createAppAsyncThunk(`${name}/deleteSpecialty`, async (payload: DeleteSpecialtyPayload, thunkApi) => {
+  try {
+    const deleteSpecialty = await MenuApi.deleteSpecialty(payload);
+    // TODO: socket
+    // const socket = thunkApi.getState().socket.socket;
+    // socket?.emit(SocketTopic.MENU, deleteSpecialty);
+  } catch (error) {
+    errorHandler(error);
+    return thunkApi.rejectWithValue(error);
+  }
+});
 
 // SPECIALTY ITEM
-export const postSpecialtyItem = createAppAsyncThunk(`${name}/postSpecialtyItem`, async (payload: PostSpecialtyItemPayload, { rejectWithValue }) => {
+export const postSpecialtyItem = createAppAsyncThunk(`${name}/postSpecialtyItem`, async (payload: PostSpecialtyItemPayload, thunkApi) => {
   try {
-    await MenuApi.postSpecialtyItem(payload);
+    const newSpecialtyItem = await MenuApi.postSpecialtyItem(payload);
+    // TODO: socket
+    // const socket = thunkApi.getState().socket.socket;
+    // socket?.emit(SocketTopic.MENU, newSpecialtyItem);
   } catch (error) {
-    if (error instanceof Error) {
-      return rejectWithValue({ message: error.message });
-    } else {
-      return rejectWithValue({ message: 'unknown error' });
-    }
+    errorHandler(error);
+    return thunkApi.rejectWithValue(error);
   }
 });
 
-export const patchSpecialtyItem = createAppAsyncThunk(
-  `${name}/patchSpecialtyItem`,
-  async (payload: PatchSpecialtyItemPayload, { rejectWithValue, dispatch }) => {
+export const patchSpecialtyItem = createAppAsyncThunk(`${name}/patchSpecialtyItem`, async (payload: PatchSpecialtyItemPayload, thunkApi) => {
+  try {
+    const updateSpecialtyItem = await MenuApi.patchSpecialtyItem(payload);
+    // TODO: socket
+    // const socket = thunkApi.getState().socket.socket;
+    // socket?.emit(SocketTopic.MENU, updateSpecialtyItem);
+  } catch (error) {
+    errorHandler(error);
+    return thunkApi.rejectWithValue(error);
+  }
+});
+
+export const patchSpecialtyItemOrder = createAppAsyncThunk(
+  `${name}/patchSpecialtyItemOrder`,
+  async (payload: PatchSpecialtyItemOrderPayload, thunkApi) => {
     try {
-      await MenuApi.patchSpecialtyItem(payload);
-      dispatch(closeCreateSpecialtyItemModal());
-      dispatch(getSpecialties());
+      await MenuApi.patchSpecialtyItemOrder(payload);
     } catch (error) {
-      if (error instanceof Error) {
-        return rejectWithValue({ message: error.message });
-      } else {
-        return rejectWithValue({ message: 'unknown error' });
-      }
+      errorHandler(error);
+      return thunkApi.rejectWithValue(error);
     }
   },
 );
 
-export const patchSpecialtyItemsOrder = createAppAsyncThunk(
-  `${name}/patchSpecialtyItemsOrder`,
-  async (payload: PatchSpecialtyItemOrderPayload, { rejectWithValue, dispatch }) => {
-    try {
-      await MenuApi.patchSpecialtyItemsOrder(payload);
-      dispatch(getSpecialties());
-    } catch (error) {
-      if (error instanceof Error) {
-        return rejectWithValue({ message: error.message });
-      } else {
-        return rejectWithValue({ message: 'unknown error' });
-      }
-    }
-  },
-);
-
-export const deleteSpecialtyItem = createAppAsyncThunk(
-  `${name}/deleteSpecialtyItem`,
-  async (payload: ISpecialtyItem['id'], { rejectWithValue, dispatch }) => {
-    try {
-      await MenuApi.deleteSpecialtyItem(payload);
-      dispatch(closeDeleteSpecialtyItemConfirmModal());
-      dispatch(getSpecialties());
-    } catch (error) {
-      if (error instanceof Error) {
-        return rejectWithValue({ message: error.message });
-      } else {
-        return rejectWithValue({ message: 'unknown error' });
-      }
-    }
-  },
-);
+export const deleteSpecialtyItem = createAppAsyncThunk(`${name}/deleteSpecialtyItem`, async (payload: DeleteSpecialtyItemPayload, thunkApi) => {
+  try {
+    const deleteSpecialtyItem = await MenuApi.deleteSpecialtyItem(payload);
+    // TODO: socket
+    // const socket = thunkApi.getState().socket.socket;
+    // socket?.emit(SocketTopic.MENU, deleteSpecialtyItem);
+  } catch (error) {
+    errorHandler(error);
+    return thunkApi.rejectWithValue(error);
+  }
+});
 
 export const menuSlice = createSlice({
   name,

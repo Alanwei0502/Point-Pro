@@ -2,7 +2,7 @@ import { Card, CardActions, CardContent, CardHeader, Typography } from '@mui/mat
 import { FC } from 'react';
 import { BaseButton, TabletModalLayout } from '~/components';
 import { useAppDispatch, useAppSelector } from '~/hooks';
-import { closeDeleteSpecialtyItemConfirmModal, deleteSpecialtyItem } from '~/store/slices';
+import { closeDeleteSpecialtyItemConfirmModal, deleteSpecialtyItem, getSpecialties } from '~/store/slices';
 import { theme } from '~/theme';
 
 interface IDeleteSpecialtyItemConfirmModalProps {}
@@ -18,7 +18,12 @@ export const DeleteSpecialtyItemConfirmModal: FC<IDeleteSpecialtyItemConfirmModa
 
   const handleConfirmDelete = () => {
     if (!data) return;
-    dispatch(deleteSpecialtyItem(data.id));
+    dispatch(deleteSpecialtyItem(data.id))
+      .unwrap()
+      .then(() => {
+        dispatch(getSpecialties());
+        handleCancel();
+      });
   };
 
   return isOpen ? (

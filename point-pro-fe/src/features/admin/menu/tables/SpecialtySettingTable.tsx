@@ -6,7 +6,7 @@ import { SortableContext, arrayMove, verticalListSortingStrategy } from '@dnd-ki
 import { BaseButton, StyledTableCell, StyledTableRow } from '~/components';
 import { useAppDispatch, useAppSelector } from '~/hooks';
 import { SpecialtyRow } from '../rows/SpecialtyRow';
-import { openCreateSpecialtyModal, patchSpecialtiesOrder, setSpecialties } from '~/store/slices';
+import { getSpecialties, openCreateSpecialtyModal, patchSpecialtyOrder, setSpecialties } from '~/store/slices';
 import { PatchSpecialtyOrderPayload } from '~/types';
 
 interface ISpecialtySettingTableProps {}
@@ -30,7 +30,11 @@ export const SpecialtySettingTable: FC<ISpecialtySettingTableProps> = () => {
         return { ...s, position: idx };
       });
       dispatch(setSpecialties(newSpecialtiesOrder));
-      dispatch(patchSpecialtiesOrder(payload));
+      dispatch(patchSpecialtyOrder(payload))
+        .unwrap()
+        .then(() => {
+          dispatch(getSpecialties());
+        });
     }
   };
 

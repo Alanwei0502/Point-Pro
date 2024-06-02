@@ -3,6 +3,7 @@ import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 // Others
 import { MenuApi } from '~/api';
 import { createAppAsyncThunk } from '~/hooks';
+import { errorHandler } from '~/store/errorHandler';
 import {
   MobileDialog,
   ICategory,
@@ -59,11 +60,8 @@ export const getMenu = createAppAsyncThunk(`${name}/getMenu`, async (_, { reject
     const menuRes = await MenuApi.getMenu();
     return menuRes.result;
   } catch (error) {
-    if (error instanceof Error) {
-      return rejectWithValue({ message: error.message });
-    } else {
-      return rejectWithValue({ message: 'unknown error' });
-    }
+    errorHandler(error);
+    return rejectWithValue(error);
   }
 });
 
@@ -110,9 +108,7 @@ export const takeOrderSlice = createSlice({
         switch (selectedSpecialty.selectionType) {
           case SelectionType.SINGLE: {
             const singleSpecialtyItemIds = selectedSpecialty.specialtyItems.map((item) => item.id);
-            const newSelectedSpecialtyItems = state.dialog.data.selectedSpecialtyItems.filter(
-              (item) => !singleSpecialtyItemIds.includes(item.id),
-            );
+            const newSelectedSpecialtyItems = state.dialog.data.selectedSpecialtyItems.filter((item) => !singleSpecialtyItemIds.includes(item.id));
             state.dialog.data.selectedSpecialtyItems = [...newSelectedSpecialtyItems, selectedItem];
             break;
           }

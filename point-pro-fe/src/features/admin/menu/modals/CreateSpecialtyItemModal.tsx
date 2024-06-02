@@ -49,10 +49,12 @@ export const CreateSpecialtyItemModal: FC<ICreateSpecialtyItemModalProps> = () =
         price,
         position: data.specialtyItems.length,
       }),
-    ).then(() => {
-      dispatch(getSpecialties());
-      handleCancel();
-    });
+    )
+      .unwrap()
+      .then(() => {
+        dispatch(getSpecialties());
+        handleCancel();
+      });
   };
 
   return (

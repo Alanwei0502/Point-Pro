@@ -1,22 +1,21 @@
-import { NextFunction, Request } from 'express';
+import { NextFunction } from 'express';
 import { ReasonPhrases, StatusCodes } from 'http-status-codes';
-import { differenceWith } from 'ramda';
 import { ApiResponse } from '../types/shared';
-import { imgurClient, prismaClient } from '../helpers';
-import { IDeleteMealRequest, IUploadImageRequest } from '../types';
+import { imgurClient } from '../helpers';
+import { IDeleteCategoryRequest, IDeleteMealRequest, IPatchImageRequest, IUploadImageRequest } from '../types';
+import { MenuModel } from '../models';
 
 export class ImgurController {
   static uploadImageHandler = async (req: IUploadImageRequest, res: ApiResponse, next: NextFunction) => {
     try {
-      if (req.file === undefined) {
-        res.status(StatusCodes.BAD_REQUEST).send({
+      if (!req.file) {
+        return res.status(StatusCodes.BAD_REQUEST).send({
           message: ReasonPhrases.BAD_REQUEST,
           result: 'Please upload a file!',
         });
-        return;
       }
 
-      const response = await imgurClient.upload({
+      const imgurRes = await imgurClient.upload({
         image: req.file.buffer.toString('base64'),
         type: 'base64',
         album: process.env.IMGUR_ALBUM_ID,
@@ -24,8 +23,50 @@ export class ImgurController {
         description: req.body.description,
       });
 
-      req.body.imageId = response.data.id;
-      req.body.imageDeleteHash = response.data.deletehash as string;
+      if (!imgurRes.success) {
+        return res.status(StatusCodes.BAD_REQUEST).send({
+          message: ReasonPhrases.BAD_REQUEST,
+          result: 'Failed to upload image!',
+        });
+      }
+
+      req.body.imageId = imgurRes.data.id;
+      req.body.imageDeleteHash = imgurRes.data.deletehash ?? null;
+
+      next();
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  static patchImageHandler = async (req: IPatchImageRequest, res: ApiResponse, next: NextFunction) => {
+    try {
+      // if there is no file, skip the image upload
+      if (!req.file) return next();
+
+      // delete the old image
+      if (req.body.imageDeleteHash) {
+        await imgurClient.deleteImage(req.body.imageDeleteHash);
+      }
+
+      // upload the new image
+      const imgurRes = await imgurClient.upload({
+        image: req.file.buffer.toString('base64'),
+        type: 'base64',
+        album: process.env.IMGUR_ALBUM_ID,
+        title: req.body.title,
+        description: req.body.description,
+      });
+
+      if (!imgurRes.success) {
+        return res.status(StatusCodes.BAD_REQUEST).send({
+          message: ReasonPhrases.BAD_REQUEST,
+          result: 'Failed to upload image!',
+        });
+      }
+
+      req.body.imageId = imgurRes.data.id;
+      req.body.imageDeleteHash = imgurRes.data.deletehash ?? null;
 
       next();
     } catch (error) {
@@ -35,8 +76,36 @@ export class ImgurController {
 
   static deleteImageHandler = async (req: IDeleteMealRequest, res: ApiResponse, next: NextFunction) => {
     try {
-      const { imageDeleteHash } = req.params;
-      await imgurClient.deleteImage(imageDeleteHash);
+      const { mealId } = req.params;
+
+      // get the image delete hash
+      const meal = await MenuModel.getMealById(mealId);
+
+      if (meal?.imageDeleteHash) {
+        await imgurClient.deleteImage(meal.imageDeleteHash);
+      }
+      next();
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  static deleteImagesByDeletingCategoryHandler = async (req: IDeleteCategoryRequest, res: ApiResponse, next: NextFunction) => {
+    try {
+      const { categoryId } = req.params;
+
+      // get the image delete hashes
+      const meals = await MenuModel.getMealsDeleteHashesByCategoryId(categoryId);
+
+      // delete the images from imgur
+      if (meals.length) {
+        const deletePromises = meals.map((m) => {
+          if (m.imageDeleteHash) return imgurClient.deleteImage(m.imageDeleteHash);
+        });
+
+        await Promise.all(deletePromises);
+      }
+
       next();
     } catch (error) {
       next(error);

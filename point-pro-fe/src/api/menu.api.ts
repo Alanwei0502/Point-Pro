@@ -5,8 +5,6 @@ import {
   PostCategoryPayload,
   GetMealsWithCategoryAndSpecialtyItemsResponse,
   MealResponse,
-  PatchMealByIdPayload,
-  IMeal,
   GetSpecialtyWithSpecialtyItemsResponse,
   SpecialtyResponse,
   PatchCategoryOrderPayload,
@@ -23,6 +21,7 @@ import {
   DeleteSpecialtyPayload,
   DeleteSpecialtyItemPayload,
   PostMealPayload,
+  PatchMealPayload,
 } from '~/types';
 
 export class MenuApi {
@@ -50,7 +49,7 @@ export class MenuApi {
     return http.patch(`${MenuApi.categoryPath}/${id}`, { title });
   }
 
-  static patchCategoriesOrder(payload: PatchCategoryOrderPayload) {
+  static patchCategoryOrder(payload: PatchCategoryOrderPayload) {
     return http.patch(MenuApi.categoryPath, payload);
   }
 
@@ -61,10 +60,6 @@ export class MenuApi {
   // MEAL
   static getMeals() {
     return http.get<string, GetMealsWithCategoryAndSpecialtyItemsResponse>(MenuApi.mealPath);
-  }
-
-  static getMealById(mealId: string) {
-    return http.get<string, MealResponse>(`${MenuApi.mealPath}/${mealId}`);
   }
 
   static postMeal(payload: PostMealPayload) {
@@ -92,17 +87,39 @@ export class MenuApi {
     });
   }
 
-  static patchMealById({ mealId, payload }: PatchMealByIdPayload) {
-    return http.patch(`${MenuApi.mealPath}/${mealId}`, payload);
+  static patchMeal(payload: PatchMealPayload) {
+    const { id, ...restPayload } = payload;
+
+    const formData = new FormData();
+
+    const keys = Object.keys(restPayload) as (keyof Omit<PatchMealPayload, 'id'>)[];
+    keys.forEach((k) => {
+      const value = restPayload[k];
+
+      if (k === 'specialtyItems') {
+        restPayload.specialtyItems.forEach((specialtyItemId) => {
+          formData.append('specialtyItems', specialtyItemId);
+        });
+      } else if (k === 'image' && value instanceof File) {
+        formData.append(k, value);
+      } else {
+        formData.append(k, value?.toString() ?? '');
+      }
+    });
+
+    return http.patch(`${MenuApi.mealPath}/${id}`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
   }
 
-  static patchMealsOrder(payload: PatchMealOrderPayload) {
+  static patchMealOrder(payload: PatchMealOrderPayload) {
     return http.patch(MenuApi.mealPath, payload);
   }
 
-  static deleteMeal(payload: DeleteMealPaylaod) {
-    const { id, imageDeleteHash } = payload;
-    return http.delete(`${MenuApi.mealPath}/${id}/${imageDeleteHash}`);
+  static deleteMeal(mealId: DeleteMealPaylaod) {
+    return http.delete(`${MenuApi.mealPath}/${mealId}`);
   }
 
   // SPECIALTY
@@ -119,12 +136,12 @@ export class MenuApi {
     return http.patch<string, SpecialtyResponse>(`${MenuApi.specialtyPath}/${id}`, { title, selectionType });
   }
 
-  static patchSpecialtiesOrder(payload: PatchSpecialtyOrderPayload) {
+  static patchSpecialtyOrder(payload: PatchSpecialtyOrderPayload) {
     return http.patch(MenuApi.specialtyPath, payload);
   }
 
-  static deleteSpecialty(id: DeleteSpecialtyPayload) {
-    return http.delete(`${MenuApi.specialtyPath}/${id}`);
+  static deleteSpecialty(specialtyId: DeleteSpecialtyPayload) {
+    return http.delete(`${MenuApi.specialtyPath}/${specialtyId}`);
   }
 
   // SPECIALTY ITEMS
@@ -137,11 +154,11 @@ export class MenuApi {
     return http.patch(`${MenuApi.specialtyItemsPath}/${id}`, { title, price });
   }
 
-  static patchSpecialtyItemsOrder(payload: PatchSpecialtyItemOrderPayload) {
+  static patchSpecialtyItemOrder(payload: PatchSpecialtyItemOrderPayload) {
     return http.patch(`${MenuApi.specialtyItemsPath}`, payload);
   }
 
-  static deleteSpecialtyItem(id: DeleteSpecialtyItemPayload) {
-    return http.delete(`${MenuApi.specialtyItemsPath}/${id}`);
+  static deleteSpecialtyItem(specialtyItemId: DeleteSpecialtyItemPayload) {
+    return http.delete(`${MenuApi.specialtyItemsPath}/${specialtyItemId}`);
   }
 }

@@ -1,16 +1,10 @@
-import { PayloadAction, createSlice } from "@reduxjs/toolkit";
-import { AuthApi } from "~/api";
-import { createAppAsyncThunk } from "~/hooks";
-import {
-  GenerateTokenPayload,
-  GenerateTokenResponse,
-  GetUserInfoResponse,
-  LoginPayload,
-  LoginResponse,
-  UserInfo
-} from "~/types";
+import { PayloadAction, createSlice } from '@reduxjs/toolkit';
+import { AuthApi } from '~/api';
+import { createAppAsyncThunk } from '~/hooks';
+import { errorHandler } from '~/store/errorHandler';
+import { GenerateTokenPayload, GenerateTokenResponse, GetUserInfoResponse, LoginPayload, LoginResponse, UserInfo } from '~/types';
 
-const name = "auth";
+const name = 'auth';
 
 interface IAuthState {
   isLoading: boolean;
@@ -25,44 +19,32 @@ const initialState: IAuthState = {
   isAuthenticated: false,
   authToken: null,
   userRole: null,
-  userToken: null
+  userToken: null,
 };
 
-export const login = createAppAsyncThunk<LoginResponse, LoginPayload>(
-  `${name}/login`,
-  async (payload, { rejectWithValue }) => {
-    try {
-      const data = await AuthApi.login(payload);
+export const login = createAppAsyncThunk<LoginResponse, LoginPayload>(`${name}/login`, async (payload, { rejectWithValue }) => {
+  try {
+    const data = await AuthApi.login(payload);
 
-      if (data?.result?.authToken) {
-        sessionStorage.setItem("token", data.result.authToken);
-      }
-      return data;
-    } catch (error) {
-      if (error instanceof Error) {
-        return rejectWithValue({ message: error.message });
-      } else {
-        return rejectWithValue({ message: "unknown error" });
-      }
+    if (data?.result?.authToken) {
+      sessionStorage.setItem('token', data.result.authToken);
     }
+    return data;
+  } catch (error) {
+    errorHandler(error);
+    return rejectWithValue(error);
   }
-);
+});
 
-export const getUserInfo = createAppAsyncThunk<GetUserInfoResponse>(
-  `${name}/getUserInfo`,
-  async (payload, { rejectWithValue }) => {
-    try {
-      const data = await AuthApi.getUserInfo();
-      return data;
-    } catch (error) {
-      if (error instanceof Error) {
-        return rejectWithValue({ message: error.message });
-      } else {
-        return rejectWithValue({ message: "unknown error" });
-      }
-    }
+export const getUserInfo = createAppAsyncThunk<GetUserInfoResponse>(`${name}/getUserInfo`, async (payload, { rejectWithValue }) => {
+  try {
+    const data = await AuthApi.getUserInfo();
+    return data;
+  } catch (error) {
+    errorHandler(error);
+    return rejectWithValue(error);
   }
-);
+});
 
 export const getUserTokenByReservationLogId = createAppAsyncThunk<GenerateTokenResponse, GenerateTokenPayload>(
   `${name}/getUserTokenByReservationLogId`,
@@ -71,13 +53,10 @@ export const getUserTokenByReservationLogId = createAppAsyncThunk<GenerateTokenR
       const response = await AuthApi.generateToken({ reservationId: payload.reservationId });
       return response;
     } catch (error) {
-      if (error instanceof Error) {
-        return rejectWithValue({ message: error.message });
-      } else {
-        return rejectWithValue({ message: "unknown error" });
-      }
+      errorHandler(error);
+      return rejectWithValue(error);
     }
-  }
+  },
 );
 
 export const authSlice = createSlice({
@@ -90,7 +69,7 @@ export const authSlice = createSlice({
     logoutSuccess(state) {
       state.isAuthenticated = false;
       state.authToken = null;
-    }
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -125,7 +104,7 @@ export const authSlice = createSlice({
       .addCase(getUserTokenByReservationLogId.rejected, (state) => {
         state.userToken = initialState.userToken;
       });
-  }
+  },
 });
 
 export const { loginSuccess, logoutSuccess } = authSlice.actions;

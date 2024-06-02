@@ -1,16 +1,5 @@
-import { FC, Fragment, useState } from 'react';
-import {
-  Box,
-  Divider,
-  List,
-  ListItemButton,
-  Tab,
-  Tabs,
-  ToggleButton,
-  Typography,
-  styled,
-  tabsClasses,
-} from '@mui/material';
+import { FC, Fragment, useMemo, useState } from 'react';
+import { Box, Divider, List, ListItemButton, Tab, Tabs, ToggleButton, Typography, styled, tabsClasses } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { useAppDispatch, useAppSelector } from '~/hooks';
 import { setCurrentCategory } from '~/store/slices';
@@ -39,6 +28,8 @@ export const CategoryNavbar: FC<ICategoryNavbarProps> = () => {
   const [isShowDropdown, setIsShowDropdown] = useState(false);
 
   const categories = useAppSelector(({ takeOrder }) => takeOrder.categories);
+  const meals = useAppSelector(({ takeOrder }) => takeOrder.meals);
+  const showCategories = useMemo(() => categories.filter((c) => meals.some((m) => m.categoryId === c.id)), [categories, meals]);
   const currentCategory = useAppSelector(({ takeOrder }) => takeOrder.currentCategory);
 
   const handleClickCategory = (categoryId: string) => {
@@ -82,7 +73,7 @@ export const CategoryNavbar: FC<ICategoryNavbarProps> = () => {
               marginBottom: '10px',
             }}
           >
-            {categories.map(({ id, title }) => (
+            {showCategories.map(({ id, title }) => (
               <StyledTab key={id} value={id} label={title} />
             ))}
           </Tabs>
@@ -119,7 +110,7 @@ export const CategoryNavbar: FC<ICategoryNavbarProps> = () => {
           }}
         >
           <List>
-            {categories.map(({ id, title }) => (
+            {showCategories.map(({ id, title }) => (
               <Fragment key={id}>
                 <ListItemButton onClick={() => handleClickCategory(id)} sx={{ padding: '1rem' }}>
                   {title}

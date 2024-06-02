@@ -19,8 +19,7 @@ import { useAppDispatch, useAppSelector } from '~/hooks';
 import { closeCreateMealModal, getMeals, postMeal } from '~/store/slices';
 import { theme } from '~/theme';
 import { IMeal, ISpecialtyItem } from '~/types';
-
-const imageType = ['image/jpeg', 'image/jpg', 'image/png'];
+import { MEAL_IMAGE_FORMAT_REMINDER, MEAL_IMAGE_SIZE_LIMIT, MEAL_IMAGE_TYPES } from '~/utils';
 
 interface ICreateMealModalProps {}
 
@@ -31,12 +30,11 @@ export const CreateMealModal: FC<ICreateMealModalProps> = () => {
   const isOpen = useAppSelector((state) => state.menu.createMealModal.isOpen);
   const categoryId = useAppSelector((state) => state.menu.createMealModal.data);
   const specialties = useAppSelector((state) => state.menu.specialties);
-  const allDpecialtyItems = useMemo(() => specialties.flatMap((s) => s.specialtyItems), [specialties]);
+  const allSpecialtyItems = useMemo(() => specialties.flatMap((s) => s.specialtyItems), [specialties]);
 
   const [title, setTitle] = useState<IMeal['title']>('');
   const [price, setPrice] = useState<IMeal['price']>(0);
   const [image, setImage] = useState<File>();
-  const [isImageFormatError, setIsImageFormatError] = useState(false);
   const [previewImage, setPreviewImage] = useState<string>();
   const [description, setDescription] = useState<IMeal['description']>('');
   const [specialtyItems, setSpecialtyItems] = useState<ISpecialtyItem['id'][]>([]);
@@ -54,8 +52,7 @@ export const CreateMealModal: FC<ICreateMealModalProps> = () => {
   const handleChangeImage = (e: ChangeEvent<HTMLInputElement>) => {
     const selectedFiles = e.target.files as FileList;
     const imageFile = selectedFiles?.[0];
-    if (imageFile.size > 2 * 1024 * 1024 || !imageType.includes(imageFile.type)) {
-      setIsImageFormatError(true);
+    if (imageFile.size > MEAL_IMAGE_SIZE_LIMIT || !MEAL_IMAGE_TYPES.includes(imageFile.type)) {
       return;
     }
 
@@ -128,32 +125,37 @@ export const CreateMealModal: FC<ICreateMealModalProps> = () => {
       <Card>
         <CardHeader title='新增餐點' sx={{ backgroundColor: theme.palette.primary.main, textAlign: 'center' }} />
         <CardContent sx={{ padding: '1rem', width: '50cqw', height: 640, overflow: 'scroll' }}>
-          <FormControl margin='dense' required fullWidth>
-            <FormLabel>名稱</FormLabel>
-            <TextField
-              autoFocus
-              size='small'
-              value={title}
-              error={hasSameMealExist}
-              helperText={hasSameMealExist && '已有相同的餐點'}
-              onChange={handleChangeTitle}
-            />
-          </FormControl>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+            <FormControl margin='dense' required fullWidth>
+              <FormLabel>名稱</FormLabel>
+              <TextField
+                autoFocus
+                size='small'
+                value={title}
+                error={hasSameMealExist}
+                helperText={hasSameMealExist && '已有相同的餐點'}
+                onChange={handleChangeTitle}
+              />
+            </FormControl>
+            <FormControl margin='dense' required fullWidth>
+              <FormLabel>價格</FormLabel>
+              <TextField type='number' size='small' value={price.toString()} onChange={handleChangePrice} />
+            </FormControl>
+          </Box>
           <FormControl margin='dense' required fullWidth>
             <FormLabel>照片</FormLabel>
             <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 5 }}>
               <Box sx={{ display: 'flex', flexDirection: 'column', width: '50%' }}>
-                <UploadButton btn={{ sx: { width: 200 } }} input={{ onChange: handleChangeImage, inputProps: { accept: imageType.join(',') } }} />
+                <UploadButton
+                  btn={{ sx: { width: 200 } }}
+                  input={{ onChange: handleChangeImage, inputProps: { accept: MEAL_IMAGE_TYPES.join(',') } }}
+                />
                 <Typography variant='caption' color='error'>
-                  圖片大小不得超過 2MB，格式為 .jpg、.jpeg 或 .png
+                  {MEAL_IMAGE_FORMAT_REMINDER}
                 </Typography>
               </Box>
               <Box component='img' id='previewImage' sx={{ width: 130, height: 130, objectFit: 'cover' }} src={previewImage} />
             </Box>
-          </FormControl>
-          <FormControl margin='dense' required fullWidth>
-            <FormLabel>價格</FormLabel>
-            <TextField type='number' size='small' value={price.toString()} onChange={handleChangePrice} />
           </FormControl>
           <FormControl margin='dense' fullWidth>
             <FormLabel>備註</FormLabel>
@@ -169,13 +171,13 @@ export const CreateMealModal: FC<ICreateMealModalProps> = () => {
               renderValue={(selected) => (
                 <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
                   {selected.map((value) => {
-                    const { title, price } = allDpecialtyItems.find((si) => si.id === value) as ISpecialtyItem;
-                    return <Chip key={value} label={`${title}(${price}元)`} />;
+                    const { title, price } = allSpecialtyItems.find((si) => si.id === value) as ISpecialtyItem;
+                    return <Chip key={value} label={`${title}(${price}元)`} variant='filled' size='small' />;
                   })}
                 </Box>
               )}
             >
-              {allDpecialtyItems.map((si) => (
+              {allSpecialtyItems.map((si) => (
                 <MenuItem
                   key={si.id}
                   value={si.id}

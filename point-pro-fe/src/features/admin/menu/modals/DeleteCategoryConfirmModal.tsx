@@ -26,7 +26,7 @@ export const DeleteCategoryConfirmModal: FC<IDeleteCategoryConfirmModalProps> = 
         <CardHeader title='確定刪除' sx={{ backgroundColor: theme.palette.primary.main, textAlign: 'center' }} />
         <CardContent sx={{ padding: '1rem', width: '50cqw' }}>
           <Typography component='p' variant='body1' textAlign={'center'}>
-            確定要刪除整個「{data?.title}」種類？
+            確定要刪除整個「{data?.title}」？
           </Typography>
         </CardContent>
         <CardActions>

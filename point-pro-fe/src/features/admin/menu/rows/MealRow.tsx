@@ -1,16 +1,18 @@
 import { ChangeEvent, FC, useState } from 'react';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { Box, Chip, IconButton, MenuItem, Select } from '@mui/material';
+import { Box, Chip, IconButton, MenuItem, Select, SelectChangeEvent, Typography } from '@mui/material';
 import ReorderIcon from '@mui/icons-material/Reorder';
 import EditIcon from '@mui/icons-material/Edit';
 import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
 import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove';
-import { BaseSwitch, StyledTableCell, StyledTableRow, TextInput, TextareaInput } from '~/components';
-import { IMealWithCategoryAndSpecialtyItems } from '~/types';
+import { BaseSwitch, StyledTableCell, StyledTableRow, TextInput, TextareaInput, UploadButton } from '~/components';
+import { ICategory, IMeal, IMealWithCategoryAndSpecialtyItems, ISpecialtyItem } from '~/types';
 import { useAppDispatch, useAppSelector } from '~/hooks';
-import { openDeleteMealConfirmModal } from '~/store/slices';
+import { getMeals, openDeleteMealConfirmModal, patchMeal } from '~/store/slices';
+import { theme } from '~/theme';
+import { MEAL_IMAGE_FORMAT_REMINDER, MEAL_IMAGE_SIZE_LIMIT, MEAL_IMAGE_TYPES, MEAL_IMAGE_URL } from '~/utils';
 
 interface IMealRowProps {
   meal: IMealWithCategoryAndSpecialtyItems;
@@ -21,12 +23,6 @@ export const MealRow: FC<IMealRowProps> = (props) => {
 
   const dispatch = useAppDispatch();
 
-  const [updateMeal, setUpdateMeal] = useState(meal);
-  const [isEdit, setIsEdit] = useState(false);
-
-  const specialties = useAppSelector((state) => state.menu.specialties);
-  const specialtyItems = specialties.flatMap((s) => s.specialtyItems);
-
   const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: meal.id });
 
   const style = {
@@ -34,41 +30,73 @@ export const MealRow: FC<IMealRowProps> = (props) => {
     transition,
   };
 
+  const categories = useAppSelector((state) => state.menu.categories);
+  const meals = useAppSelector((state) => state.menu.meals);
+  const specialties = useAppSelector((state) => state.menu.specialties);
+  const allSpecialtyItems = specialties.flatMap((s) => s.specialtyItems);
+
+  const [isEdit, setIsEdit] = useState(false);
+  const [categoryId, setCategoryId] = useState<ICategory['id']>(meal.categoryId);
+  const [title, setTitle] = useState<IMeal['title']>(meal.title);
+  const [price, setPrice] = useState<IMeal['price']>(meal.price);
+  const [image, setImage] = useState<File>();
+  const [previewImage, setPreviewImage] = useState<string>(`${MEAL_IMAGE_URL}${meal.imageId}m.jpg`);
+  const [description, setDescription] = useState<IMeal['description']>(meal.description);
+  const [specialtyItems, setSpecialtyItems] = useState<ISpecialtyItem[]>(meal.specialtyItems);
+  const [isPopular, setIsPopular] = useState<IMeal['isPopular']>(meal.isPopular);
+  const [publishedAt, setPublisedAt] = useState<IMeal['publishedAt']>(meal.publishedAt);
+
+  const isIncompleteInfo = !title;
+  const hasSameMealNameExist = meals.some((m) => m.title === title && m.id !== meal.id);
+
+  const isInvalid = isIncompleteInfo || hasSameMealNameExist;
+
+  const handleChangeCategory = (e: SelectChangeEvent<ICategory['id']>) => {
+    const selectedCategoryId = e.target.value;
+    setCategoryId(selectedCategoryId);
+  };
+
   const handleChangeTitle = (e: ChangeEvent<HTMLTextAreaElement>) => {
-    setUpdateMeal({
-      ...updateMeal,
-      title: e.target.value,
-    });
+    setTitle(e.target.value);
+  };
+
+  const handleChangeImage = (e: ChangeEvent<HTMLInputElement>) => {
+    const selectedFiles = e.target.files;
+    const imageFile = selectedFiles?.[0];
+    if (imageFile && (imageFile.size > MEAL_IMAGE_SIZE_LIMIT || !MEAL_IMAGE_TYPES.includes(imageFile.type))) {
+      return;
+    }
+
+    if (imageFile) {
+      setImage(imageFile);
+      setPreviewImage(URL.createObjectURL(imageFile));
+    }
   };
 
   const handleChangePrice = (e: ChangeEvent<HTMLInputElement>) => {
-    setUpdateMeal({
-      ...updateMeal,
-      price: +e.target.value,
-    });
+    const newPrice = Number(e.target.value);
+
+    if (!/[\d]/.test(`${newPrice}`)) return;
+
+    setPrice((prevPrice) => (newPrice < 0 ? prevPrice : newPrice));
   };
 
   const handleChangeDescription = (e: ChangeEvent<HTMLTextAreaElement>) => {
-    setUpdateMeal({
-      ...updateMeal,
-      description: e.target.value,
-    });
+    setDescription(e.target.value);
   };
 
-  const handleChangeSpecialtyItems = () => {};
+  const handleChangeSpecialtyItems = (e: SelectChangeEvent<ISpecialtyItem['id'][]>) => {
+    const value = e.target.value;
+    const selectedSpecialtyItemsId = typeof value === 'string' ? value.split(',') : value;
+    setSpecialtyItems(allSpecialtyItems.filter((si) => selectedSpecialtyItemsId.includes(si.id)));
+  };
 
   const handleChangeIsPopluar = () => {
-    setUpdateMeal((prev) => ({
-      ...prev,
-      isPopular: !prev.isPopular,
-    }));
+    setIsPopular((prevIsPopular) => !prevIsPopular);
   };
 
   const handleChangeIsPublished = () => {
-    setUpdateMeal((prev) => ({
-      ...prev,
-      publishedAt: prev.publishedAt ? null : new Date(),
-    }));
+    setPublisedAt((prevPublishedAt) => (prevPublishedAt ? null : new Date()));
   };
 
   const handleEditMeal = () => {
@@ -76,17 +104,45 @@ export const MealRow: FC<IMealRowProps> = (props) => {
   };
 
   const handleOpenDeleteMealConfirmModal = () => {
-    // TODO
     dispatch(openDeleteMealConfirmModal(meal));
   };
 
-  const handleConfirmEdit = () => {
+  const handleCancelEdit = () => {
+    setCategoryId(meal.categoryId);
+    setTitle(meal.title);
+    setPrice(meal.price);
+    setImage(undefined);
+    setPreviewImage(`${MEAL_IMAGE_URL}${meal.imageId}m.jpg`);
+    setDescription(meal.description);
+    setSpecialtyItems(meal.specialtyItems);
+    setIsPopular(meal.isPopular);
+    setPublisedAt(meal.publishedAt);
     setIsEdit(false);
   };
 
-  const handleCancelEdit = () => {
-    setUpdateMeal(meal);
-    setIsEdit(false);
+  const handleConfirmEdit = () => {
+    if (isInvalid) return;
+
+    dispatch(
+      patchMeal({
+        categoryId,
+        id: meal.id,
+        title,
+        image,
+        imageId: meal.imageId,
+        imageDeleteHash: meal.imageDeleteHash,
+        price,
+        description,
+        isPopular,
+        publishedAt,
+        specialtyItems: specialtyItems.map((si) => si.id),
+      }),
+    )
+      .unwrap()
+      .then(() => {
+        dispatch(getMeals());
+        setIsEdit(false);
+      });
   };
 
   return (
@@ -96,53 +152,87 @@ export const MealRow: FC<IMealRowProps> = (props) => {
           <ReorderIcon />
         </IconButton>
       </StyledTableCell>
-      <StyledTableCell>
-        {isEdit ? <TextareaInput value={updateMeal.title} sx={{ width: 100 }} onChange={handleChangeTitle} /> : updateMeal.title}
+      <StyledTableCell width={120}>
+        {isEdit ? (
+          <Box>
+            <TextareaInput value={title} sx={{ width: '100%' }} onChange={handleChangeTitle} />
+            <Select size='small' value={categoryId} onChange={handleChangeCategory}>
+              {categories.map((c) => (
+                <MenuItem
+                  key={c.id}
+                  value={c.id}
+                  sx={{ '&.Mui-selected': { bgcolor: theme.palette.primary.light, '&:hover': { bgcolor: theme.palette.primary.light } } }}
+                >
+                  {c.title}
+                </MenuItem>
+              ))}
+            </Select>
+          </Box>
+        ) : (
+          title
+        )}
       </StyledTableCell>
-      <StyledTableCell>
-        {/* TODO: update imageId */}
-        <Box component='img' src={`https://i.imgur.com/${meal.imageId}s.jpg`} alt={updateMeal.title} />
+      <StyledTableCell width={100}>
+        {isEdit ? (
+          <Box width={'100%'}>
+            <Box component='img' width={100} height={100} sx={{ objectFit: 'cover' }} src={previewImage} alt={title} />
+            <UploadButton
+              btn={{ sx: { width: '100%' } }}
+              input={{ onChange: handleChangeImage, inputProps: { accept: MEAL_IMAGE_TYPES.join(',') } }}
+            />
+            <Typography variant='caption' color='error' fontSize={12}>
+              {MEAL_IMAGE_FORMAT_REMINDER}
+            </Typography>
+          </Box>
+        ) : (
+          <Box component='img' width={100} height={100} sx={{ objectFit: 'cover' }} src={previewImage} alt={title} />
+        )}
       </StyledTableCell>
-      <StyledTableCell sx={{ whiteSpace: 'nowrap' }}>
-        {isEdit ? <TextInput type='number' value={updateMeal.price.toString()} onChange={handleChangePrice} /> : updateMeal.price}
+      <StyledTableCell width={100}>
+        {isEdit ? <TextInput type='number' size='small' value={price.toString()} onChange={handleChangePrice} /> : price}
       </StyledTableCell>
-      <StyledTableCell>
-        {isEdit ? <TextareaInput value={updateMeal.description} sx={{ width: 100 }} onChange={handleChangeDescription} /> : updateMeal.description}
+      <StyledTableCell width={200}>
+        {isEdit ? <TextareaInput value={description} sx={{ width: '100%' }} onChange={handleChangeDescription} /> : description}
       </StyledTableCell>
-      <StyledTableCell>
-        <Box onClick={handleChangeSpecialtyItems}>
+      <StyledTableCell width={250}>
+        <Box>
           {isEdit ? (
             <Select
               multiple
-              value={updateMeal.specialtyItems.map((si) => si.id)}
-              sx={{ maxWidth: 250 }}
+              size='small'
+              value={specialtyItems.map((si) => si.id)}
+              onChange={handleChangeSpecialtyItems}
               renderValue={(selected) => (
                 <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
                   {selected.map((value) => {
                     const si = specialtyItems.find((si) => si.id === value);
-                    return <Chip key={value} label={si?.title} variant='outlined' size='small' />;
+                    return <Chip key={value} label={si?.title} variant='filled' size='small' />;
                   })}
                 </Box>
               )}
             >
-              {specialtyItems.map((si) => (
-                <MenuItem key={si.id} value={si.id}>
+              {allSpecialtyItems.map((si) => (
+                <MenuItem
+                  key={si.id}
+                  value={si.id}
+                  sx={{ '&.Mui-selected': { bgcolor: theme.palette.primary.light, '&:hover': { bgcolor: theme.palette.primary.light } } }}
+                >
                   {si.title}
                 </MenuItem>
               ))}
             </Select>
           ) : (
-            updateMeal.specialtyItems.map((si) => {
-              return <Chip key={si.id} label={si.title} variant='outlined' size='small' />;
+            specialtyItems.map((si) => {
+              return <Chip key={si.id} label={si.title} variant='filled' size='small' />;
             })
           )}
         </Box>
       </StyledTableCell>
-      <StyledTableCell>
-        <BaseSwitch checked={updateMeal.isPopular} disabled={!isEdit} onChange={handleChangeIsPopluar} />
+      <StyledTableCell padding='checkbox'>
+        <BaseSwitch checked={isPopular} disabled={!isEdit} onChange={handleChangeIsPopluar} />
       </StyledTableCell>
-      <StyledTableCell>
-        <BaseSwitch checked={!!updateMeal.publishedAt} disabled={!isEdit} onChange={handleChangeIsPublished} />
+      <StyledTableCell padding='checkbox'>
+        <BaseSwitch checked={!!publishedAt} disabled={!isEdit} onChange={handleChangeIsPublished} />
       </StyledTableCell>
       <StyledTableCell padding='checkbox'>
         <Box sx={{ display: 'flex', gap: 1 }}>

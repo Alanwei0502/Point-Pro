@@ -37,10 +37,12 @@ export const CreateCategoryModal: FC<ICreateCategoryModalProps> = () => {
         title,
         position: categories.length,
       }),
-    ).then(() => {
-      dispatch(getCategories());
-      handleCancel();
-    });
+    )
+      .unwrap()
+      .then(() => {
+        dispatch(getCategories());
+        handleCancel();
+      });
   };
 
   return (

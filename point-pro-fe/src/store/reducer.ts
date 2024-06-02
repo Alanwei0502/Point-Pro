@@ -1,5 +1,5 @@
 import { combineReducers } from '@reduxjs/toolkit';
-import { authSlice, loadingSlice, orderSlice, paymentSlice, socketSlice, bookingSlice, takeOrderSlice, periodSlice, menuSlice } from './slices';
+import { authSlice, orderSlice, paymentSlice, socketSlice, bookingSlice, takeOrderSlice, periodSlice, menuSlice } from './slices';
 import { counterSlice } from '~/features/home/slice';
 
 const reducer = combineReducers({
@@ -10,7 +10,6 @@ const reducer = combineReducers({
   [orderSlice.name]: orderSlice.reducer,
   [paymentSlice.name]: paymentSlice.reducer,
   [socketSlice.name]: socketSlice.reducer,
-  [loadingSlice.name]: loadingSlice.reducer,
   [periodSlice.name]: periodSlice.reducer,
   [menuSlice.name]: menuSlice.reducer,
 });

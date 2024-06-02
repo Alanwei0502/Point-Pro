@@ -15,7 +15,7 @@ import { StyledTableCell, TextInput } from '~/components';
 import { theme } from '~/theme';
 import { CollapseMealsTable } from '../tables/CollapseMealsTable';
 import { useAppDispatch, useAppSelector } from '~/hooks';
-import { openDeleteCategoryConfirmModal, patchCategory } from '~/store/slices';
+import { getCategories, openDeleteCategoryConfirmModal, patchCategory } from '~/store/slices';
 
 const StyledCategoryRow = styled(TableRow)(() => ({
   '&.MuiTableRow-root': {
@@ -71,16 +71,20 @@ export const CategoryRow: FC<ICategoryRowProps> = (props) => {
     setNewTitle(e.target.value);
   };
 
-  const handleConfirmEdit = () => {
-    if (isInvalid) return;
-
-    dispatch(patchCategory({ id: category.id, title: newTitle }));
-    setIsEdit(false);
-  };
-
   const handleCancelEdit = () => {
     setNewTitle(category.title);
     setIsEdit(false);
+  };
+
+  const handleConfirmEdit = () => {
+    if (isInvalid) return;
+
+    dispatch(patchCategory({ id: category.id, title: newTitle }))
+      .unwrap()
+      .then(() => {
+        dispatch(getCategories());
+        setIsEdit(false);
+      });
   };
 
   return (

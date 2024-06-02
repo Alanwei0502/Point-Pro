@@ -1,4 +1,4 @@
-import { SelectionType } from '@prisma/client';
+import { Category, Meal, SelectionType, Specialty, SpecialtyItem } from '@prisma/client';
 import { z } from 'zod';
 import { prismaClient } from '../helpers';
 import {
@@ -9,6 +9,7 @@ import {
   updateSpecialtyItemOrderRequestSchema,
   updateMealOrderRequestSchema,
   createMealRequestSchema,
+  updateMealRequestSchema,
 } from '../validators';
 
 const getCustomerCategories = async () => {
@@ -77,6 +78,16 @@ const getCustomerSpecialtiesWithItems = async () => {
 };
 
 // CATEGORY
+const getCategoryById = async (id: Category['id']) => {
+  const category = await prismaClient.category.findUnique({
+    where: {
+      id,
+    },
+  });
+
+  return category;
+};
+
 const getCategories = async () => {
   const categories = await prismaClient.category.findMany({
     orderBy: {
@@ -87,17 +98,7 @@ const getCategories = async () => {
   return categories;
 };
 
-const getCategoryById = async (id: string) => {
-  const category = await prismaClient.category.findUnique({
-    where: {
-      id,
-    },
-  });
-
-  return category;
-};
-
-const createCategory = async (title: string, position: number) => {
+const createCategory = async (title: Category['title'], position: Category['position']) => {
   const category = await prismaClient.category.create({
     data: {
       title,
@@ -108,7 +109,7 @@ const createCategory = async (title: string, position: number) => {
   return category;
 };
 
-const updateCateogry = async (id: string, title: string) => {
+const updateCateogry = async (id: Category['id'], title: Category['title']) => {
   await prismaClient.category.update({
     where: {
       id,
@@ -119,7 +120,7 @@ const updateCateogry = async (id: string, title: string) => {
   });
 };
 
-const deleteCategoryById = async (id: string) => {
+const deleteCategoryById = async (id: Category['id']) => {
   await prismaClient.category.delete({
     where: {
       id,
@@ -143,7 +144,7 @@ const updateCategoriesOrder = async (categories: z.infer<typeof updateCategoryOr
 };
 
 // MEAL
-const getMealById = async (id: string) => {
+const getMealById = async (id: Meal['id']) => {
   const meal = await prismaClient.meal.findUnique({
     where: {
       id,
@@ -151,6 +152,19 @@ const getMealById = async (id: string) => {
   });
 
   return meal;
+};
+
+const getMealsDeleteHashesByCategoryId = async (categoryId: Category['id']) => {
+  const meals = await prismaClient.meal.findMany({
+    select: {
+      imageDeleteHash: true,
+    },
+    where: {
+      categoryId,
+    },
+  });
+
+  return meals;
 };
 
 const getMealsWithCategoryAndSpecialtyItems = async () => {
@@ -217,6 +231,44 @@ const createMeal = async (data: z.infer<typeof createMealRequestSchema>) => {
   return meal;
 };
 
+const updateMeal = async (id: Meal['id'], meal: z.infer<typeof updateMealRequestSchema>) => {
+  const { specialtyItems, ...rest } = meal;
+  const specialties = await prismaClient.specialtyItem.findMany({
+    select: {
+      specialtyId: true,
+    },
+    where: {
+      id: {
+        in: specialtyItems,
+      },
+    },
+    distinct: ['specialtyId'],
+  });
+
+  await prismaClient.meal.update({
+    where: {
+      id,
+    },
+    data: {
+      ...rest,
+      mealSpecialties: {
+        deleteMany: {},
+        createMany: {
+          data: specialties,
+        },
+      },
+      mealSpecialtyItems: {
+        deleteMany: {},
+        createMany: {
+          data: specialtyItems.map((si) => ({
+            specialtyItemId: si,
+          })),
+        },
+      },
+    },
+  });
+};
+
 const updateMealsOrder = async (meals: z.infer<typeof updateMealOrderRequestSchema>) => {
   const updatePromises = meals.map((m) => {
     return prismaClient.meal.update({
@@ -232,7 +284,7 @@ const updateMealsOrder = async (meals: z.infer<typeof updateMealOrderRequestSche
   await Promise.all(updatePromises);
 };
 
-const deleteMealById = async (id: string) => {
+const deleteMealById = async (id: Meal['id']) => {
   await prismaClient.meal.delete({
     where: {
       id,
@@ -258,7 +310,7 @@ const getSpecialtiesWithItems = async () => {
   return specialtiesWithItems;
 };
 
-const getSpecialtyById = async (id: string) => {
+const getSpecialtyById = async (id: Specialty['id']) => {
   const specialty = await prismaClient.specialty.findUnique({
     where: {
       id,
@@ -280,7 +332,7 @@ const createSpecialty = async (data: z.infer<typeof createSpecialtyRequestSchema
   return specialty;
 };
 
-const updateSpecialty = async (id: string, title: string, selectionType: SelectionType) => {
+const updateSpecialty = async (id: Specialty['id'], title: Specialty['title'], selectionType: SelectionType) => {
   await prismaClient.specialty.update({
     where: {
       id,
@@ -292,7 +344,7 @@ const updateSpecialty = async (id: string, title: string, selectionType: Selecti
   });
 };
 
-const deleteSpecialtyById = async (id: string) => {
+const deleteSpecialtyById = async (id: Specialty['id']) => {
   await prismaClient.specialty.delete({
     where: {
       id,
@@ -331,7 +383,7 @@ const createSpecialtyItem = async (data: z.infer<typeof createSpecialtyItemReque
   return specialtyItem;
 };
 
-const getSpecialtyItemById = async (id: string) => {
+const getSpecialtyItemById = async (id: SpecialtyItem['id']) => {
   const specialtyItem = await prismaClient.specialtyItem.findUnique({
     where: {
       id,
@@ -341,7 +393,7 @@ const getSpecialtyItemById = async (id: string) => {
   return specialtyItem;
 };
 
-const updateSpecialtyItem = async (id: string, title: string, price: number) => {
+const updateSpecialtyItem = async (id: SpecialtyItem['id'], title: SpecialtyItem['title'], price: SpecialtyItem['price']) => {
   await prismaClient.specialtyItem.update({
     where: {
       id,
@@ -368,7 +420,7 @@ const updateSpecialtyItemsOrder = async (specialtyItems: z.infer<typeof updateSp
   await Promise.all(updatePromises);
 };
 
-const deleteSpecialtyItemById = async (id: string) => {
+const deleteSpecialtyItemById = async (id: SpecialtyItem['id']) => {
   await prismaClient.specialtyItem.delete({
     where: {
       id,
@@ -389,8 +441,10 @@ export const MenuModel = {
   deleteCategoryById,
   // MEAL
   getMealById,
+  getMealsDeleteHashesByCategoryId,
   getMealsWithCategoryAndSpecialtyItems,
   createMeal,
+  updateMeal,
   updateMealsOrder,
   deleteMealById,
   // SPECIALTY

@@ -2,7 +2,7 @@ import { Card, CardActions, CardContent, CardHeader, Typography } from '@mui/mat
 import { FC } from 'react';
 import { BaseButton, TabletModalLayout } from '~/components';
 import { useAppDispatch, useAppSelector } from '~/hooks';
-import { closeDeleteMealConfirmModal, deleteMeal } from '~/store/slices';
+import { closeDeleteMealConfirmModal, deleteMeal, getMeals } from '~/store/slices';
 import { theme } from '~/theme';
 
 interface IDeleteMealConfirmModalProps {}
@@ -17,14 +17,12 @@ export const DeleteMealConfirmModal: FC<IDeleteMealConfirmModalProps> = () => {
 
   const handleConfirmDelete = () => {
     if (!data) return;
-    dispatch(
-      deleteMeal({
-        id: data.id,
-        imageDeleteHash: data.imageDeleteHash,
-      }),
-    ).then(() => {
-      handleCancel();
-    });
+    dispatch(deleteMeal(data.id))
+      .unwrap()
+      .then(() => {
+        dispatch(getMeals());
+        handleCancel();
+      });
   };
 
   return (

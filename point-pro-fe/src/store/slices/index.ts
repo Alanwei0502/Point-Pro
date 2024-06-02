@@ -1,6 +1,4 @@
 export * from './admin/auth.slice';
-export * from './admin/imgur.slice';
-export * from './loading.slice';
 export * from './customer/mailer.slice';
 export * from './order.slice';
 export * from './payment.slice';

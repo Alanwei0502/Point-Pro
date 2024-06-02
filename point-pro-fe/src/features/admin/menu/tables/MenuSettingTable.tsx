@@ -6,7 +6,7 @@ import AddIcon from '@mui/icons-material/Add';
 import { useAppDispatch, useAppSelector } from '~/hooks';
 
 import { BaseButton, StyledTableCell, StyledTableRow } from '~/components';
-import { openCreateCategoryModal, patchCategoriesOrder, setCategories } from '~/store/slices';
+import { getCategories, openCreateCategoryModal, patchCategoryOrder, setCategories } from '~/store/slices';
 import { CategoryRow } from '../rows/CategoryRow';
 import { PatchCategoryOrderPayload } from '~/types';
 
@@ -32,7 +32,11 @@ export const MenuSettingTable: FC<IMenuSettingTableProps> = () => {
       });
 
       dispatch(setCategories(newCategoriesOrder));
-      dispatch(patchCategoriesOrder(payload));
+      dispatch(patchCategoryOrder(payload))
+        .unwrap()
+        .then(() => {
+          dispatch(getCategories());
+        });
     }
   };
 

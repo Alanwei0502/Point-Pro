@@ -10,7 +10,7 @@ import { CSS } from '@dnd-kit/utilities';
 import { StyledTableCell, StyledTableRow, TextInput } from '~/components';
 import { ISpecialtyWithSpecialtyItems } from '~/types';
 import { useAppDispatch, useAppSelector } from '~/hooks';
-import { openDeleteSpecialtyItemConfirmModal, patchSpecialtyItem } from '~/store/slices';
+import { closeCreateSpecialtyItemModal, getSpecialties, openDeleteSpecialtyItemConfirmModal, patchSpecialtyItem } from '~/store/slices';
 
 interface ISpecialtyItemRowProps {
   specialtyItem: ISpecialtyWithSpecialtyItems['specialtyItems'][0];
@@ -59,22 +59,27 @@ export const SpecialtyItemRow: FC<ISpecialtyItemRowProps> = (props) => {
     dispatch(openDeleteSpecialtyItemConfirmModal(specialtyItem));
   };
 
+  const handleCancelEdit = () => {
+    setIsEdit(false);
+    setNewTitle(specialtyItem.title);
+    setNewPrice(specialtyItem.price);
+  };
+
   const handleConfirmEdit = () => {
     if (isInValid) return;
-    setIsEdit(false);
+
     dispatch(
       patchSpecialtyItem({
         id: specialtyItem.id,
         title: newTitle,
         price: newPrice,
       }),
-    );
-  };
-
-  const handleCancelEdit = () => {
-    setIsEdit(false);
-    setNewTitle(specialtyItem.title);
-    setNewPrice(specialtyItem.price);
+    )
+      .unwrap()
+      .then(() => {
+        setIsEdit(false);
+        dispatch(getSpecialties());
+      });
   };
 
   return (

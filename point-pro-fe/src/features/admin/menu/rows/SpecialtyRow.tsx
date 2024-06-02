@@ -16,7 +16,7 @@ import { ISpecialtyWithSpecialtyItems, SelectionType } from '~/types';
 import { theme } from '~/theme';
 import { CollapseSpecialtyItemsTable } from '../tables/CollapseSpecialtyItemsTable';
 import { selectionTypeObj } from '~/utils';
-import { openDeleteSpecialtyConfirmModal, patchSpecialty } from '~/store/slices';
+import { getSpecialties, openDeleteSpecialtyConfirmModal, patchSpecialty } from '~/store/slices';
 
 const StyledSpecialtyRow = styled(TableRow)(() => ({
   '&.MuiTableRow-root': {
@@ -78,22 +78,27 @@ export const SpecialtyRow: FC<ISpecialtyRowProps> = (props) => {
     dispatch(openDeleteSpecialtyConfirmModal(specialty));
   };
 
+  const handleCancelEdit = () => {
+    setIsEdit(false);
+    setNewTitle(specialty.title);
+    setNewSelectionType(specialty.selectionType);
+  };
+
   const handleConfirmEdit = () => {
     if (isInvalid) return;
+
     dispatch(
       patchSpecialty({
         id: specialty.id,
         title: newTitle,
         selectionType: newSelectionType,
       }),
-    );
-    setIsEdit(false);
-  };
-
-  const handleCancelEdit = () => {
-    setIsEdit(false);
-    setNewTitle(specialty.title);
-    setNewSelectionType(specialty.selectionType);
+    )
+      .unwrap()
+      .then(() => {
+        dispatch(getSpecialties());
+        setIsEdit(false);
+      });
   };
 
   return (

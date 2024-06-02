@@ -1,4 +1,5 @@
 import axios, { AxiosRequestConfig } from 'axios';
+import { toast } from 'react-toastify';
 import { getToken } from '~/utils/token.utils';
 
 export const apiHost = import.meta.env.VITE_API_HOST;
@@ -19,15 +20,15 @@ http.interceptors.request.use(
 
 http.interceptors.response.use(
   (response) => {
-    log(response.config, response.data);
+    // log(response.config, response.data);
     return response.data;
   },
   // error
   (error) => {
-    const { response } = error;
-    log(response.config, response.data, true);
-    errorCodeCheck(response.status);
-    return Promise.reject(response);
+    // const { response } = error;
+    // log(response.config, response.data, true);
+    errorCodeCheck(error.response.status);
+    return Promise.reject(error);
   },
 );
 
@@ -46,6 +47,6 @@ const errorCodeCheck = (status: number) => {
   }
 };
 
-function log({ method, url }: AxiosRequestConfig, text: string, error = false) {
-  console.log(`%c ${method}/${url} `, `color: white; background-color: #${error ? 'f66361' : '95B46A'}`, text);
-}
+// function log({ method, url }: AxiosRequestConfig, text: string, error = false) {
+//   console.log(`%c ${method}/${url} `, `color: white; background-color: #${error ? 'f66361' : '95B46A'}`, text);
+// }

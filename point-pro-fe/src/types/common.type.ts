@@ -56,7 +56,7 @@ export interface IMeal {
   id: string;
   title: string;
   imageId: string;
-  imageDeleteHash: string;
+  imageDeleteHash: string | null;
   description: string;
   isPopular: boolean;
   price: number;

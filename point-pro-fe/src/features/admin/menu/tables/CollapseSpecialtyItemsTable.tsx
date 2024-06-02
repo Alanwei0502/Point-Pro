@@ -7,7 +7,7 @@ import { BaseButton, StyledTableCell, StyledTableRow } from '~/components';
 import { ISpecialty, ISpecialtyItem, ISpecialtyWithSpecialtyItems, PatchSpecialtyItemOrderPayload } from '~/types';
 import { SpecialtyItemRow } from '../rows/SpecialtyItemRow';
 import { useAppDispatch } from '~/hooks';
-import { openCreateSpecialtyItemModal, patchSpecialtyItemsOrder, setSpecialtyItems } from '~/store/slices';
+import { getSpecialties, openCreateSpecialtyItemModal, patchSpecialtyItemOrder, setSpecialtyItems } from '~/store/slices';
 
 interface ICollapseSpecialtyItemsTableProps {
   isOpen: boolean;
@@ -35,7 +35,11 @@ export const CollapseSpecialtyItemsTable: FC<ICollapseSpecialtyItemsTableProps> 
       });
 
       dispatch(setSpecialtyItems(newSpecialtiesOrder));
-      dispatch(patchSpecialtyItemsOrder(payload));
+      dispatch(patchSpecialtyItemOrder(payload))
+        .unwrap()
+        .then(() => {
+          dispatch(getSpecialties());
+        });
     }
   };
 

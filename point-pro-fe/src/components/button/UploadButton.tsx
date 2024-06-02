@@ -3,23 +3,15 @@ import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { FC } from 'react';
 
 interface IUploadButtonProps {
-  btn: ButtonTypeMap['props'];
+  btn?: ButtonTypeMap['props'];
   input: InputProps;
 }
 
 export const UploadButton: FC<IUploadButtonProps> = (props) => {
   const { btn, input } = props;
-  const { children = 'Upload file', sx, ...rest } = btn;
+  const { children = '上傳', sx, ...rest } = btn ?? {};
   return (
-    <Button
-      component='label'
-      role={undefined}
-      variant='contained'
-      tabIndex={-1}
-      startIcon={<CloudUploadIcon />}
-      sx={{ fontSize: 14, ...sx }}
-      {...rest}
-    >
+    <Button component='label' role={undefined} variant='contained' startIcon={<CloudUploadIcon />} sx={{ fontSize: 14, ...sx }} {...rest}>
       {children}
       <Input
         type='file'

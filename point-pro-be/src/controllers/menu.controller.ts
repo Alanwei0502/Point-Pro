@@ -17,10 +17,10 @@ import {
   IUpdateSpecialtyItemsOrderRequest,
   IUpdateSpecialtyRequest,
   ICreateMealRequest,
+  IUpdateMealRequest,
 } from '../types';
 
 export class MenuController {
-  // CATEGORY
   static getMenuHandler = async (req: Request, res: ApiResponse, next: NextFunction) => {
     try {
       const categories = await MenuModel.getCustomerCategories();
@@ -40,6 +40,7 @@ export class MenuController {
     }
   };
 
+  // CATEGORY
   static getCategoriesHandler = async (req: Request, res: ApiResponse, next: NextFunction) => {
     try {
       const categories = await MenuModel.getCategories();
@@ -163,6 +164,33 @@ export class MenuController {
     }
   };
 
+  static updateMealHandler = async (req: IUpdateMealRequest, res: ApiResponse, next: NextFunction) => {
+    try {
+      const { mealId } = req.params;
+
+      // Check if meal exists
+      const meal = await MenuModel.getMealById(mealId);
+
+      if (!meal) {
+        res.status(StatusCodes.NOT_FOUND).send({
+          message: ReasonPhrases.NOT_FOUND,
+          result: null,
+        });
+        return;
+      }
+
+      // Update meal
+      await MenuModel.updateMeal(mealId, req.body);
+
+      res.status(StatusCodes.NO_CONTENT).send({
+        message: ReasonPhrases.NO_CONTENT,
+        result: null,
+      });
+    } catch (error) {
+      next(error);
+    }
+  };
+
   static updateMealOrderHandler = async (req: IUpdateMealOrderRequest, res: ApiResponse, next: NextFunction) => {
     try {
       const meals = req.body;
@@ -180,10 +208,10 @@ export class MenuController {
 
   static deleteMealHandler = async (req: IDeleteMealRequest, res: ApiResponse, next: NextFunction) => {
     try {
-      const { id } = req.params;
+      const { mealId } = req.params;
 
       // Check if meal exists
-      const meal = await MenuModel.getMealById(id);
+      const meal = await MenuModel.getMealById(mealId);
 
       if (!meal) {
         res.status(StatusCodes.NOT_FOUND).send({
@@ -194,7 +222,7 @@ export class MenuController {
       }
 
       // Delete meal
-      await MenuModel.deleteMealById(id);
+      await MenuModel.deleteMealById(mealId);
 
       res.status(StatusCodes.NO_CONTENT).send({
         message: ReasonPhrases.NO_CONTENT,
@@ -302,20 +330,6 @@ export class MenuController {
   };
 
   // SPECIALTY ITEM
-  // TODO: delete
-  static getSpecialtyItemsHandler = async (_: Request, res: ApiResponse, next: NextFunction) => {
-    try {
-      const specialtyItems = await MenuModel.getSpecialtyItems();
-
-      res.status(StatusCodes.OK).send({
-        message: ReasonPhrases.OK,
-        result: specialtyItems,
-      });
-    } catch (error) {
-      next(error);
-    }
-  };
-
   static createSpecialtyItemHandler = async (req: ICreateSpecialtyItemRequest, res: ApiResponse, next: NextFunction) => {
     try {
       const newSpecialtyItem = await MenuModel.createSpecialtyItem(req.body);

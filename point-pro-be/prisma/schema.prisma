@@ -58,7 +58,7 @@ model Meal {
   id                 String              @id @default(dbgenerated("uuid_generate_v1mc()")) @db.Uuid
   title              String              @unique @db.VarChar(50)
   imageId            String              @default("") @map("image_id") @db.VarChar(50)
-  imageDeleteHash    String              @default("") @map("image_delete_hash") @db.VarChar(50)
+  imageDeleteHash    String?             @default("") @map("image_delete_hash") @db.VarChar(50)
   description        String              @default("")
   isPopular          Boolean             @default(false) @map("is_popular")
   price              Int                 @default(0)
@@ -78,8 +78,8 @@ model Meal {
 model OrderMealSpecialty {
   orderMealId String    @map("order_meal_id") @db.Uuid
   specialtyId String    @map("specialty_id") @db.Uuid
-  orderMeals  OrderMeal @relation(fields: [orderMealId], references: [id], onDelete: Cascade, onUpdate: NoAction)
-  specialties Specialty @relation(fields: [specialtyId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  orderMeals  OrderMeal @relation(fields: [orderMealId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  specialties Specialty @relation(fields: [specialtyId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
   @@id([orderMealId, specialtyId])
   @@map("order_meal_specialties")
@@ -88,8 +88,8 @@ model OrderMealSpecialty {
 model OrderMealSpecialtyItem {
   orderMealId     String        @map("order_meal_id") @db.Uuid
   specialtyItemId String        @map("specialty_item_id") @db.Uuid
-  orderMeals      OrderMeal     @relation(fields: [orderMealId], references: [id], onDelete: Cascade, onUpdate: NoAction)
-  specialtyItems  SpecialtyItem @relation(fields: [specialtyItemId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  orderMeals      OrderMeal     @relation(fields: [orderMealId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  specialtyItems  SpecialtyItem @relation(fields: [specialtyItemId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
   @@id([orderMealId, specialtyItemId])
   @@map("order_meal_specialty_items")
@@ -104,8 +104,8 @@ model OrderMeal {
   mealId                  String                   @map("meal_id") @db.Uuid
   orderMealSpecialties    OrderMealSpecialty[]
   orderMealSpecialtyItems OrderMealSpecialtyItem[]
-  meals                   Meal                     @relation(fields: [mealId], references: [id], onDelete: Cascade, onUpdate: NoAction)
-  orders                  Order                    @relation(fields: [orderId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  meals                   Meal                     @relation(fields: [mealId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  orders                  Order                    @relation(fields: [orderId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
   @@map("order_meals")
 }
@@ -120,8 +120,8 @@ model Order {
   reservationId String?      @map("reservation_id") @db.Uuid
   paymentId     String?      @map("payment_id") @db.Uuid
   orderMeals    OrderMeal[]
-  payments      Payment?     @relation(fields: [paymentId], references: [id], onUpdate: NoAction)
-  reservations  Reservation? @relation(fields: [reservationId], references: [id], onUpdate: NoAction)
+  payments      Payment?     @relation(fields: [paymentId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  reservations  Reservation? @relation(fields: [reservationId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
   @@map("orders")
 }
@@ -143,8 +143,8 @@ model Payment {
 model PeriodSeat {
   periodId               String                  @map("period_id") @db.Uuid
   seatId                 String                  @map("seat_id") @db.Uuid
-  periods                Period                  @relation(fields: [periodId], references: [id], onDelete: Cascade, onUpdate: NoAction)
-  seats                  Seat                    @relation(fields: [seatId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  periods                Period                  @relation(fields: [periodId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  seats                  Seat                    @relation(fields: [seatId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   reservationPeriodSeats ReservationPeriodSeat[]
 
   @@id([periodId, seatId])
@@ -168,8 +168,8 @@ model ReservationPeriodSeat {
   reservationId String      @map("reservation_id") @db.Uuid
   periodId      String      @map("period_id") @db.Uuid
   seatId        String      @map("seat_id") @db.Uuid
-  periodSeats   PeriodSeat  @relation(fields: [periodId, seatId], references: [periodId, seatId], onDelete: Cascade, onUpdate: NoAction)
-  reservations  Reservation @relation(fields: [reservationId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  periodSeats   PeriodSeat  @relation(fields: [periodId, seatId], references: [periodId, seatId], onDelete: Cascade, onUpdate: Cascade)
+  reservations  Reservation @relation(fields: [reservationId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
   @@id([reservationId, periodId, seatId])
   @@map("reservation_period_seats")
@@ -190,8 +190,8 @@ model Reservation {
   periodId               String                  @map("period_id") @db.Uuid
   orders                 Order[]
   reservationPeriodSeats ReservationPeriodSeat[]
-  periods                Period                  @relation(fields: [periodId], references: [id], onDelete: Cascade, onUpdate: NoAction)
-  users                  User                    @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  periods                Period                  @relation(fields: [periodId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  users                  User                    @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
   @@map("reservations")
 }

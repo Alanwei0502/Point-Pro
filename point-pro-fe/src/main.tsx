@@ -2,12 +2,14 @@ import React from 'react';
 import { Provider } from 'react-redux';
 import { RouterProvider } from 'react-router-dom';
 import ReactDOM from 'react-dom/client';
+import { ToastContainer } from 'react-toastify';
 import { ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import router from './router';
 import { store } from './store/store';
 import { theme } from './theme';
 import './index.css';
+import 'react-toastify/dist/ReactToastify.css';
 
 const root = document.getElementById('root')!;
 
@@ -17,6 +19,7 @@ ReactDOM.createRoot(root).render(
       <Provider store={store}>
         <CssBaseline />
         <RouterProvider router={router} />
+        <ToastContainer position='top-center' autoClose={3000} hideProgressBar limit={3} theme='dark' />
       </Provider>
     </ThemeProvider>
   </React.StrictMode>,

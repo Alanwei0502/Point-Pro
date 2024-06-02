@@ -14,9 +14,8 @@ import {
   insertUsers,
 } from './seeders';
 
-async function main() {
+const main = async () => {
   try {
-    console.log('seeding data...');
     try {
       console.log('seeding users...');
       await insertUsers();
@@ -107,6 +106,6 @@ async function main() {
     console.log('error seeding data:', error);
     await prisma.$disconnect();
   }
-}
+};
 
 main();

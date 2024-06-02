@@ -48,7 +48,6 @@ export type PostCategoryPayload = Pick<ICategory, 'title' | 'position'>;
 export type PatchCategoryPayload = Pick<ICategory, 'id' | 'title'>;
 export type PatchCategoryOrderPayload = Pick<ICategory, 'id' | 'position'>[];
 export type DeleteCategoryPayload = ICategory['id'];
-
 // MEAL
 export type GetMealsWithCategoryAndSpecialtyItemsResponse = ApiResponse<IMealWithCategoryAndSpecialtyItems[]>;
 export type MealResponse = ApiResponse<IMeal>;
@@ -57,8 +56,13 @@ export type PostMealPayload = Pick<IMeal, 'title' | 'price' | 'position' | 'isPo
   image: File;
   specialtyItems: ISpecialtyItem['id'][];
 };
+export type PatchMealPayload = Pick<IMeal, 'id' | 'title' | 'price' | 'description' | 'isPopular' | 'publishedAt' | 'imageId' | 'imageDeleteHash'> & {
+  categoryId: ICategory['id'];
+  image?: File;
+  specialtyItems: ISpecialtyItem['id'][];
+};
 export type PatchMealOrderPayload = Pick<IMeal, 'id' | 'position'>[];
-export type DeleteMealPaylaod = Pick<IMeal, 'id' | 'imageDeleteHash'>;
+export type DeleteMealPaylaod = IMeal['id'];
 
 export interface MealDetails {
   id: string;
@@ -66,11 +70,6 @@ export interface MealDetails {
   type: string;
   price?: number;
   items?: MealDetails[];
-}
-
-export interface PatchMealByIdPayload {
-  mealId: string;
-  payload: Partial<IMeal>; // TODO
 }
 
 // SPECIALTY

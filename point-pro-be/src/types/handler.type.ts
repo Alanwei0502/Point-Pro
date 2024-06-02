@@ -19,6 +19,8 @@ import {
   deleteMealRequestSchma,
   deleteCategoryRequestSchema,
   createMealRequestSchema,
+  getMealByIdRequestSchema,
+  updateMealRequestSchema,
 } from '../validators';
 
 // Request
@@ -95,8 +97,8 @@ export interface ICreateCategoryRequest extends Request {
 }
 
 export interface IUpdateCategoryRequest extends Request {
-  body: z.infer<typeof createCategoryRequestSchema>;
   params: z.infer<typeof getCategoryByIdRequestSchema>;
+  body: z.infer<typeof createCategoryRequestSchema>;
 }
 
 export interface IUpdateCategoriesOrderRequest extends Request {
@@ -104,10 +106,14 @@ export interface IUpdateCategoriesOrderRequest extends Request {
 }
 
 export interface IDeleteCategoryRequest extends Request {
-  params: z.infer<typeof deleteCategoryRequestSchema>;
+  params: z.infer<typeof getCategoryByIdRequestSchema>;
 }
 
 // MEAL
+export interface IUpdateMealRequest extends Request {
+  params: z.infer<typeof getMealByIdRequestSchema>;
+  body: z.infer<typeof updateMealRequestSchema>;
+}
 export interface IUpdateMealOrderRequest extends Request {
   body: z.infer<typeof updateMealOrderRequestSchema>;
 }
@@ -126,8 +132,8 @@ export interface ICreateSpecialtyRequest extends Request {
 }
 
 export interface IUpdateSpecialtyRequest extends Request {
-  body: z.infer<typeof updateSpecialtyRequestSchema>;
   params: z.infer<typeof getSpecialtyByIdRequestSchema>;
+  body: z.infer<typeof updateSpecialtyRequestSchema>;
 }
 
 export interface IDeleteSpecialtyRequest extends Request {
@@ -155,4 +161,9 @@ export interface IDeleteSpecialtyItemRequest extends Request {
 export interface IUploadImageRequest extends Request {
   file?: Express.Multer.File;
   body: z.infer<typeof createMealRequestSchema>;
+}
+
+export interface IPatchImageRequest extends Request {
+  file?: Express.Multer.File;
+  body: z.infer<typeof updateMealRequestSchema>;
 }

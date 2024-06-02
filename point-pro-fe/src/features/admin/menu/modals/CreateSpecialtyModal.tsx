@@ -45,10 +45,12 @@ export const CreateSpecialtyModal: FC<ICreateSpecialtyModalProps> = () => {
         selectionType,
         position: specialties.length,
       }),
-    ).then(() => {
-      dispatch(getSpecialties());
-      handleCancel();
-    });
+    )
+      .unwrap()
+      .then(() => {
+        dispatch(getSpecialties());
+        handleCancel();
+      });
   };
 
   return (
@@ -57,7 +59,7 @@ export const CreateSpecialtyModal: FC<ICreateSpecialtyModalProps> = () => {
         <CardHeader title='新增種類' sx={{ backgroundColor: theme.palette.primary.main, textAlign: 'center' }} />
         <CardContent sx={{ padding: '1rem', width: '50cqw' }}>
           <FormControl margin='dense' required fullWidth>
-            <FormLabel>種類名稱</FormLabel>
+            <FormLabel>名稱</FormLabel>
             <TextField
               autoFocus
               size='small'

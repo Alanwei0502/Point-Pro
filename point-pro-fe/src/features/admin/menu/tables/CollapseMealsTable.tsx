@@ -6,7 +6,7 @@ import AddIcon from '@mui/icons-material/Add';
 import { useAppDispatch } from '~/hooks';
 import { ICategory, IMealWithCategoryAndSpecialtyItems, PatchMealOrderPayload } from '~/types';
 import { BaseButton, StyledTableCell, StyledTableRow } from '~/components';
-import { openCreateMealModal, patchMealsOrder, setMeals } from '~/store/slices';
+import { getMeals, openCreateMealModal, patchMealOrder, setMeals } from '~/store/slices';
 import { MealRow } from '../rows/MealRow';
 
 interface ICollapseMealsTableProps {
@@ -36,7 +36,11 @@ export const CollapseMealsTable: FC<ICollapseMealsTableProps> = (props) => {
       });
 
       dispatch(setMeals(newFilterMealsOrder));
-      dispatch(patchMealsOrder(payload));
+      dispatch(patchMealOrder(payload))
+        .unwrap()
+        .then(() => {
+          dispatch(getMeals());
+        });
     }
   };
 
@@ -53,7 +57,7 @@ export const CollapseMealsTable: FC<ICollapseMealsTableProps> = (props) => {
               <Table stickyHeader size='small'>
                 <TableHead>
                   <StyledTableRow>
-                    {['排序', '名稱', '照片', '價錢(元)', '備註', '客製化選項', '人氣', '上架', '操作'].map((header) => (
+                    {['排序', '名稱', '照片', '價格', '備註', '客製化選項', '人氣', '上架', '操作'].map((header) => (
                       <StyledTableCell key={header}>{header}</StyledTableCell>
                     ))}
                   </StyledTableRow>

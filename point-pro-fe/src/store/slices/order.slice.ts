@@ -5,6 +5,7 @@ import { clearCart, openDialog } from '~/store/slices/customer/takeOrder.slice';
 import { appDayjs, calculateCartItemPrice } from '~/utils';
 import { MobileDialog, IOrder, OrderStatus, SocketTopic, GatherOrder } from '~/types';
 import { openPaymentDrawer } from './payment.slice';
+import { errorHandler } from '../errorHandler';
 
 const name = 'order';
 
@@ -34,11 +35,8 @@ export const getOrders = createAppAsyncThunk(`${name}/getOrders`, async (payload
 
     return { orders };
   } catch (error) {
-    if (error instanceof Error) {
-      return rejectWithValue({ message: error.message });
-    } else {
-      return rejectWithValue({ message: 'unknown error' });
-    }
+    errorHandler(error);
+    return rejectWithValue(error);
   }
 });
 
@@ -98,11 +96,8 @@ export const cancelOrder = createAppAsyncThunk(`${name}/cancelOrder`, async (arg
     socket && socket.emit(SocketTopic.ORDER, cancelOrder);
     dispatch(getOrders({ status: getState()[name].status }));
   } catch (error) {
-    if (error instanceof Error) {
-      return rejectWithValue({ message: error.message });
-    } else {
-      return rejectWithValue({ message: 'unknown error' });
-    }
+    errorHandler(error);
+    return rejectWithValue(error);
   }
 });
 
@@ -113,11 +108,8 @@ export const patchOrder = createAppAsyncThunk(`${name}/patchOrder`, async (order
     socket && socket.emit(SocketTopic.ORDER, updatedOrder);
     dispatch(getOrders({ status: getState()[name].status }));
   } catch (error) {
-    if (error instanceof Error) {
-      return rejectWithValue({ message: error.message });
-    } else {
-      return rejectWithValue({ message: 'unknown error' });
-    }
+    errorHandler(error);
+    return rejectWithValue(error);
   }
 });
 

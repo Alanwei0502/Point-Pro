@@ -14,6 +14,7 @@ import {
   ReservationInfo,
   IUser,
 } from '~/types';
+import { errorHandler } from '~/store/errorHandler';
 
 const name = 'booking';
 
@@ -55,74 +56,56 @@ const initialState: ICustomerBookingSliceState = {
   token: '',
 };
 
-export const getAvailablePeriods = createAppAsyncThunk(
-  `${name}/getAvailablePeriods`,
-  async (_, { rejectWithValue }) => {
-    try {
-      const result = await PeriodApi.getAvailablePeriods();
-      return result?.result ?? [];
-    } catch (error) {
-      if (error instanceof Error) {
-        return rejectWithValue({ message: error.message });
-      } else {
-        return rejectWithValue({ message: 'unknown error' });
-      }
-    }
-  },
-);
+export const getAvailablePeriods = createAppAsyncThunk(`${name}/getAvailablePeriods`, async (_, { rejectWithValue }) => {
+  try {
+    const result = await PeriodApi.getAvailablePeriods();
+    return result?.result ?? [];
+  } catch (error) {
+    errorHandler(error);
+    return rejectWithValue(error);
+  }
+});
 
-export const postReservation = createAppAsyncThunk(
-  `${name}/postReservation`,
-  async (_, { getState, rejectWithValue }) => {
-    try {
-      const { username, gender, phone, email, remark, people, selectedPeriod } = getState().booking;
-      const periodId = selectedPeriod?.id;
+export const postReservation = createAppAsyncThunk(`${name}/postReservation`, async (_, { getState, rejectWithValue }) => {
+  try {
+    const { username, gender, phone, email, remark, people, selectedPeriod } = getState().booking;
+    const periodId = selectedPeriod?.id;
 
-      if (!periodId) return;
+    if (!periodId) return;
 
-      const socket = getState().socket.socket;
+    const socket = getState().socket.socket;
 
-      const response = await ReservationApi.postReservation({
-        username,
-        gender,
-        phone,
-        email,
-        role: Role.CUSTOMER,
-        remark,
-        people,
-        periodId,
-        type: ReservationType.ONLINE,
-      });
+    const response = await ReservationApi.postReservation({
+      username,
+      gender,
+      phone,
+      email,
+      role: Role.CUSTOMER,
+      remark,
+      people,
+      periodId,
+      type: ReservationType.ONLINE,
+    });
 
-      socket && socket.emit(SocketTopic.RESERVATION, response.result);
+    socket && socket.emit(SocketTopic.RESERVATION, response.result);
 
-      return response.result;
-    } catch (error) {
-      if (error instanceof Error) {
-        return rejectWithValue({ message: error.message });
-      } else {
-        return rejectWithValue({ message: 'unknown error' });
-      }
-    }
-  },
-);
+    return response.result;
+  } catch (error) {
+    errorHandler(error);
+    return rejectWithValue(error);
+  }
+});
 
-export const getReservationByPhone = createAppAsyncThunk(
-  `${name}/getReservationByPhone`,
-  async (phone: string, { rejectWithValue, dispatch }) => {
-    try {
-      const result = await ReservationApi.getReservationByPhone(phone);
+export const getReservationByPhone = createAppAsyncThunk(`${name}/getReservationByPhone`, async (phone: string, { rejectWithValue, dispatch }) => {
+  try {
+    const result = await ReservationApi.getReservationByPhone(phone);
 
-      return result?.result ?? null;
-    } catch (error) {
-      if (error instanceof Error) {
-        return rejectWithValue({ message: error.message });
-      } else {
-        return rejectWithValue({ message: 'unknown error' });
-      }
-    }
-  },
-);
+    return result?.result ?? null;
+  } catch (error) {
+    errorHandler(error);
+    return rejectWithValue(error);
+  }
+});
 
 export const bookingSlice = createSlice({
   name,
