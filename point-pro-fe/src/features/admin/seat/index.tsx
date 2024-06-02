@@ -1,5 +1,5 @@
 import { FC, useState } from 'react';
-import { PanelTabs } from '~/components';
+import { TabPanel } from '~/components';
 import { SeatTabs } from './SeatTabs';
 import { SeatSearchBar } from './SeatSearchBar';
 import { TabTable, TabList } from './tab';
@@ -23,12 +23,12 @@ export const AdminSeat: FC<SeatContainerProps> = () => {
     <>
       <SeatTabs view={view} setView={setView} />
       <SeatSearchBar view={view} date={date} handleDateChange={handleDateChange} handleSearchChange={handleSearchChange} />
-      <PanelTabs value={view} index={0}>
+      <TabPanel value={view} index={0}>
         <TabTable date={date} />
-      </PanelTabs>
-      <PanelTabs value={view} index={1}>
+      </TabPanel>
+      <TabPanel value={view} index={1}>
         <TabList date={date} search={search} />
-      </PanelTabs>
+      </TabPanel>
       {/* <BookingQRCodeDialog /> */}
     </>
   );

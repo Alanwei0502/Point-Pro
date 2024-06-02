@@ -14,7 +14,7 @@ interface ISpecialtySettingTableProps {}
 export const SpecialtySettingTable: FC<ISpecialtySettingTableProps> = () => {
   const dispatch = useAppDispatch();
 
-  const speicalties = useAppSelector((state) => state.menu.specialties);
+  const speicalties = useAppSelector((state) => state.menuSetting.specialties);
 
   const sensors = useSensors(useSensor(MouseSensor), useSensor(TouchSensor), useSensor(KeyboardSensor));
 

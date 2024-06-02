@@ -3,7 +3,7 @@ import { Button, Typography } from '@mui/material';
 import MoneyIcon from '@mui/icons-material/Money';
 import CreditCardIcon from '@mui/icons-material/CreditCard';
 import { useAppDispatch, useAppSelector } from '~/hooks';
-import { openModal } from '~/store/slices/customer/takeOrder.slice';
+import { openModal } from '~/store/slices/customer/menu.slice';
 import linePay from '~/assets/images/line-pay.png';
 import { requestEcPay, requestLinePay } from '~/store/slices';
 import { MobileModal, OrderStatus } from '~/types';
@@ -14,7 +14,7 @@ interface IPaymentModalProps {}
 export const PaymentModal: FC<IPaymentModalProps> = () => {
   const dispatch = useAppDispatch();
 
-  const { type: modalType } = useAppSelector(({ takeOrder }) => takeOrder.modal);
+  const { type: modalType } = useAppSelector((state) => state.menu.modal);
   const orders = useAppSelector(({ order }) => order.orders);
   const linePayResponse = useAppSelector(({ payment }) => payment.linePayResponse);
 

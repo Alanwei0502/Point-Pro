@@ -5,6 +5,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { useAppDispatch } from '~/hooks';
 import { viewCartItemCustomized, openModal } from '~/store/slices';
 import { ICartItem, MobileModal } from '~/types';
+import { MEAL_IMAGE_URL } from '~/utils';
 
 interface ICartMealProps {
   cartItem: ICartItem;
@@ -36,7 +37,7 @@ export const CartMeal: FC<ICartMealProps> = (props) => {
         <Box sx={{ width: '100%' }}>
           <Grid container gap={1} sx={{ justifyContent: 'space-between', marginBottom: '1rem' }}>
             <Grid item sx={{ position: 'relative' }} xs={3}>
-              <Box component='img' src={imageId} alt={`${title}-img`} sx={{ width: '5rem', verticalAlign: 'middle' }} />
+              <Box component='img' src={`${MEAL_IMAGE_URL}${imageId}s.jpg`} alt={`${title}-img`} sx={{ width: '5rem', verticalAlign: 'middle' }} />
               {cartItem.isPopular && (
                 <Box
                   sx={{

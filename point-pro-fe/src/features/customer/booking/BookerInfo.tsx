@@ -1,7 +1,7 @@
 import { FC, useState } from 'react';
 import { Box, ButtonBase, FormControl, FormControlLabel, FormLabel, Radio, RadioGroup, TextField } from '@mui/material';
 import { BaseCheckbox, BaseButton } from '~/components';
-import { CustomerBookingDialog, Gender } from '~/types';
+import { MobileBookingDialog, Gender } from '~/types';
 import { emailRegex, genderObj, phoneRegex } from '~/utils';
 import { useAppDispatch, useAppSelector } from '~/hooks';
 import { setPhone, setDialog, setName, setEmail, setRemark, setGender, setAgreedPolicy } from '~/store/slices';
@@ -54,7 +54,7 @@ export const BookerInfo: FC<IBookerInfoProps> = () => {
   };
 
   const handleOpenPrivayPolicyDialog = () => {
-    dispatch(setDialog(CustomerBookingDialog.PRIVACY_POLICY));
+    dispatch(setDialog(MobileBookingDialog.PRIVACY_POLICY));
   };
 
   return (
@@ -118,10 +118,7 @@ export const BookerInfo: FC<IBookerInfoProps> = () => {
           label='確認我已閱讀並同意'
           sx={{ margin: 0 }}
         />
-        <ButtonBase
-          sx={{ textDecoration: 'underline', fontWeight: 700, fontSize: 'body1.fontSize' }}
-          onClick={handleOpenPrivayPolicyDialog}
-        >
+        <ButtonBase sx={{ textDecoration: 'underline', fontWeight: 700, fontSize: 'body1.fontSize' }} onClick={handleOpenPrivayPolicyDialog}>
           PointPro 隱私權政策
         </ButtonBase>
       </Box>

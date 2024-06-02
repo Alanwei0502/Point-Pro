@@ -7,7 +7,7 @@ import { BaseButton, Loading } from '~/components';
 import { appDayjs, formatTimeOnly, formatDateOnly } from '~/utils';
 import { useAppDispatch, useAppSelector } from '~/hooks';
 import { setPeople, setSelectedDate, setSelectedPeriod, getAvailablePeriods, setDialog } from '~/store/slices';
-import { CustomerBookingDialog } from '~/types';
+import { MobileBookingDialog } from '~/types';
 
 const formLabelStyle: SxProps<Theme> | undefined = { fontWeight: 700, color: 'common.black' };
 
@@ -36,9 +36,7 @@ export const PeopleAndTime: FC<IPeopleAndTimeProps> = () => {
 
     if (!choosedPeriodInfo) return [];
 
-    return choosedPeriodInfo.available > 10
-      ? [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-      : Array.from({ length: choosedPeriodInfo.available }, (_, i) => i + 1);
+    return choosedPeriodInfo.available > 10 ? [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] : Array.from({ length: choosedPeriodInfo.available }, (_, i) => i + 1);
   }, [availableTime, selectedPeriod]);
 
   useEffect(() => {
@@ -62,7 +60,7 @@ export const PeopleAndTime: FC<IPeopleAndTimeProps> = () => {
   };
 
   const handleOpenBookingSearch = () => {
-    dispatch(setDialog(CustomerBookingDialog.RECORD_QUERY));
+    dispatch(setDialog(MobileBookingDialog.RECORD_QUERY));
   };
 
   return isLoading ? (

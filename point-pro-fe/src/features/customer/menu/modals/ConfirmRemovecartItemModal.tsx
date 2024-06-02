@@ -2,7 +2,7 @@ import { FC } from 'react';
 import { Button, Typography } from '@mui/material';
 import { MobileModalLayout } from '~/components';
 import { useAppDispatch, useAppSelector } from '~/hooks';
-import { closeModal, deleteCartItem } from '~/store/slices/customer/takeOrder.slice';
+import { closeModal, deleteCartItem } from '~/store/slices/customer/menu.slice';
 import { MobileModal } from '~/types';
 
 interface IConfirmRemoveCartItemModalProps {}
@@ -10,7 +10,7 @@ interface IConfirmRemoveCartItemModalProps {}
 export const ConfirmRemoveCartItemModal: FC<IConfirmRemoveCartItemModalProps> = () => {
   const dispatch = useAppDispatch();
 
-  const { type: modalType, data } = useAppSelector(({ takeOrder }) => takeOrder.modal);
+  const { type: modalType, data } = useAppSelector((state) => state.menu.modal);
 
   const handleConfirm = () => {
     if (data && modalType === MobileModal.REMOVE_CART_CONFIRM) {

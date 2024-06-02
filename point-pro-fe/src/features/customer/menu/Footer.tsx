@@ -37,9 +37,9 @@ interface IFooterProps {}
 export const Footer: FC<IFooterProps> = () => {
   const dispatch = useAppDispatch();
 
-  const userInfo = useAppSelector(({ takeOrder }) => takeOrder.userInfo);
-  const dialogType = useAppSelector(({ takeOrder }) => takeOrder.dialog.type);
-  const cart = useAppSelector(({ takeOrder }) => takeOrder.cart);
+  const userInfo = useAppSelector((state) => state.menu.userInfo);
+  const dialogType = useAppSelector((state) => state.menu.dialog.type);
+  const cart = useAppSelector((state) => state.menu.cart);
   const orders = useAppSelector(({ order }) => order.orders);
 
   const cartAmount = useMemo(() => cart.reduce((acc, item) => (acc += item.amount), 0), [cart]);

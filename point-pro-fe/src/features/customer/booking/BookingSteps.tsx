@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import { MobileStepper } from '@mui/material';
 import { MobileButton } from '~/components';
-import { CustomerBookingDialog } from '~/types';
+import { MobileBookingDialog } from '~/types';
 import { useAppDispatch, useAppSelector } from '~/hooks';
 import { setStep, setDialog, postReservation } from '~/store/slices';
 
@@ -48,7 +48,7 @@ export const BookingSteps: FC<IBookingStepsProps> = (props) => {
 
   const handleConfirm = async () => {
     await dispatch(postReservation());
-    dispatch(setDialog(CustomerBookingDialog.REMINDER));
+    dispatch(setDialog(MobileBookingDialog.REMINDER));
   };
 
   return (

@@ -1,6 +1,6 @@
 import { FC, Fragment, useEffect } from 'react';
 import { Box, Button, Divider, List, Typography } from '@mui/material';
-import { CartMeal } from '~/features/customer/take-order/CartMeal';
+import { CartMeal } from '~/features/customer/menu/CartMeal';
 import { MobileDialogLayout } from '~/components';
 import { calculateCartPrice } from '~/utils';
 import { useAppDispatch, useAppSelector } from '~/hooks';
@@ -12,9 +12,9 @@ interface ICartDialogProps {}
 export const CartDialog: FC<ICartDialogProps> = () => {
   const dispatch = useAppDispatch();
 
-  const dialogType = useAppSelector(({ takeOrder }) => takeOrder.dialog.type);
-  const meals = useAppSelector(({ takeOrder }) => takeOrder.meals);
-  const cart = useAppSelector(({ takeOrder }) => takeOrder.cart);
+  const dialogType = useAppSelector((state) => state.menu.dialog.type);
+  const meals = useAppSelector((state) => state.menu.meals);
+  const cart = useAppSelector((state) => state.menu.cart);
 
   const totalAmount = cart.reduce((acc, cur) => (acc += cur.amount), 0);
   const totaPrice = calculateCartPrice(cart);

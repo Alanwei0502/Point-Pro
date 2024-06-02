@@ -14,7 +14,7 @@ interface IMenuSettingTableProps {}
 
 export const MenuSettingTable: FC<IMenuSettingTableProps> = () => {
   const dispatch = useAppDispatch();
-  const categories = useAppSelector((state) => state.menu.categories);
+  const categories = useAppSelector((state) => state.menuSetting.categories);
 
   const sensors = useSensors(useSensor(MouseSensor), useSensor(TouchSensor), useSensor(KeyboardSensor));
 

@@ -13,7 +13,7 @@ export enum MobileModal {
   CART_ITEM_IS_OFF = 'CART_ITEM_IS_OFF',
 }
 
-export enum CustomerBookingDialog {
+export enum MobileBookingDialog {
   RECORD_QUERY = 'RECORD_QUERY',
   PRIVACY_POLICY = 'PRIVACY_POLICY',
   REMINDER = 'REMINDER',

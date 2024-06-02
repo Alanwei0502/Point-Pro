@@ -7,7 +7,7 @@ import { MobileModal } from '~/types';
 interface ICartItemIsOffReminderModalProps {}
 
 export const CartItemIsOffReminderModal: FC<ICartItemIsOffReminderModalProps> = () => {
-  const { type: modalType, data } = useAppSelector(({ takeOrder }) => takeOrder.modal);
+  const { type: modalType, data } = useAppSelector((state) => state.menu.modal);
 
   return (
     <MobileModalLayout open={modalType === MobileModal.CART_ITEM_IS_OFF}>

@@ -11,7 +11,7 @@ interface ISpecialtyItemsSettingModalProps {}
 export const SpecialtySettingModal: FC<ISpecialtyItemsSettingModalProps> = () => {
   const dispatch = useAppDispatch();
 
-  const isOpen = useAppSelector((state) => state.menu.specialtySettingModal.isOpen);
+  const isOpen = useAppSelector((state) => state.menuSetting.specialtySettingModal.isOpen);
 
   const handleCloseModal = () => {
     dispatch(closeSpecialtySettingModal());

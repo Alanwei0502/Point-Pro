@@ -28,9 +28,9 @@ import {
   DeleteSpecialtyItemPayload,
 } from '~/types';
 
-const name = 'menu';
+const name = 'menuSetting';
 
-interface IMenuSliceState {
+interface IMenuSettingSliceState {
   categories: ICategory[];
   meals: IMealWithCategoryAndSpecialtyItems[];
   specialties: ISpecialtyWithSpecialtyItems[];
@@ -74,7 +74,7 @@ interface IMenuSliceState {
   };
 }
 
-const initialState: IMenuSliceState = {
+const initialState: IMenuSettingSliceState = {
   categories: [],
   meals: [],
   specialties: [],
@@ -331,12 +331,12 @@ export const deleteSpecialtyItem = createAppAsyncThunk(`${name}/deleteSpecialtyI
   }
 });
 
-export const menuSlice = createSlice({
+export const menuSettingSlice = createSlice({
   name,
   initialState,
   reducers: {
     // CATEGORY
-    setCategories: (state, action: PayloadAction<IMenuSliceState['categories']>) => {
+    setCategories: (state, action: PayloadAction<IMenuSettingSliceState['categories']>) => {
       state.categories = action.payload;
     },
     openCreateCategoryModal: (state) => {
@@ -353,7 +353,7 @@ export const menuSlice = createSlice({
       state.deleteCategoryConfirmModal = initialState.deleteCategoryConfirmModal;
     },
     // MEAL
-    setMeals: (state, action: PayloadAction<IMenuSliceState['meals']>) => {
+    setMeals: (state, action: PayloadAction<IMenuSettingSliceState['meals']>) => {
       state.meals = action.payload;
     },
     openCreateMealModal: (state, action: PayloadAction<ICategory['id']>) => {
@@ -371,7 +371,7 @@ export const menuSlice = createSlice({
       state.deleteMealConfirmModal = initialState.deleteMealConfirmModal;
     },
     // SPECIALTY
-    setSpecialties: (state, action: PayloadAction<IMenuSliceState['specialties']>) => {
+    setSpecialties: (state, action: PayloadAction<IMenuSettingSliceState['specialties']>) => {
       state.specialties = action.payload;
     },
     openCreateSpecialtyModal: (state) => {
@@ -464,4 +464,4 @@ export const {
   closeCreateSpecialtyItemModal,
   openDeleteSpecialtyItemConfirmModal,
   closeDeleteSpecialtyItemConfirmModal,
-} = menuSlice.actions;
+} = menuSettingSlice.actions;

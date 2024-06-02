@@ -2,7 +2,7 @@ import { FC } from 'react';
 import { Box } from '@mui/material';
 import { BaseModal } from '~/components';
 import { useAppDispatch } from '~/hooks';
-import { closeModal } from '~/store/slices/customer/takeOrder.slice';
+import { closeModal } from '~/store/slices/customer/menu.slice';
 
 interface IMobileModalLayoutProps {
   children: React.ReactNode;

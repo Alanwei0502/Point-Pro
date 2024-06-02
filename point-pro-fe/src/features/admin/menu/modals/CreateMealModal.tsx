@@ -26,10 +26,10 @@ interface ICreateMealModalProps {}
 export const CreateMealModal: FC<ICreateMealModalProps> = () => {
   const dispatch = useAppDispatch();
 
-  const meals = useAppSelector((state) => state.menu.meals);
-  const isOpen = useAppSelector((state) => state.menu.createMealModal.isOpen);
-  const categoryId = useAppSelector((state) => state.menu.createMealModal.data);
-  const specialties = useAppSelector((state) => state.menu.specialties);
+  const meals = useAppSelector((state) => state.menuSetting.meals);
+  const isOpen = useAppSelector((state) => state.menuSetting.createMealModal.isOpen);
+  const categoryId = useAppSelector((state) => state.menuSetting.createMealModal.data);
+  const specialties = useAppSelector((state) => state.menuSetting.specialties);
   const allSpecialtyItems = useMemo(() => specialties.flatMap((s) => s.specialtyItems), [specialties]);
 
   const [title, setTitle] = useState<IMeal['title']>('');

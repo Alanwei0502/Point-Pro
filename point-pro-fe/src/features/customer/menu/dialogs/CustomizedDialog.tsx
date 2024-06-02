@@ -3,14 +3,7 @@ import { Box, Button, Divider, List, ListItemButton, ListSubheader, Typography }
 import { BaseCheckbox, MobileDialogLayout, NumberInput } from '~/components';
 import { calculateCartItemPrice, getToken } from '~/utils';
 import { useAppDispatch, useAppSelector } from '~/hooks';
-import {
-  closeDialog,
-  updateSpecialty,
-  increaseMealAmount,
-  decreaseMealAmount,
-  createCartItem,
-  updateCartItem,
-} from '~/store/slices';
+import { closeDialog, updateSpecialty, increaseMealAmount, decreaseMealAmount, createCartItem, updateCartItem } from '~/store/slices';
 import { MobileDialog, GetMenuResponseSpecialtiesWithItems, GetMenuResponseSpecialtyItem } from '~/types';
 
 interface ICustomizedSpecialtiesProps {}
@@ -18,8 +11,8 @@ interface ICustomizedSpecialtiesProps {}
 const CustomizedSpecialties: FC<ICustomizedSpecialtiesProps> = () => {
   const dispatch = useAppDispatch();
   const token = getToken();
-  const specialtiesWithItems = useAppSelector(({ takeOrder }) => takeOrder.specialtiesWithItems);
-  const customizedDialogData = useAppSelector(({ takeOrder }) => takeOrder.dialog.data);
+  const specialtiesWithItems = useAppSelector((state) => state.menu.specialtiesWithItems);
+  const customizedDialogData = useAppSelector((state) => state.menu.dialog.data);
 
   const mealSpecialtyItemIds = customizedDialogData?.mealSpecialtyItems.map((s) => s.specialtyItemId) ?? [];
 
@@ -27,12 +20,11 @@ const CustomizedSpecialties: FC<ICustomizedSpecialtiesProps> = () => {
     .map((s) => ({ ...s, specialtyItems: s.specialtyItems.filter((si) => mealSpecialtyItemIds.includes(si.id)) }))
     .filter((s) => s.specialtyItems.length > 0);
 
-  const handleClickItem =
-    (selectedSpecialty: GetMenuResponseSpecialtiesWithItems, selectedItem: GetMenuResponseSpecialtyItem) => () => {
-      // TODO: recover token
-      // if (!token) return;
-      dispatch(updateSpecialty({ selectedSpecialty, selectedItem }));
-    };
+  const handleClickItem = (selectedSpecialty: GetMenuResponseSpecialtiesWithItems, selectedItem: GetMenuResponseSpecialtyItem) => () => {
+    // TODO: recover token
+    // if (!token) return;
+    dispatch(updateSpecialty({ selectedSpecialty, selectedItem }));
+  };
 
   return (
     <>
@@ -52,11 +44,7 @@ const CustomizedSpecialties: FC<ICustomizedSpecialtiesProps> = () => {
                       <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
                         <Typography>{item.title}</Typography>
                         {/* TODO: recover token */}
-                        {!token && (
-                          <BaseCheckbox
-                            checked={!!customizedDialogData?.selectedSpecialtyItems.find(({ id }) => id === item.id)}
-                          />
-                        )}
+                        {!token && <BaseCheckbox checked={!!customizedDialogData?.selectedSpecialtyItems.find(({ id }) => id === item.id)} />}
                       </Box>
                     </ListItemButton>
                     <Divider light />
@@ -88,8 +76,8 @@ export const CustomizedDialog: FC<ICustomizedDialogProps> = () => {
   const dispatch = useAppDispatch();
 
   const token = getToken();
-  const { type: dialogType, data: customizedDialogData } = useAppSelector(({ takeOrder }) => takeOrder.dialog);
-  const isModifiedCartItem = useAppSelector(({ takeOrder }) => takeOrder.isModifiedCartItem);
+  const { type: dialogType, data: customizedDialogData } = useAppSelector((state) => state.menu.dialog);
+  const isModifiedCartItem = useAppSelector((state) => state.menu.isModifiedCartItem);
 
   const handleClose = () => {
     dispatch(closeDialog());
@@ -160,11 +148,7 @@ export const CustomizedDialog: FC<ICustomizedDialogProps> = () => {
               {customizedDialogData.id ? calculateCartItemPrice(customizedDialogData) : 0}元
             </Typography>
           </Box>
-          {isModifiedCartItem ? (
-            <Button onClick={handleUpdateCartItem}>確認修改</Button>
-          ) : (
-            <Button onClick={handleAddToCart}>加入購物車</Button>
-          )}
+          {isModifiedCartItem ? <Button onClick={handleUpdateCartItem}>確認修改</Button> : <Button onClick={handleAddToCart}>加入購物車</Button>}
         </>
       }
     >

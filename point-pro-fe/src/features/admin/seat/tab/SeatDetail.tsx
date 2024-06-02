@@ -6,7 +6,7 @@ import { theme } from '~/theme';
 import UnDraw from '~/assets/images/undraw_login.svg';
 import { ReservationDetail } from './ReservationDetail';
 
-import { SeatDetailsPeriod, SeatDetails, CustomerBookingDialog } from '~/types';
+import { SeatDetailsPeriod, SeatDetails, MobileBookingDialog } from '~/types';
 import { appDayjs, seatStatusListObj, formatTimeOnly, genderObj } from '~/utils';
 
 import { useAppDispatch } from '~/hooks';
@@ -162,7 +162,7 @@ export const SeatDetail: FC<SeatDetailProps> = ({ open, onClose, state, update, 
             }),
           );
           await dispatch(getUserTokenByReservationLogId({ reservationId: info?.reservation?.id as string }));
-          dispatch(setDialog(CustomerBookingDialog.QRCODE));
+          dispatch(setDialog(MobileBookingDialog.QRCODE));
           update();
         } catch (error) {
           console.log({ error });

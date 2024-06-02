@@ -12,8 +12,8 @@ interface ICreateSpecialtyModalProps {}
 export const CreateSpecialtyModal: FC<ICreateSpecialtyModalProps> = () => {
   const dispatch = useAppDispatch();
 
-  const specialties = useAppSelector((state) => state.menu.specialties);
-  const isOpen = useAppSelector((state) => state.menu.createSpecialtyModal.isOpen);
+  const specialties = useAppSelector((state) => state.menuSetting.specialties);
+  const isOpen = useAppSelector((state) => state.menuSetting.createSpecialtyModal.isOpen);
 
   const [title, setTitle] = useState<ISpecialty['title']>('');
   const [selectionType, setSelectionType] = useState<ISpecialty['selectionType']>(SelectionType.SINGLE);

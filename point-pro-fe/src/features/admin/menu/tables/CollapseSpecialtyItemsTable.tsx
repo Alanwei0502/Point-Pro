@@ -4,7 +4,7 @@ import AddIcon from '@mui/icons-material/Add';
 import { DndContext, DragEndEvent, KeyboardSensor, MouseSensor, TouchSensor, useSensor, useSensors } from '@dnd-kit/core';
 import { SortableContext, arrayMove } from '@dnd-kit/sortable';
 import { BaseButton, StyledTableCell, StyledTableRow } from '~/components';
-import { ISpecialty, ISpecialtyItem, ISpecialtyWithSpecialtyItems, PatchSpecialtyItemOrderPayload } from '~/types';
+import { ISpecialtyWithSpecialtyItems, PatchSpecialtyItemOrderPayload } from '~/types';
 import { SpecialtyItemRow } from '../rows/SpecialtyItemRow';
 import { useAppDispatch } from '~/hooks';
 import { getSpecialties, openCreateSpecialtyItemModal, patchSpecialtyItemOrder, setSpecialtyItems } from '~/store/slices';

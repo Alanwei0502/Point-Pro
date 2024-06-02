@@ -8,18 +8,18 @@ import { SeatInfo } from './SeatInfo';
 import { CategoryNavbar } from './CategoryNavbar';
 import { Meals } from './Meals';
 import { Footer } from './Footer';
-import { CartDialog } from './CartDialog';
-import { CustomizedDialog } from './CustomizedDialog';
-import { OrdersDialog } from './OrderDialog';
-import { ConfirmRemoveCartItemModal } from './ConfirmRemovecartItemModal';
-import { PaymentModal } from './PaymentModal';
-import { CounterReminderModal } from './CounterReminderModal';
-import { CartItemIsOffReminderModal } from './CartItemIsOffReminderModal';
-import { EcPayFormModal } from './EcPayFormModal';
+import { CartDialog } from './dialogs/CartDialog';
+import { CustomizedDialog } from './dialogs/CustomizedDialog';
+import { OrdersDialog } from './dialogs/OrderDialog';
+import { ConfirmRemoveCartItemModal } from './modals/ConfirmRemovecartItemModal';
+import { PaymentModal } from './modals/PaymentModal';
+import { CounterReminderModal } from './modals/CounterReminderModal';
+import { CartItemIsOffReminderModal } from './modals/CartItemIsOffReminderModal';
+import { EcPayFormModal } from './modals/EcPayFormModal';
 
-interface ITakeOrdersProps {}
+interface IMenuProps {}
 
-export const TakeOrders: FC<ITakeOrdersProps> = () => {
+export const Menu: FC<IMenuProps> = () => {
   const dispatch = useAppDispatch();
 
   useSocket({ ns: NameSpace.user });

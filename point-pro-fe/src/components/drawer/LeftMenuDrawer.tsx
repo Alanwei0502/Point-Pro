@@ -13,29 +13,29 @@ import { theme } from '~/theme';
 
 export const pathObj = {
   booking: 'booking',
-  takeOrders: 'take-orders',
   payment: 'payment',
   confirm: 'confirm',
   cancel: 'cancel',
   admin: 'admin',
-  orders: 'orders',
-  takeOrder: 'take-order',
-  seat: 'seat',
+  order: 'order',
   menu: 'menu',
+  takeOrder: 'take_order',
+  seat: 'seat',
+  menuSetting: 'menu_setting',
 };
 
 export const sideBarItemList: SideBarItemType[] = [
   {
-    id: pathObj.orders,
-    name: '訂單系統',
-    src: RestaurantMenuIcon,
-    path: `/${pathObj.admin}/${pathObj.orders}`,
-  },
-  {
     id: pathObj.takeOrder,
     name: '點餐系統',
-    src: StickyNote2Icon,
+    src: RestaurantMenuIcon,
     path: `/${pathObj.admin}/${pathObj.takeOrder}`,
+  },
+  {
+    id: pathObj.order,
+    name: '訂單系統',
+    src: StickyNote2Icon,
+    path: `/${pathObj.admin}/${pathObj.order}`,
   },
   {
     id: pathObj.seat,
@@ -44,10 +44,10 @@ export const sideBarItemList: SideBarItemType[] = [
     path: `/${pathObj.admin}/${pathObj.seat}`,
   },
   {
-    id: pathObj.menu,
+    id: pathObj.menuSetting,
     name: '菜單系統',
     src: MenuBookIcon,
-    path: `/${pathObj.admin}/${pathObj.menu}`,
+    path: `/${pathObj.admin}/${pathObj.menuSetting}`,
   },
 ];
 

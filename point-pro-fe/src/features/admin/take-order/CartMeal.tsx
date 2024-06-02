@@ -1,30 +1,27 @@
-import { Box, IconButton, List, ListItem, ListItemText, Typography } from '@mui/material';
-import DeleteIcon from '@mui/icons-material/Delete';
 import { FC } from 'react';
+import { Box, Chip, IconButton, List, Typography } from '@mui/material';
+import DeleteIcon from '@mui/icons-material/Delete';
 import { Column, Row } from '~/components';
 import { useAppDispatch } from '~/hooks';
-import { deleteCartItem, viewCartItemCustomized } from '~/store/slices';
+import { ITakeOrderSliceState, takeOrderSlice } from '~/store/slices';
 import { theme } from '~/theme';
-import { ICartItem } from '~/types';
 
 interface ICartMealProps {
   idx: number;
-  cartItem: ICartItem;
+  cartItem: ITakeOrderSliceState['cart'][0];
 }
 
 export const CartMeal: FC<ICartMealProps> = ({ idx, cartItem }) => {
   const dispatch = useAppDispatch();
 
-  const { title, amount, specialties, price } = cartItem;
+  const { deleteCartItem, editCartItem } = takeOrderSlice.actions;
+  const { title, amount, price, selectSpecialtyItems } = cartItem;
 
-  const specialtiesPrice = specialties.reduce(
-    (acc, specialty) => (acc += specialty.items.reduce((acc, specialtyItem) => (acc += specialtyItem.price), 0)),
-    0,
-  );
+  const specialtiesPrice = selectSpecialtyItems.reduce((acc, specialtyItem) => (acc += specialtyItem.price), 0);
   const totalPrice = (price + specialtiesPrice) * amount;
 
   const handleEditCartItem = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-    dispatch(viewCartItemCustomized({ cartItem, idx }));
+    dispatch(editCartItem(idx));
   };
 
   const handleDeleteCartItem = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
@@ -36,41 +33,32 @@ export const CartMeal: FC<ICartMealProps> = ({ idx, cartItem }) => {
     <Column
       sx={{
         flex: 1,
-        padding: '.2rem .5rem',
-        gap: '.2rem',
+        padding: '0 .5rem',
         borderBottom: `1px solid ${theme.palette.common.black_20}`,
-        boxShadow: 'rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px',
+        boxShadow: `${theme.palette.common.black_40}  0px 1px 2px 0px, ${theme.palette.common.black_40} 0px 2px 6px 2px`,
         cursor: 'pointer',
       }}
       onClick={handleEditCartItem}
     >
       <Row>
-        <Typography variant='h6' fontWeight={700} mb={0.5}>
+        <Typography fontWeight={700}>
           {title} x {amount}
         </Typography>
-        <IconButton sx={{ marginLeft: 'auto' }} size='large' color='inherit' onClick={handleDeleteCartItem}>
+        <IconButton sx={{ marginLeft: 'auto' }} size='small' onClick={handleDeleteCartItem}>
           <DeleteIcon />
         </IconButton>
       </Row>
-      <Row sx={{ gap: '0.5rem' }} alignItems='flex-start'>
+      <Row alignItems='flex-start'>
         <Column>
           <List dense={true} sx={{ padding: 0, margin: 0 }}>
-            {specialties.map((specialty) => (
-              <ListItem key={specialty.id} sx={{ padding: 0, margin: 0 }}>
-                <ListItemText
-                  secondary={specialty.items.map((item) => (
-                    <Typography component='span' variant='body1' key={item.id} lineHeight={1.2} sx={{ marginRight: '0.5rem' }}>
-                      {item.title}
-                    </Typography>
-                  ))}
-                />
-              </ListItem>
+            {selectSpecialtyItems.map((si) => (
+              <Chip key={si.id} label={si.title} variant='filled' size='small' sx={{ margin: '1px', fontSize: 12 }} />
             ))}
           </List>
         </Column>
       </Row>
-      <Box sx={{ width: '100%', textAlign: 'right' }}>
-        <Typography variant='body1' sx={{ fontWeight: 900 }}>
+      <Box sx={{ textAlign: 'right' }}>
+        <Typography sx={{ fontWeight: 700 }}>
           {`${price}${specialtiesPrice ? `(+${specialtiesPrice})` : ''} x ${amount} = ${totalPrice}元`}
         </Typography>
       </Box>

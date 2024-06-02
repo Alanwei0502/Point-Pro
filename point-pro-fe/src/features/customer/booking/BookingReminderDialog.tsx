@@ -9,7 +9,7 @@ import {
   MapSharp as MapSharpIcon,
 } from '@mui/icons-material';
 import { MobileDialogLayout, Loading, BaseButton } from '~/components';
-import { CustomerBookingDialog } from '~/types';
+import { MobileBookingDialog } from '~/types';
 import { appDayjs, genderObj } from '~/utils';
 import { useAppDispatch, useAppSelector } from '~/hooks';
 import { setDialog, finishBooking } from '~/store/slices';
@@ -65,7 +65,7 @@ export const BookingReminderDialog: FC<IBookingReminderProps> = () => {
   };
 
   const handleQRCode = () => {
-    dispatch(setDialog(CustomerBookingDialog.QRCODE));
+    dispatch(setDialog(MobileBookingDialog.QRCODE));
   };
 
   const handlePhoneCall = () => {
@@ -92,7 +92,7 @@ export const BookingReminderDialog: FC<IBookingReminderProps> = () => {
       }
       titleSize='h6'
       isShowCloseIcon={false}
-      isOpen={dialog === CustomerBookingDialog.REMINDER}
+      isOpen={dialog === MobileBookingDialog.REMINDER}
       onCloseDialog={handleClose}
       actionButton={<Button onClick={handleClose}>關閉</Button>}
       dialogTitleProps={{
@@ -111,9 +111,7 @@ export const BookingReminderDialog: FC<IBookingReminderProps> = () => {
         <br />
         <Typography>您的訂位已經成功囉, 感謝您選擇港都熱炒！</Typography>
         <br />
-        <Typography>
-          我們會竭誠為您提供美味佳餚和貼心的服務。請留意並保存以下資訊，並準時到達。 如需更改或取消，提前聯繫我們。
-        </Typography>
+        <Typography>我們會竭誠為您提供美味佳餚和貼心的服務。請留意並保存以下資訊，並準時到達。 如需更改或取消，提前聯繫我們。</Typography>
         <br />
         <ConfirmBookingInfo isReminder />
         <Box

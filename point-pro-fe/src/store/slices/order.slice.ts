@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { OrderApi } from '~/api';
 import { createAppAsyncThunk } from '~/hooks';
-import { clearCart, openDialog } from '~/store/slices/customer/takeOrder.slice';
+import { clearCart, openDialog } from '~/store/slices/customer/menu.slice';
 import { appDayjs, calculateCartItemPrice } from '~/utils';
 import { MobileDialog, IOrder, OrderStatus, SocketTopic, GatherOrder } from '~/types';
 import { openPaymentDrawer } from './payment.slice';

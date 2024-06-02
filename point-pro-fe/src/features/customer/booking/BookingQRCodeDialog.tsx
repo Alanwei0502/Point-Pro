@@ -3,7 +3,7 @@ import { QRCodeSVG } from 'qrcode.react';
 import { Box, Button } from '@mui/material';
 import { useAppDispatch, useAppSelector } from '~/hooks';
 import { setDialog } from '~/store/slices';
-import { CustomerBookingDialog } from '~/types';
+import { MobileBookingDialog } from '~/types';
 import { MobileDialogLayout } from '~/components';
 
 interface IBookingQRCodeDialogProps {}
@@ -14,8 +14,7 @@ export const BookingQRCodeDialog: FC<IBookingQRCodeDialogProps> = () => {
   const dialog = useAppSelector(({ booking }) => booking.dialog);
   const token = useAppSelector(({ auth }) => auth.userToken);
 
-  const checkInQRCode =
-    (import.meta.env.DEV ? 'http://' : 'https://') + window.location.host + '/orders?token=' + token ?? '';
+  const checkInQRCode = (import.meta.env.DEV ? 'http://' : 'https://') + window.location.host + '/orders?token=' + token ?? '';
 
   const handleClose = () => {
     dispatch(setDialog());
@@ -25,7 +24,7 @@ export const BookingQRCodeDialog: FC<IBookingQRCodeDialogProps> = () => {
     <MobileDialogLayout
       title='客人桌邊點餐 QR Code'
       titleSize='h2'
-      isOpen={dialog === CustomerBookingDialog.QRCODE}
+      isOpen={dialog === MobileBookingDialog.QRCODE}
       onCloseDialog={handleClose}
       actionButton={<Button onClick={handleClose}>關閉</Button>}
     >

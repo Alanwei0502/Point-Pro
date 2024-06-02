@@ -4,18 +4,19 @@ import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import { usePrevious, useAppDispatch, useAppSelector } from '~/hooks';
 import { openDialog } from '~/store/slices';
 import { MobileDialog, GetMenuResponseMeal } from '~/types';
+import { MEAL_IMAGE_URL } from '~/utils';
 
 interface IMealsProps {}
 
 export const Meals: FC<IMealsProps> = () => {
   const dispatch = useAppDispatch();
 
-  const userInfo = useAppSelector(({ takeOrder }) => takeOrder.userInfo);
-  const meals = useAppSelector(({ takeOrder }) => takeOrder.meals);
-  const currentCategory = useAppSelector(({ takeOrder }) => takeOrder.currentCategory);
+  const userInfo = useAppSelector((state) => state.menu.userInfo);
+  const meals = useAppSelector((state) => state.menu.meals);
+  const currentCategory = useAppSelector((state) => state.menu.currentCategory);
   const prevCategory = usePrevious(currentCategory);
   const showMeals = meals.filter((meal) => meal.categoryId === currentCategory);
-  const cart = useAppSelector(({ takeOrder }) => takeOrder.cart);
+  const cart = useAppSelector((state) => state.menu.cart);
 
   const getItemAmountInCart = useCallback((mealId: string) => cart.reduce((acc, cur) => (cur.id === mealId ? acc + cur.amount : acc), 0), [cart]);
 
@@ -42,7 +43,7 @@ export const Meals: FC<IMealsProps> = () => {
                     <Grid item sx={{ position: 'relative' }}>
                       <Box
                         component='img'
-                        src={`https://i.imgur.com/${meal.imageId}s.jpg`}
+                        src={`${MEAL_IMAGE_URL}${meal.imageId}s.jpg`}
                         alt={`${meal.title}-img`}
                         sx={{ width: '5rem', verticalAlign: 'middle' }}
                       />

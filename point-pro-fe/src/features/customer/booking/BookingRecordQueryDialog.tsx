@@ -1,7 +1,7 @@
 import { FC, useState } from 'react';
 import { Button, FormControl, FormLabel, TextField } from '@mui/material';
 import { MobileDialogLayout } from '~/components';
-import { CustomerBookingDialog } from '~/types';
+import { MobileBookingDialog } from '~/types';
 import { phoneRegex } from '~/utils';
 import { useAppDispatch, useAppSelector } from '~/hooks';
 import { closeBookingRecordQueryDialog, getReservationByPhone, setPhone } from '~/store/slices';
@@ -36,7 +36,7 @@ export const BookingRecordQueryDialog: FC<BookingRecordQueryDialogProps> = () =>
     <MobileDialogLayout
       title='預訂查詢'
       titleSize='h2'
-      isOpen={dialog === CustomerBookingDialog.RECORD_QUERY}
+      isOpen={dialog === MobileBookingDialog.RECORD_QUERY}
       onCloseDialog={handleClose}
       actionButton={
         <Button onClick={handleQuery} disabled={isPhoneError}>
@@ -46,12 +46,7 @@ export const BookingRecordQueryDialog: FC<BookingRecordQueryDialogProps> = () =>
     >
       <FormControl margin='normal' fullWidth>
         <FormLabel sx={{ fontWeight: 700, color: 'common.black' }}>請輸入訂位的手機號碼</FormLabel>
-        <TextField
-          placeholder='0987654321'
-          onChange={handleQueryString}
-          error={isPhoneError}
-          helperText={isPhoneError && '手機號碼格式錯誤'}
-        />
+        <TextField placeholder='0987654321' onChange={handleQueryString} error={isPhoneError} helperText={isPhoneError && '手機號碼格式錯誤'} />
       </FormControl>
     </MobileDialogLayout>
   );

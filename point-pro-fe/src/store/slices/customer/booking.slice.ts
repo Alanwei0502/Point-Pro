@@ -5,7 +5,7 @@ import { createAppAsyncThunk } from '~/hooks';
 import {
   IBookingInfo,
   ReservationType,
-  CustomerBookingDialog,
+  MobileBookingDialog,
   Gender,
   SocketTopic,
   IPeriod,
@@ -33,7 +33,7 @@ interface ICustomerBookingSliceState {
   gender: Gender;
   remark: IReservation['remark'];
   isAgreedPrivacyPolicy: boolean;
-  dialog: CustomerBookingDialog | null;
+  dialog: MobileBookingDialog | null;
 
   token?: string;
 }
@@ -177,7 +177,7 @@ export const bookingSlice = createSlice({
       })
       .addCase(postReservation.fulfilled, (state) => {
         state.isLoading = false;
-        state.dialog = CustomerBookingDialog.REMINDER;
+        state.dialog = MobileBookingDialog.REMINDER;
       })
       .addCase(postReservation.pending, (state) => {
         state.isLoading = true;
@@ -198,7 +198,7 @@ export const bookingSlice = createSlice({
         state.remark = action.payload?.remark ?? null;
         state.people = action.payload.people;
         state.selectedPeriod = action.payload.period;
-        state.dialog = CustomerBookingDialog.REMINDER;
+        state.dialog = MobileBookingDialog.REMINDER;
         state.isLoading = false;
       })
       .addCase(getReservationByPhone.rejected, (state) => {

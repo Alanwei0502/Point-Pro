@@ -6,13 +6,13 @@ import { useAppDispatch, useAppSelector } from '~/hooks';
 import { setMobileOrderStatusTab, closeDialog, openModal } from '~/store/slices';
 import { OrderType, MobileDialog, IOrder, OrderStatus, MobileModal } from '~/types';
 import { MobileDialogLayout } from '~/components';
-import { StyledTab } from '~/features/customer/take-order/CategoryNavbar';
+import { StyledTab } from '~/features/customer/menu/CategoryNavbar';
 
 interface IOrdersDialogProps {}
 
 export const OrdersDialog: FC<IOrdersDialogProps> = () => {
   const dispatch = useAppDispatch();
-  const dialogType = useAppSelector(({ takeOrder }) => takeOrder.dialog.type);
+  const dialogType = useAppSelector((state) => state.menu.dialog.type);
   const orders = useAppSelector(({ order }) => order.orders);
   const mobileOrderStatusTab = useAppSelector(({ order }) => order.mobileOrderStatusTab);
 

@@ -1,13 +1,14 @@
 import { Box, Typography } from '@mui/material';
-import { FC } from 'react';
+import { FC, SyntheticEvent } from 'react';
 import { Row } from '~/components';
 import { useAppDispatch, useAppSelector } from '~/hooks';
-import { openDialog, setNotModifiedCartItem } from '~/store/slices';
+import { openDialog, setNotModifiedCartItem, takeOrderSlice } from '~/store/slices';
 import { theme } from '~/theme';
-import { IMeal, MobileDialog } from '~/types';
+import { GetMenuResponseMeal, MobileDialog } from '~/types';
+import { MEAL_IMAGE_URL } from '~/utils';
 
 interface MealItemProps {
-  meal: IMeal;
+  meal: GetMenuResponseMeal;
 }
 
 export const MealItem: FC<MealItemProps> = (props) => {
@@ -15,12 +16,19 @@ export const MealItem: FC<MealItemProps> = (props) => {
 
   const { meal } = props;
 
-  const isModifiedCartItem = useAppSelector(({ takeOrder }) => takeOrder.isModifiedCartItem);
-  const customized = useAppSelector(({ takeOrder }) => takeOrder.customized);
-  const isSelected = meal.id === customized?.id && !isModifiedCartItem;
+  const { setUnselectMeal, setSelectMeal, setNotModifiedCartItem } = takeOrderSlice.actions;
 
-  const handleSelectedMeal = () => {
-    dispatch(openDialog({ type: MobileDialog.CUSTOMIZED, data: { ...meal, amount: 1, specialties: [] } }));
+  const editingCartItem = useAppSelector((state) => state.takeOrder.editingCartItem);
+  const selectMeal = useAppSelector((state) => state.takeOrder.selectMeal);
+  const isEdit = editingCartItem !== -1;
+  const isSelected = meal.id === selectMeal?.id && !isEdit;
+
+  const clickMealHandler = () => {
+    if (isSelected) {
+      dispatch(setUnselectMeal());
+    } else {
+      dispatch(setSelectMeal({ ...meal, amount: 1 }));
+    }
     dispatch(setNotModifiedCartItem());
   };
 
@@ -29,18 +37,17 @@ export const MealItem: FC<MealItemProps> = (props) => {
       key={meal.id}
       sx={{
         backgroundColor: isSelected ? 'primary.main' : 'transparent',
-        boxShadow: `${theme.palette.common.black_40} 0px 1px 4px`,
-        border: `1px solid ${theme.palette.common.black_20}`,
+        boxShadow: `${theme.palette.common.black_40}  0px 1px 2px 0px, ${theme.palette.common.black_40} 0px 2px 6px 2px`,
       }}
-      onClick={handleSelectedMeal}
+      onClick={clickMealHandler}
     >
-      <Typography fontWeight={600} textAlign='center' sx={{ textOverflow: 'ellipsis', whiteSpace: 'nowrap', overflow: 'hidden', padding: '.3rem' }}>
+      <Typography textAlign='center' sx={{ textOverflow: 'ellipsis', whiteSpace: 'nowrap', overflow: 'hidden', padding: '.3rem' }}>
         {meal.title}
       </Typography>
       <Box height='6rem' sx={{ bgcolor: theme.palette.common.black, textAlign: 'center' }}>
         <Box
           component='img'
-          src={`https://i.imgur.com/${meal.imageId}b.jpg`}
+          src={`${MEAL_IMAGE_URL}${meal.imageId}b.jpg`}
           alt={meal.title}
           sx={{ objectFit: 'fill', height: '100%', maxWidth: '100%' }}
         />

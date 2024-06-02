@@ -7,7 +7,7 @@ import { AdminTakeOrder } from '~/features/admin/take-order';
 import { AdminMenuSettings } from '~/features/admin/menu';
 import { AdminSeat } from '~/features/admin/seat';
 import { Booking } from '~/features/customer/booking';
-import { TakeOrders } from '~/features/customer/take-order';
+import { Menu } from '~/features/customer/menu';
 import { PaymentCancel, PaymentConfirm } from '~/features/customer/payment';
 import { pathObj } from '~/components';
 
@@ -22,8 +22,8 @@ const router = createBrowserRouter([
     element: <Booking />,
   },
   {
-    path: pathObj.takeOrders,
-    element: <TakeOrders />,
+    path: pathObj.menu,
+    element: <Menu />,
   },
   {
     path: pathObj.payment,
@@ -48,7 +48,7 @@ const router = createBrowserRouter([
     element: <ProtectedRoute />,
     children: [
       {
-        path: pathObj.orders,
+        path: pathObj.order,
         element: <AdminOrders />,
       },
       {
@@ -60,7 +60,7 @@ const router = createBrowserRouter([
         element: <AdminSeat />,
       },
       {
-        path: pathObj.menu,
+        path: pathObj.menuSetting,
         element: <AdminMenuSettings />,
       },
     ],

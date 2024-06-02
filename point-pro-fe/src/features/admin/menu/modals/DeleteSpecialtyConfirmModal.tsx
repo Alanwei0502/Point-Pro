@@ -1,5 +1,5 @@
-import { Card, CardActions, CardContent, CardHeader, Typography } from '@mui/material';
 import { FC } from 'react';
+import { Card, CardActions, CardContent, CardHeader, Typography } from '@mui/material';
 import { BaseButton, TabletModalLayout } from '~/components';
 import { useAppDispatch, useAppSelector } from '~/hooks';
 import { closeDeleteSpecialtyConfirmModal, deleteSpecialty, getSpecialties } from '~/store/slices';
@@ -10,7 +10,7 @@ interface IDeleteSpecialtyConfirmModalProps {}
 export const DeleteSpecialtyConfirmModal: FC<IDeleteSpecialtyConfirmModalProps> = () => {
   const dispatch = useAppDispatch();
 
-  const { isOpen, data } = useAppSelector((state) => state.menu.deleteSpecialtyConfirmModal);
+  const { isOpen, data } = useAppSelector((state) => state.menuSetting.deleteSpecialtyConfirmModal);
 
   const handleCancel = () => {
     dispatch(closeDeleteSpecialtyConfirmModal());
@@ -31,9 +31,7 @@ export const DeleteSpecialtyConfirmModal: FC<IDeleteSpecialtyConfirmModalProps> 
       <Card>
         <CardHeader title='確定刪除' sx={{ backgroundColor: theme.palette.primary.main, textAlign: 'center' }} />
         <CardContent sx={{ padding: '1rem', width: '50cqw' }}>
-          <Typography component='p' variant='body1' textAlign={'center'}>
-            確定要刪除整個「{data?.title}」？
-          </Typography>
+          <Typography textAlign='center'>確定要刪除整個「{data?.title}」？</Typography>
         </CardContent>
         <CardActions>
           <BaseButton variant='outlined' color='secondary' fullWidth onClick={handleCancel}>

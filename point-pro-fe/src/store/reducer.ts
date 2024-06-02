@@ -1,17 +1,20 @@
 import { combineReducers } from '@reduxjs/toolkit';
-import { authSlice, orderSlice, paymentSlice, socketSlice, bookingSlice, takeOrderSlice, periodSlice, menuSlice } from './slices';
+import { authSlice, orderSlice, paymentSlice, socketSlice, bookingSlice, menuSlice, periodSlice, menuSettingSlice, takeOrderSlice } from './slices';
 import { counterSlice } from '~/features/home/slice';
 
 const reducer = combineReducers({
-  [counterSlice.name]: counterSlice.reducer,
-  [takeOrderSlice.name]: takeOrderSlice.reducer,
+  // customer
+  [menuSlice.name]: menuSlice.reducer,
   [bookingSlice.name]: bookingSlice.reducer,
-  [authSlice.name]: authSlice.reducer,
-  [orderSlice.name]: orderSlice.reducer,
   [paymentSlice.name]: paymentSlice.reducer,
+  // admin
+  [authSlice.name]: authSlice.reducer,
+  [takeOrderSlice.name]: takeOrderSlice.reducer,
+  [menuSettingSlice.name]: menuSettingSlice.reducer,
+  [orderSlice.name]: orderSlice.reducer,
+  [counterSlice.name]: counterSlice.reducer,
   [socketSlice.name]: socketSlice.reducer,
   [periodSlice.name]: periodSlice.reducer,
-  [menuSlice.name]: menuSlice.reducer,
 });
 
 export default reducer;

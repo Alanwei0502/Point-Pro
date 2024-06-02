@@ -18,9 +18,9 @@ import {
   MobileDialogState,
 } from '~/types';
 
-const name = 'takeOrder';
+const name = 'menu';
 
-type TakeOrderSliceState = {
+type menuSliceState = {
   userInfo: UserInfo | null;
   currentCategory: ICategory['id'];
   categories: GetMenuResponseCategory[];
@@ -35,7 +35,7 @@ type TakeOrderSliceState = {
   isLoading: boolean;
 };
 
-const initialState: TakeOrderSliceState = {
+const initialState: menuSliceState = {
   userInfo: null,
   currentCategory: '',
   categories: [],
@@ -65,12 +65,12 @@ export const getMenu = createAppAsyncThunk(`${name}/getMenu`, async (_, { reject
   }
 });
 
-export const takeOrderSlice = createSlice({
+export const menuSlice = createSlice({
   name,
   initialState,
   reducers: {
     // Category Tab Focus
-    setCurrentCategory: (state, action: PayloadAction<TakeOrderSliceState['currentCategory']>) => {
+    setCurrentCategory: (state, action: PayloadAction<menuSliceState['currentCategory']>) => {
       state.currentCategory = action.payload;
     },
     // Modal
@@ -86,7 +86,7 @@ export const takeOrderSlice = createSlice({
     },
     closeDialog: (state) => {
       state.dialog = initialState.dialog;
-      takeOrderSlice.caseReducers.setNotModifiedCartItem(state);
+      menuSlice.caseReducers.setNotModifiedCartItem(state);
     },
     updateSpecialty: (
       state,
@@ -136,7 +136,7 @@ export const takeOrderSlice = createSlice({
     createCartItem: (state) => {
       if (state.dialog.data) {
         state.cart.push(state.dialog.data);
-        takeOrderSlice.caseReducers.closeDialog(state);
+        menuSlice.caseReducers.closeDialog(state);
       }
     },
     viewCartItemCustomized: (state, action: PayloadAction<{ cartItem: ICartItem; idx: number }>) => {
@@ -156,8 +156,8 @@ export const takeOrderSlice = createSlice({
     },
     clearCart: (state) => {
       state.cart = initialState.cart;
-      takeOrderSlice.caseReducers.closeModal(state);
-      takeOrderSlice.caseReducers.closeDialog(state);
+      menuSlice.caseReducers.closeModal(state);
+      menuSlice.caseReducers.closeDialog(state);
     },
   },
   extraReducers: (builder) => {
@@ -198,4 +198,4 @@ export const {
   updateCartItem,
   deleteCartItem,
   clearCart,
-} = takeOrderSlice.actions;
+} = menuSlice.actions;

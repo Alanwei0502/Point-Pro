@@ -39,8 +39,8 @@ export const CategoryRow: FC<ICategoryRowProps> = (props) => {
   const [isEdit, setIsEdit] = useState(false);
   const [newTitle, setNewTitle] = useState(category.title);
 
-  const categories = useAppSelector((state) => state.menu.categories);
-  const meals = useAppSelector((state) => state.menu.meals);
+  const categories = useAppSelector((state) => state.menuSetting.categories);
+  const meals = useAppSelector((state) => state.menuSetting.meals);
 
   const filterMeals = useMemo(() => meals.filter((m) => m.categoryId === category.id), [meals, category.id]);
 

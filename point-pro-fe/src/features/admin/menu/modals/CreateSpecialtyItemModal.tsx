@@ -11,8 +11,8 @@ interface ICreateSpecialtyItemModalProps {}
 export const CreateSpecialtyItemModal: FC<ICreateSpecialtyItemModalProps> = () => {
   const dispatch = useAppDispatch();
 
-  const isOpen = useAppSelector((state) => state.menu.createSpecialtyItemModal.isOpen);
-  const data = useAppSelector((state) => state.menu.createSpecialtyItemModal.data);
+  const isOpen = useAppSelector((state) => state.menuSetting.createSpecialtyItemModal.isOpen);
+  const data = useAppSelector((state) => state.menuSetting.createSpecialtyItemModal.data);
 
   const [title, setTitle] = useState<ISpecialtyItem['title']>('');
   const [price, setPrice] = useState<ISpecialtyItem['price']>(0);

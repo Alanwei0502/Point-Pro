@@ -4,7 +4,7 @@ import io from 'socket.io-client';
 import { apiHost } from '~/api/http';
 import { useAppDispatch, useAppSelector } from '~/hooks';
 import { addNotification, resetSocket, setSocket, getOrders } from '~/store/slices';
-import { closeDialog, getMenu } from '~/store/slices/customer/takeOrder.slice';
+import { closeDialog, getMenu } from '~/store/slices/customer/menu.slice';
 import { getToken } from '~/utils';
 import { NameSpace, SocketTopic } from '~/types';
 

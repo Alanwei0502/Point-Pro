@@ -1,4 +1,4 @@
-import React, { ChangeEvent, FC, ReactNode, useEffect, useState } from 'react';
+import React, { ChangeEvent, FC, useEffect, useState } from 'react';
 import styled from '@emotion/styled';
 import { Box, IconButton, MenuItem, SelectChangeEvent, TableRow, Typography } from '@mui/material';
 import ReorderIcon from '@mui/icons-material/Reorder';
@@ -35,7 +35,7 @@ export const SpecialtyRow: FC<ISpecialtyRowProps> = (props) => {
 
   const dispatch = useAppDispatch();
 
-  const specialties = useAppSelector((state) => state.menu.specialties);
+  const specialties = useAppSelector((state) => state.menuSetting.specialties);
   const [isExpand, setIsExpanded] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
   const [newTitle, setNewTitle] = useState(specialty.title);

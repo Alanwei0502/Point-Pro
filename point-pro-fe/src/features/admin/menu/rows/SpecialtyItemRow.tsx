@@ -10,7 +10,7 @@ import { CSS } from '@dnd-kit/utilities';
 import { StyledTableCell, StyledTableRow, TextInput } from '~/components';
 import { ISpecialtyWithSpecialtyItems } from '~/types';
 import { useAppDispatch, useAppSelector } from '~/hooks';
-import { closeCreateSpecialtyItemModal, getSpecialties, openDeleteSpecialtyItemConfirmModal, patchSpecialtyItem } from '~/store/slices';
+import { getSpecialties, openDeleteSpecialtyItemConfirmModal, patchSpecialtyItem } from '~/store/slices';
 
 interface ISpecialtyItemRowProps {
   specialtyItem: ISpecialtyWithSpecialtyItems['specialtyItems'][0];
@@ -20,7 +20,7 @@ export const SpecialtyItemRow: FC<ISpecialtyItemRowProps> = (props) => {
 
   const dispatch = useAppDispatch();
 
-  const specialties = useAppSelector((state) => state.menu.specialties);
+  const specialties = useAppSelector((state) => state.menuSetting.specialties);
   const specialtyItems = specialties.find((s) => s.id === specialtyItem.specialtyId)?.specialtyItems ?? [];
   const [isEdit, setIsEdit] = useState(false);
   const [newTitle, setNewTitle] = useState(specialtyItem.title);

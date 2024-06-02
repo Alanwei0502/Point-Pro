@@ -30,9 +30,9 @@ export const MealRow: FC<IMealRowProps> = (props) => {
     transition,
   };
 
-  const categories = useAppSelector((state) => state.menu.categories);
-  const meals = useAppSelector((state) => state.menu.meals);
-  const specialties = useAppSelector((state) => state.menu.specialties);
+  const categories = useAppSelector((state) => state.menuSetting.categories);
+  const meals = useAppSelector((state) => state.menuSetting.meals);
+  const specialties = useAppSelector((state) => state.menuSetting.specialties);
   const allSpecialtyItems = specialties.flatMap((s) => s.specialtyItems);
 
   const [isEdit, setIsEdit] = useState(false);

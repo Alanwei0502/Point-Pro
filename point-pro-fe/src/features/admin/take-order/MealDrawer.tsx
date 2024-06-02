@@ -1,29 +1,42 @@
-import { FC } from 'react';
+import { FC, useMemo } from 'react';
 import { Box, Chip, Typography } from '@mui/material';
-import { DomainVerification } from '@mui/icons-material';
 import DoneIcon from '@mui/icons-material/Done';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import { BaseButton, CloseButton, NumberInput } from '~/components';
 import { useAppDispatch, useAppSelector } from '~/hooks';
-import { closeDialog, createCartItem, decreaseMealAmount, increaseMealAmount, updateCartItem, updateSpecialty } from '~/store/slices';
+import { takeOrderSlice } from '~/store/slices';
 import { theme } from '~/theme';
-import { ISpecialty, ISpecialtyItem } from '~/types';
+import { GetMenuResponseSpecialtyItem, ISpecialty, SelectionType } from '~/types';
 
 interface IMealDrawerProps {}
 
 export const MealDrawer: FC<IMealDrawerProps> = () => {
   const dispatch = useAppDispatch();
 
-  const meals = useAppSelector(({ takeOrder }) => takeOrder.meals);
-  const customized = useAppSelector(({ takeOrder }) => takeOrder.customized);
-  const isModifiedCartItem = useAppSelector(({ takeOrder }) => takeOrder.isModifiedCartItem);
+  const { increaseMealAmount, decreaseMealAmount, setUnselectMeal, setSelectSpecialtyItems, addCartItem, updateCartItem } = takeOrderSlice.actions;
+  const selectMeal = useAppSelector((state) => state.takeOrder.selectMeal);
+  const selectSpecialtyItems = useAppSelector((state) => state.takeOrder.selectSpecialtyItems);
+  const specialtiesWithItems = useAppSelector((state) => state.takeOrder.specialtiesWithItems);
+  const editingCartItem = useAppSelector((state) => state.takeOrder.editingCartItem);
+  const isEditing = editingCartItem !== -1;
 
-  const customizedSpecialties = meals?.find((meal) => meal.id === customized?.id)?.specialties ?? [];
+  const selectMealSpecialtyItemsId = useMemo(() => selectMeal?.mealSpecialtyItems.map((msi) => msi.specialtyItemId) ?? [], [selectMeal]);
 
-  const items = customized?.specialties?.reduce((acc, cur) => acc.concat(cur.items), [] as ISpecialtyItem[]);
+  const customizedSpecialties = useMemo(
+    () =>
+      specialtiesWithItems
+        .map((s) => ({
+          ...s,
+          specialtyItems: s.specialtyItems
+            .map((si) => ({ ...si, specialtyId: s.id }))
+            .filter((si) => selectMealSpecialtyItemsId.some((msi) => msi === si.id)),
+        }))
+        .filter((s) => s.specialtyItems.length > 0),
+    [specialtiesWithItems, selectMealSpecialtyItemsId],
+  );
 
-  const handleClickItem = (selectedSpecialty: ISpecialty, selectedItem: ISpecialtyItem) => () => {
-    dispatch(updateSpecialty({ selectedSpecialty, selectedItem }));
+  const handleClickItem = (selectedSpecialtyId: ISpecialty['id'], selectionType: SelectionType, selectedItem: GetMenuResponseSpecialtyItem) => () => {
+    dispatch(setSelectSpecialtyItems({ selectedSpecialtyId, selectionType, selectedItem: { ...selectedItem, specialtyId: selectedSpecialtyId } }));
   };
 
   const handleAdd = () => {
@@ -36,15 +49,14 @@ export const MealDrawer: FC<IMealDrawerProps> = () => {
 
   const handleUpdateCartItem = () => {
     dispatch(updateCartItem());
-    dispatch(closeDialog());
   };
 
   const handleAddToCart = () => {
-    dispatch(createCartItem());
+    dispatch(addCartItem());
   };
 
   const handleClose = () => {
-    dispatch(closeDialog());
+    dispatch(setUnselectMeal());
   };
 
   return (
@@ -53,80 +65,70 @@ export const MealDrawer: FC<IMealDrawerProps> = () => {
         position: 'fixed',
         bottom: 0,
         transition: 'transform 0.3s',
-        transform: customized ? 'translateY(0)' : 'translateY(100%)',
+        transform: `translateY(${selectMeal ? 0 : '100%'})`,
         width: '66.6vw',
       }}
     >
-      <Box
-        bgcolor='white'
-        sx={{
-          borderTop: `1px solid ${theme.palette.common.black_40}`,
-          position: 'relative',
-          padding: '.5rem',
-        }}
-      >
-        <Typography variant='h4' sx={{ fontWeight: 900, color: 'common.black' }}>
-          {customized?.title}
-        </Typography>
-        <CloseButton
-          onClick={handleClose}
+      {selectMeal && (
+        <Box
+          bgcolor='white'
           sx={{
-            position: 'absolute',
-            top: 0,
-            right: 0,
+            boxShadow: `${theme.palette.common.black_40} 0px 1px 4px`,
+            position: 'relative',
             padding: '.5rem',
-            minWidth: 0,
           }}
-        />
-        <Box>
-          {customizedSpecialties.length
-            ? customizedSpecialties.map((specialty) => (
-                <Box key={specialty.id}>
-                  <Typography variant='h6' key={specialty.id} sx={{ fontWeight: 900, padding: '1rem 0 1rem', color: theme.palette.common.black_80 }}>
-                    {specialty.title}
-                  </Typography>
-                  <Box
-                    sx={{
-                      padding: 0,
-                      margin: 0,
-                      width: '100%',
-                      display: 'grid',
-                      gridTemplateColumns: 'repeat(6, 1fr)',
-                      gap: '.5rem',
-                    }}
-                  >
-                    {specialty.items.map((item) => (
-                      <Chip
-                        key={item.id}
-                        label={item.title}
-                        color='primary'
-                        variant={items?.find(({ id }) => id === item.id) ? 'filled' : 'outlined'}
-                        icon={
-                          <DomainVerification
-                            sx={{
-                              display: items?.find(({ id }) => id === item.id) ? 'block' : 'none',
-                              fontSize: theme.typography.body1.fontSize,
-                            }}
-                          />
-                        }
-                        onClick={handleClickItem(specialty, item)}
-                        sx={{
-                          color: theme.palette.common.black,
-                          fontSize: theme.typography.body1.fontSize,
-                          '&:hover': {
-                            bgcolor: theme.palette.primary.main,
-                          },
-                        }}
-                      />
-                    ))}
+        >
+          <Typography sx={{ fontSize: 22, fontWeight: 900, color: 'common.black' }}>{selectMeal.title}</Typography>
+          <CloseButton
+            onClick={handleClose}
+            sx={{
+              position: 'absolute',
+              top: 0,
+              right: 0,
+              padding: '.5rem',
+              minWidth: 0,
+            }}
+          />
+          <Box>
+            {customizedSpecialties.length
+              ? customizedSpecialties.map((s) => (
+                  <Box key={s.id}>
+                    <Typography key={s.id} sx={{ fontWeight: 900, padding: '1rem 0 1rem', color: theme.palette.common.black_80 }}>
+                      {s.title}
+                    </Typography>
+                    <Box
+                      sx={{
+                        padding: 0,
+                        margin: 0,
+                        width: '100%',
+                        display: 'grid',
+                        gridTemplateColumns: 'repeat(6, 1fr)',
+                        gap: '.5rem',
+                      }}
+                    >
+                      {s.specialtyItems.map((si) => (
+                        <Chip
+                          key={si.id}
+                          label={si.title}
+                          color='primary'
+                          variant={selectSpecialtyItems.some(({ id }) => id === si.id) ? 'filled' : 'outlined'}
+                          onClick={handleClickItem(s.id, s.selectionType, si)}
+                          sx={{
+                            color: theme.palette.common.black,
+                            fontSize: theme.typography.body1.fontSize,
+                            '&:hover': {
+                              bgcolor: theme.palette.primary.main,
+                            },
+                          }}
+                        />
+                      ))}
+                    </Box>
                   </Box>
-                </Box>
-              ))
-            : null}
-        </Box>
-        {customized && (
+                ))
+              : null}
+          </Box>
           <Box sx={{ marginTop: '1rem', display: 'flex', justifyContent: 'end' }}>
-            <NumberInput value={customized.amount} onAdd={handleAdd} onMinus={handleMinus} />
+            <NumberInput value={selectMeal.amount} onAdd={handleAdd} onMinus={handleMinus} />
             <BaseButton
               sx={{
                 backgroundColor: 'common.black',
@@ -138,16 +140,16 @@ export const MealDrawer: FC<IMealDrawerProps> = () => {
                   color: 'common.black_20',
                 },
               }}
-              onClick={isModifiedCartItem ? handleUpdateCartItem : handleAddToCart}
-              startIcon={isModifiedCartItem ? <DoneIcon /> : <ShoppingCartIcon />}
+              onClick={isEditing ? handleUpdateCartItem : handleAddToCart}
+              startIcon={isEditing ? <DoneIcon /> : <ShoppingCartIcon />}
             >
               <Typography variant='body1' fontWeight={700}>
-                {isModifiedCartItem ? '確認修改' : '加入購物車'}
+                {isEditing ? '確認修改' : '加入購物車'}
               </Typography>
             </BaseButton>
           </Box>
-        )}
-      </Box>
+        </Box>
+      )}
     </Box>
   );
 };

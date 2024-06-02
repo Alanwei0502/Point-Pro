@@ -27,10 +27,10 @@ export const CategoryNavbar: FC<ICategoryNavbarProps> = () => {
 
   const [isShowDropdown, setIsShowDropdown] = useState(false);
 
-  const categories = useAppSelector(({ takeOrder }) => takeOrder.categories);
-  const meals = useAppSelector(({ takeOrder }) => takeOrder.meals);
+  const categories = useAppSelector((state) => state.menu.categories);
+  const meals = useAppSelector((state) => state.menu.meals);
   const showCategories = useMemo(() => categories.filter((c) => meals.some((m) => m.categoryId === c.id)), [categories, meals]);
-  const currentCategory = useAppSelector(({ takeOrder }) => takeOrder.currentCategory);
+  const currentCategory = useAppSelector((state) => state.menu.currentCategory);
 
   const handleClickCategory = (categoryId: string) => {
     setIsShowDropdown(false);

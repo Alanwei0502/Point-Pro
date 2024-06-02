@@ -7,7 +7,7 @@ import { MobileModal } from '~/types';
 interface ICounterReminderModalProps {}
 
 export const CounterReminderModal: FC<ICounterReminderModalProps> = () => {
-  const modalType = useAppSelector(({ takeOrder }) => takeOrder.modal.type);
+  const modalType = useAppSelector((state) => state.menu.modal.type);
 
   return (
     <MobileModalLayout open={modalType === MobileModal.COUNTER_REMINDER}>

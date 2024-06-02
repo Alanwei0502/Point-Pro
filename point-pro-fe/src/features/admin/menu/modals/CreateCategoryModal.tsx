@@ -11,8 +11,8 @@ interface ICreateCategoryModalProps {}
 export const CreateCategoryModal: FC<ICreateCategoryModalProps> = () => {
   const dispatch = useAppDispatch();
 
-  const categories = useAppSelector((state) => state.menu.categories);
-  const isOpen = useAppSelector((state) => state.menu.createCategoryModal.isOpen);
+  const categories = useAppSelector((state) => state.menuSetting.categories);
+  const isOpen = useAppSelector((state) => state.menuSetting.createCategoryModal.isOpen);
 
   const [title, setTitle] = useState<ICategory['id']>('');
 
