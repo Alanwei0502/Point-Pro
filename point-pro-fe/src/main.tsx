@@ -19,7 +19,7 @@ ReactDOM.createRoot(root).render(
       <Provider store={store}>
         <CssBaseline />
         <RouterProvider router={router} />
-        <ToastContainer position='top-center' autoClose={3000} hideProgressBar limit={3} theme='dark' />
+        <ToastContainer position='top-center' limit={3} hideProgressBar autoClose={1000} />
       </Provider>
     </ThemeProvider>
   </React.StrictMode>,

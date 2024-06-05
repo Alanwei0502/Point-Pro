@@ -1,6 +1,7 @@
 import { ChangeEvent, FC, useState } from 'react';
+import { toast } from 'react-toastify';
 import { Card, CardActions, CardContent, CardHeader, FormControl, FormLabel, TextField } from '@mui/material';
-import { BaseButton, TabletModalLayout } from '~/components';
+import { AppButton, TabletModalLayout } from '~/components';
 import { useAppDispatch, useAppSelector } from '~/hooks';
 import { closeCreateCategoryModal, getCategories, postCategory } from '~/store/slices';
 import { theme } from '~/theme';
@@ -15,10 +16,11 @@ export const CreateCategoryModal: FC<ICreateCategoryModalProps> = () => {
   const isOpen = useAppSelector((state) => state.menuSetting.createCategoryModal.isOpen);
 
   const [title, setTitle] = useState<ICategory['id']>('');
+  const [isCreateLoading, setIsCreateLoading] = useState(false);
 
   const hasSameCategoryExist = categories.some((c) => c.title === title);
   const isIncompleteInfo = !title;
-  const isInvalid = isIncompleteInfo || hasSameCategoryExist;
+  const isInvalid = isIncompleteInfo || hasSameCategoryExist || isCreateLoading;
 
   const handleChangeTitle = (e: ChangeEvent<HTMLInputElement>) => {
     setTitle(e.target.value);
@@ -32,16 +34,27 @@ export const CreateCategoryModal: FC<ICreateCategoryModalProps> = () => {
   const handleConfirmCreateCategory = () => {
     if (isInvalid) return;
 
-    dispatch(
-      postCategory({
-        title,
-        position: categories.length,
-      }),
-    )
-      .unwrap()
-      .then(() => {
-        dispatch(getCategories());
+    setIsCreateLoading(true);
+    toast
+      .promise(
+        async () => {
+          await dispatch(
+            postCategory({
+              title,
+              position: categories.length,
+            }),
+          ).unwrap();
+          await dispatch(getCategories());
+        },
+        {
+          pending: '新增中...',
+          success: '新增成功',
+          error: '新增失敗',
+        },
+      )
+      .finally(() => {
         handleCancel();
+        setIsCreateLoading(false);
       });
   };
 
@@ -63,12 +76,12 @@ export const CreateCategoryModal: FC<ICreateCategoryModalProps> = () => {
           </FormControl>
         </CardContent>
         <CardActions>
-          <BaseButton variant='outlined' color='secondary' fullWidth onClick={handleCancel}>
+          <AppButton variant='outlined' color='secondary' fullWidth onClick={handleCancel}>
             取消
-          </BaseButton>
-          <BaseButton variant='contained' color='primary' fullWidth onClick={handleConfirmCreateCategory} disabled={isInvalid}>
+          </AppButton>
+          <AppButton fullWidth onClick={handleConfirmCreateCategory} disabled={isInvalid}>
             確定
-          </BaseButton>
+          </AppButton>
         </CardActions>
       </Card>
     </TabletModalLayout>

@@ -17,10 +17,13 @@ import {
   updateSpecialtyRequestSchema,
   updateMealOrderRequestSchema,
   deleteMealRequestSchma,
-  deleteCategoryRequestSchema,
   createMealRequestSchema,
   getMealByIdRequestSchema,
   updateMealRequestSchema,
+  createOrderRequestSchema,
+  getOrderRequestSchema,
+  updateOrderMealServedAmountPayloadSchema,
+  orderIdValidatedSchema,
 } from '../validators';
 
 // Request
@@ -166,4 +169,21 @@ export interface IUploadImageRequest extends Request {
 export interface IPatchImageRequest extends Request {
   file?: Express.Multer.File;
   body: z.infer<typeof updateMealRequestSchema>;
+}
+
+// ORDER
+export interface IGetOrderRequest extends Request {
+  query: z.infer<typeof getOrderRequestSchema>;
+}
+export interface IPostOrderRequest extends Request {
+  body: z.infer<typeof createOrderRequestSchema>;
+}
+
+export interface ICancelOrderRequest extends Request {
+  params: z.infer<typeof orderIdValidatedSchema>;
+}
+
+export interface IUpdateOrderMealServedAmountRequest extends Request {
+  params: z.infer<typeof orderIdValidatedSchema>;
+  body: z.infer<typeof updateOrderMealServedAmountPayloadSchema>;
 }

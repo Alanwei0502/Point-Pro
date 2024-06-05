@@ -1,26 +1,24 @@
 import { FC } from 'react';
 import { Card, CardActions, CardContent, CardHeader, Typography } from '@mui/material';
-import { BaseButton, TabletModalLayout } from '~/components';
+import { AppButton, TabletModalLayout } from '~/components';
 import { useAppDispatch, useAppSelector } from '~/hooks';
-import { takeOrderSlice } from '~/store/slices';
 import { theme } from '~/theme';
+import { takeOrderSliceActions } from '~/store/slices';
 
 interface IClearCartConfirmModalProps {}
 
 export const ClearCartConfirmModal: FC<IClearCartConfirmModalProps> = () => {
   const dispatch = useAppDispatch();
 
-  const { closeClearCartConfirmModal } = takeOrderSlice.actions;
-
   const isOpen = useAppSelector((state) => state.takeOrder.clearCartConfirmModal.isOpen);
 
   const handleClearCart = () => {
-    // dispatch(clearCart());
-    dispatch(closeClearCartConfirmModal());
+    dispatch(takeOrderSliceActions.clearCart());
+    dispatch(takeOrderSliceActions.closeClearCartConfirmModal());
   };
 
   const handleCancel = () => {
-    dispatch(closeClearCartConfirmModal());
+    dispatch(takeOrderSliceActions.closeClearCartConfirmModal());
   };
 
   return (
@@ -31,12 +29,12 @@ export const ClearCartConfirmModal: FC<IClearCartConfirmModalProps> = () => {
           <Typography textAlign={'center'}>確定要刪除目前已點的所有項目？</Typography>
         </CardContent>
         <CardActions>
-          <BaseButton variant='outlined' color='secondary' fullWidth onClick={handleCancel}>
+          <AppButton variant='outlined' color='secondary' fullWidth onClick={handleCancel}>
             取消
-          </BaseButton>
-          <BaseButton variant='contained' color='primary' fullWidth onClick={handleClearCart}>
+          </AppButton>
+          <AppButton fullWidth onClick={handleClearCart}>
             確定
-          </BaseButton>
+          </AppButton>
         </CardActions>
       </Card>
     </TabletModalLayout>

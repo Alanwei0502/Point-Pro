@@ -2,19 +2,11 @@ import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
-import {
-  Box,
-  Typography,
-  InputAdornment,
-  IconButton,
-  OutlinedInput,
-  FormControl,
-  InputLabel,
-  Button,
-} from '@mui/material';
+import { Box, Typography, InputAdornment, IconButton, OutlinedInput, FormControl, InputLabel, Button } from '@mui/material';
 import { useAppDispatch, useAppSelector } from '~/hooks';
 import { login } from '~/store/slices';
 import HeaderLogo from '~/assets/images/header-logo.svg';
+import { pathObj } from '~/components';
 
 export const Login = () => {
   const navigate = useNavigate();
@@ -33,10 +25,9 @@ export const Login = () => {
       dispatch(login({ username: usernameRef.current.value, password: passwordRef.current.value }));
     }
   };
-
   useEffect(() => {
     if (isAuthenticated) {
-      navigate('/admin/orders');
+      navigate(`/${pathObj.admin}/${pathObj.order}`);
     }
   }, [isAuthenticated, navigate]);
 
@@ -67,12 +58,7 @@ export const Login = () => {
         {/* Username */}
         <FormControl sx={{ my: 2, width: '100%' }} variant='outlined'>
           <InputLabel htmlFor='username'>Username</InputLabel>
-          <OutlinedInput
-            inputProps={{ ref: usernameRef }}
-            id='username'
-            placeholder='Please enter username'
-            label='Username'
-          />
+          <OutlinedInput inputProps={{ ref: usernameRef }} id='username' placeholder='Please enter username' label='Username' />
         </FormControl>
         {/* Password */}
         <FormControl sx={{ my: 2, width: '100%' }} variant='outlined'>

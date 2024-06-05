@@ -1,9 +1,6 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
-import axios, { AxiosError } from 'axios';
-import { toast } from 'react-toastify';
 import { MenuApi } from '~/api';
 import { createAppAsyncThunk } from '~/hooks';
-import { errorHandler } from '~/store/errorHandler';
 import {
   ICategory,
   PostCategoryPayload,
@@ -123,7 +120,6 @@ export const getCategories = createAppAsyncThunk(`${name}/getCategories`, async 
   try {
     return await MenuApi.getCategories();
   } catch (error) {
-    errorHandler(error);
     return thunkApi.rejectWithValue(error);
   }
 });
@@ -131,11 +127,9 @@ export const getCategories = createAppAsyncThunk(`${name}/getCategories`, async 
 export const postCategory = createAppAsyncThunk(`${name}/postCategory`, async (payload: PostCategoryPayload, thunkApi) => {
   try {
     const newCategory = await MenuApi.postCategory(payload);
-    // TODO: socket
-    // const socket = thunkApi.getState().socket.socket;
-    // socket?.emit(SocketTopic.MENU, newCategory);
+    const socket = thunkApi.getState().socket.socket;
+    socket?.emit(SocketTopic.MENU, newCategory);
   } catch (error) {
-    errorHandler(error);
     return thunkApi.rejectWithValue(error);
   }
 });
@@ -143,11 +137,9 @@ export const postCategory = createAppAsyncThunk(`${name}/postCategory`, async (p
 export const patchCategory = createAppAsyncThunk(`${name}/patchCategory`, async (payload: PatchCategoryPayload, thunkApi) => {
   try {
     const updateCategory = await MenuApi.patchCategory(payload);
-    // TODO: socket
-    // const socket = thunkApi.getState().socket.socket;
-    // socket?.emit(SocketTopic.MENU, updateCategory);
+    const socket = thunkApi.getState().socket.socket;
+    socket?.emit(SocketTopic.MENU, updateCategory);
   } catch (error) {
-    errorHandler(error);
     return thunkApi.rejectWithValue(error);
   }
 });
@@ -156,7 +148,6 @@ export const patchCategoryOrder = createAppAsyncThunk(`${name}/patchCategoryOrde
   try {
     await MenuApi.patchCategoryOrder(payload);
   } catch (error) {
-    errorHandler(error);
     return thunkApi.rejectWithValue(error);
   }
 });
@@ -164,13 +155,9 @@ export const patchCategoryOrder = createAppAsyncThunk(`${name}/patchCategoryOrde
 export const deleteCategory = createAppAsyncThunk(`${name}/deleteCategory`, async (payload: DeleteCategoryPayload, thunkApi) => {
   try {
     const deleteCategory = await MenuApi.deleteCategory(payload);
-    thunkApi.dispatch(closeDeleteCategoryConfirmModal());
-    thunkApi.dispatch(getCategories());
-    // TODO: socket
-    // const socket = thunkApi.getState().socket.socket;
-    // socket?.emit(SocketTopic.MENU, deleteCategory);
+    const socket = thunkApi.getState().socket.socket;
+    socket?.emit(SocketTopic.MENU, deleteCategory);
   } catch (error) {
-    errorHandler(error);
     return thunkApi.rejectWithValue(error);
   }
 });
@@ -180,7 +167,6 @@ export const getMeals = createAppAsyncThunk(`${name}/getMeals`, async (_, thunkA
   try {
     return await MenuApi.getMeals();
   } catch (error) {
-    errorHandler(error);
     return thunkApi.rejectWithValue(error);
   }
 });
@@ -191,7 +177,6 @@ export const postMeal = createAppAsyncThunk(`${name}/postMeal`, async (payload: 
     const socket = thunkApi.getState().socket.socket;
     socket?.emit(SocketTopic.MENU, newMeal);
   } catch (error) {
-    errorHandler(error);
     return thunkApi.rejectWithValue(error);
   }
 });
@@ -202,7 +187,6 @@ export const patchMeal = createAppAsyncThunk(`${name}/patchMeal`, async (payload
     const socket = thunkApi.getState().socket.socket;
     socket?.emit(SocketTopic.MENU, updateMeal);
   } catch (error) {
-    errorHandler(error);
     return thunkApi.rejectWithValue(error);
   }
 });
@@ -211,7 +195,6 @@ export const patchMealOrder = createAppAsyncThunk(`${name}/patchMealOrder`, asyn
   try {
     await MenuApi.patchMealOrder(payload);
   } catch (error) {
-    errorHandler(error);
     return thunkApi.rejectWithValue(error);
   }
 });
@@ -222,7 +205,6 @@ export const deleteMeal = createAppAsyncThunk(`${name}/deleteMeal`, async (paylo
     const socket = thunkApi.getState().socket.socket;
     socket?.emit(SocketTopic.MENU, deletedMeal);
   } catch (error) {
-    errorHandler(error);
     return thunkApi.rejectWithValue(error);
   }
 });
@@ -232,7 +214,6 @@ export const getSpecialties = createAppAsyncThunk(`${name}/getSpecialties`, asyn
   try {
     return await MenuApi.getSpecialties();
   } catch (error) {
-    errorHandler(error);
     return thunkApi.rejectWithValue(error);
   }
 });
@@ -240,11 +221,9 @@ export const getSpecialties = createAppAsyncThunk(`${name}/getSpecialties`, asyn
 export const postSpecialty = createAppAsyncThunk(`${name}/postSpecialty`, async (payload: PostSpecialtyPayload, thunkApi) => {
   try {
     const newSpecialty = await MenuApi.postSpecialty(payload);
-    // TODO: socket
-    // const socket = thunkApi.getState().socket.socket;
-    // socket?.emit(SocketTopic.MENU, newSpecialty);
+    const socket = thunkApi.getState().socket.socket;
+    socket?.emit(SocketTopic.MENU, newSpecialty);
   } catch (error) {
-    errorHandler(error);
     return thunkApi.rejectWithValue(error);
   }
 });
@@ -252,11 +231,9 @@ export const postSpecialty = createAppAsyncThunk(`${name}/postSpecialty`, async 
 export const patchSpecialty = createAppAsyncThunk(`${name}/patchSpecialty`, async (payload: PatchSpecialtyPayload, thunkApi) => {
   try {
     const updateSpecialty = await MenuApi.patchSpecialty(payload);
-    // TODO: socket
-    // const socket = thunkApi.getState().socket.socket;
-    // socket?.emit(SocketTopic.MENU, updateSpecialty);
+    const socket = thunkApi.getState().socket.socket;
+    socket?.emit(SocketTopic.MENU, updateSpecialty);
   } catch (error) {
-    errorHandler(error);
     return thunkApi.rejectWithValue(error);
   }
 });
@@ -265,7 +242,6 @@ export const patchSpecialtyOrder = createAppAsyncThunk(`${name}/patchSpecialtyOr
   try {
     await MenuApi.patchSpecialtyOrder(payload);
   } catch (error) {
-    errorHandler(error);
     return thunkApi.rejectWithValue(error);
   }
 });
@@ -273,11 +249,9 @@ export const patchSpecialtyOrder = createAppAsyncThunk(`${name}/patchSpecialtyOr
 export const deleteSpecialty = createAppAsyncThunk(`${name}/deleteSpecialty`, async (payload: DeleteSpecialtyPayload, thunkApi) => {
   try {
     const deleteSpecialty = await MenuApi.deleteSpecialty(payload);
-    // TODO: socket
-    // const socket = thunkApi.getState().socket.socket;
-    // socket?.emit(SocketTopic.MENU, deleteSpecialty);
+    const socket = thunkApi.getState().socket.socket;
+    socket?.emit(SocketTopic.MENU, deleteSpecialty);
   } catch (error) {
-    errorHandler(error);
     return thunkApi.rejectWithValue(error);
   }
 });
@@ -286,11 +260,9 @@ export const deleteSpecialty = createAppAsyncThunk(`${name}/deleteSpecialty`, as
 export const postSpecialtyItem = createAppAsyncThunk(`${name}/postSpecialtyItem`, async (payload: PostSpecialtyItemPayload, thunkApi) => {
   try {
     const newSpecialtyItem = await MenuApi.postSpecialtyItem(payload);
-    // TODO: socket
-    // const socket = thunkApi.getState().socket.socket;
-    // socket?.emit(SocketTopic.MENU, newSpecialtyItem);
+    const socket = thunkApi.getState().socket.socket;
+    socket?.emit(SocketTopic.MENU, newSpecialtyItem);
   } catch (error) {
-    errorHandler(error);
     return thunkApi.rejectWithValue(error);
   }
 });
@@ -298,11 +270,9 @@ export const postSpecialtyItem = createAppAsyncThunk(`${name}/postSpecialtyItem`
 export const patchSpecialtyItem = createAppAsyncThunk(`${name}/patchSpecialtyItem`, async (payload: PatchSpecialtyItemPayload, thunkApi) => {
   try {
     const updateSpecialtyItem = await MenuApi.patchSpecialtyItem(payload);
-    // TODO: socket
-    // const socket = thunkApi.getState().socket.socket;
-    // socket?.emit(SocketTopic.MENU, updateSpecialtyItem);
+    const socket = thunkApi.getState().socket.socket;
+    socket?.emit(SocketTopic.MENU, updateSpecialtyItem);
   } catch (error) {
-    errorHandler(error);
     return thunkApi.rejectWithValue(error);
   }
 });
@@ -313,7 +283,6 @@ export const patchSpecialtyItemOrder = createAppAsyncThunk(
     try {
       await MenuApi.patchSpecialtyItemOrder(payload);
     } catch (error) {
-      errorHandler(error);
       return thunkApi.rejectWithValue(error);
     }
   },
@@ -322,11 +291,9 @@ export const patchSpecialtyItemOrder = createAppAsyncThunk(
 export const deleteSpecialtyItem = createAppAsyncThunk(`${name}/deleteSpecialtyItem`, async (payload: DeleteSpecialtyItemPayload, thunkApi) => {
   try {
     const deleteSpecialtyItem = await MenuApi.deleteSpecialtyItem(payload);
-    // TODO: socket
-    // const socket = thunkApi.getState().socket.socket;
-    // socket?.emit(SocketTopic.MENU, deleteSpecialtyItem);
+    const socket = thunkApi.getState().socket.socket;
+    socket?.emit(SocketTopic.MENU, deleteSpecialtyItem);
   } catch (error) {
-    errorHandler(error);
     return thunkApi.rejectWithValue(error);
   }
 });
@@ -392,7 +359,6 @@ export const menuSettingSlice = createSlice({
       state.specialties = state.specialties.map((s) => {
         if (s.id === action.payload[0].specialtyId) {
           s.specialtyItems = action.payload;
-          return s;
         }
         return s;
       });

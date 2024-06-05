@@ -1,7 +1,7 @@
 import { FC, useMemo, useState } from 'react';
 
 import { Stack, Typography, styled, Button, Box, Divider } from '@mui/material';
-import { BaseDraw, BaseTabs } from '~/components';
+import { BaseDraw } from '~/components';
 import { theme } from '~/theme';
 import UnDraw from '~/assets/images/undraw_login.svg';
 import { ReservationDetail } from './ReservationDetail';
@@ -63,65 +63,65 @@ const SelectTab = styled(Button)(({ theme }) => ({
   },
 }));
 
-export const SeatStatusTabs: FC<SeatProps> = ({ seatTab, setSeatTab }) => {
-  return (
-    <BaseTabs
-      sx={{ position: 'sticky', top: '0', zIndex: '10', backgroundColor: theme.palette.background.paper }}
-      tabs={[
-        {
-          id: SeatTab.CURRENT,
-          title: '當前桌況',
-        },
-        {
-          id: SeatTab.TODAY,
-          title: '今日排程',
-        },
-      ]}
-      onChange={(_, value) => setSeatTab(value as SeatTab)}
-      value={seatTab}
-    />
-  );
-};
+// export const SeatStatusTabs: FC<SeatProps> = ({ seatTab, setSeatTab }) => {
+// return (
+// <BaseTabs
+//   sx={{ position: 'sticky', top: '0', zIndex: '10', backgroundColor: theme.palette.background.paper }}
+//   tabs={[
+//     {
+//       id: SeatTab.CURRENT,
+//       title: '當前桌況',
+//     },
+//     {
+//       id: SeatTab.TODAY,
+//       title: '今日排程',
+//     },
+//   ]}
+//   onChange={(_, value) => setSeatTab(value as SeatTab)}
+//   value={seatTab}
+// />
+// );
+// };
 
-export const SeatInfo: FC<ReservationProps> = ({ info }) => {
-  const infoList = [
-    { label: '訂位編號', value: info?.id.slice(0, 12) },
-    {
-      label: '姓名',
-      value: info?.reservation?.options.name + genderObj[info?.reservation?.options.gender],
-    },
-    {
-      label: '總人數',
-      value: people(info?.reservation?.options),
-    },
-    { label: '電話', value: info?.reservation?.options.phone },
-    { label: '信箱', value: info?.reservation?.options.email },
-    { label: '使用座位', value: info?.reservation?.seats.map((e) => e.seatNo).join(', ') },
-  ];
-  return (
-    <Stack height='inherit' gap={2} sx={{ px: 4, pb: 2 }}>
-      {info?.reservation ? (
-        <>
-          {infoList.map((e) => (
-            <Stack key={e.label} direction='row' justifyContent='space-between' alignItems='center'>
-              <Typography variant='body1' whiteSpace='nowrap'>
-                {e.label}
-              </Typography>
-              <Typography variant='h6' textAlign='end'>
-                {e.value ?? '-'}
-              </Typography>
-            </Stack>
-          ))}
-        </>
-      ) : (
-        <Stack alignItems='center' justifyContent='center' height='100%'>
-          <Box component='img' src={UnDraw} width={200} height={120} />
-          <Typography variant='h6'>等待客人上門中</Typography>
-        </Stack>
-      )}
-    </Stack>
-  );
-};
+// export const SeatInfo: FC<ReservationProps> = ({ info }) => {
+//   const infoList = [
+//     { label: '訂位編號', value: info?.id.slice(0, 12) },
+//     {
+//       label: '姓名',
+//       value: info?.reservation?.options.name + genderObj[info?.reservation?.options.gender],
+//     },
+//     {
+//       label: '總人數',
+//       value: people(info?.reservation?.options),
+//     },
+//     { label: '電話', value: info?.reservation?.options.phone },
+//     { label: '信箱', value: info?.reservation?.options.email },
+//     { label: '使用座位', value: info?.reservation?.seats.map((e) => e.seatNo).join(', ') },
+//   ];
+//   return (
+//     <Stack height='inherit' gap={2} sx={{ px: 4, pb: 2 }}>
+//       {info?.reservation ? (
+//         <>
+//           {infoList.map((e) => (
+//             <Stack key={e.label} direction='row' justifyContent='space-between' alignItems='center'>
+//               <Typography variant='body1' whiteSpace='nowrap'>
+//                 {e.label}
+//               </Typography>
+//               <Typography variant='h6' textAlign='end'>
+//                 {e.value ?? '-'}
+//               </Typography>
+//             </Stack>
+//           ))}
+//         </>
+//       ) : (
+//         <Stack alignItems='center' justifyContent='center' height='100%'>
+//           <Box component='img' src={UnDraw} width={200} height={120} />
+//           <Typography variant='h6'>等待客人上門中</Typography>
+//         </Stack>
+//       )}
+//     </Stack>
+//   );
+// };
 
 export const SeatDetail: FC<SeatDetailProps> = ({ open, onClose, state, update, selectedPeriod }) => {
   const [seatTab, setSeatTab] = useState(SeatTab.CURRENT);
@@ -241,7 +241,7 @@ export const SeatDetail: FC<SeatDetailProps> = ({ open, onClose, state, update, 
       <Divider sx={{ py: 1 }} />
 
       {/* tab */}
-      <SeatStatusTabs seatTab={seatTab} setSeatTab={setSeatTab} />
+      {/* <SeatStatusTabs seatTab={seatTab} setSeatTab={setSeatTab} /> */}
       {/* period seletor */}
       {seatTab === SeatTab.TODAY ? (
         <Stack direction='row' alignItems='center' gap={2} px={3} py={2} sx={{ overflowY: 'auto', height: 'inherit', maxHeight: '77px' }}>
@@ -259,7 +259,7 @@ export const SeatDetail: FC<SeatDetailProps> = ({ open, onClose, state, update, 
         </Stack>
       ) : null}
       {/* seat info */}
-      <SeatInfo info={info} />
+      {/* <SeatInfo info={info} /> */}
       <ReservationDetail isCreate={editMode === 'create'} open={!!editMode} onClose={handleCloseDrawer} date={appDayjs(state.date)} info={info} />
     </BaseDraw>
   );

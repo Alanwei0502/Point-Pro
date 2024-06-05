@@ -1,7 +1,7 @@
-import { useEffect } from 'react';
+import { FC, useEffect } from 'react';
 import { Grid } from '@mui/material';
 import { useAppDispatch } from '~/hooks';
-import { getAdminMenu, takeOrderSlice } from '~/store/slices/admin/takeOrder.slice';
+import { takeOrderSliceActions } from '~/store/slices';
 import { theme } from '~/theme';
 import { headerHeight, PaymentDrawer } from '~/components';
 import { Menu } from './Menu';
@@ -10,14 +10,18 @@ import { CartList } from './CartList';
 import { ClearCartConfirmModal } from './modals/ClearCartConfirmModal';
 import { SubmitCartConfirmModal } from './modals/SubmitCartConfirmModal';
 
-export const AdminTakeOrder = () => {
+const { getAdminMenu, resetTakeOrderState } = takeOrderSliceActions;
+
+interface IAdminTakeOrderProps {}
+
+export const AdminTakeOrder: FC<IAdminTakeOrderProps> = () => {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
     dispatch(getAdminMenu());
 
     return () => {
-      dispatch(takeOrderSlice.actions.resetTakeOrderState());
+      dispatch(resetTakeOrderState());
     };
   }, [dispatch]);
 

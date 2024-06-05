@@ -4,20 +4,20 @@ import DoneIcon from '@mui/icons-material/Done';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import { BaseButton, CloseButton, NumberInput } from '~/components';
 import { useAppDispatch, useAppSelector } from '~/hooks';
-import { takeOrderSlice } from '~/store/slices';
 import { theme } from '~/theme';
 import { GetMenuResponseSpecialtyItem, ISpecialty, SelectionType } from '~/types';
+import { takeOrderSliceActions } from '~/store/slices';
 
 interface IMealDrawerProps {}
 
 export const MealDrawer: FC<IMealDrawerProps> = () => {
   const dispatch = useAppDispatch();
 
-  const { increaseMealAmount, decreaseMealAmount, setUnselectMeal, setSelectSpecialtyItems, addCartItem, updateCartItem } = takeOrderSlice.actions;
   const selectMeal = useAppSelector((state) => state.takeOrder.selectMeal);
   const selectSpecialtyItems = useAppSelector((state) => state.takeOrder.selectSpecialtyItems);
   const specialtiesWithItems = useAppSelector((state) => state.takeOrder.specialtiesWithItems);
   const editingCartItem = useAppSelector((state) => state.takeOrder.editingCartItem);
+
   const isEditing = editingCartItem !== -1;
 
   const selectMealSpecialtyItemsId = useMemo(() => selectMeal?.mealSpecialtyItems.map((msi) => msi.specialtyItemId) ?? [], [selectMeal]);
@@ -36,27 +36,33 @@ export const MealDrawer: FC<IMealDrawerProps> = () => {
   );
 
   const handleClickItem = (selectedSpecialtyId: ISpecialty['id'], selectionType: SelectionType, selectedItem: GetMenuResponseSpecialtyItem) => () => {
-    dispatch(setSelectSpecialtyItems({ selectedSpecialtyId, selectionType, selectedItem: { ...selectedItem, specialtyId: selectedSpecialtyId } }));
+    dispatch(
+      takeOrderSliceActions.setSelectSpecialtyItems({
+        selectedSpecialtyId,
+        selectionType,
+        selectedItem: { ...selectedItem, specialtyId: selectedSpecialtyId },
+      }),
+    );
   };
 
   const handleAdd = () => {
-    dispatch(increaseMealAmount());
+    dispatch(takeOrderSliceActions.increaseMealAmount());
   };
 
   const handleMinus = () => {
-    dispatch(decreaseMealAmount());
+    dispatch(takeOrderSliceActions.decreaseMealAmount());
   };
 
   const handleUpdateCartItem = () => {
-    dispatch(updateCartItem());
+    dispatch(takeOrderSliceActions.updateCartItem());
   };
 
   const handleAddToCart = () => {
-    dispatch(addCartItem());
+    dispatch(takeOrderSliceActions.addCartItem());
   };
 
   const handleClose = () => {
-    dispatch(setUnselectMeal());
+    dispatch(takeOrderSliceActions.setUnselectMeal());
   };
 
   return (

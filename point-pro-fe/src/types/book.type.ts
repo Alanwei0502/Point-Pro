@@ -26,19 +26,6 @@ export interface ReservationRecord {
   options?: { [key: string]: any };
 }
 
-export interface ReservationInfo {
-  id: string;
-  reservedAt: Date;
-  type: ReservationType;
-  options: { [key: string]: any };
-  startTime: Date;
-  endTime: Date;
-  startOfMeal: Date | null;
-  endOfMeal: Date | null;
-  seats: PartialSeat[];
-  status: string;
-}
-
 export interface IBookingInfo {
   id: string;
   reservedAt: string;

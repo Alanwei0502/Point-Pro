@@ -1,146 +1,100 @@
-import { FC, useCallback, useEffect, useState } from 'react';
-import { Accordion, AccordionSummary, AccordionDetails, Button, Typography, List, ListItem, Box, Select, MenuItem, styled } from '@mui/material';
-import AddIcon from '@mui/icons-material/Add';
-import RemoveIcon from '@mui/icons-material/Remove';
-import { Column, Row } from '~/components';
-import { useAppDispatch } from '~/hooks';
-import { patchOrder, setCancelOrder, openPaymentDrawer } from '~/store/slices';
-import { appDayjs, calculateOrderPrice, calculateGatherOrderPrice } from '~/utils';
+import { Accordion, AccordionDetails, AccordionSummary, Box, Divider, List, Typography } from '@mui/material';
+import { FC, useMemo, useState } from 'react';
 import { theme } from '~/theme';
-import { OrderStatus, OrderType, GatherOrder, IOrder, IOrderMeal } from '~/types';
+import { IOrderMeal, OrderStatus, OrderType, OrdersResult } from '~/types';
+import RemoveIcon from '@mui/icons-material/Remove';
+import AddIcon from '@mui/icons-material/Add';
+import { AppButton, Column, Row } from '~/components';
+import { formatFullDateWithTime, orderTypeObj } from '~/utils';
 import { LinearProgressWithLabel } from './LinearProgressWithLabel';
+import { useAppDispatch, useAppSelector } from '~/hooks';
+import { OrderMealItem } from './OrderMealItem';
+import { orderManagementSliceActions } from '~/store/slices';
+import { toast } from 'react-toastify';
 
-function useAccordion() {
-  const [expanded, setExpanded] = useState(false);
+const { openCancelOrderConfirmModal, patchOrderMealServedAmount, getOrders } = orderManagementSliceActions;
 
-  const handleExpand = useCallback(() => {
-    setExpanded((prevExpand) => !prevExpand);
-  }, []);
-
-  return { expanded, handleExpand };
+interface IOrderItemProps {
+  order: OrdersResult;
 }
 
-const VerticalDivider = styled('div')(({ theme }) => ({
-  height: '32px',
-  width: '1px',
-  background: theme.palette.common.black_40,
-  margin: '0 1rem',
-}));
-
-interface IOrderMealItemProps {
-  idx: number;
-  orderMeal: IOrderMeal;
-  status: OrderStatus;
-  isShowServedAmount?: boolean;
-  tempServedAmount?: string;
-  handleChangeServedAmount?: (idx: number, value: number | string) => void;
-}
-export const OrderMealItem: FC<IOrderMealItemProps> = (props) => {
-  const { handleChangeServedAmount, tempServedAmount, orderMeal, isShowServedAmount, idx } = props;
-  const { id, title, mealPrice, price, amount, specialties } = orderMeal;
-
-  return (
-    <ListItem
-      sx={{
-        borderTop: idx > 0 ? `1px solid ${theme.palette.common.black_20}` : 'none',
-        padding: '.5rem',
-      }}
-    >
-      <Row justifyContent='space-between' width='100%' gap={2} sx={{ padding: '.5rem' }}>
-        <Typography sx={{ minWidth: '15rem' }}>{title}</Typography>
-        <Typography sx={{ minWidth: '5rem' }}>{mealPrice}</Typography>
-        <Typography sx={{ minWidth: '5rem' }}>x {amount}</Typography>
-        <List sx={{ margin: 0, padding: 0, flexGrow: 1 }}>
-          {specialties.map((specialty) => (
-            <ListItem key={specialty.id} sx={{ margin: 0, padding: 0, color: theme.palette.text.secondary }}>
-              {/* [{specialty.title}]: {specialty.items.map((item) => item.title).join('、')} */}
-            </ListItem>
-          ))}
-        </List>
-        <Typography fontWeight={700} sx={{ minWidth: '6rem', textAlign: 'right' }}>
-          {price}元
-        </Typography>
-        {isShowServedAmount && handleChangeServedAmount && tempServedAmount && (
-          <Box
-            sx={{
-              display: 'flex',
-              alignItems: 'center',
-              flexDirection: 'column',
-              minWidth: '7rem',
-              gap: '.5rem',
-            }}
-          >
-            <Typography>已出餐數量</Typography>
-            <Select
-              value={tempServedAmount.split('')[idx]}
-              onChange={(e) => handleChangeServedAmount(idx, e.target.value)}
-              sx={{ width: '80%', height: '2rem' }}
-            >
-              {Array.from({ length: orderMeal.amount + 1 }, (_, idx) => idx).map((amount) => (
-                <MenuItem key={`${id}-${amount}`} value={amount}>
-                  {amount}
-                </MenuItem>
-              ))}
-            </Select>
-          </Box>
-        )}
-      </Row>
-    </ListItem>
-  );
-};
-
-interface IPendingAndCancelOrderItemProps {
-  order: IOrder;
-}
-export const PendingAndCancelOrderItem: FC<IPendingAndCancelOrderItemProps> = (props) => {
+export const OrderItem: FC<IOrderItemProps> = (props) => {
   const dispatch = useAppDispatch();
-  const { expanded, handleExpand } = useAccordion();
+
   const { order } = props;
 
-  const { id, status, type, orderMeals, createdAt, seats = [], paymentLogs = [] } = order;
-  const [totalMeals, servedMeals] = orderMeals.reduce(
-    (acc, meal) => {
-      acc[0] = acc[0] + meal.amount;
-      acc[1] = acc[1] + meal.servedAmount;
-      return acc;
-    },
-    [0, 0],
+  const typeTab = useAppSelector((state) => state.orderManagement.typeTab);
+  const statusTab = useAppSelector((state) => state.orderManagement.statusTab);
+
+  const [expanded, setExpanded] = useState(false);
+  const [tempOrder, setTempOrder] = useState(order);
+  const [updateServedAmountLoading, setUpdateServedAmountLoading] = useState(false);
+
+  const tempServedAmountCompare = useMemo(() => tempOrder.orderMeals.map((m) => m.servedAmount).join(''), [tempOrder.orderMeals]);
+
+  const [totalMeals, servedMeals, servedAmountCompare] = useMemo(
+    () =>
+      order.orderMeals.reduce(
+        (acc, m) => {
+          acc[0] = acc[0] + m.amount;
+          acc[1] = acc[1] + m.servedAmount;
+          acc[2] = `${acc[2]}${m.servedAmount}`;
+          return acc;
+        },
+        [0, 0, ''],
+      ),
+    [order.orderMeals],
   );
+
   const progress = (servedMeals / totalMeals) * 100;
 
-  const originServedAmount = orderMeals.map((meal) => meal.servedAmount).join('');
-  const [tempServedAmount, setUpdatedServedAmount] = useState('');
-  const [isServedAmountUpdated, setIsServedAmountUpdated] = useState(false);
+  const cancellable = order.status === OrderStatus.WORKING && progress === 0;
 
-  useEffect(() => {
-    setUpdatedServedAmount(originServedAmount);
-    setIsServedAmountUpdated(false);
-  }, [originServedAmount]);
-
-  const handleChangeServedAmount = (idx: number, value: number | string) => {
-    const newServedAmount = tempServedAmount.split('');
-    newServedAmount[idx] = `${value}`;
-    setUpdatedServedAmount(newServedAmount.join(''));
-    setIsServedAmountUpdated(originServedAmount !== newServedAmount.join(''));
+  const handleExpand = (event: React.SyntheticEvent<Element, Event>, value: boolean) => {
+    setExpanded((prev) => !prev);
   };
 
-  const handleCancelOrder = (orderId: string) => {
-    dispatch(setCancelOrder(orderId));
+  const handleChangeServedAmount = (id: IOrderMeal['id'], newAmount: IOrderMeal['amount']) => {
+    setTempOrder((prev) => ({
+      ...prev,
+      orderMeals: prev.orderMeals.map((m) => ({
+        ...m,
+        servedAmount: m.id === id ? newAmount : m.servedAmount,
+      })),
+    }));
   };
 
-  const handleUpdateOrder = () => {
-    dispatch(
-      patchOrder({
-        id,
-        status,
-        type,
-        orderMeals: order.orderMeals.map((meal, idx) => ({
-          ...meal,
-          servedAmount: +tempServedAmount.split('')[idx],
-        })),
-        paymentLogs,
-      }),
-    );
+  const handleCancelOrder = () => {
+    if (!cancellable) return;
+    dispatch(openCancelOrderConfirmModal(order));
+  };
+
+  const handleUpdateServedAmount = () => {
+    setUpdateServedAmountLoading(true);
+    toast
+      .promise(
+        async () => {
+          await dispatch(
+            patchOrderMealServedAmount({
+              id: tempOrder.id,
+              orderMeals: tempOrder.orderMeals.map((om) => ({
+                id: om.id,
+                amount: om.amount,
+                servedAmount: om.servedAmount,
+              })),
+            }),
+          ).unwrap();
+          await dispatch(getOrders({ status: statusTab, type: typeTab }));
+        },
+        {
+          pending: '出餐更新中...',
+          success: '更新成功',
+          error: '更新失敗',
+        },
+      )
+      .finally(() => {
+        setUpdateServedAmountLoading(false);
+      });
   };
 
   return (
@@ -149,41 +103,38 @@ export const PendingAndCancelOrderItem: FC<IPendingAndCancelOrderItemProps> = (p
       onChange={handleExpand}
       sx={{
         bgcolor: 'white',
-        boxShadow: `0 0 0.5rem #d1d1d181`,
-        '&:before': {
-          height: 0,
-        },
+        boxShadow: `${theme.palette.common.black_40}  0px 1px 2px 0px, ${theme.palette.common.black_40} 0px 2px 6px 2px`,
+        margin: '.5rem 0',
       }}
     >
       <AccordionSummary
         sx={{
           flexDirection: 'row-reverse',
           borderBottom: expanded ? `1px solid ${theme.palette.common.black_20}` : null,
+          '& > .MuiAccordionSummary-content': { margin: 1 },
         }}
         expandIcon={expanded ? <RemoveIcon /> : <AddIcon />}
       >
         <Row sx={{ width: '100%' }}>
-          <VerticalDivider />
+          <Divider orientation='vertical' flexItem variant='middle' sx={{ margin: 2 }} />
           <Column sx={{ flex: '0 70%' }}>
-            <Typography variant='body1' fontWeight={700}>
-              {type === OrderType.DINE_IN ? '內用' : '外帶'}
-            </Typography>
-            {type === OrderType.DINE_IN && (
+            <Typography fontWeight={700}>{orderTypeObj[order.type]}</Typography>
+            {typeTab === OrderType.DINE_IN && (
               <Typography variant='h6' fontWeight={900}>
-                {seats.join(', ')}
+                {/* {seats.join(', ')} */}
               </Typography>
             )}
           </Column>
-          <VerticalDivider />
+          <Divider orientation='vertical' flexItem variant='middle' sx={{ margin: 2 }} />
           <Column sx={{ flex: '0 70%' }}>
             <Typography>訂單編號</Typography>
-            <Typography>{id.slice(-5)}</Typography>
+            <Typography>{order.id.slice(-5)}</Typography>
           </Column>
-          <VerticalDivider />
-          <Typography sx={{ flex: '0 50%' }}>{appDayjs(createdAt).format('YYYY/MM/DD HH:mm')}</Typography>
-          {status === OrderStatus.WORKING && (
+          <Divider orientation='vertical' flexItem variant='middle' sx={{ margin: 2 }} />
+          <Typography sx={{ flex: '0 50%' }}>{formatFullDateWithTime(order.createdAt)}</Typography>
+          {statusTab === OrderStatus.WORKING && (
             <>
-              <VerticalDivider />
+              <Divider orientation='vertical' flexItem variant='middle' sx={{ margin: 2 }} />
               <Box sx={{ flex: '0 50%' }}>
                 <LinearProgressWithLabel value={progress} />
               </Box>
@@ -192,174 +143,36 @@ export const PendingAndCancelOrderItem: FC<IPendingAndCancelOrderItemProps> = (p
         </Row>
       </AccordionSummary>
 
-      <AccordionDetails sx={{ padding: '0 1rem .5rem' }}>
-        <List>
-          {orderMeals.map((orderMeal, idx) => (
+      <AccordionDetails sx={{ padding: '0.5rem' }}>
+        <List disablePadding>
+          {tempOrder.orderMeals.map((m, idx) => (
             <OrderMealItem
               idx={idx}
-              key={orderMeal.id}
-              status={status}
-              orderMeal={orderMeal}
-              isShowServedAmount={status === OrderStatus.WORKING}
-              tempServedAmount={tempServedAmount}
+              key={m.id}
+              orderMeal={m}
+              updateServedAmountLoading={updateServedAmountLoading}
               handleChangeServedAmount={handleChangeServedAmount}
             />
           ))}
         </List>
-        <Box sx={{ display: 'flex' }}>
-          {status === OrderStatus.WORKING && (
+        <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 2, marginTop: 2 }}>
+          {statusTab === OrderStatus.WORKING && (
             <>
-              {progress === 0 && (
-                <Button
-                  variant='outlined'
-                  color='error'
-                  onClick={() => handleCancelOrder(id)}
-                  sx={{ fontSize: theme.typography.body1.fontSize, fontWeight: 700 }}
-                >
+              {cancellable && (
+                <AppButton variant='outlined' color='error' onClick={handleCancelOrder}>
                   取消訂單
-                </Button>
+                </AppButton>
               )}
-              <Button
-                variant='contained'
-                disabled={!isServedAmountUpdated}
-                onClick={handleUpdateOrder}
-                sx={{ fontSize: theme.typography.body1.fontSize, fontWeight: 700, marginLeft: 'auto' }}
+              <AppButton
+                disabled={tempServedAmountCompare === servedAmountCompare}
+                loading={updateServedAmountLoading}
+                onClick={handleUpdateServedAmount}
               >
-                更新訂單
-              </Button>
+                更新出餐
+              </AppButton>
             </>
           )}
         </Box>
-      </AccordionDetails>
-    </Accordion>
-  );
-};
-
-interface IUnpaidAndSuccessOrderItemProps {
-  gatherOrder: GatherOrder;
-}
-export const UnpaidAndSuccessOrderItem: FC<IUnpaidAndSuccessOrderItemProps> = (props) => {
-  const { gatherOrder } = props;
-  const { id, type, status, seats = [], orders = [], paymentLogs = [] } = gatherOrder;
-  const totalPrice = calculateGatherOrderPrice(gatherOrder);
-
-  const dispatch = useAppDispatch();
-  const { expanded, handleExpand } = useAccordion();
-
-  const handlePayment = useCallback(
-    (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-      e.stopPropagation();
-      dispatch(openPaymentDrawer(gatherOrder));
-    },
-    [dispatch, gatherOrder],
-  );
-
-  return (
-    <Accordion
-      expanded={expanded}
-      onChange={handleExpand}
-      sx={{
-        bgcolor: 'white',
-        boxShadow: `0 0 0.5rem #d1d1d181`,
-        '&:before': {
-          height: 0,
-        },
-      }}
-    >
-      <AccordionSummary
-        sx={{
-          flexDirection: 'row-reverse',
-          borderBottom: expanded ? `1px solid ${theme.palette.common.black_20}` : null,
-        }}
-        expandIcon={expanded ? <RemoveIcon /> : <AddIcon />}
-      >
-        <Row sx={{ width: '100%' }}>
-          <VerticalDivider />
-          <Column sx={{ flexGrow: 1 }}>
-            <Typography variant='body1' fontWeight={700}>
-              {type === OrderType.DINE_IN ? '內用' : '外帶'}
-            </Typography>
-            {type === OrderType.DINE_IN && (
-              <Typography variant='h6' fontWeight={900}>
-                {seats.join(', ')}
-              </Typography>
-            )}
-          </Column>
-          {type === OrderType.TAKE_OUT && (
-            <>
-              <VerticalDivider />
-              <Column sx={{ flexGrow: 1 }}>
-                <Typography>訂單編號</Typography>
-                <Typography>{id.slice(-5)}</Typography>
-              </Column>
-              {status === OrderStatus.FINISHED && (
-                <>
-                  <VerticalDivider />
-                  <Column sx={{ minWidth: '13rem' }}>
-                    <Typography fontWeight={700}>付款方式：{paymentLogs?.[0].gateway ?? null}</Typography>
-                  </Column>
-                </>
-              )}
-            </>
-          )}
-          <VerticalDivider />
-          <Column sx={{ minWidth: '13rem', textAlign: 'right' }}>
-            <Typography variant='h6' fontWeight={700}>
-              總金額：{totalPrice}元
-            </Typography>
-          </Column>
-          {status === OrderStatus.FINISHED && (
-            <>
-              <VerticalDivider />
-              <Button variant='contained' onClick={handlePayment} sx={{ fontSize: theme.typography.body1.fontSize, fontWeight: 700, height: '100%' }}>
-                收款
-              </Button>
-            </>
-          )}
-        </Row>
-      </AccordionSummary>
-      <AccordionDetails sx={{ padding: '0 1rem .5rem' }}>
-        {orders.map((order) => (
-          <Box key={order.id} sx={{ margin: '1rem 0' }}>
-            <Accordion
-              sx={{
-                boxShadow: `0 0 0.25rem #b8b8b881`,
-              }}
-            >
-              {type === OrderType.DINE_IN && (
-                <AccordionSummary>
-                  <Row sx={{ width: '100%' }}>
-                    <Column sx={{ flexGrow: 1 }}>
-                      <Typography>訂單編號</Typography>
-                      <Typography>{order.id.slice(-5)}</Typography>
-                    </Column>
-                    <VerticalDivider />
-                    <Typography sx={{ minWidth: '13rem' }}>{appDayjs(order.createdAt).format('YYYY/MM/DD HH:mm')}</Typography>
-                    {status === OrderStatus.FINISHED && (
-                      <>
-                        <VerticalDivider />
-                        <Column sx={{ minWidth: '13rem' }}>
-                          <Typography fontWeight={700}>付款方式：{order.paymentLogs[0]?.gateway ?? null}</Typography>
-                        </Column>
-                      </>
-                    )}
-                    <VerticalDivider />
-                    <Column sx={{ minWidth: '12rem', textAlign: 'right' }}>
-                      <Typography fontWeight={700}>金額：{calculateOrderPrice(order)}元</Typography>
-                    </Column>
-                  </Row>
-                </AccordionSummary>
-              )}
-              <AccordionDetails sx={{ bgcolor: theme.palette.secondary.contrastText }}>
-                <List>
-                  {order.orderMeals.map((orderMeal, idx) => (
-                    <OrderMealItem idx={idx} key={orderMeal.id} status={status} orderMeal={orderMeal} />
-                  ))}
-                </List>
-              </AccordionDetails>
-            </Accordion>
-          </Box>
-        ))}
       </AccordionDetails>
     </Accordion>
   );

@@ -3,8 +3,10 @@ import { Box, Chip, IconButton, List, Typography } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { Column, Row } from '~/components';
 import { useAppDispatch } from '~/hooks';
-import { ITakeOrderSliceState, takeOrderSlice } from '~/store/slices';
+import { ITakeOrderSliceState, takeOrderSliceActions } from '~/store/slices';
 import { theme } from '~/theme';
+
+const { editCartItem, deleteCartItem } = takeOrderSliceActions;
 
 interface ICartMealProps {
   idx: number;
@@ -14,7 +16,6 @@ interface ICartMealProps {
 export const CartMeal: FC<ICartMealProps> = ({ idx, cartItem }) => {
   const dispatch = useAppDispatch();
 
-  const { deleteCartItem, editCartItem } = takeOrderSlice.actions;
   const { title, amount, price, selectSpecialtyItems } = cartItem;
 
   const specialtiesPrice = selectSpecialtyItems.reduce((acc, specialtyItem) => (acc += specialtyItem.price), 0);
@@ -27,6 +28,7 @@ export const CartMeal: FC<ICartMealProps> = ({ idx, cartItem }) => {
   const handleDeleteCartItem = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.stopPropagation();
     dispatch(deleteCartItem(idx));
+    // dispatch();
   };
 
   return (
@@ -50,7 +52,7 @@ export const CartMeal: FC<ICartMealProps> = ({ idx, cartItem }) => {
       </Row>
       <Row alignItems='flex-start'>
         <Column>
-          <List dense={true} sx={{ padding: 0, margin: 0 }}>
+          <List dense sx={{ padding: 0, margin: 0 }}>
             {selectSpecialtyItems.map((si) => (
               <Chip key={si.id} label={si.title} variant='filled' size='small' sx={{ margin: '1px', fontSize: 12 }} />
             ))}

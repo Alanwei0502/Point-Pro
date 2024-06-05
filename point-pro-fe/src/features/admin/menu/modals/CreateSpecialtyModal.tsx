@@ -1,6 +1,7 @@
 import { ChangeEvent, FC, useState } from 'react';
+import { toast } from 'react-toastify';
 import { Card, CardActions, CardContent, CardHeader, FormControl, FormLabel, MenuItem, Select, SelectChangeEvent, TextField } from '@mui/material';
-import { BaseButton, TabletModalLayout } from '~/components';
+import { AppButton, TabletModalLayout } from '~/components';
 import { useAppDispatch, useAppSelector } from '~/hooks';
 import { closeCreateSpecialtyModal, getSpecialties, postSpecialty } from '~/store/slices';
 import { theme } from '~/theme';
@@ -15,12 +16,13 @@ export const CreateSpecialtyModal: FC<ICreateSpecialtyModalProps> = () => {
   const specialties = useAppSelector((state) => state.menuSetting.specialties);
   const isOpen = useAppSelector((state) => state.menuSetting.createSpecialtyModal.isOpen);
 
+  const [isCreateLoading, setIsCreateLoading] = useState(false);
   const [title, setTitle] = useState<ISpecialty['title']>('');
   const [selectionType, setSelectionType] = useState<ISpecialty['selectionType']>(SelectionType.SINGLE);
 
   const hasSameSpecialtyExist = specialties.some((s) => s.title === title);
   const isIncompleteInfo = !title || !selectionType;
-  const isInvalid = isIncompleteInfo || hasSameSpecialtyExist;
+  const isInvalid = isIncompleteInfo || hasSameSpecialtyExist || isCreateLoading;
 
   const handleChangeTitle = (e: ChangeEvent<HTMLInputElement>) => {
     setTitle(e.target.value);
@@ -39,17 +41,28 @@ export const CreateSpecialtyModal: FC<ICreateSpecialtyModalProps> = () => {
   const handleConfirmCreateSpecialty = () => {
     if (isInvalid) return;
 
-    dispatch(
-      postSpecialty({
-        title,
-        selectionType,
-        position: specialties.length,
-      }),
-    )
-      .unwrap()
-      .then(() => {
-        dispatch(getSpecialties());
+    setIsCreateLoading(true);
+    toast
+      .promise(
+        async () => {
+          await dispatch(
+            postSpecialty({
+              title,
+              selectionType,
+              position: specialties.length,
+            }),
+          ).unwrap();
+          await dispatch(getSpecialties());
+        },
+        {
+          pending: '新增中...',
+          success: '新增成功',
+          error: '新增失敗',
+        },
+      )
+      .finally(() => {
         handleCancel();
+        setIsCreateLoading(false);
       });
   };
 
@@ -81,12 +94,12 @@ export const CreateSpecialtyModal: FC<ICreateSpecialtyModalProps> = () => {
           </FormControl>
         </CardContent>
         <CardActions>
-          <BaseButton variant='outlined' color='secondary' fullWidth onClick={handleCancel}>
+          <AppButton variant='outlined' color='secondary' fullWidth onClick={handleCancel}>
             取消
-          </BaseButton>
-          <BaseButton variant='contained' color='primary' fullWidth onClick={handleConfirmCreateSpecialty} disabled={isInvalid}>
+          </AppButton>
+          <AppButton fullWidth onClick={handleConfirmCreateSpecialty} disabled={isInvalid}>
             確定
-          </BaseButton>
+          </AppButton>
         </CardActions>
       </Card>
     </TabletModalLayout>

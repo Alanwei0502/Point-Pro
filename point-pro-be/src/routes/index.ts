@@ -27,7 +27,7 @@ apiRouter.use((error: Error, req: Request, res: ApiResponse, next: NextFunction)
 });
 
 apiRouter.use('/auth', authRouter);
-// apiRouter.use('/order', orderRouter);
+apiRouter.use('/order', orderRouter);
 apiRouter.use('/menu', menuRouter);
 // apiRouter.use('/imgur', imgurRouter);
 // apiRouter.use('/payment', paymentRouter);

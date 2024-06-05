@@ -1,9 +1,8 @@
 import { FC, useMemo } from 'react';
-import { Box, Tab, Tabs, tabsClasses } from '@mui/material';
+import { Box } from '@mui/material';
 import { useAppDispatch, useAppSelector } from '~/hooks';
-import { takeOrderSlice } from '~/store/slices';
-import { theme } from '~/theme';
-import { BaseGrid, BaseGridItem, TabPanel, headerHeight } from '~/components';
+import { BaseGrid, BaseGridItem, BaseTab, BaseTabs, TabPanel, headerHeight } from '~/components';
+import { takeOrderSliceActions } from '~/store/slices';
 import { MealItem } from './MealItem';
 
 interface IMenuProps {}
@@ -11,40 +10,22 @@ interface IMenuProps {}
 export const Menu: FC<IMenuProps> = () => {
   const dispatch = useAppDispatch();
 
-  const { setSelectCategory } = takeOrderSlice.actions;
-
   const categories = useAppSelector((state) => state.takeOrder.categories);
   const selectCategory = useAppSelector((state) => state.takeOrder.selectCategory);
   const meals = useAppSelector((state) => state.takeOrder.meals);
   const showCategories = useMemo(() => categories.filter((category) => meals.some((meal) => meal.categoryId === category.id)), [categories, meals]);
 
-  const clickCategoryTabHandler = (e: React.SyntheticEvent<Element, Event>, categoryId: string) => {
-    dispatch(setSelectCategory(categoryId));
-    // TODO: delete?
-    // dispatch(closeDialog());
+  const handleSelectCategory = (e: React.SyntheticEvent, categoryId: string) => {
+    dispatch(takeOrderSliceActions.setSelectCategory(categoryId));
   };
 
   return (
     <>
-      <Tabs
-        variant='scrollable'
-        value={selectCategory}
-        onChange={clickCategoryTabHandler}
-        sx={{
-          position: 'sticky',
-          top: '0',
-          zIndex: '2',
-          backgroundColor: theme.palette.background.paper,
-          height: '48px',
-          [`& .${tabsClasses.scrollButtons}.Mui-disabled`]: {
-            opacity: 0.2,
-          },
-        }}
-      >
+      <BaseTabs value={selectCategory} onChange={handleSelectCategory}>
         {showCategories.map(({ id, title }) => (
-          <Tab key={id} value={id} label={title} sx={{ fontSize: theme.typography.body1.fontSize }} />
+          <BaseTab key={id} value={id} label={title} />
         ))}
-      </Tabs>
+      </BaseTabs>
       <Box
         sx={{
           overflowY: 'auto',

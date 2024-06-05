@@ -52,6 +52,7 @@ export * from './select/MySelect';
 export * from './switch/BaseSwitch';
 // Tabs
 export * from './tabs/BaseTabs';
+export * from './tabs/BaseTab';
 export * from './tabs/TabPanel';
 // Transfer
 export * from './transfer/BaseTransfer';

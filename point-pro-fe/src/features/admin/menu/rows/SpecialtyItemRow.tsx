@@ -1,4 +1,5 @@
 import { ChangeEvent, FC, useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
 import { Box, IconButton, Typography } from '@mui/material';
 import ReorderIcon from '@mui/icons-material/Reorder';
 import EditIcon from '@mui/icons-material/Edit';
@@ -8,7 +9,7 @@ import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { StyledTableCell, StyledTableRow, TextInput } from '~/components';
-import { ISpecialtyWithSpecialtyItems } from '~/types';
+import { ISpecialty, ISpecialtyItem, ISpecialtyWithSpecialtyItems } from '~/types';
 import { useAppDispatch, useAppSelector } from '~/hooks';
 import { getSpecialties, openDeleteSpecialtyItemConfirmModal, patchSpecialtyItem } from '~/store/slices';
 
@@ -20,23 +21,25 @@ export const SpecialtyItemRow: FC<ISpecialtyItemRowProps> = (props) => {
 
   const dispatch = useAppDispatch();
 
-  const specialties = useAppSelector((state) => state.menuSetting.specialties);
-  const specialtyItems = specialties.find((s) => s.id === specialtyItem.specialtyId)?.specialtyItems ?? [];
-  const [isEdit, setIsEdit] = useState(false);
-  const [newTitle, setNewTitle] = useState(specialtyItem.title);
-  const [newPrice, setNewPrice] = useState(specialtyItem.price);
-
-  const isNotChanged = newTitle === specialtyItem.title && newPrice === specialtyItem.price;
-  const isSpecialtyItemExist = specialtyItems.some((si) => si.title === newTitle && si.id !== specialtyItem.id);
-  const isIncompleteInfo = !newTitle || isNaN(newPrice);
-  const isInValid = isNotChanged || isSpecialtyItemExist || isIncompleteInfo;
-
   const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: specialtyItem.id });
 
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
   };
+
+  const specialties = useAppSelector((state) => state.menuSetting.specialties);
+  const specialtyItems = specialties.find((s) => s.id === specialtyItem.specialtyId)?.specialtyItems ?? [];
+
+  const [isUpdateLoading, setIsUpdateLoading] = useState(false);
+  const [isEdit, setIsEdit] = useState(false);
+  const [newTitle, setNewTitle] = useState<ISpecialty['title']>(specialtyItem.title);
+  const [newPrice, setNewPrice] = useState<ISpecialtyItem['price']>(specialtyItem.price);
+
+  const isNotChanged = newTitle === specialtyItem.title && newPrice === specialtyItem.price;
+  const isSpecialtyItemExist = specialtyItems.some((si) => si.title === newTitle && si.id !== specialtyItem.id);
+  const isIncompleteInfo = !newTitle || isNaN(newPrice);
+  const isInvalid = isNotChanged || isSpecialtyItemExist || isIncompleteInfo || isUpdateLoading;
 
   useEffect(() => {
     setNewTitle(specialtyItem.title);
@@ -66,19 +69,30 @@ export const SpecialtyItemRow: FC<ISpecialtyItemRowProps> = (props) => {
   };
 
   const handleConfirmEdit = () => {
-    if (isInValid) return;
+    if (isInvalid) return;
 
-    dispatch(
-      patchSpecialtyItem({
-        id: specialtyItem.id,
-        title: newTitle,
-        price: newPrice,
-      }),
-    )
-      .unwrap()
-      .then(() => {
+    setIsUpdateLoading(true);
+    toast
+      .promise(
+        async () => {
+          await dispatch(
+            patchSpecialtyItem({
+              id: specialtyItem.id,
+              title: newTitle,
+              price: newPrice,
+            }),
+          ).unwrap();
+          await dispatch(getSpecialties());
+        },
+        {
+          pending: '更新中...',
+          success: '更新成功',
+          error: '更新失敗',
+        },
+      )
+      .finally(() => {
         setIsEdit(false);
-        dispatch(getSpecialties());
+        setIsUpdateLoading(false);
       });
   };
 
@@ -111,8 +125,8 @@ export const SpecialtyItemRow: FC<ISpecialtyItemRowProps> = (props) => {
         <Box sx={{ display: 'flex', gap: 1 }}>
           {isEdit ? (
             <>
-              <IconButton size='small' onClick={handleConfirmEdit} disabled={isInValid}>
-                <CheckIcon color={isInValid ? 'disabled' : 'success'} />
+              <IconButton size='small' onClick={handleConfirmEdit} disabled={isInvalid}>
+                <CheckIcon color={isInvalid ? 'disabled' : 'success'} />
               </IconButton>
               <IconButton size='small' onClick={handleCancelEdit}>
                 <CloseIcon color='error' />

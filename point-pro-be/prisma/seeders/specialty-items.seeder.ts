@@ -32,8 +32,8 @@ export function insertSpecialtyItems() {
         ('不加胡椒', 0, 12, speical_specialty_id),
         ('吃素', 0, 13, speical_specialty_id),
         ('蛋奶素', 0, 14, speical_specialty_id),
-        ('加10元', 10, 15, add_amount_specialty_id),
-        ('加20元', 20, 16, add_amount_specialty_id);
+        ('加量10元', 10, 15, add_amount_specialty_id),
+        ('加量20元', 20, 16, add_amount_specialty_id);
       END $$;
     `,
   ]);

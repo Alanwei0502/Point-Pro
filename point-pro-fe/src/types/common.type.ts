@@ -22,6 +22,12 @@ export enum OrderType {
   TAKE_OUT = 'TAKE_OUT',
 }
 
+export enum PaymentGateway {
+  LINE_PAY = 'LINE_PAY',
+  CASH = 'CASH',
+  EC_PAY = 'EC_PAY',
+}
+
 export enum PaymentStatus {
   UNPAID = 'UNPAID',
   PAID = 'PAID',
@@ -48,20 +54,20 @@ export interface ICategory {
   id: string;
   title: string;
   position: number;
-  createAt: Date;
+  createdAt: Date;
   updatedAt: Date | null;
 }
 
 export interface IMeal {
   id: string;
   title: string;
-  imageId: string;
-  imageDeleteHash: string | null;
   description: string;
   isPopular: boolean;
   price: number;
   position: number;
   publishedAt: Date | null;
+  imageId: string;
+  imageDeleteHash: string | null;
   createdAt: Date;
   updatedAt: Date | null;
 }
@@ -71,7 +77,7 @@ export interface ISpecialty {
   title: string;
   selectionType: SelectionType;
   position: number;
-  createAt: Date;
+  createdAt: Date;
   updatedAt: Date | null;
 }
 
@@ -80,13 +86,8 @@ export interface ISpecialtyItem {
   title: string;
   price: number;
   position: number;
-  createAt: Date;
+  createdAt: Date;
   updatedAt: Date | null;
-}
-
-export interface ICartItem extends GetMenuResponseMeal {
-  amount: number;
-  selectedSpecialtyItems: GetMenuResponseSpecialtyItem[];
 }
 
 export interface IUser {
@@ -101,6 +102,60 @@ export interface IUser {
   updatedAt: Date | null;
 }
 
+export interface IPeriod {
+  id: string;
+  startTime: Date;
+  endTime: Date;
+  createdAt: Date;
+  updatedAt: Date | null;
+}
+
+export interface IReservation {
+  id: string;
+  type: ReservationType;
+  isCancelled: boolean;
+  people: number;
+  remark: string | null;
+  startAt: Date | null;
+  endAt: Date | null;
+  createdAt: Date;
+  updatedAt: Date | null;
+}
+
+export interface ISeat {
+  id: string;
+  seatNo: string;
+  capacity: number;
+  createdAt: Date;
+  updatedAt: Date | null;
+}
+
+export interface IOrder {
+  id: string;
+  status: OrderStatus;
+  type: OrderType;
+  totalPrice: number;
+  createdAt: Date;
+  updatedAt: Date | null;
+}
+
+export interface IOrderMeal {
+  id: string;
+  amount: number;
+  servedAmount: number;
+}
+
+export interface IPayment {
+  id: string;
+  paymentNo: string;
+  price: number;
+  gateway: PaymentGateway;
+  status: PaymentStatus;
+  createdAt: Date;
+  updatedAt: Date | null;
+}
+
+// extend types
 export interface UserInfo {
   periodEndTime: string;
   periodStartTime: string;
@@ -113,27 +168,6 @@ export interface UserInfo {
   role: 'USER';
 }
 
-export interface IPeriod {
-  id: string;
-  startTime: Date;
-  endTime: Date;
-  available: number;
-  createdAt: Date;
-  updatedAt: Date | null;
-}
-
-export interface IReservation {
-  id: string;
-  type: ReservationType;
-  isCancelled: boolean;
-  people: number;
-  startAt: Date | null;
-  endAt: Date | null;
-  createdAt: Date;
-  updatedAt: Date | null;
-  remark: string | null;
-}
-
 export interface IMealWithCategoryAndSpecialtyItems extends IMeal {
   categories: ICategory;
   categoryId: ICategory['id'];
@@ -142,4 +176,9 @@ export interface IMealWithCategoryAndSpecialtyItems extends IMeal {
 
 export interface ISpecialtyWithSpecialtyItems extends ISpecialty {
   specialtyItems: (ISpecialtyItem & { specialtyId: ISpecialty['id'] })[];
+}
+
+export interface ICartItem extends GetMenuResponseMeal {
+  amount: number;
+  selectedSpecialtyItems: GetMenuResponseSpecialtyItem[];
 }

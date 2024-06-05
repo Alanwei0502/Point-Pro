@@ -127,12 +127,20 @@ export interface OrderWithMeal {
   seats?: string[] | undefined;
   orderMeals: OrderMealWithMeal[];
 }
+
+export type GetOrderPayload = {
+  type?: OrderType;
+  status?: OrderStatus;
+};
 export type PostOrderPayload = {
-  id: string;
-  amount: number;
-  price: number;
-  selectedSpecialtyItems: Pick<ISpecialtyItem, 'id' | 'title' | 'price'>[];
-}[];
+  type: IOrder['type'];
+  totalPrice: number;
+  orderMeals: {
+    id: IMeal['id'];
+    amount: IOrderMeal['amount'];
+    specialtyItems: ISpecialtyItem['id'][];
+  }[];
+};
 
 export type PatchOrderPayload = {
   id: string;
@@ -141,10 +149,28 @@ export type PatchOrderPayload = {
   selectedSpecialtyItems: Pick<ISpecialtyItem, 'id' | 'title' | 'price'>[];
 }[];
 
+export type PatchOrderMealServedAmountPayload = {
+  id: IOrder['id'];
+  orderMeals: IOrderMeal[];
+};
+
+export type CancelOrderPayload = IOrder['id'];
+
+export interface IOrderMealInOrdersResult extends IOrderMeal {
+  meals: Pick<IMeal, 'id' | 'title' | 'imageId' | 'price' | 'isPopular'>;
+  orderMealSpecialtyItems: {
+    specialtyItems: Pick<ISpecialtyItem, 'id' | 'title' | 'price'>;
+  }[];
+}
+
+export type OrdersResult = Pick<IOrder, 'id' | 'status' | 'type' | 'totalPrice' | 'createdAt' | 'updatedAt'> & {
+  orderMeals: IOrderMealInOrdersResult[];
+};
+
 export type PostOrderResponse = ApiResponse<IOrder>;
 export type DeleteOrderResponse = ApiResponse<IOrder>;
 export type PatchOrderResponse = ApiResponse<IOrder>;
-export type GetOrdersResponse = ApiResponse<IOrder[]>;
+export type GetOrdersResponse = ApiResponse<OrdersResult[]>;
 
 // Image
 export interface updateImgPayload {}

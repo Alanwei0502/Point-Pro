@@ -1,13 +1,14 @@
-import { FC } from 'react';
+import { FC, useState } from 'react';
 import { Table, TableBody, TableCell, TableFooter, TableHead, TableRow } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import { DndContext, DragEndEvent, KeyboardSensor, MouseSensor, TouchSensor, useSensor, useSensors } from '@dnd-kit/core';
 import { SortableContext, arrayMove, verticalListSortingStrategy } from '@dnd-kit/sortable';
-import { BaseButton, StyledTableCell, StyledTableRow } from '~/components';
+import { AppButton, StyledTableCell, StyledTableRow } from '~/components';
 import { useAppDispatch, useAppSelector } from '~/hooks';
 import { SpecialtyRow } from '../rows/SpecialtyRow';
 import { getSpecialties, openCreateSpecialtyModal, patchSpecialtyOrder, setSpecialties } from '~/store/slices';
 import { PatchSpecialtyOrderPayload } from '~/types';
+import { toast } from 'react-toastify';
 
 interface ISpecialtySettingTableProps {}
 
@@ -15,6 +16,8 @@ export const SpecialtySettingTable: FC<ISpecialtySettingTableProps> = () => {
   const dispatch = useAppDispatch();
 
   const speicalties = useAppSelector((state) => state.menuSetting.specialties);
+
+  const [isSortingLoading, setIsSortingLoading] = useState(false);
 
   const sensors = useSensors(useSensor(MouseSensor), useSensor(TouchSensor), useSensor(KeyboardSensor));
 
@@ -29,11 +32,23 @@ export const SpecialtySettingTable: FC<ISpecialtySettingTableProps> = () => {
         payload.push({ id: s.id, position: idx });
         return { ...s, position: idx };
       });
+
       dispatch(setSpecialties(newSpecialtiesOrder));
-      dispatch(patchSpecialtyOrder(payload))
-        .unwrap()
-        .then(() => {
-          dispatch(getSpecialties());
+      setIsSortingLoading(true);
+      toast
+        .promise(
+          async () => {
+            await dispatch(patchSpecialtyOrder(payload)).unwrap();
+            await dispatch(getSpecialties());
+          },
+          {
+            pending: '更新排序中...',
+            success: '更新成功',
+            error: '更新失敗',
+          },
+        )
+        .finally(() => {
+          setIsSortingLoading(false);
         });
     }
   };
@@ -44,7 +59,7 @@ export const SpecialtySettingTable: FC<ISpecialtySettingTableProps> = () => {
 
   return (
     <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
-      <SortableContext items={speicalties} strategy={verticalListSortingStrategy}>
+      <SortableContext items={speicalties} strategy={verticalListSortingStrategy} disabled={isSortingLoading}>
         <Table stickyHeader size='small'>
           <TableHead>
             <StyledTableRow>
@@ -61,9 +76,9 @@ export const SpecialtySettingTable: FC<ISpecialtySettingTableProps> = () => {
           <TableFooter>
             <TableRow>
               <TableCell colSpan={5}>
-                <BaseButton variant='outlined' color='inherit' fullWidth onClick={handleOpenCreateSpecialtyModal} startIcon={<AddIcon />}>
+                <AppButton variant='outlined' color='inherit' fullWidth onClick={handleOpenCreateSpecialtyModal} startIcon={<AddIcon />}>
                   新增種類
-                </BaseButton>
+                </AppButton>
               </TableCell>
             </TableRow>
           </TableFooter>

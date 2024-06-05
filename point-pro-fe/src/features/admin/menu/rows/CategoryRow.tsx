@@ -1,4 +1,5 @@
-import { ChangeEvent, FC, useMemo, useState } from 'react';
+import { ChangeEvent, FC, useEffect, useMemo, useState } from 'react';
+import { toast } from 'react-toastify';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import styled from '@emotion/styled';
@@ -35,9 +36,17 @@ export const CategoryRow: FC<ICategoryRowProps> = (props) => {
 
   const dispatch = useAppDispatch();
 
+  const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: category.id });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+  };
+
+  const [isUpdateLoading, setIsUpdateLoading] = useState(false);
   const [isExpand, setIsExpanded] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
-  const [newTitle, setNewTitle] = useState(category.title);
+  const [newTitle, setNewTitle] = useState<ICategory['id']>(category.title);
 
   const categories = useAppSelector((state) => state.menuSetting.categories);
   const meals = useAppSelector((state) => state.menuSetting.meals);
@@ -46,17 +55,18 @@ export const CategoryRow: FC<ICategoryRowProps> = (props) => {
 
   const isCategoryTitleExist = categories.some((c) => c.title === newTitle && c.id != category.id);
   const isNotChanged = category.title === newTitle;
-  const isInvalid = !newTitle || isNotChanged || isCategoryTitleExist;
+  const isInvalid = !newTitle || isNotChanged || isCategoryTitleExist || isUpdateLoading;
 
-  const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: category.id });
-
-  const style = {
-    transform: CSS.Transform.toString(transform),
-    transition,
-  };
+  useEffect(() => {
+    setNewTitle(category.title);
+  }, [category.title]);
 
   const handleOpenMealTable = () => {
     setIsExpanded((prevOpen) => !prevOpen);
+  };
+
+  const handleChangeTitle = (e: ChangeEvent<HTMLInputElement>) => {
+    setNewTitle(e.target.value);
   };
 
   const handleEditCategoryRow = () => {
@@ -67,10 +77,6 @@ export const CategoryRow: FC<ICategoryRowProps> = (props) => {
     dispatch(openDeleteCategoryConfirmModal(category));
   };
 
-  const handleChangeTitle = (e: ChangeEvent<HTMLInputElement>) => {
-    setNewTitle(e.target.value);
-  };
-
   const handleCancelEdit = () => {
     setNewTitle(category.title);
     setIsEdit(false);
@@ -79,11 +85,22 @@ export const CategoryRow: FC<ICategoryRowProps> = (props) => {
   const handleConfirmEdit = () => {
     if (isInvalid) return;
 
-    dispatch(patchCategory({ id: category.id, title: newTitle }))
-      .unwrap()
-      .then(() => {
-        dispatch(getCategories());
+    setIsUpdateLoading(true);
+    toast
+      .promise(
+        async () => {
+          await dispatch(patchCategory({ id: category.id, title: newTitle })).unwrap();
+          await dispatch(getCategories());
+        },
+        {
+          pending: '更新中...',
+          success: '更新成功',
+          error: '更新失敗',
+        },
+      )
+      .finally(() => {
         setIsEdit(false);
+        setIsUpdateLoading(false);
       });
   };
 

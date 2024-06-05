@@ -1,31 +1,40 @@
 import { FC } from 'react';
+import { Box } from '@mui/material';
 import { useAppDispatch, useAppSelector } from '~/hooks';
-import { setOrderStatus } from '~/store/slices';
-import { BaseTabs } from '~/components';
-import { theme } from '~/theme';
-import { OrderStatus } from '~/types';
-import { ORDER_STATUS } from '~/utils';
+import { IOrderManagementSliceState, orderManagementSliceActions } from '~/store/slices';
+import { orderStatusObj, orderTypeObj } from '~/utils';
+import { BaseTab, BaseTabs } from '~/components';
 
-export const OrderTabs: FC = () => {
+const { setTypeTab, setStatusTab } = orderManagementSliceActions;
+
+interface IOrderTabsProps {}
+
+export const OrderTabs: FC<IOrderTabsProps> = () => {
   const dispatch = useAppDispatch();
-  const status = useAppSelector(({ order }) => order.status);
 
-  const handleSelected = (orderStatus: OrderStatus) => {
-    dispatch(setOrderStatus(orderStatus));
+  const typeTab = useAppSelector((state) => state.orderManagement.typeTab);
+  const statusTab = useAppSelector((state) => state.orderManagement.statusTab);
+
+  const handleSelectType = (e: React.SyntheticEvent, type: IOrderManagementSliceState['typeTab']) => {
+    dispatch(setTypeTab(type));
+  };
+
+  const handleSelectStatus = (e: React.SyntheticEvent, status: IOrderManagementSliceState['statusTab']) => {
+    dispatch(setStatusTab(status));
   };
 
   return (
-    <BaseTabs
-      sx={{
-        position: 'sticky',
-        top: '0',
-        zIndex: '10',
-        backgroundColor: theme.palette.background.paper,
-        height: '54px',
-      }}
-      tabs={ORDER_STATUS}
-      onChange={(_, value) => handleSelected(value as OrderStatus)}
-      value={status}
-    />
+    <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+      <BaseTabs value={statusTab} onChange={handleSelectStatus}>
+        {Object.entries(orderStatusObj).map(([type, title]) => (
+          <BaseTab key={type} value={type} label={title} />
+        ))}
+      </BaseTabs>
+      <BaseTabs value={typeTab} onChange={handleSelectType}>
+        {Object.entries(orderTypeObj).map(([type, title]) => (
+          <BaseTab key={type} value={type} label={title} />
+        ))}
+      </BaseTabs>
+    </Box>
   );
 };

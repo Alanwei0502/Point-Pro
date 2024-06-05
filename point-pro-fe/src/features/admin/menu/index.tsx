@@ -1,8 +1,8 @@
-import { FC } from 'react';
+import { FC, useEffect } from 'react';
 import { Box } from '@mui/material';
-import { BaseButton } from '~/components';
+import { AppButton } from '~/components';
 import { useAppDispatch } from '~/hooks';
-import { openSpecialtySettingModal } from '~/store/slices';
+import { getCategories, getMeals, getSpecialties, openSpecialtySettingModal } from '~/store/slices';
 import { MenuSettingTable } from './tables/MenuSettingTable';
 import { SpecialtySettingModal } from './modals/SpecialtySettingModal';
 import { CreateCategoryModal } from './modals/CreateCategoryModal';
@@ -23,12 +23,16 @@ export const AdminMenuSettings: FC<IAdminMenuSettingsProps> = () => {
     dispatch(openSpecialtySettingModal());
   };
 
+  useEffect(() => {
+    dispatch(getCategories());
+    dispatch(getMeals());
+    dispatch(getSpecialties());
+  }, [dispatch]);
+
   return (
     <>
       <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 2, padding: 1 }}>
-        <BaseButton variant='contained' onClick={handleOpenSpecialtyItemsSettingModal}>
-          客製化設定
-        </BaseButton>
+        <AppButton onClick={handleOpenSpecialtyItemsSettingModal}>客製化設定</AppButton>
       </Box>
 
       <MenuSettingTable />

@@ -6,8 +6,7 @@ import HeaderLogo from '~/assets/images/header-logo.svg';
 import { useAppDispatch, useAppSelector } from '~/hooks';
 import { appDayjs, dateForm } from '~/utils';
 import { theme } from '~/theme';
-import { LeftMenuDrawer, NotificationDrawer, sideBarItemList } from '~/components';
-import { getCategories, getMeals, getSpecialties } from '~/store/slices';
+import { LeftMenuDrawer, NotificationDrawer, pathObj, sideBarItemList } from '~/components';
 
 const drawerWidth = '300px';
 export const headerHeight = '72px';
@@ -21,7 +20,6 @@ interface IHeaderProps {}
 export const Header: FC<IHeaderProps> = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const dispatch = useAppDispatch();
   const { meal_id } = useParams();
 
   const [isLeftMenuOpen, setIsLeftMenuOpen] = useState(false);
@@ -29,12 +27,6 @@ export const Header: FC<IHeaderProps> = () => {
   const [showTime, setShowTime] = useState(appDayjs().format(dateForm.fullDateWithSecond));
 
   const notifications = useAppSelector(({ socket }) => socket.notifications);
-
-  useEffect(() => {
-    dispatch(getCategories());
-    dispatch(getMeals());
-    dispatch(getSpecialties());
-  }, [dispatch]);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -45,7 +37,7 @@ export const Header: FC<IHeaderProps> = () => {
 
   const handleLogout = () => {
     sessionStorage.removeItem('token');
-    navigate({ pathname: '/admin' });
+    navigate({ pathname: `/${pathObj.admin}` });
   };
 
   const pageTitle = () => {

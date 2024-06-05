@@ -17,6 +17,7 @@ import { theme } from '~/theme';
 import { CollapseSpecialtyItemsTable } from '../tables/CollapseSpecialtyItemsTable';
 import { selectionTypeObj } from '~/utils';
 import { getSpecialties, openDeleteSpecialtyConfirmModal, patchSpecialty } from '~/store/slices';
+import { toast } from 'react-toastify';
 
 const StyledSpecialtyRow = styled(TableRow)(() => ({
   '&.MuiTableRow-root': {
@@ -35,7 +36,16 @@ export const SpecialtyRow: FC<ISpecialtyRowProps> = (props) => {
 
   const dispatch = useAppDispatch();
 
+  const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: specialty.id });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+  };
+
   const specialties = useAppSelector((state) => state.menuSetting.specialties);
+
+  const [isUpdateLoading, setIsUpdateLoading] = useState(false);
   const [isExpand, setIsExpanded] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
   const [newTitle, setNewTitle] = useState(specialty.title);
@@ -44,14 +54,7 @@ export const SpecialtyRow: FC<ISpecialtyRowProps> = (props) => {
   const isNotChanged = newTitle === specialty.title && newSelectionType === specialty.selectionType;
   const isSpecialtyExist = specialties.some((item) => item.title === newTitle && item.id !== specialty.id);
   const isIncompleteInfo = !newTitle || !newSelectionType;
-  const isInvalid = isNotChanged || isSpecialtyExist || isIncompleteInfo;
-
-  const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: specialty.id });
-
-  const style = {
-    transform: CSS.Transform.toString(transform),
-    transition,
-  };
+  const isInvalid = isNotChanged || isSpecialtyExist || isIncompleteInfo || isUpdateLoading;
 
   useEffect(() => {
     setNewTitle(specialty.title);
@@ -62,16 +65,16 @@ export const SpecialtyRow: FC<ISpecialtyRowProps> = (props) => {
     setIsExpanded((prev) => !prev);
   };
 
-  const handleEditSpecialtyRow = () => {
-    setIsEdit(true);
-  };
-
   const handleChangeTitle = (e: ChangeEvent<HTMLInputElement>) => {
     setNewTitle(e.target.value);
   };
 
   const handleChangeSelectionType = (e: SelectChangeEvent<unknown>) => {
     setNewSelectionType(e.target.value as SelectionType);
+  };
+
+  const handleEditSpecialtyRow = () => {
+    setIsEdit(true);
   };
 
   const handleOpenDeleteSpecialtyConfirmModal = () => {
@@ -87,17 +90,28 @@ export const SpecialtyRow: FC<ISpecialtyRowProps> = (props) => {
   const handleConfirmEdit = () => {
     if (isInvalid) return;
 
-    dispatch(
-      patchSpecialty({
-        id: specialty.id,
-        title: newTitle,
-        selectionType: newSelectionType,
-      }),
-    )
-      .unwrap()
-      .then(() => {
-        dispatch(getSpecialties());
+    setIsUpdateLoading(true);
+    toast
+      .promise(
+        async () => {
+          await dispatch(
+            patchSpecialty({
+              id: specialty.id,
+              title: newTitle,
+              selectionType: newSelectionType,
+            }),
+          ).unwrap();
+          await dispatch(getSpecialties());
+        },
+        {
+          pending: '更新中...',
+          success: '更新成功',
+          error: '更新失敗',
+        },
+      )
+      .finally(() => {
         setIsEdit(false);
+        setIsUpdateLoading(false);
       });
   };
 

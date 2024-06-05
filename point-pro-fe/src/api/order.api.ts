@@ -1,34 +1,42 @@
-import { http } from "./http";
+import { http } from './http';
 import {
   DeleteOrderResponse,
   GetOrdersResponse,
   PostOrderPayload,
   PostOrderResponse,
   PatchOrderResponse,
-  OrderStatus,
-  IOrder
-} from "~/types";
+  IOrder,
+  GetOrderPayload,
+  CancelOrderPayload,
+  PatchOrderMealServedAmountPayload,
+} from '~/types';
 
 export class OrderApi {
-  public static path = "order";
+  public static path = 'order';
 
-  static postOrder(payload: PostOrderPayload) {
-    return http.post<string, PostOrderResponse>(`${OrderApi.path}`, payload);
+  static getOrders(params: GetOrderPayload) {
+    return http.get<string, GetOrdersResponse>(OrderApi.path, { params });
   }
 
-  static getOrders(payload: { status: OrderStatus }) {
-    return http.get<string, GetOrdersResponse>(`${OrderApi.path}`, {
-      params: payload
-    });
+  static postOrder(payload: PostOrderPayload) {
+    return http.post<string, PostOrderResponse>(OrderApi.path, payload);
   }
 
   static deleteOrder(payload: { orderId: string }) {
-    return http.delete<string, DeleteOrderResponse>(`${OrderApi.path}`, {
-      params: payload
+    return http.delete<string, DeleteOrderResponse>(OrderApi.path, {
+      params: payload,
     });
   }
 
   static patchOrder(order: IOrder) {
-    return http.patch<string, PatchOrderResponse>(`${OrderApi.path}`, order);
+    return http.patch<string, PatchOrderResponse>(OrderApi.path, order);
+  }
+
+  static patchOrderMealServedAmount(payload: PatchOrderMealServedAmountPayload) {
+    return http.patch(`${OrderApi.path}/${payload.id}/served-amount`, payload);
+  }
+
+  static cancelOrder(orderId: CancelOrderPayload) {
+    return http.patch<string, PatchOrderResponse>(`${OrderApi.path}/${orderId}/cancel`);
   }
 }

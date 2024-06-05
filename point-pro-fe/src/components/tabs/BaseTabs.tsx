@@ -1,61 +1,25 @@
-import { CSSProperties, ChangeEvent, FC } from 'react';
-import { Box, Tab, Tabs } from '@mui/material';
-import { ICategory } from '~/types';
+import { FC } from 'react';
+import { Tabs, TabsProps, tabsClasses } from '@mui/material';
+import { theme } from '~/theme';
 
-interface IBaseTabsProps {
-  value: number | string;
-  tabs: { id: string; title: string; value: string }[];
-  onChange: (event: React.SyntheticEvent<Element, Event>, value: any) => void;
-  sx?: CSSProperties;
-}
-
-export const BaseTabs: FC<IBaseTabsProps> = ({ value, tabs, onChange, sx }) => {
+export const BaseTabs: FC<TabsProps> = (props) => {
+  const { children, ...restProps } = props;
   return (
-    <>
-      <Box sx={{ width: '100%', borderBottom: 0.5, borderColor: 'divider', ...sx }}>
-        <Tabs
-          sx={{
-            '& .MuiTabs-indicator': {
-              display: 'relative',
-              backgroundColor: 'transparent',
-              height: 4,
-            },
-            '& .MuiTabs-indicator::after': {
-              content: "''",
-              position: 'absolute',
-              width: '1.5rem',
-              height: '100%',
-              left: '50%',
-              top: 0,
-              transform: 'translateX(-50%)',
-              backgroundColor: 'common.black',
-            },
-          }}
-          variant='scrollable'
-          value={value}
-          onChange={onChange}
-        >
-          {tabs.map((list) => (
-            <Tab
-              sx={{
-                fontWeight: 400,
-                fontSize: '1.5rem',
-                color: 'common.black_80',
-                '&.Mui-selected': {
-                  fontWeight: 900,
-                  color: 'common.black',
-                },
-                '&.Mui-focusVisible': {
-                  backgroundColor: 'common.black',
-                },
-              }}
-              key={list.id}
-              label={list.title}
-              value={list.value}
-            />
-          ))}
-        </Tabs>
-      </Box>
-    </>
+    <Tabs
+      variant='scrollable'
+      sx={{
+        position: 'sticky',
+        top: '0',
+        zIndex: '2',
+        backgroundColor: theme.palette.background.paper,
+        height: '48px',
+        [`& .${tabsClasses.scrollButtons}.Mui-disabled`]: {
+          opacity: 0.2,
+        },
+      }}
+      {...restProps}
+    >
+      {children}
+    </Tabs>
   );
 };

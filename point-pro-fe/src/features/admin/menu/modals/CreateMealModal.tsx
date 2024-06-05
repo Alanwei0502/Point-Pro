@@ -1,4 +1,5 @@
 import { ChangeEvent, FC, useMemo, useState } from 'react';
+import { toast } from 'react-toastify';
 import {
   Box,
   Card,
@@ -14,7 +15,7 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { BaseButton, BaseSwitch, TabletModalLayout, UploadButton } from '~/components';
+import { AppButton, BaseSwitch, TabletModalLayout, UploadButton } from '~/components';
 import { useAppDispatch, useAppSelector } from '~/hooks';
 import { closeCreateMealModal, getMeals, postMeal } from '~/store/slices';
 import { theme } from '~/theme';
@@ -32,6 +33,7 @@ export const CreateMealModal: FC<ICreateMealModalProps> = () => {
   const specialties = useAppSelector((state) => state.menuSetting.specialties);
   const allSpecialtyItems = useMemo(() => specialties.flatMap((s) => s.specialtyItems), [specialties]);
 
+  const [isCreateLoading, setIsCreateLoading] = useState(false);
   const [title, setTitle] = useState<IMeal['title']>('');
   const [price, setPrice] = useState<IMeal['price']>(0);
   const [image, setImage] = useState<File>();
@@ -43,7 +45,7 @@ export const CreateMealModal: FC<ICreateMealModalProps> = () => {
 
   const hasSameMealExist = meals.some((m) => m.title === title);
   const isIncompleteInfo = !title || !image;
-  const isInvalid = !categoryId || isIncompleteInfo || hasSameMealExist;
+  const isInvalid = !categoryId || isIncompleteInfo || hasSameMealExist || isCreateLoading;
 
   const handleChangeTitle = (e: ChangeEvent<HTMLInputElement>) => {
     setTitle(e.target.value);
@@ -102,22 +104,35 @@ export const CreateMealModal: FC<ICreateMealModalProps> = () => {
   const handleConfirmCreateMeal = () => {
     if (isInvalid) return;
 
-    dispatch(
-      postMeal({
-        categoryId,
-        title,
-        image,
-        price,
-        description,
-        isPopular,
-        position: meals.length,
-        publishedAt,
-        specialtyItems,
-      }),
-    ).then(() => {
-      dispatch(getMeals());
-      handleCancel();
-    });
+    setIsCreateLoading(true);
+    toast
+      .promise(
+        async () => {
+          await dispatch(
+            postMeal({
+              categoryId,
+              title,
+              image,
+              price,
+              description,
+              isPopular,
+              position: meals.length,
+              publishedAt,
+              specialtyItems,
+            }),
+          ).unwrap();
+          await dispatch(getMeals());
+        },
+        {
+          pending: '新增中...',
+          success: '新增成功',
+          error: '新增失敗',
+        },
+      )
+      .finally(() => {
+        handleCancel();
+        setIsCreateLoading(false);
+      });
   };
 
   return (
@@ -200,12 +215,12 @@ export const CreateMealModal: FC<ICreateMealModalProps> = () => {
           </Box>
         </CardContent>
         <CardActions>
-          <BaseButton variant='outlined' color='secondary' fullWidth onClick={handleCancel}>
+          <AppButton variant='outlined' color='secondary' fullWidth onClick={handleCancel}>
             取消
-          </BaseButton>
-          <BaseButton variant='contained' color='primary' fullWidth onClick={handleConfirmCreateMeal} disabled={isInvalid}>
+          </AppButton>
+          <AppButton fullWidth onClick={handleConfirmCreateMeal} disabled={isInvalid}>
             確定
-          </BaseButton>
+          </AppButton>
         </CardActions>
       </Card>
     </TabletModalLayout>

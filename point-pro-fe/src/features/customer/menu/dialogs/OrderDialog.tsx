@@ -1,7 +1,7 @@
 import { FC, useEffect, useMemo, useState } from 'react';
 import { Box, Button, Checkbox, Divider, Grid, List, ListItem, Tabs, Typography, tabsClasses } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { MOBILE_ORDER_STATUS_TAB, ORDER_STATUS, formatFullDateWithTime, calculateOrderPrice } from '~/utils';
+import { orderStatusObj, formatFullDateWithTime, calculateOrderPrice } from '~/utils';
 import { useAppDispatch, useAppSelector } from '~/hooks';
 import { setMobileOrderStatusTab, closeDialog, openModal } from '~/store/slices';
 import { OrderType, MobileDialog, IOrder, OrderStatus, MobileModal } from '~/types';
@@ -19,7 +19,7 @@ export const OrdersDialog: FC<IOrdersDialogProps> = () => {
   const [toggleList, setToggleList] = useState<IOrder['id'][]>([]);
   const [canPay, setCanPay] = useState<boolean>(false);
 
-  const showOrders = orders.filter(({ status }) => MOBILE_ORDER_STATUS_TAB[mobileOrderStatusTab].type.includes(status));
+  const showOrders = orders.filter(({ status }) => status === Object.keys(orderStatusObj)[mobileOrderStatusTab]);
 
   const totalPrice = useMemo(() => showOrders.reduce((acc, cur) => acc + cur.orderMeals.reduce((acc, cur) => acc + cur.price, 0), 0), [showOrders]);
 
@@ -113,8 +113,8 @@ export const OrdersDialog: FC<IOrdersDialogProps> = () => {
             marginBottom: '10px',
           }}
         >
-          {MOBILE_ORDER_STATUS_TAB.map((status, idx) => (
-            <StyledTab key={`${status.title}-${idx}`} value={idx} label={status.title} />
+          {Object.entries(orderStatusObj).map(([orderType, orderTitle], idx) => (
+            <StyledTab key={`${orderTitle}-${idx}`} value={idx} label={orderTitle} />
           ))}
         </Tabs>
       </Box>
@@ -166,7 +166,7 @@ export const OrdersDialog: FC<IOrdersDialogProps> = () => {
                         狀態：
                       </Box>
                       <Box component='span' sx={{ fontWeight: 700 }}>
-                        {ORDER_STATUS.find((status) => status.id === order.status)?.title}
+                        {orderStatusObj[order.status]}
                       </Box>
                     </Box>
                     {/* 訂單總金額 */}

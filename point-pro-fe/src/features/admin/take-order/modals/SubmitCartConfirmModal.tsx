@@ -1,26 +1,56 @@
-import { FC } from 'react';
+import { FC, useState } from 'react';
 import { Card, CardActions, CardContent, CardHeader, Typography } from '@mui/material';
-import { BaseButton, TabletModalLayout } from '~/components';
+import { AppButton, TabletModalLayout } from '~/components';
 import { useAppDispatch, useAppSelector } from '~/hooks';
-import { postOrder, takeOrderSlice } from '~/store/slices';
+import { takeOrderSliceActions, orderManagementSliceActions } from '~/store/slices';
 import { theme } from '~/theme';
+import { OrderType } from '~/types';
+import { toast } from 'react-toastify';
 
 interface ISubmitCartConfirmModalProps {}
 
 export const SubmitCartConfirmModal: FC<ISubmitCartConfirmModalProps> = () => {
   const dispatch = useAppDispatch();
 
-  const { closeSubmitCartConfirmModal } = takeOrderSlice.actions;
-
   const isOpen = useAppSelector((state) => state.takeOrder.submitCartConfirmModal.isOpen);
+  const cart = useAppSelector((state) => state.takeOrder.cart);
+  const totalPrice = useAppSelector((state) => state.takeOrder.totalPrice);
+
+  const [isSubmitLoading, setIsSubmitLoading] = useState(false);
 
   const handleSubmitOrder = () => {
-    // dispatch(postOrder({ isCustomer: false }));
-    dispatch(closeSubmitCartConfirmModal());
+    setIsSubmitLoading(true);
+    toast
+      .promise(
+        async () => {
+          const orderPayload = {
+            type: OrderType.TAKE_OUT,
+            totalPrice,
+            orderMeals: cart.map((m) => {
+              return {
+                id: m.id,
+                amount: m.amount,
+                specialtyItems: m.selectSpecialtyItems.map((ssi) => ssi.id),
+              };
+            }),
+          };
+          await dispatch(orderManagementSliceActions.postOrder(orderPayload)).unwrap();
+          dispatch(takeOrderSliceActions.clearCart());
+        },
+        {
+          pending: '送出訂單中...',
+          success: '訂單已送出',
+          error: '送出訂單失敗',
+        },
+      )
+      .finally(() => {
+        dispatch(takeOrderSliceActions.closeSubmitCartConfirmModal());
+        setIsSubmitLoading(true);
+      });
   };
 
   const handleCancel = () => {
-    dispatch(closeSubmitCartConfirmModal());
+    dispatch(takeOrderSliceActions.closeSubmitCartConfirmModal());
   };
 
   return (
@@ -31,12 +61,12 @@ export const SubmitCartConfirmModal: FC<ISubmitCartConfirmModalProps> = () => {
           <Typography textAlign='center'>請再次確定訂單內容無誤，即將送出訂單。</Typography>
         </CardContent>
         <CardActions>
-          <BaseButton variant='outlined' color='secondary' fullWidth onClick={handleCancel}>
+          <AppButton variant='outlined' color='secondary' fullWidth onClick={handleCancel}>
             取消
-          </BaseButton>
-          <BaseButton variant='contained' color='primary' fullWidth onClick={handleSubmitOrder}>
+          </AppButton>
+          <AppButton fullWidth onClick={handleSubmitOrder} disabled={isSubmitLoading}>
             確定
-          </BaseButton>
+          </AppButton>
         </CardActions>
       </Card>
     </TabletModalLayout>

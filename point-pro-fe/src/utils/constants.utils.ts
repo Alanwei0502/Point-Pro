@@ -1,13 +1,13 @@
 import { OverridableComponent } from '@mui/material/OverridableComponent';
 import { SvgIconTypeMap } from '@mui/material';
-import { OrderStatus, SelectionType, OrderStatusTitle, Gender, SeatStatus } from '~/types';
+import { OrderStatus, SelectionType, Gender, SeatStatus, OrderType } from '~/types';
 
+// 專門放固定參數
 export const MEAL_IMAGE_URL = 'https://i.imgur.com/';
 export const MEAL_IMAGE_TYPES = ['image/jpeg', 'image/jpg', 'image/png'];
 export const MEAL_IMAGE_SIZE_LIMIT = 2 * 1024 * 1024;
 export const MEAL_IMAGE_FORMAT_REMINDER = '圖片大小不得超過 2MB，格式為 .jpg、.jpeg 或 .png';
 
-// 專門放固定參數
 export const genderObj = {
   [Gender.MALE]: '先生',
   [Gender.FEMALE]: '小姐',
@@ -19,46 +19,16 @@ export const selectionTypeObj = {
   [SelectionType.MULTIPLE]: '多選',
 };
 
-export const ORDER_STATUS = [
-  {
-    id: OrderStatus.WORKING,
-    value: OrderStatus.WORKING,
-    title: OrderStatusTitle.WORKING,
-  },
+export const orderStatusObj = {
+  [OrderStatus.WORKING]: '未完成',
+  [OrderStatus.FINISHED]: '已完成',
+  [OrderStatus.CANCEL]: '已取消',
+};
 
-  {
-    id: OrderStatus.WORKING,
-    value: OrderStatus.WORKING,
-    title: OrderStatusTitle.UNPAID,
-  },
-
-  {
-    id: OrderStatus.FINISHED,
-    value: OrderStatus.FINISHED,
-    title: OrderStatusTitle.SUCCESS,
-  },
-
-  {
-    id: OrderStatus.CANCEL,
-    value: OrderStatus.CANCEL,
-    title: OrderStatusTitle.CANCEL,
-  },
-];
-
-export const MOBILE_ORDER_STATUS_TAB = [
-  {
-    type: [OrderStatus.WORKING, OrderStatus.FINISHED],
-    title: OrderStatusTitle.UNPAID,
-  },
-  {
-    type: [OrderStatus.FINISHED],
-    title: OrderStatusTitle.SUCCESS,
-  },
-  {
-    type: [OrderStatus.CANCEL],
-    title: OrderStatusTitle.CANCEL,
-  },
-];
+export const orderTypeObj = {
+  [OrderType.DINE_IN]: '內用',
+  [OrderType.TAKE_OUT]: '外帶',
+};
 
 export type SideBarItemType = {
   id: string;

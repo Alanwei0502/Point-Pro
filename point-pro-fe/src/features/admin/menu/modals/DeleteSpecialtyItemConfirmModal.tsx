@@ -1,9 +1,10 @@
-import { FC } from 'react';
+import { FC, useState } from 'react';
 import { Card, CardActions, CardContent, CardHeader, Typography } from '@mui/material';
-import { BaseButton, TabletModalLayout } from '~/components';
+import { AppButton, TabletModalLayout } from '~/components';
 import { useAppDispatch, useAppSelector } from '~/hooks';
 import { closeDeleteSpecialtyItemConfirmModal, deleteSpecialtyItem, getSpecialties } from '~/store/slices';
 import { theme } from '~/theme';
+import { toast } from 'react-toastify';
 
 interface IDeleteSpecialtyItemConfirmModalProps {}
 
@@ -12,17 +13,33 @@ export const DeleteSpecialtyItemConfirmModal: FC<IDeleteSpecialtyItemConfirmModa
 
   const { isOpen, data } = useAppSelector((state) => state.menuSetting.deleteSpecialtyItemConfirmModal);
 
+  const [isDeleteLoading, setIsDeleteLoading] = useState(false);
+
+  const isInvalid = !data || isDeleteLoading;
+
   const handleCancel = () => {
     dispatch(closeDeleteSpecialtyItemConfirmModal());
   };
 
   const handleConfirmDelete = () => {
-    if (!data) return;
-    dispatch(deleteSpecialtyItem(data.id))
-      .unwrap()
-      .then(() => {
-        dispatch(getSpecialties());
+    if (isInvalid) return;
+
+    setIsDeleteLoading(true);
+    toast
+      .promise(
+        async () => {
+          await dispatch(deleteSpecialtyItem(data.id)).unwrap();
+          await dispatch(getSpecialties());
+        },
+        {
+          pending: '刪除中...',
+          success: '刪除成功',
+          error: '刪除失敗',
+        },
+      )
+      .finally(() => {
         handleCancel();
+        setIsDeleteLoading(false);
       });
   };
 
@@ -34,12 +51,12 @@ export const DeleteSpecialtyItemConfirmModal: FC<IDeleteSpecialtyItemConfirmModa
           <Typography textAlign='center'>確定要刪除「{data?.title}」？</Typography>
         </CardContent>
         <CardActions>
-          <BaseButton variant='outlined' color='secondary' fullWidth onClick={handleCancel}>
+          <AppButton variant='outlined' color='secondary' fullWidth onClick={handleCancel}>
             取消
-          </BaseButton>
-          <BaseButton variant='contained' color='primary' fullWidth onClick={handleConfirmDelete}>
+          </AppButton>
+          <AppButton fullWidth onClick={handleConfirmDelete} disabled={isInvalid}>
             確定
-          </BaseButton>
+          </AppButton>
         </CardActions>
       </Card>
     </TabletModalLayout>

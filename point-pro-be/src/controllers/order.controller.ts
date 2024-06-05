@@ -10,6 +10,9 @@ import {
   orderStatusValidatedSchema,
   updateOrderReqBodySchema,
 } from '../schemas';
+import { ICancelOrderRequest, IGetOrderRequest, IPostOrderRequest, IUpdateOrderMealServedAmountRequest } from '../types';
+import { ReasonPhrases, StatusCodes } from 'http-status-codes';
+import { OrderModel } from '../models';
 
 const commonInclude: Prisma.OrderInclude<DefaultArgs> | null | undefined = {
   reservations: {
@@ -43,43 +46,83 @@ const commonInclude: Prisma.OrderInclude<DefaultArgs> | null | undefined = {
 };
 
 export class OrderController {
-  // public static createOrderHandler: RequestHandler = async (req: AuthRequest, res: ApiResponse, next: NextFunction) => {
-  //   try {
-  //     const { reservationId } = reservationValidatedSchema.cast(req.auth);
-  //     const orderMeals = createOrderReqBodySchema.cast(req.body);
-  //     const order = await prismaClient.order.create({
-  //       data: {
-  //         reservationId: reservationId,
-  //         type: reservationId ? OrderType.DINE_IN : OrderType.TAKE_OUT,
-  //       },
-  //       // include: commonInclude,
-  //     });
-  //     // await prismaClient.orderMeal.createMany({
-  //     //   data:
-  //     // })
-  //     // const result = {
-  //     //   ...order,
-  //     //   orderMeals:
-  //     //     order.orderMeals.map(({ id, mealDetails, price, amount, servedAmount, meal }) => ({
-  //     //       id,
-  //     //       amount,
-  //     //       servedAmount,
-  //     //       price,
-  //     //       mealPrice: meal.price,
-  //     //       mealId: meal.id,
-  //     //       title: meal.title,
-  //     //       categories: meal.categories.map((category) => ({ ...category.category })),
-  //     //       specialties: JSON.parse(mealDetails as string),
-  //     //     })) ?? [],
-  //     // };
-  //     return res.status(201).send({
-  //       message: 'CREATE_ORDER',
-  //       result: {},
-  //     });
-  //   } catch (error) {
-  //     next(error);
-  //   }
-  // };
+  static getOrdersHandler = async (req: IGetOrderRequest, res: ApiResponse, next: NextFunction) => {
+    try {
+      const orders = await OrderModel.getOrders(req.query);
+
+      return res.status(StatusCodes.OK).send({
+        message: ReasonPhrases.OK,
+        result: orders,
+      });
+    } catch (error) {
+      next();
+    }
+  };
+
+  static createOrderHandler = async (req: IPostOrderRequest, res: ApiResponse, next: NextFunction) => {
+    try {
+      const newOrder = await OrderModel.createOrder(req.body);
+
+      return res.status(StatusCodes.CREATED).send({
+        message: ReasonPhrases.CREATED,
+        result: newOrder,
+      });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  static cancelOrderHandler = async (req: ICancelOrderRequest, res: ApiResponse, next: NextFunction) => {
+    try {
+      // check if order is cancellable
+      const order = await OrderModel.getOrderByIdCheckIsCancellable(req.params.orderId);
+
+      // if order is not cancellable
+      if (!order) {
+        return res.status(StatusCodes.BAD_REQUEST).send({
+          message: ReasonPhrases.BAD_REQUEST,
+          result: 'Order is not cancellable',
+        });
+      }
+
+      // cancel order
+      const result = await OrderModel.cancelOrder(order.id);
+
+      return res.status(StatusCodes.OK).send({
+        message: ReasonPhrases.OK,
+        result,
+      });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  static updateOrderMealServedAmountHandler = async (req: IUpdateOrderMealServedAmountRequest, res: ApiResponse, next: NextFunction) => {
+    try {
+      const { orderId } = req.params;
+      const { orderMeals } = req.body;
+
+      // check if served amount is valid
+      const isValidServedAmount = orderMeals.every((meal) => meal.amount >= meal.servedAmount);
+      if (!isValidServedAmount) {
+        return res.status(StatusCodes.BAD_REQUEST).send({
+          message: ReasonPhrases.BAD_REQUEST,
+          result: 'Served amount cannot be greater than amount',
+        });
+      }
+
+      // update order meal served amount
+      const result = await OrderModel.updateOrderMealServedAmount(orderId, orderMeals);
+      return res.status(StatusCodes.OK).send({
+        message: ReasonPhrases.OK,
+        result,
+      });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  // TODO: delete
   // public static getOrdersHandler: RequestHandler = async (req: AuthRequest, res: ApiResponse, next) => {
   //   if (req.auth.role === 'USER') {
   //     try {
@@ -151,24 +194,7 @@ export class OrderController {
   //     }
   //   }
   // };
-  // public static cancelOrderHandler: RequestHandler = async (req: AuthRequest, res: ApiResponse, next) => {
-  //   try {
-  //     const { orderId } = orderIdValidatedSchema.cast(req.query);
-  //     const result = await prismaClient.order.update({
-  //       where: { id: orderId },
-  //       data: {
-  //         status: OrderStatus.CANCEL,
-  //       },
-  //       include: commonInclude,
-  //     });
-  //     return res.status(200).send({
-  //       message: 'CANCEL_ORDER',
-  //       result,
-  //     });
-  //   } catch (error) {
-  //     next(error);
-  //   }
-  // };
+
   // public static updateOrderHandler: RequestHandler = async (req: AuthRequest, res: ApiResponse, next) => {
   //   try {
   //     const { id, status, orderMeals } = updateOrderReqBodySchema.cast(req.body);

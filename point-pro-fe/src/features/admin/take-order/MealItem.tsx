@@ -1,10 +1,10 @@
+import { FC } from 'react';
 import { Box, Typography } from '@mui/material';
-import { FC, SyntheticEvent } from 'react';
 import { Row } from '~/components';
 import { useAppDispatch, useAppSelector } from '~/hooks';
-import { openDialog, setNotModifiedCartItem, takeOrderSlice } from '~/store/slices';
+import { takeOrderSliceActions } from '~/store/slices';
 import { theme } from '~/theme';
-import { GetMenuResponseMeal, MobileDialog } from '~/types';
+import { GetMenuResponseMeal } from '~/types';
 import { MEAL_IMAGE_URL } from '~/utils';
 
 interface MealItemProps {
@@ -16,8 +16,6 @@ export const MealItem: FC<MealItemProps> = (props) => {
 
   const { meal } = props;
 
-  const { setUnselectMeal, setSelectMeal, setNotModifiedCartItem } = takeOrderSlice.actions;
-
   const editingCartItem = useAppSelector((state) => state.takeOrder.editingCartItem);
   const selectMeal = useAppSelector((state) => state.takeOrder.selectMeal);
   const isEdit = editingCartItem !== -1;
@@ -25,11 +23,10 @@ export const MealItem: FC<MealItemProps> = (props) => {
 
   const clickMealHandler = () => {
     if (isSelected) {
-      dispatch(setUnselectMeal());
+      dispatch(takeOrderSliceActions.setUnselectMeal());
     } else {
-      dispatch(setSelectMeal({ ...meal, amount: 1 }));
+      dispatch(takeOrderSliceActions.setSelectMeal({ ...meal, amount: 1 }));
     }
-    dispatch(setNotModifiedCartItem());
   };
 
   return (

@@ -1,11 +1,11 @@
-import { FC } from 'react';
+import { FC, useState } from 'react';
 import { DndContext, DragEndEvent, KeyboardSensor, MouseSensor, TouchSensor, useSensor, useSensors } from '@dnd-kit/core';
 import { SortableContext, arrayMove, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { Table, TableBody, TableCell, TableFooter, TableHead, TableRow } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
+import { toast } from 'react-toastify';
 import { useAppDispatch, useAppSelector } from '~/hooks';
-
-import { BaseButton, StyledTableCell, StyledTableRow } from '~/components';
+import { AppButton, StyledTableCell, StyledTableRow } from '~/components';
 import { getCategories, openCreateCategoryModal, patchCategoryOrder, setCategories } from '~/store/slices';
 import { CategoryRow } from '../rows/CategoryRow';
 import { PatchCategoryOrderPayload } from '~/types';
@@ -14,7 +14,10 @@ interface IMenuSettingTableProps {}
 
 export const MenuSettingTable: FC<IMenuSettingTableProps> = () => {
   const dispatch = useAppDispatch();
+
   const categories = useAppSelector((state) => state.menuSetting.categories);
+
+  const [isSortingLoading, setIsSortingLoading] = useState(false);
 
   const sensors = useSensors(useSensor(MouseSensor), useSensor(TouchSensor), useSensor(KeyboardSensor));
 
@@ -32,10 +35,21 @@ export const MenuSettingTable: FC<IMenuSettingTableProps> = () => {
       });
 
       dispatch(setCategories(newCategoriesOrder));
-      dispatch(patchCategoryOrder(payload))
-        .unwrap()
-        .then(() => {
-          dispatch(getCategories());
+      setIsSortingLoading(true);
+      toast
+        .promise(
+          async () => {
+            await dispatch(patchCategoryOrder(payload)).unwrap();
+            await dispatch(getCategories());
+          },
+          {
+            pending: '更新排序中...',
+            success: '更新成功',
+            error: '更新失敗',
+          },
+        )
+        .finally(() => {
+          setIsSortingLoading(false);
         });
     }
   };
@@ -46,7 +60,7 @@ export const MenuSettingTable: FC<IMenuSettingTableProps> = () => {
 
   return (
     <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
-      <SortableContext items={categories} strategy={verticalListSortingStrategy}>
+      <SortableContext items={categories} strategy={verticalListSortingStrategy} disabled={isSortingLoading}>
         <Table stickyHeader size='small'>
           <TableHead>
             <StyledTableRow>
@@ -63,9 +77,9 @@ export const MenuSettingTable: FC<IMenuSettingTableProps> = () => {
           <TableFooter>
             <TableRow>
               <TableCell colSpan={4}>
-                <BaseButton variant='outlined' color='inherit' fullWidth onClick={handleOpenCreateCategoryModal} startIcon={<AddIcon />}>
+                <AppButton variant='outlined' color='inherit' fullWidth onClick={handleOpenCreateCategoryModal} startIcon={<AddIcon />}>
                   新增種類
-                </BaseButton>
+                </AppButton>
               </TableCell>
             </TableRow>
           </TableFooter>

@@ -61,7 +61,12 @@ mealRouter.patch(
   MenuController.updateMealHandler,
 );
 mealRouter.patch('/', validateMiddleware(updateMealOrderRequestSchema), MenuController.updateMealOrderHandler);
-mealRouter.delete('/:mealId', validateMiddleware(deleteMealRequestSchma), ImgurController.deleteImageHandler, MenuController.deleteMealHandler);
+mealRouter.delete(
+  '/:mealId',
+  validateMiddleware(deleteMealRequestSchma, 'params'),
+  ImgurController.deleteImageHandler,
+  MenuController.deleteMealHandler,
+);
 
 // SPECIALTY
 const specialtyRouter = Router();
@@ -69,14 +74,18 @@ specialtyRouter.get('/', MenuController.getSpecialtiesHandler);
 specialtyRouter.post('/', validateMiddleware(createSpecialtyRequestSchema), MenuController.createSpecialtyHandler);
 specialtyRouter.patch('/:specialtyId', validateMiddleware(updateSpecialtyRequestSchema), MenuController.updateSpecialtyHandler);
 specialtyRouter.patch('/', validateMiddleware(updateSpecialtyOrderRequestSchema), MenuController.updateSpecialtyOrderHandler);
-specialtyRouter.delete('/:specialtyId', validateMiddleware(deleteSpecialtyRequestSchema), MenuController.deleteSpecialtyHandler);
+specialtyRouter.delete('/:specialtyId', validateMiddleware(deleteSpecialtyRequestSchema, 'params'), MenuController.deleteSpecialtyHandler);
 
 // SPECIALTY ITEM
 const specialtyItemRouter = Router();
 specialtyItemRouter.post('/', validateMiddleware(createSpecialtyItemRequestSchema), MenuController.createSpecialtyItemHandler);
 specialtyItemRouter.patch('/:specialtyItemId', validateMiddleware(updateSpecialtyItemRequestSchema), MenuController.updateSpecialtyItemHandler);
 specialtyItemRouter.patch('/', validateMiddleware(updateSpecialtyItemOrderRequestSchema), MenuController.updateSpecialtyItemOrderHandler);
-specialtyItemRouter.delete('/:specialtyItemId', validateMiddleware(deleteSpecialtyItemRequestSchema), MenuController.deleteSpecialtyItemHandler);
+specialtyItemRouter.delete(
+  '/:specialtyItemId',
+  validateMiddleware(deleteSpecialtyItemRequestSchema, 'params'),
+  MenuController.deleteSpecialtyItemHandler,
+);
 
 menuRouter.use('/category', categoryRouter);
 menuRouter.use('/meal', mealRouter);

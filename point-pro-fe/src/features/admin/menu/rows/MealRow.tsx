@@ -1,4 +1,5 @@
-import { ChangeEvent, FC, useState } from 'react';
+import { ChangeEvent, FC, useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { Box, Chip, IconButton, MenuItem, Select, SelectChangeEvent, Typography } from '@mui/material';
@@ -35,29 +36,40 @@ export const MealRow: FC<IMealRowProps> = (props) => {
   const specialties = useAppSelector((state) => state.menuSetting.specialties);
   const allSpecialtyItems = specialties.flatMap((s) => s.specialtyItems);
 
+  const [isUpdateLoading, setIsUpdateLoading] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
-  const [categoryId, setCategoryId] = useState<ICategory['id']>(meal.categoryId);
-  const [title, setTitle] = useState<IMeal['title']>(meal.title);
-  const [price, setPrice] = useState<IMeal['price']>(meal.price);
-  const [image, setImage] = useState<File>();
-  const [previewImage, setPreviewImage] = useState<string>(`${MEAL_IMAGE_URL}${meal.imageId}m.jpg`);
-  const [description, setDescription] = useState<IMeal['description']>(meal.description);
-  const [specialtyItems, setSpecialtyItems] = useState<ISpecialtyItem[]>(meal.specialtyItems);
-  const [isPopular, setIsPopular] = useState<IMeal['isPopular']>(meal.isPopular);
-  const [publishedAt, setPublisedAt] = useState<IMeal['publishedAt']>(meal.publishedAt);
+  const [newCategoryId, setNewCategoryId] = useState<ICategory['id']>(meal.categoryId);
+  const [newTitle, setNewTitle] = useState<IMeal['title']>(meal.title);
+  const [newPrice, setNewPrice] = useState<IMeal['price']>(meal.price);
+  const [newImage, setNewImage] = useState<File>();
+  const [newPreviewImage, setNewPreviewImage] = useState<string>(`${MEAL_IMAGE_URL}${meal.imageId}m.jpg`);
+  const [newDescription, setNewDescription] = useState<IMeal['description']>(meal.description);
+  const [newSpecialtyItems, setNewSpecialtyItems] = useState<ISpecialtyItem[]>(meal.specialtyItems);
+  const [newIsPopular, setNewIsPopular] = useState<IMeal['isPopular']>(meal.isPopular);
+  const [newPublishedAt, setNewPublisedAt] = useState<IMeal['publishedAt']>(meal.publishedAt);
 
-  const isIncompleteInfo = !title;
-  const hasSameMealNameExist = meals.some((m) => m.title === title && m.id !== meal.id);
+  const isIncompleteInfo = !newTitle;
+  const hasSameMealNameExist = meals.some((m) => m.title === newTitle && m.id !== meal.id);
+  const isInvalid = isIncompleteInfo || hasSameMealNameExist || isUpdateLoading;
 
-  const isInvalid = isIncompleteInfo || hasSameMealNameExist;
+  useEffect(() => {
+    setNewCategoryId(meal.categoryId);
+    setNewTitle(meal.title);
+    setNewPrice(meal.price);
+    setNewPreviewImage(`${MEAL_IMAGE_URL}${meal.imageId}m.jpg`);
+    setNewDescription(meal.description);
+    setNewSpecialtyItems(meal.specialtyItems);
+    setNewIsPopular(meal.isPopular);
+    setNewPublisedAt(meal.publishedAt);
+  }, [meal]);
 
   const handleChangeCategory = (e: SelectChangeEvent<ICategory['id']>) => {
     const selectedCategoryId = e.target.value;
-    setCategoryId(selectedCategoryId);
+    setNewCategoryId(selectedCategoryId);
   };
 
   const handleChangeTitle = (e: ChangeEvent<HTMLTextAreaElement>) => {
-    setTitle(e.target.value);
+    setNewTitle(e.target.value);
   };
 
   const handleChangeImage = (e: ChangeEvent<HTMLInputElement>) => {
@@ -68,8 +80,8 @@ export const MealRow: FC<IMealRowProps> = (props) => {
     }
 
     if (imageFile) {
-      setImage(imageFile);
-      setPreviewImage(URL.createObjectURL(imageFile));
+      setNewImage(imageFile);
+      setNewPreviewImage(URL.createObjectURL(imageFile));
     }
   };
 
@@ -78,25 +90,25 @@ export const MealRow: FC<IMealRowProps> = (props) => {
 
     if (!/[\d]/.test(`${newPrice}`)) return;
 
-    setPrice((prevPrice) => (newPrice < 0 ? prevPrice : newPrice));
+    setNewPrice((prevPrice) => (newPrice < 0 ? prevPrice : newPrice));
   };
 
   const handleChangeDescription = (e: ChangeEvent<HTMLTextAreaElement>) => {
-    setDescription(e.target.value);
+    setNewDescription(e.target.value);
   };
 
   const handleChangeSpecialtyItems = (e: SelectChangeEvent<ISpecialtyItem['id'][]>) => {
     const value = e.target.value;
     const selectedSpecialtyItemsId = typeof value === 'string' ? value.split(',') : value;
-    setSpecialtyItems(allSpecialtyItems.filter((si) => selectedSpecialtyItemsId.includes(si.id)));
+    setNewSpecialtyItems(allSpecialtyItems.filter((si) => selectedSpecialtyItemsId.includes(si.id)));
   };
 
   const handleChangeIsPopluar = () => {
-    setIsPopular((prevIsPopular) => !prevIsPopular);
+    setNewIsPopular((prevIsPopular) => !prevIsPopular);
   };
 
   const handleChangeIsPublished = () => {
-    setPublisedAt((prevPublishedAt) => (prevPublishedAt ? null : new Date()));
+    setNewPublisedAt((prevPublishedAt) => (prevPublishedAt ? null : new Date()));
   };
 
   const handleEditMeal = () => {
@@ -108,40 +120,51 @@ export const MealRow: FC<IMealRowProps> = (props) => {
   };
 
   const handleCancelEdit = () => {
-    setCategoryId(meal.categoryId);
-    setTitle(meal.title);
-    setPrice(meal.price);
-    setImage(undefined);
-    setPreviewImage(`${MEAL_IMAGE_URL}${meal.imageId}m.jpg`);
-    setDescription(meal.description);
-    setSpecialtyItems(meal.specialtyItems);
-    setIsPopular(meal.isPopular);
-    setPublisedAt(meal.publishedAt);
+    setNewCategoryId(meal.categoryId);
+    setNewTitle(meal.title);
+    setNewPrice(meal.price);
+    setNewImage(undefined);
+    setNewPreviewImage(`${MEAL_IMAGE_URL}${meal.imageId}m.jpg`);
+    setNewDescription(meal.description);
+    setNewSpecialtyItems(meal.specialtyItems);
+    setNewIsPopular(meal.isPopular);
+    setNewPublisedAt(meal.publishedAt);
     setIsEdit(false);
   };
 
   const handleConfirmEdit = () => {
     if (isInvalid) return;
 
-    dispatch(
-      patchMeal({
-        categoryId,
-        id: meal.id,
-        title,
-        image,
-        imageId: meal.imageId,
-        imageDeleteHash: meal.imageDeleteHash,
-        price,
-        description,
-        isPopular,
-        publishedAt,
-        specialtyItems: specialtyItems.map((si) => si.id),
-      }),
-    )
-      .unwrap()
-      .then(() => {
-        dispatch(getMeals());
+    setIsUpdateLoading(true);
+    toast
+      .promise(
+        async () => {
+          await dispatch(
+            patchMeal({
+              categoryId: newCategoryId,
+              id: meal.id,
+              title: newTitle,
+              image: newImage,
+              imageId: meal.imageId,
+              imageDeleteHash: meal.imageDeleteHash,
+              price: newPrice,
+              description: newDescription,
+              isPopular: newIsPopular,
+              publishedAt: newPublishedAt,
+              specialtyItems: newSpecialtyItems.map((si) => si.id),
+            }),
+          ).unwrap();
+          await dispatch(getMeals());
+        },
+        {
+          pending: '更新中...',
+          success: '更新成功',
+          error: '更新失敗',
+        },
+      )
+      .finally(() => {
         setIsEdit(false);
+        setIsUpdateLoading(false);
       });
   };
 
@@ -155,8 +178,8 @@ export const MealRow: FC<IMealRowProps> = (props) => {
       <StyledTableCell width={120}>
         {isEdit ? (
           <Box>
-            <TextareaInput value={title} sx={{ width: '100%' }} onChange={handleChangeTitle} />
-            <Select size='small' value={categoryId} onChange={handleChangeCategory}>
+            <TextareaInput value={newTitle} sx={{ width: '100%' }} onChange={handleChangeTitle} />
+            <Select size='small' value={newCategoryId} onChange={handleChangeCategory}>
               {categories.map((c) => (
                 <MenuItem
                   key={c.id}
@@ -169,13 +192,13 @@ export const MealRow: FC<IMealRowProps> = (props) => {
             </Select>
           </Box>
         ) : (
-          title
+          newTitle
         )}
       </StyledTableCell>
       <StyledTableCell width={100}>
         {isEdit ? (
           <Box width={'100%'}>
-            <Box component='img' width={100} height={100} sx={{ objectFit: 'cover' }} src={previewImage} alt={title} />
+            <Box component='img' width={100} height={100} sx={{ objectFit: 'cover' }} src={newPreviewImage} alt={newTitle} />
             <UploadButton
               btn={{ sx: { width: '100%' } }}
               input={{ onChange: handleChangeImage, inputProps: { accept: MEAL_IMAGE_TYPES.join(',') } }}
@@ -185,14 +208,14 @@ export const MealRow: FC<IMealRowProps> = (props) => {
             </Typography>
           </Box>
         ) : (
-          <Box component='img' width={100} height={100} sx={{ objectFit: 'cover' }} src={previewImage} alt={title} />
+          <Box component='img' width={100} height={100} sx={{ objectFit: 'cover' }} src={newPreviewImage} alt={newTitle} />
         )}
       </StyledTableCell>
       <StyledTableCell width={100}>
-        {isEdit ? <TextInput type='number' size='small' value={price.toString()} onChange={handleChangePrice} /> : price}
+        {isEdit ? <TextInput type='number' size='small' value={newPrice.toString()} onChange={handleChangePrice} /> : newPrice}
       </StyledTableCell>
       <StyledTableCell width={200}>
-        {isEdit ? <TextareaInput value={description} sx={{ width: '100%' }} onChange={handleChangeDescription} /> : description}
+        {isEdit ? <TextareaInput value={newDescription} sx={{ width: '100%' }} onChange={handleChangeDescription} /> : newDescription}
       </StyledTableCell>
       <StyledTableCell width={250}>
         <Box>
@@ -200,12 +223,12 @@ export const MealRow: FC<IMealRowProps> = (props) => {
             <Select
               multiple
               size='small'
-              value={specialtyItems.map((si) => si.id)}
+              value={newSpecialtyItems.map((si) => si.id)}
               onChange={handleChangeSpecialtyItems}
               renderValue={(selected) => (
                 <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
                   {selected.map((value) => {
-                    const si = specialtyItems.find((si) => si.id === value);
+                    const si = newSpecialtyItems.find((si) => si.id === value);
                     return <Chip key={value} label={si?.title} variant='filled' size='small' />;
                   })}
                 </Box>
@@ -222,24 +245,24 @@ export const MealRow: FC<IMealRowProps> = (props) => {
               ))}
             </Select>
           ) : (
-            specialtyItems.map((si) => {
+            newSpecialtyItems.map((si) => {
               return <Chip key={si.id} label={si.title} variant='filled' size='small' />;
             })
           )}
         </Box>
       </StyledTableCell>
       <StyledTableCell padding='checkbox'>
-        <BaseSwitch checked={isPopular} disabled={!isEdit} onChange={handleChangeIsPopluar} />
+        <BaseSwitch checked={newIsPopular} disabled={!isEdit} onChange={handleChangeIsPopluar} />
       </StyledTableCell>
       <StyledTableCell padding='checkbox'>
-        <BaseSwitch checked={!!publishedAt} disabled={!isEdit} onChange={handleChangeIsPublished} />
+        <BaseSwitch checked={!!newPublishedAt} disabled={!isEdit} onChange={handleChangeIsPublished} />
       </StyledTableCell>
       <StyledTableCell padding='checkbox'>
         <Box sx={{ display: 'flex', gap: 1 }}>
           {isEdit ? (
             <>
               <IconButton size='small' onClick={handleConfirmEdit}>
-                <CheckIcon color='success' />
+                <CheckIcon color={isInvalid ? 'disabled' : 'success'} />
               </IconButton>
               <IconButton size='small' onClick={handleCancelEdit}>
                 <CloseIcon color='error' />

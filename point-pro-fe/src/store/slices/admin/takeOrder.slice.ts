@@ -23,6 +23,7 @@ export interface ITakeOrderSliceState {
   specialtiesWithItems: GetMenuResponseSpecialtiesWithItems[];
   editingCartItem: number;
   cart: (ITakeOrderSliceState['selectMeal'] & { selectSpecialtyItems: ITakeOrderSliceState['selectSpecialtyItems'] })[];
+  totalPrice: number;
   clearCartConfirmModal: {
     isOpen: boolean;
   };
@@ -40,6 +41,7 @@ const initialState: ITakeOrderSliceState = {
   specialtiesWithItems: [],
   editingCartItem: -1,
   cart: [],
+  totalPrice: 0,
   clearCartConfirmModal: {
     isOpen: false,
   },
@@ -48,7 +50,7 @@ const initialState: ITakeOrderSliceState = {
   },
 };
 
-export const getAdminMenu = createAppAsyncThunk(`${name}/getAdminMenu`, async (_, { rejectWithValue }) => {
+const getAdminMenu = createAppAsyncThunk(`${name}/getAdminMenu`, async (_, { rejectWithValue }) => {
   try {
     const menuRes = await MenuApi.getMenu();
     return menuRes.result;
@@ -62,21 +64,18 @@ export const takeOrderSlice = createSlice({
   name,
   initialState,
   reducers: {
-    // Category Tab Focus
     setSelectCategory: (state, action: PayloadAction<ITakeOrderSliceState['selectCategory']>) => {
       state.selectCategory = action.payload;
     },
     setUnselectMeal: (state) => {
       state.selectMeal = initialState.selectMeal;
       state.selectSpecialtyItems = initialState.selectSpecialtyItems;
+      state.editingCartItem = initialState.editingCartItem;
     },
     setSelectMeal: (state, action: PayloadAction<ITakeOrderSliceState['selectMeal']>) => {
       state.selectMeal = action.payload;
       state.selectSpecialtyItems = initialState.selectSpecialtyItems;
-    },
-    setNotModifiedCartItem: (state) => {
       state.editingCartItem = initialState.editingCartItem;
-      // state.modifiedCartItemIndex = initialState.modifiedCartItemIndex;
     },
     increaseMealAmount: (state) => {
       if (state.selectMeal) {
@@ -125,6 +124,11 @@ export const takeOrderSlice = createSlice({
       }
     },
     deleteCartItem: (state, action: PayloadAction<number>) => {
+      if (state.editingCartItem !== initialState.editingCartItem) {
+        state.selectMeal = initialState.selectMeal;
+        state.selectSpecialtyItems = initialState.selectSpecialtyItems;
+        state.editingCartItem = initialState.editingCartItem;
+      }
       state.cart = state.cart.filter((_, i) => i !== action.payload);
     },
     editCartItem: (state, action: PayloadAction<number>) => {
@@ -151,19 +155,23 @@ export const takeOrderSlice = createSlice({
         state.editingCartItem = initialState.editingCartItem;
       }
     },
+    clearCart: (state) => {
+      state.cart = initialState.cart;
+    },
     openClearCartConfirmModal: (state) => {
       state.clearCartConfirmModal.isOpen = true;
     },
     closeClearCartConfirmModal: (state) => {
       state.clearCartConfirmModal = initialState.clearCartConfirmModal;
     },
-    openSubmitCartConfirmModal: (state) => {
+    openSubmitCartConfirmModal: (state, action: PayloadAction<number>) => {
+      state.totalPrice = action.payload;
       state.submitCartConfirmModal.isOpen = true;
     },
     closeSubmitCartConfirmModal: (state) => {
+      state.totalPrice = initialState.totalPrice;
       state.submitCartConfirmModal = initialState.submitCartConfirmModal;
     },
-
     resetTakeOrderState: (state) => {
       state.selectMeal = initialState.selectMeal;
       state.selectSpecialtyItems = initialState.selectSpecialtyItems;
@@ -194,3 +202,8 @@ export const takeOrderSlice = createSlice({
       });
   },
 });
+
+export const takeOrderSliceActions = {
+  ...takeOrderSlice.actions,
+  getAdminMenu,
+};
