@@ -28,7 +28,7 @@ export const OrderItem: FC<IOrderItemProps> = (props) => {
 
   const [expanded, setExpanded] = useState(false);
   const [tempOrder, setTempOrder] = useState(order);
-  const [updateServedAmountLoading, setUpdateServedAmountLoading] = useState(false);
+  const [isUpdateServedAmountLoading, setIsUpdateServedAmountLoading] = useState(false);
 
   const tempServedAmountCompare = useMemo(() => tempOrder.orderMeals.map((m) => m.servedAmount).join(''), [tempOrder.orderMeals]);
 
@@ -70,7 +70,7 @@ export const OrderItem: FC<IOrderItemProps> = (props) => {
   };
 
   const handleUpdateServedAmount = () => {
-    setUpdateServedAmountLoading(true);
+    setIsUpdateServedAmountLoading(true);
     toast
       .promise(
         async () => {
@@ -93,7 +93,7 @@ export const OrderItem: FC<IOrderItemProps> = (props) => {
         },
       )
       .finally(() => {
-        setUpdateServedAmountLoading(false);
+        setIsUpdateServedAmountLoading(false);
       });
   };
 
@@ -150,7 +150,7 @@ export const OrderItem: FC<IOrderItemProps> = (props) => {
               idx={idx}
               key={m.id}
               orderMeal={m}
-              updateServedAmountLoading={updateServedAmountLoading}
+              isUpdateServedAmountLoading={isUpdateServedAmountLoading}
               handleChangeServedAmount={handleChangeServedAmount}
             />
           ))}
@@ -159,13 +159,13 @@ export const OrderItem: FC<IOrderItemProps> = (props) => {
           {statusTab === OrderStatus.WORKING && (
             <>
               {cancellable && (
-                <AppButton variant='outlined' color='error' onClick={handleCancelOrder}>
+                <AppButton variant='outlined' color='error' onClick={handleCancelOrder} disabled={isUpdateServedAmountLoading}>
                   取消訂單
                 </AppButton>
               )}
               <AppButton
                 disabled={tempServedAmountCompare === servedAmountCompare}
-                loading={updateServedAmountLoading}
+                loading={isUpdateServedAmountLoading}
                 onClick={handleUpdateServedAmount}
               >
                 更新出餐

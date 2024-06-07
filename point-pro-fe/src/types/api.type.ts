@@ -27,16 +27,15 @@ export interface LoginPayload {
   username: IUser['username'];
   password: IUser['password'];
 }
-export type LoginResponse = ApiResponse<{
-  authToken: string;
-}>;
+export type Token = string;
+export type LoginResponse = ApiResponse<Token>;
 
 // Generate Token
 export interface GenerateTokenPayload {
   reservationId: string;
 }
 export type GenerateTokenResponse = ApiResponse<{
-  token: string;
+  token: Token;
 }>;
 
 // Get User Info

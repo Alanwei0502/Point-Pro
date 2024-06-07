@@ -1,5 +1,4 @@
-import jwt from 'jsonwebtoken';
-import { prismaClient, throwError } from '../helpers';
+import { jwt, prismaClient, throwError } from '../helpers';
 
 export class AuthService {
   static signJWT = async (
@@ -20,12 +19,8 @@ export class AuthService {
           periodStartTime?: Date;
           periodEndTime?: Date;
         },
-    expiresIn = '1 day',
   ) => {
-    if (!process.env.POINT_PRO_SECRET) {
-      throw new Error('no jwt secret');
-    }
-    return jwt.sign(payload, process.env.POINT_PRO_SECRET, { expiresIn });
+    return jwt.sign(payload);
   };
 
   static generateReservationToken = async (reservationId: string) => {

@@ -30,14 +30,6 @@ export const orderTypeObj = {
   [OrderType.TAKE_OUT]: '外帶',
 };
 
-export type SideBarItemType = {
-  id: string;
-  name: string;
-  src?: OverridableComponent<SvgIconTypeMap> & { muiName: string };
-  path?: string;
-  list?: SideBarItemType[];
-};
-
 export const cityList = [
   '臺北市',
   '新北市',

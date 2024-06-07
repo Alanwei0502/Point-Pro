@@ -1,8 +1,7 @@
 import { NextFunction } from 'express';
 import { ReasonPhrases, StatusCodes } from 'http-status-codes';
-import { ApiResponse } from '../types/shared';
 import { imgurClient } from '../helpers';
-import { IDeleteCategoryRequest, IDeleteMealRequest, IPatchImageRequest, IUploadImageRequest } from '../types';
+import { IDeleteCategoryRequest, IDeleteMealRequest, IPatchImageRequest, IUploadImageRequest, ApiResponse } from '../types';
 import { MenuModel } from '../models';
 
 export class ImgurController {

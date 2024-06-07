@@ -4,7 +4,7 @@
     "allowJs": true,
     "sourceMap": true,
     "target": "es6",
-    "module": "commonjs",
+    "module": "CommonJS",
     "outDir": "./dist",
     "rootDir": "./src",
     "strict": true,

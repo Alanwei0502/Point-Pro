@@ -8,7 +8,6 @@ const name = 'auth';
 
 interface IAuthState {
   isLoading: boolean;
-  isAuthenticated: boolean;
   authToken: string | null;
   userRole: UserInfo | null;
   userToken: string | null;
@@ -16,45 +15,47 @@ interface IAuthState {
 
 const initialState: IAuthState = {
   isLoading: false,
-  isAuthenticated: false,
   authToken: null,
   userRole: null,
   userToken: null,
 };
 
-export const login = createAppAsyncThunk<LoginResponse, LoginPayload>(`${name}/login`, async (payload, { rejectWithValue }) => {
+const login = createAppAsyncThunk<LoginResponse, LoginPayload>(`${name}/login`, async (payload, thunkApi) => {
   try {
-    const data = await AuthApi.login(payload);
-
-    if (data?.result?.authToken) {
-      sessionStorage.setItem('token', data.result.authToken);
-    }
-    return data;
+    const response = await AuthApi.login(payload);
+    return response;
   } catch (error) {
-    errorHandler(error);
-    return rejectWithValue(error);
+    return thunkApi.rejectWithValue(error);
   }
 });
 
-export const getUserInfo = createAppAsyncThunk<GetUserInfoResponse>(`${name}/getUserInfo`, async (payload, { rejectWithValue }) => {
+const logout = createAppAsyncThunk(`${name}/logout`, async (_, thunkApi) => {
+  try {
+    await AuthApi.logout();
+  } catch (error) {
+    return thunkApi.rejectWithValue(error);
+  }
+});
+
+export const getUserInfo = createAppAsyncThunk<GetUserInfoResponse>(`${name}/getUserInfo`, async (payload, thunkApi) => {
   try {
     const data = await AuthApi.getUserInfo();
     return data;
   } catch (error) {
     errorHandler(error);
-    return rejectWithValue(error);
+    return thunkApi.rejectWithValue(error);
   }
 });
 
 export const getUserTokenByReservationLogId = createAppAsyncThunk<GenerateTokenResponse, GenerateTokenPayload>(
   `${name}/getUserTokenByReservationLogId`,
-  async (payload, { rejectWithValue }) => {
+  async (payload, thunkApi) => {
     try {
       const response = await AuthApi.generateToken({ reservationId: payload.reservationId });
       return response;
     } catch (error) {
       errorHandler(error);
-      return rejectWithValue(error);
+      return thunkApi.rejectWithValue(error);
     }
   },
 );
@@ -62,34 +63,32 @@ export const getUserTokenByReservationLogId = createAppAsyncThunk<GenerateTokenR
 export const authSlice = createSlice({
   name,
   initialState,
-  reducers: {
-    loginSuccess(state, action: PayloadAction<IAuthState>) {
-      state.isAuthenticated = action.payload.isAuthenticated;
-    },
-    logoutSuccess(state) {
-      state.isAuthenticated = false;
-      state.authToken = null;
-    },
-  },
+  reducers: {},
   extraReducers: (builder) => {
     builder
+      .addCase(login.pending, (state) => {
+        state.isLoading = initialState.isLoading;
+      })
       .addCase(login.fulfilled, (state, action) => {
         const { result } = action.payload;
-        if (result?.authToken) {
-          state.authToken = result.authToken;
-          state.isAuthenticated = true;
-        } else {
-          state.isAuthenticated = false;
+        if (result) {
+          state.authToken = result;
+          sessionStorage.setItem('token', result);
         }
         state.isLoading = false;
       })
-      .addCase(login.pending, (state) => {
-        state.isLoading = true;
-      })
       .addCase(login.rejected, (state) => {
-        state.isLoading = false;
-        state.isAuthenticated = false;
-        state.authToken = null;
+        sessionStorage.removeItem('token');
+        state.authToken = initialState.authToken;
+        state.isLoading = initialState.isLoading;
+      })
+      .addCase(logout.pending, (state) => {
+        state.isLoading = initialState.isLoading;
+      })
+      .addCase(logout.fulfilled, (state) => {
+        sessionStorage.removeItem('token');
+        state.authToken = initialState.authToken;
+        state.isLoading = initialState.isLoading;
       })
       .addCase(getUserInfo.fulfilled, (state, action) => {
         state.userRole = action.payload.result;
@@ -107,4 +106,10 @@ export const authSlice = createSlice({
   },
 });
 
-export const { loginSuccess, logoutSuccess } = authSlice.actions;
+export const authSliceActions = {
+  ...authSlice.actions,
+  login,
+  logout,
+  getUserInfo,
+  getUserTokenByReservationLogId,
+};

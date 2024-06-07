@@ -1,35 +1,52 @@
-import { useEffect, useRef, useState } from 'react';
+import { FC, useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
-import { Box, Typography, InputAdornment, IconButton, OutlinedInput, FormControl, InputLabel, Button } from '@mui/material';
+import { Box, Typography, InputAdornment, IconButton, OutlinedInput, FormControl, InputLabel } from '@mui/material';
 import { useAppDispatch, useAppSelector } from '~/hooks';
-import { login } from '~/store/slices';
+import { authSliceActions } from '~/store/slices';
 import HeaderLogo from '~/assets/images/header-logo.svg';
-import { pathObj } from '~/components';
+import { AppButton, pathObj } from '~/components';
+import { toast } from 'react-toastify';
 
-export const Login = () => {
+const { login } = authSliceActions;
+
+interface ILoginProps {}
+
+export const Login: FC<ILoginProps> = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const usernameRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
   const [showPassword, setShowPassword] = useState(false);
-  const isAuthenticated = useAppSelector(({ auth }) => auth.isAuthenticated);
+  const authToken = useAppSelector((state) => state.auth.authToken);
 
-  const handleClickShowPassword = () => {
+  const handleShowPassword = () => {
     setShowPassword((show) => !show);
   };
 
-  const handleConfirm = () => {
-    if (usernameRef.current && passwordRef.current) {
-      dispatch(login({ username: usernameRef.current.value, password: passwordRef.current.value }));
-    }
+  const handleLogin = () => {
+    toast.promise(
+      async () => {
+        if (!usernameRef.current || !passwordRef.current) {
+          return;
+        }
+
+        await dispatch(login({ username: usernameRef.current.value, password: passwordRef.current.value })).unwrap();
+      },
+      {
+        pending: '登入中...',
+        success: '登入成功',
+        error: '登入失敗',
+      },
+    );
   };
+
   useEffect(() => {
-    if (isAuthenticated) {
-      navigate(`/${pathObj.admin}/${pathObj.order}`);
+    if (authToken) {
+      navigate(`/${pathObj.admin}/${pathObj.orderManagement}`);
     }
-  }, [isAuthenticated, navigate]);
+  }, [authToken, navigate]);
 
   return (
     <Box
@@ -57,30 +74,30 @@ export const Login = () => {
         </Typography>
         {/* Username */}
         <FormControl sx={{ my: 2, width: '100%' }} variant='outlined'>
-          <InputLabel htmlFor='username'>Username</InputLabel>
-          <OutlinedInput inputProps={{ ref: usernameRef }} id='username' placeholder='Please enter username' label='Username' />
+          <InputLabel htmlFor='username'>名稱</InputLabel>
+          <OutlinedInput inputProps={{ ref: usernameRef }} id='username' label='Username' placeholder='Please enter username' />
         </FormControl>
         {/* Password */}
         <FormControl sx={{ my: 2, width: '100%' }} variant='outlined'>
-          <InputLabel htmlFor='password'>Password</InputLabel>
+          <InputLabel htmlFor='password'>密碼</InputLabel>
           <OutlinedInput
             inputProps={{ ref: passwordRef }}
             id='password'
+            label='Password'
             type={showPassword ? 'text' : 'password'}
             placeholder='Please enter password'
             endAdornment={
               <InputAdornment position='end'>
-                <IconButton aria-label='toggle password visibility' onClick={handleClickShowPassword} edge='end'>
+                <IconButton aria-label='toggle password visibility' onClick={handleShowPassword} edge='end'>
                   {showPassword ? <VisibilityOff /> : <Visibility />}
                 </IconButton>
               </InputAdornment>
             }
-            label='Password'
           />
         </FormControl>
-        <Button variant='contained' sx={{ my: 3, width: '100%' }} onClick={handleConfirm}>
-          Confirm
-        </Button>
+        <AppButton sx={{ width: '100%', fontSize: 18, my: 2 }} onClick={handleLogin}>
+          登入
+        </AppButton>
       </Box>
     </Box>
   );

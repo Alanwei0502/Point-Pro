@@ -3,14 +3,14 @@ import { ReasonPhrases, StatusCodes } from 'http-status-codes';
 import { Prisma, ReservationType } from '@prisma/client';
 import { date, number, object, string } from 'yup';
 import { getDateOnly, ignoreUndefined, prismaClient } from '../helpers';
-import { ApiResponse, AuthRequest } from '../types/shared';
+import { ApiResponse, AuthRequest } from '../types';
 import { AuthService, PeriodService, ReservationService } from '../services';
 import { v4 as uuidv4 } from 'uuid';
 import { CreateRecord, CreateReservation, ReservationInfo, UpdateReservation } from '../types/reservation';
 import { reservationModel, userModel } from '../models';
 
 export class ReservationController {
-  static getReservationByPhoneHandler = async (req: AuthRequest, res: ApiResponse, next: NextFunction) => {
+  static getReservationByPhoneHandler = async (req: Request, res: ApiResponse, next: NextFunction) => {
     try {
       const { phone } = req.params;
 

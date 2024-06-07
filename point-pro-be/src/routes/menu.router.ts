@@ -5,6 +5,7 @@ import {
   multerUploadMiddleware,
   createMealTransformFormDataMiddleware,
   updateMealTransformFormDataMiddleware,
+  authMiddleware,
 } from '../middlewares';
 import {
   createCategoryRequestSchema,
@@ -30,6 +31,7 @@ menuRouter.get('/', MenuController.getMenuHandler);
 
 // CATEGORY
 const categoryRouter = Router();
+categoryRouter.use(authMiddleware);
 categoryRouter.get('/', MenuController.getCategoriesHandler);
 categoryRouter.post('/', validateMiddleware(createCategoryRequestSchema), MenuController.createCategoryHandler);
 categoryRouter.patch('/:categoryId', validateMiddleware(updateCategoryRequestSchema), MenuController.updateCategoryHandler);
@@ -43,6 +45,7 @@ categoryRouter.delete(
 
 // MEAL
 const mealRouter = Router();
+mealRouter.use(authMiddleware);
 mealRouter.get('/', MenuController.getMealsHandler);
 mealRouter.post(
   '/',
@@ -70,6 +73,7 @@ mealRouter.delete(
 
 // SPECIALTY
 const specialtyRouter = Router();
+specialtyRouter.use(authMiddleware);
 specialtyRouter.get('/', MenuController.getSpecialtiesHandler);
 specialtyRouter.post('/', validateMiddleware(createSpecialtyRequestSchema), MenuController.createSpecialtyHandler);
 specialtyRouter.patch('/:specialtyId', validateMiddleware(updateSpecialtyRequestSchema), MenuController.updateSpecialtyHandler);
@@ -78,6 +82,7 @@ specialtyRouter.delete('/:specialtyId', validateMiddleware(deleteSpecialtyReques
 
 // SPECIALTY ITEM
 const specialtyItemRouter = Router();
+specialtyItemRouter.use(authMiddleware);
 specialtyItemRouter.post('/', validateMiddleware(createSpecialtyItemRequestSchema), MenuController.createSpecialtyItemHandler);
 specialtyItemRouter.patch('/:specialtyItemId', validateMiddleware(updateSpecialtyItemRequestSchema), MenuController.updateSpecialtyItemHandler);
 specialtyItemRouter.patch('/', validateMiddleware(updateSpecialtyItemOrderRequestSchema), MenuController.updateSpecialtyItemOrderHandler);

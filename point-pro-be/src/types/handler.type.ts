@@ -1,6 +1,5 @@
-import { Request } from 'express';
+import { Request, Response } from 'express';
 import { z } from 'zod';
-import { ReservationAuth, UserAuth } from './shared';
 import {
   loginSchema,
   registerSchema,
@@ -24,8 +23,8 @@ import {
   getOrderRequestSchema,
   updateOrderMealServedAmountPayloadSchema,
   orderIdValidatedSchema,
+  verifyAdminAndStaffSchema,
 } from '../validators';
-
 // Request
 
 // P = path params, expects a [key: string]: string dictionary
@@ -62,25 +61,28 @@ import {
 // // Response expects success boolean array and number in data
 // Response<{ success: boolean, data: number }>
 
-export interface AuthRequest<
-  P extends { [key: string]: string } = {
-    [key: string]: string;
-  },
-  T = any,
-  R = any,
-  S = { maxResult: number },
-> extends Request<P, T, R, S> {
-  auth: UserAuth | ReservationAuth;
+type ReservationAuth = {
+  reservationId: string;
+  reservationType?: string;
+  startTime: Date;
+  seatNo: string;
+  periodStartTime?: Date;
+  periodEndTime?: Date;
+  role?: string;
+};
+
+export interface AuthRequest extends Request {
+  // auth: UserAuth | ReservationAuth;
+  auth: z.infer<typeof verifyAdminAndStaffSchema>;
 }
 
-export interface IGetAllMealsRequest<
-  P extends { [key: string]: string } = {
-    [key: string]: string;
-  },
-  T = any,
-  R = any,
-  S = any,
-> extends AuthRequest<P, T, R, S> {}
+export type ApiResponse<T = any> = Response<{
+  message: string;
+  result: T | null;
+}>;
+
+// MENU
+export interface IGetAllMealsRequest extends Request {}
 
 export interface ILoginRequest extends Request {
   body: z.infer<typeof loginSchema>;

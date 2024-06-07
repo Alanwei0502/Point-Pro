@@ -1,4 +1,4 @@
-import { FC, useEffect } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { Box } from '@mui/material';
 import { theme } from '~/theme';
 import HeaderLogo from '~/assets/images/header-logo.svg';
@@ -11,14 +11,15 @@ import {
   orderManagementSliceActions,
   takeOrderSliceActions,
 } from '~/store/slices';
+import { toast } from 'react-toastify';
 
-const { openAdminLoginLoading, closeAdminLoginLoading } = adminLoadingSliceActions;
 const { getAdminMenu } = takeOrderSliceActions;
 const { getAllOrders } = orderManagementSliceActions;
+const { openAdminLoginLoading, closeAdminLoginLoading } = adminLoadingSliceActions;
 
 interface IAdminLoginLoadingProps {}
 
-export const AdminLoginLoading: FC<IAdminLoginLoadingProps> = (props) => {
+export const AdminLoginLoading: FC<IAdminLoginLoadingProps> = () => {
   const dispatch = useAppDispatch();
 
   const isOpen = useAppSelector((state) => state.adminLoading.loginLoading.isOpen);
@@ -26,15 +27,19 @@ export const AdminLoginLoading: FC<IAdminLoginLoadingProps> = (props) => {
   // initial data
   useEffect(() => {
     dispatch(openAdminLoginLoading());
-    Promise.all([
-      dispatch(getAdminMenu()),
-      dispatch(getCategories()),
-      dispatch(getMeals()),
-      dispatch(getSpecialties()),
-      dispatch(getAllOrders()),
-    ]).then(() => {
-      dispatch(closeAdminLoginLoading());
-    });
+    Promise.allSettled([
+      dispatch(getAdminMenu()).unwrap(),
+      dispatch(getCategories()).unwrap(),
+      dispatch(getMeals()).unwrap(),
+      dispatch(getSpecialties()).unwrap(),
+      dispatch(getAllOrders()).unwrap(),
+    ])
+      .then(() => {
+        dispatch(closeAdminLoginLoading());
+      })
+      .catch(() => {
+        toast.error('系統錯誤，請重新整理頁面');
+      });
   }, [dispatch]);
 
   return (

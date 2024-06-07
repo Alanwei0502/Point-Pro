@@ -55,7 +55,6 @@ const getAdminMenu = createAppAsyncThunk(`${name}/getAdminMenu`, async (_, { rej
     const menuRes = await MenuApi.getMenu();
     return menuRes.result;
   } catch (error) {
-    errorHandler(error);
     return rejectWithValue(error);
   }
 });

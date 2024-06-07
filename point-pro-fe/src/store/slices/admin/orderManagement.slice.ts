@@ -41,58 +41,53 @@ const initialState: IOrderManagementSliceState = {
   },
 };
 
-const getAllOrders = createAppAsyncThunk(`${name}/getAllOrders`, async (_, { rejectWithValue }) => {
+const getAllOrders = createAppAsyncThunk(`${name}/getAllOrders`, async (_, thunkApi) => {
   try {
     const orders = await OrderApi.getOrders({});
     return orders.result;
   } catch (error) {
-    errorHandler(error);
-    return rejectWithValue(error);
+    return thunkApi.rejectWithValue(error);
   }
 });
 
-const getOrders = createAppAsyncThunk(`${name}/getOrders`, async (payload: GetOrderPayload, { rejectWithValue }) => {
+const getOrders = createAppAsyncThunk(`${name}/getOrders`, async (payload: GetOrderPayload, thunkApi) => {
   try {
     const orders = await OrderApi.getOrders(payload);
     return orders.result;
   } catch (error) {
-    errorHandler(error);
-    return rejectWithValue(error);
+    return thunkApi.rejectWithValue(error);
   }
 });
 
-const postOrder = createAppAsyncThunk(`${name}/postTakeOutOrder`, async (payload: PostOrderPayload, { getState, rejectWithValue }) => {
+const postOrder = createAppAsyncThunk(`${name}/postTakeOutOrder`, async (payload: PostOrderPayload, thunkApi) => {
   try {
-    const socket = getState().socket.socket;
     const createOrder = await OrderApi.postOrder(payload);
+    const socket = thunkApi.getState().socket.socket;
     socket && socket.emit(SocketTopic.ORDER, createOrder);
   } catch (error) {
-    errorHandler(error);
-    return rejectWithValue(error);
+    return thunkApi.rejectWithValue(error);
   }
 });
 
-const cancelOrder = createAppAsyncThunk(`${name}/cancelOrder`, async (payload: CancelOrderPayload, { getState, rejectWithValue }) => {
+const cancelOrder = createAppAsyncThunk(`${name}/cancelOrder`, async (payload: CancelOrderPayload, thunkApi) => {
   try {
-    const socket = getState().socket.socket;
     const cancelOrder = await OrderApi.cancelOrder(payload);
+    const socket = thunkApi.getState().socket.socket;
     socket && socket.emit(SocketTopic.ORDER, cancelOrder);
   } catch (error) {
-    // errorHandler(error);
-    return rejectWithValue(error);
+    return thunkApi.rejectWithValue(error);
   }
 });
 
 const patchOrderMealServedAmount = createAppAsyncThunk(
   `${name}/patchOrderMealServedAmount`,
-  async (payload: PatchOrderMealServedAmountPayload, { getState, rejectWithValue }) => {
+  async (payload: PatchOrderMealServedAmountPayload, thunkApi) => {
     try {
-      const socket = getState().socket.socket;
       const patchOrder = await OrderApi.patchOrderMealServedAmount(payload);
+      const socket = thunkApi.getState().socket.socket;
       socket && socket.emit(SocketTopic.ORDER, patchOrder);
     } catch (error) {
-      // errorHandler(error);
-      return rejectWithValue(error);
+      return thunkApi.rejectWithValue(error);
     }
   },
 );
@@ -145,7 +140,6 @@ export const orderManagementSlice = createSlice({
       })
       .addCase(getOrders.fulfilled, (state, action) => {
         const orders = action?.payload ?? [];
-        if (orders.length === 0) return;
 
         const orderList: OrdersResult[] = [];
 

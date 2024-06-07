@@ -1,5 +1,6 @@
-import axios, { AxiosRequestConfig } from 'axios';
+import axios from 'axios';
 import { toast } from 'react-toastify';
+import { pathObj } from '~/components';
 import { getToken } from '~/utils/token.utils';
 
 export const apiHost = import.meta.env.VITE_API_HOST;
@@ -20,13 +21,10 @@ http.interceptors.request.use(
 
 http.interceptors.response.use(
   (response) => {
-    // log(response.config, response.data);
     return response.data;
   },
   // error
   (error) => {
-    // const { response } = error;
-    // log(response.config, response.data, true);
     errorCodeCheck(error.response.status);
     return Promise.reject(error);
   },
@@ -35,18 +33,21 @@ http.interceptors.response.use(
 const errorCodeCheck = (status: number) => {
   switch (status) {
     case 401:
-    case 403:
-      // case 500:
+    case 403: {
       sessionStorage.removeItem('token');
-      if (location.href.includes('admin')) {
-        location.replace(`${location.origin}/admin`);
+
+      const isInAdminLoginPage = location.pathname === `/${pathObj.admin}`;
+      const isInCMS = location.pathname.includes('admin');
+
+      if (isInCMS && !isInAdminLoginPage) {
+        toast.error('登入逾時，請重新登入');
+        setTimeout(() => {
+          location.replace(`${location.origin}/admin`);
+        }, 1000);
       }
       break;
+    }
     default:
       break;
   }
 };
-
-// function log({ method, url }: AxiosRequestConfig, text: string, error = false) {
-//   console.log(`%c ${method}/${url} `, `color: white; background-color: #${error ? 'f66361' : '95B46A'}`, text);
-// }

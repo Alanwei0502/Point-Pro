@@ -17,6 +17,8 @@ interface ISeatSearchBarProps {
   handleSearchChange: (value: string) => void;
 }
 
+export const seatAearchBarHeight = '72px';
+
 export const SeatSearchBar: FC<ISeatSearchBarProps> = ({ view, date, handleDateChange, handleSearchChange }) => {
   const [open, setOpen] = useState<boolean>(false);
   const [periods, setPeriods] = useState<string[]>([]);
@@ -41,7 +43,7 @@ export const SeatSearchBar: FC<ISeatSearchBarProps> = ({ view, date, handleDateC
         display: 'flex',
         width: '100%',
         gap: '1rem',
-        height: '72px',
+        height: seatAearchBarHeight,
         padding: '1rem',
         borderBottom: (theme) => `1px solid ${theme.palette.divider}`,
       }}
@@ -90,10 +92,7 @@ export const SeatSearchBar: FC<ISeatSearchBarProps> = ({ view, date, handleDateC
           flexDirection: 'row-reverse',
         }}
       >
-        <BaseButton
-          onClick={() => setOpen(true)}
-          sx={{ color: 'common.black', bgcolor: 'primary.main', width: '12rem' }}
-        >
+        <BaseButton onClick={() => setOpen(true)} sx={{ color: 'common.black', bgcolor: 'primary.main', width: '12rem' }}>
           <AddIcon sx={{ fontSize: 'h6.fontSize' }} />
           新增預約
         </BaseButton>

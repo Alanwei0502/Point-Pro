@@ -8,11 +8,11 @@ import { useAppSelector } from '~/hooks';
 interface IOrderMealItemProps {
   idx: number;
   orderMeal: IOrderMealInOrdersResult;
-  updateServedAmountLoading: boolean;
+  isUpdateServedAmountLoading: boolean;
   handleChangeServedAmount: (id: IOrderMeal['id'], newAmount: IOrderMeal['amount']) => void;
 }
 export const OrderMealItem: FC<IOrderMealItemProps> = (props) => {
-  const { orderMeal, idx, handleChangeServedAmount, updateServedAmountLoading } = props;
+  const { orderMeal, idx, handleChangeServedAmount, isUpdateServedAmountLoading } = props;
 
   const statusTab = useAppSelector((state) => state.orderManagement.statusTab);
 
@@ -51,7 +51,7 @@ export const OrderMealItem: FC<IOrderMealItemProps> = (props) => {
             <Typography whiteSpace='nowrap'>已出餐</Typography>
             <Select
               value={`${orderMeal.servedAmount}`}
-              disabled={updateServedAmountLoading}
+              disabled={isUpdateServedAmountLoading}
               onChange={handleChangeServedAmoount}
               sx={{ width: '80%', height: '2rem' }}
             >

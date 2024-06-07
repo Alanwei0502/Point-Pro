@@ -1,33 +1,77 @@
-require('dotenv-flow').config();
-
+import 'dotenv/config';
 import http from 'http';
-import app from './app';
+import express, { json, urlencoded } from 'express';
+import cookieParser from 'cookie-parser';
+import morgan from 'morgan';
 import createWsServer from './socket';
+import { Logger } from './helpers';
+import apiRouter from './routes';
+import { corsMiddleware, errorMiddleware, sessionMiddleware, rateLimiterMiddleware } from './middlewares';
 
-const port = parseInt(process.env.PORT || '8081');
-
-app.set('port', port);
-
+const app = express();
 const server = http.createServer(app);
-server.listen(port, () => {
-  createWsServer(server);
-});
 
-server.on('error', console.error);
-
-server.on('listening', () => {
-  const addr = server.address();
-  if (!addr) {
-    return console.error('cannot get the address from server');
-  }
-  const bind = typeof addr === 'string' ? 'pipe ' + addr : 'port ' + addr.port;
-  console.log('Listening on ' + bind);
-});
-
-process.on('SIGINT', () => {
-  console.log('close server');
-  server.close(() => {
-    console.log('kill Node process');
-    process.exit(0);
+// Global Error Handler
+process
+  .on('uncaughtException', (err) => {
+    console.error('未捕捉到的異常：', err);
+    setTimeout(() => process.exit(1), 100);
+  })
+  .on('unhandledRejection', (reason, promise) => {
+    console.error('未捕捉到的Promise錯誤：', promise, '原因：', reason);
+    setTimeout(() => process.exit(1), 100);
+  })
+  .on('SIGINT', () => {
+    Logger.info('close server');
+    server.close(() => {
+      Logger.info('kill Node process');
+      process.exit(0);
+    });
   });
-});
+
+const setUpMiddleware = () => {
+  app
+    // Middlewares
+    .use(rateLimiterMiddleware)
+    .use(morgan(':remote-addr :date[iso] :status :method :url :response-time ms - :res[content-length]'))
+    .use(corsMiddleware)
+    .use(cookieParser())
+    .use(sessionMiddleware)
+    .use(json())
+    .use(urlencoded({ extended: true }))
+    // Health Check
+    .get('/healthz', async (_, res, next) => {
+      try {
+        res.send(new Date().toISOString() + ' health check');
+      } catch (error) {
+        Logger.error(`Health Check Error: ${error}`);
+        next(error);
+      }
+    })
+    // API Router
+    .use('/api', apiRouter)
+    // Error Handler
+    .use(errorMiddleware);
+};
+
+const startServer = () => {
+  const port = parseInt(process.env.PORT!);
+
+  server
+    .on('error', (error) => {
+      Logger.error(`Server Error: ${error}`);
+    })
+    .listen(port, async () => {
+      createWsServer(server);
+
+      const addr = server.address();
+      if (!addr) {
+        return Logger.error('cannot get the address from server');
+      }
+      const bind = typeof addr === 'string' ? 'pipe ' + addr : 'port ' + addr.port;
+      Logger.info(`Server is listening on ${bind}`);
+    });
+};
+
+setUpMiddleware();
+startServer();

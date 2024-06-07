@@ -1,8 +1,8 @@
 import { NextFunction, Request } from 'express';
-import { ApiResponse } from '../types/shared';
-import { MenuModel } from '../models';
 import { ReasonPhrases, StatusCodes } from 'http-status-codes';
+import { MenuModel } from '../models';
 import {
+  ApiResponse,
   ICreateCategoryRequest,
   ICreateSpecialtyItemRequest,
   ICreateSpecialtyRequest,

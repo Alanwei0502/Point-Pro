@@ -1,5 +1,5 @@
 // import { RequestHandler } from 'express';
-// import { ApiResponse, AuthRequest } from '../types/shared';
+// import { ApiResponse, AuthRequest } from '../types';
 // import { ReservationInfo, ReservationStatus } from '../types/reservation';
 // import { formatReservationOptions, getDateOnly, getDefaultDate, prismaClient } from '../helpers';
 // import { object, date as dateSchema, string } from 'yup';

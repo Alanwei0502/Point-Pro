@@ -1,5 +1,6 @@
 import { useState, useEffect, FC } from 'react';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import { Box, Button, Badge, AppBar, Toolbar, IconButton, Typography } from '@mui/material';
 import { DoubleArrow, NotificationsNone, PowerSettingsNew } from '@mui/icons-material';
 import HeaderLogo from '~/assets/images/header-logo.svg';
@@ -7,20 +8,20 @@ import { useAppDispatch, useAppSelector } from '~/hooks';
 import { appDayjs, dateForm } from '~/utils';
 import { theme } from '~/theme';
 import { LeftMenuDrawer, NotificationDrawer, pathObj, sideBarItemList } from '~/components';
+import { authSliceActions } from '~/store/slices';
 
-const drawerWidth = '300px';
-export const headerHeight = '72px';
+const { logout } = authSliceActions;
 
-const flatSideBarItemList = sideBarItemList.flatMap((item) => {
-  return item.list ? item.list : item;
-});
+const drawerExpandWidth = '250px';
+const drawerCollapseWidth = '100px';
+export const headerHeight = '60px';
 
 interface IHeaderProps {}
 
 export const Header: FC<IHeaderProps> = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { meal_id } = useParams();
+  const dispatch = useAppDispatch();
 
   const [isLeftMenuOpen, setIsLeftMenuOpen] = useState(false);
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
@@ -28,26 +29,31 @@ export const Header: FC<IHeaderProps> = () => {
 
   const notifications = useAppSelector(({ socket }) => socket.notifications);
 
+  const flatSideBarItemList = sideBarItemList.flatMap((item) => (item.list.length ? item.list : item));
+
+  const routerInfo = flatSideBarItemList.find((item) => item.path === location.pathname);
+
+  const handleLogout = () => {
+    toast.promise(
+      async () => {
+        await dispatch(logout()).unwrap();
+        navigate(pathObj.admin, { replace: true });
+      },
+      {
+        pending: '登出中...',
+        success: '已登出',
+        error: '登出失敗',
+      },
+    );
+  };
+
+  // show time
   useEffect(() => {
     const interval = setInterval(() => {
       setShowTime(appDayjs().format(dateForm.fullDateWithSecond));
     }, 1000);
     return () => clearInterval(interval);
   }, []);
-
-  const handleLogout = () => {
-    sessionStorage.removeItem('token');
-    navigate({ pathname: `/${pathObj.admin}` });
-  };
-
-  const pageTitle = () => {
-    const routerInfo = flatSideBarItemList.find((item) => item.path === location.pathname) ?? null;
-    if (routerInfo?.name) {
-      return routerInfo.name;
-    } else {
-      return meal_id === 'create' ? '新增菜單' : '編輯菜單';
-    }
-  };
 
   return (
     <>
@@ -64,6 +70,7 @@ export const Header: FC<IHeaderProps> = () => {
           userSelect: 'none',
           '& .MuiToolbar-root': {
             padding: 0,
+            minHeight: headerHeight,
           },
         }}
       >
@@ -73,14 +80,12 @@ export const Header: FC<IHeaderProps> = () => {
             onClick={() => setIsLeftMenuOpen((val) => !val)}
             sx={{
               bgcolor: (theme) => theme.palette.primary.main,
-              width: isLeftMenuOpen ? drawerWidth : '112px',
-              p: 2,
-              // pl: 2,
+              width: isLeftMenuOpen ? drawerExpandWidth : drawerCollapseWidth,
+              height: headerHeight,
               position: 'relative',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
-              gap: 1,
               borderRadius: 0,
               overflow: 'hidden',
               whiteSpace: 'nowrap',
@@ -90,19 +95,14 @@ export const Header: FC<IHeaderProps> = () => {
               },
             }}
           >
-            <Box component='img' src={HeaderLogo} sx={{ width: '40px', height: '40px' }} />
+            <Box component='img' src={HeaderLogo} sx={{ width: '45px', height: '45px' }} />
             <Box
-              component='div'
               sx={{
                 textAlign: 'left',
-                position: 'absolute',
-                left: '80px',
-                top: '13%',
-                opacity: isLeftMenuOpen ? 1 : 0,
-                transiton: 'opacity 225ms',
+                display: isLeftMenuOpen ? 'block' : 'none',
               }}
             >
-              <Typography variant='h5' color={theme.palette.common.black} fontWeight={900} lineHeight={1}>
+              <Typography variant='h6' color={theme.palette.common.black} fontWeight={900} lineHeight={1}>
                 港都熱炒
               </Typography>
               <Typography variant='tiny' color={theme.palette.common.black}>
@@ -112,7 +112,6 @@ export const Header: FC<IHeaderProps> = () => {
             <DoubleArrow
               color='secondary'
               sx={{
-                ml: 1,
                 width: '24px',
                 height: '24px',
                 color: (theme) => theme.palette.common.black,
@@ -123,8 +122,8 @@ export const Header: FC<IHeaderProps> = () => {
           </Button>
 
           {/* page title */}
-          <Typography variant='h2' sx={{ flexGrow: 1, pl: 2 }}>
-            {pageTitle()}
+          <Typography variant='h3' sx={{ flexGrow: 1, pl: 2 }}>
+            {routerInfo?.name ?? '未知頁面'}
           </Typography>
           <Typography sx={{ pr: 2 }}>{showTime}</Typography>
 
@@ -151,7 +150,7 @@ export const Header: FC<IHeaderProps> = () => {
       </AppBar>
 
       {/* drawers */}
-      <LeftMenuDrawer drawerWidth={drawerWidth} open={isLeftMenuOpen} setOpen={setIsLeftMenuOpen} />
+      <LeftMenuDrawer drawerExpandWidth={drawerExpandWidth} open={isLeftMenuOpen} setOpen={setIsLeftMenuOpen} />
       <NotificationDrawer open={isNotificationOpen} setOpen={setIsNotificationOpen} />
     </>
   );

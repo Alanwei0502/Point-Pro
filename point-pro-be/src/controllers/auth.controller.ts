@@ -1,17 +1,17 @@
 import { NextFunction, Request } from 'express';
+import { Role } from '@prisma/client';
 import { ReasonPhrases, StatusCodes } from 'http-status-codes';
 import { object, string } from 'yup';
 import bcrypt from 'bcryptjs';
-import { ApiResponse, AuthRequest } from '../types/shared';
 import { AuthService } from '../services';
-import { ILoginRequest, IRegisterRequest } from '../types/handler.type';
-import { sign } from 'jsonwebtoken';
+import { ILoginRequest, IRegisterRequest, ApiResponse, AuthRequest } from '../types';
 import { userModel } from '../models';
+import { SessionRedis, jwt } from '../helpers';
 
 export class AuthController {
   static decodeTokenHandler = async (req: AuthRequest, res: ApiResponse) => {
-    return res.status(200).send({
-      message: 'success',
+    return res.status(StatusCodes.OK).send({
+      message: ReasonPhrases.OK,
       result: req.auth,
     });
   };
@@ -61,11 +61,9 @@ export class AuthController {
         });
       }
 
-      // Hash password
-      const saltRound = process.env.SALT_ROUND;
-      if (!saltRound) throw new Error('No SALT_ROUND');
-
-      const passwordHash = bcrypt.hashSync(req.body.phone, +saltRound);
+      // Hash password with bcrypt
+      if (!process.env.JWT_SALT_ROUND) throw new Error('No Salt Round');
+      const passwordHash = bcrypt.hashSync(req.body.phone, Number(process.env.JWT_SALT_ROUND));
 
       // Create user and return JWT token
       const newUser = await userModel.createStaffUser({
@@ -94,46 +92,71 @@ export class AuthController {
       const user = await userModel.findUserByUsername({ username });
 
       if (!user) {
-        return res.status(StatusCodes.NOT_FOUND).json({
+        return res.status(StatusCodes.NOT_FOUND).send({
           message: ReasonPhrases.NOT_FOUND,
           result: 'User not found',
         });
       }
 
-      // Check user's password is correct
-      if (user?.passwordHash && !bcrypt.compareSync(password, user.passwordHash)) {
-        return res.status(StatusCodes.FORBIDDEN).json({
+      // Check if user is admin or staff
+      if (user.role === Role.CUSTOMER) {
+        return res.status(StatusCodes.FORBIDDEN).send({
           message: ReasonPhrases.FORBIDDEN,
-          result: 'Password does not match',
+          result: 'User is not admin or staff',
         });
       }
 
-      // Login user and return JWT token
-      if (!process.env.POINT_PRO_SECRET) throw new Error('No JWT Secret');
+      // Check user's password is correct
+      if (!user.passwordHash) {
+        return res.status(StatusCodes.FORBIDDEN).send({
+          message: ReasonPhrases.FORBIDDEN,
+          result: 'User has not set password yet',
+        });
+      }
 
-      const authToken = sign(
-        {
-          id: user.id,
-          username: user.username,
-          phone: user.phone,
-          email: user.email,
-          role: user.role,
-        },
-        process.env.POINT_PRO_SECRET,
-        { expiresIn: '1 day' },
-      );
+      // Check if password is correct
+      const isPasswordCorrect = await bcrypt.compare(password, user.passwordHash);
+
+      if (!isPasswordCorrect) {
+        return res.status(StatusCodes.FORBIDDEN).send({
+          message: ReasonPhrases.FORBIDDEN,
+          result: 'Password is incorrect',
+        });
+      }
+
+      // Create JWT token
+      const token = await jwt.sign({
+        id: user.id,
+        username: user.username,
+        phone: user.phone,
+        email: user.email,
+        role: user.role,
+      });
+
+      // Redis set token
+      await SessionRedis.setSession(user.id, jwt.expiresIn, token);
 
       // Create login log
-      const loginLog = await userModel.createLoginLog({ userId: user.id });
+      await userModel.createLoginLog({ userId: user.id });
 
       return res.status(StatusCodes.OK).json({
         message: ReasonPhrases.OK,
-        result: { authToken, loginLog },
+        result: token,
       });
     } catch (error) {
       next(error);
     }
   };
 
-  // static logoutHandler = async (req, res: ApiResponse) => {};
+  static logoutHandler = async (req: AuthRequest, res: ApiResponse, next: NextFunction) => {
+    try {
+      await SessionRedis.deleteSession(req.auth.id);
+      return res.status(StatusCodes.OK).send({
+        message: ReasonPhrases.OK,
+        result: 'Logout successfully',
+      });
+    } catch (error) {
+      next(error);
+    }
+  };
 }

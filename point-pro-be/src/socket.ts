@@ -1,12 +1,9 @@
-import jwt from 'jsonwebtoken';
 import { Server as SocketIOServer } from 'socket.io';
 import { Server as HttpServer } from 'http';
 import { Namespace } from 'socket.io/dist/namespace';
-import { Logger } from './helpers/utils.helper';
 import { DefaultEventsMap } from 'socket.io/dist/typed-events';
-import { verifyAdminSchema, verifyReservationSchema } from './validators';
-
-const secret = process.env.POINT_PRO_SECRET || 'point-proo';
+import { verifyAdminAndStaffSchema, verifyReservationSchema } from './validators';
+import { Logger, jwt } from './helpers';
 
 // Type
 type SocketArgType = {
@@ -49,7 +46,7 @@ function usersSocket({ mainNs, adminNs, userNs }: SocketArgType) {
     try {
       // Verify & Decode Token
       const token = socket.handshake.auth.token;
-      const decoded = jwt.verify(token, secret);
+      const decoded = jwt.verify(token);
       verifyReservationSchema.validateSync(decoded);
       const reservation = verifyReservationSchema.cast(decoded);
 
@@ -80,23 +77,23 @@ function adminsSocket({ mainNs, adminNs, userNs }: SocketArgType) {
     try {
       // Verify & Decode token
       const token = socket.handshake.auth.token;
-      const decoded = jwt.verify(token, secret);
-      const admin = verifyAdminSchema.parse(decoded);
+      const decoded = jwt.verify(token);
+      const admin = verifyAdminAndStaffSchema.parse(decoded);
 
       // Join Room
-      socket.join(admin.memberId);
+      socket.join(admin.id);
 
       // Listeners
       socket.on(SocketTopic.MENU, (menu) => {
-        adminNs.except(admin.memberId).emit(SocketTopic.MENU, menu);
+        adminNs.except(admin.id).emit(SocketTopic.MENU, menu);
         userNs.emit(SocketTopic.MENU, menu);
       });
       socket.on(SocketTopic.ORDER, (order) => {
-        adminNs.except(admin.memberId).emit(SocketTopic.ORDER, order);
+        adminNs.except(admin.id).emit(SocketTopic.ORDER, order);
         userNs.to(order.result.reservationId).emit(SocketTopic.ORDER, order);
       });
       socket.on(SocketTopic.RESERVATION, (reservation) => {
-        adminNs.except(admin.memberId).emit(SocketTopic.RESERVATION, reservation);
+        adminNs.except(admin.id).emit(SocketTopic.RESERVATION, reservation);
         userNs.emit(SocketTopic.RESERVATION, reservation);
       });
 

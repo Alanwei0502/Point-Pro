@@ -1,7 +1,7 @@
 // import { Meal, Order, OrderMeal, OrderStatus, Payment } from '@prisma/client';
 // import { prismaClient } from './prismaClient.helper';
 // // import { Product, RequestRequestBody } from 'line-pay-merchant';
-// import { ApiResponse } from '../types/shared';
+// import { ApiResponse } from '../types';
 // import { randomUUID } from 'crypto';
 
 // export interface OrderMealWithMeal extends OrderMeal {

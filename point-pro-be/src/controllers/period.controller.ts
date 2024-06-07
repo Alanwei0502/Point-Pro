@@ -1,10 +1,10 @@
+import { NextFunction } from 'express';
+import { Period, Prisma } from '@prisma/client';
+import { ReasonPhrases, StatusCodes } from 'http-status-codes';
 import { object, date as dateSchema, boolean } from 'yup';
 import { getDateOnly, getDefaultDate, prismaClient } from '../helpers';
-import { ApiResponse, AuthRequest, PeriodInfo, DatePeriodInfo } from '../types/shared';
-import { Period, Prisma } from '@prisma/client';
+import { ApiResponse, AuthRequest } from '../types';
 import { PeriodService } from '../services';
-import { ReasonPhrases, StatusCodes } from 'http-status-codes';
-import { NextFunction } from 'express';
 
 export class PeriodController {
   // public static getPeriods = async (req: AuthRequest, res: ApiResponse<DatePeriodInfo[]>) => {

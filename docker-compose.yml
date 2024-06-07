@@ -12,7 +12,7 @@ services:
   point-pro-be:
     build:
       context: ./point-pro-be
-      dockerfile: Dockerfile.dev
+      
   db:
     image: supabase/postgres
     ports:

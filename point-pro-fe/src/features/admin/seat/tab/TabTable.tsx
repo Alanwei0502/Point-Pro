@@ -100,7 +100,7 @@ export const TabTable: FC<ITabTableProps> = ({ date }) => {
   };
 
   return (
-    <Stack direction='row' sx={{ p: 0, height: `calc(100vh - ${headerHeight} - 50px - 72px)`, width: '100%' }}>
+    <Stack direction='row' sx={{ p: 0, height: `calc(100vh - ${headerHeight} - 50px - ${seatAearchBarHeight})`, width: '100%' }}>
       <Periods periods={periods} selected={selectedPeriod} handleClick={handlePeriodClick} />
       {seats ? (
         <Stack sx={{ p: 3, width: 'calc(100vw - 200px)', overflow: 'auto' }}>
@@ -110,12 +110,7 @@ export const TabTable: FC<ITabTableProps> = ({ date }) => {
             ))}
           </Stack>
           {normalSeatList.map((row, key) => (
-            <Stack
-              key={`row-${String.fromCharCode(key + 65)}`}
-              direction='row'
-              sx={{ mt: 3 }}
-              justifyContent='space-evenly'
-            >
+            <Stack key={`row-${String.fromCharCode(key + 65)}`} direction='row' sx={{ mt: 3 }} justifyContent='space-evenly'>
               {row.map((e) => (
                 <TableNormal key={e} state={seats[e]} handleClick={handleSeatSelect} />
               ))}

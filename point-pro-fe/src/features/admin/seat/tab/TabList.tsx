@@ -51,7 +51,7 @@ export const TabList: FC<ITabListProps> = ({ date, search }) => {
   return (
     <Box
       sx={{
-        height: `calc(100vh - ${headerHeight} - 50px - 72px)`,
+        height: `calc(100vh - ${headerHeight} - 50px - ${seatAearchBarHeight})`,
         width: '100%',
         overflow: 'auto',
       }}

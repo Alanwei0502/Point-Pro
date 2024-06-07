@@ -7,10 +7,10 @@ import {
   getOrderRequestSchema,
   updateOrderMealServedAmountPayloadSchema,
 } from '../validators';
-import { validateMiddleware } from '../middlewares';
+import { authMiddleware, validateMiddleware } from '../middlewares';
 
 const orderRouter = Router();
-
+orderRouter.use(authMiddleware);
 orderRouter.get('/', validateMiddleware(getOrderRequestSchema, 'query'), OrderController.getOrdersHandler);
 orderRouter.post('/', validateMiddleware(createOrderRequestSchema), OrderController.createOrderHandler);
 orderRouter.patch('/:orderId/cancel', validateMiddleware(orderIdValidatedSchema, 'params'), OrderController.cancelOrderHandler);

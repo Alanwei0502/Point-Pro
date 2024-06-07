@@ -2,12 +2,10 @@
 // import { mixed, object, string } from 'yup';
 // import { createLinePayClient } from 'line-pay-merchant';
 // import { ALLPayment, Merchant, isValidReceivedCheckMacValue } from 'node-ecpay-aio';
-
 // import { BasePaymentParams, ALLPaymentParams } from 'node-ecpay-aio/dist/types';
 // import { LinePayClient } from 'line-pay-merchant/dist/type';
-
 // import { prismaClient, OrderProcessor, PaymentProcessor } from '../helpers';
-// import { ApiResponse } from '../types/shared';
+// import { ApiResponse } from '../types';
 
 // declare global {
 //   export interface ProcessEnv {

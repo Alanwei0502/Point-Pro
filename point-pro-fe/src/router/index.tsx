@@ -1,4 +1,4 @@
-import { createBrowserRouter } from 'react-router-dom';
+import { Navigate, createBrowserRouter } from 'react-router-dom';
 import { Home } from '~/features/home';
 import { Login } from '~/features/admin/login';
 import { ProtectedRoute } from './protected';
@@ -48,7 +48,7 @@ const router = createBrowserRouter([
     element: <ProtectedRoute />,
     children: [
       {
-        path: pathObj.order,
+        path: pathObj.orderManagement,
         element: <AdminOrders />,
       },
       {
@@ -64,6 +64,10 @@ const router = createBrowserRouter([
         element: <AdminMenuSettings />,
       },
     ],
+  },
+  {
+    path: `${pathObj.admin}/*`,
+    element: <Navigate to='.' replace />,
   },
 ]);
 

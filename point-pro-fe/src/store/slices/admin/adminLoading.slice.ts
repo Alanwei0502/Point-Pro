@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 
+// TODO: delete
 const name = 'adminLoading';
 
 export interface ILoadingSliceState {

@@ -1,6 +1,6 @@
 // import { RequestHandler, Request } from 'express';
 // import nodemailer from 'nodemailer';
-// import { ApiResponse } from '../types/shared';
+// import { ApiResponse } from '../types';
 // import { object, string } from 'yup';
 
 // export interface MailInterface {
