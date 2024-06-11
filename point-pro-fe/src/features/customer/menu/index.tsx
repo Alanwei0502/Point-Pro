@@ -1,8 +1,7 @@
 import { FC, useEffect } from 'react';
 import { MobileLayout, MobileHeader } from '~/components';
-import { getMenu, getOrders, getUserInfo } from '~/store/slices';
-import { useSocket, useAppDispatch } from '~/hooks';
-import { getToken } from '~/utils';
+import { getMenu, getOrders } from '~/store/slices';
+import { useSocket, useAppDispatch, useToken } from '~/hooks';
 import { OrderStatus, NameSpace } from '~/types';
 import { SeatInfo } from './SeatInfo';
 import { CategoryNavbar } from './CategoryNavbar';
@@ -16,26 +15,26 @@ import { PaymentModal } from './modals/PaymentModal';
 import { CounterReminderModal } from './modals/CounterReminderModal';
 import { CartItemIsOffReminderModal } from './modals/CartItemIsOffReminderModal';
 import { EcPayFormModal } from './modals/EcPayFormModal';
+import MobileMask from '~/components/mask/MobileMask';
 
 interface IMenuProps {}
 
 export const Menu: FC<IMenuProps> = () => {
   const dispatch = useAppDispatch();
 
-  useSocket({ ns: NameSpace.user });
+  // useSocket({ ns: NameSpace.user });
+  const token = useToken();
 
   useEffect(() => {
-    dispatch(getMenu());
-
-    const token = getToken();
-
     if (token) {
-      dispatch(getUserInfo());
-      dispatch(getOrders({ status: OrderStatus.WORKING }));
+      dispatch(getMenu());
+      // TODO: getReservation
+      // dispatch(getUserInfo());
+      // dispatch(getOrders({ status: OrderStatus.WORKING }));
     }
-  }, [dispatch]);
+  }, [token, dispatch]);
 
-  return (
+  return token ? (
     <MobileLayout>
       <MobileHeader />
       <SeatInfo />
@@ -55,5 +54,7 @@ export const Menu: FC<IMenuProps> = () => {
       <CartItemIsOffReminderModal />
       <EcPayFormModal />
     </MobileLayout>
+  ) : (
+    <MobileMask />
   );
 };

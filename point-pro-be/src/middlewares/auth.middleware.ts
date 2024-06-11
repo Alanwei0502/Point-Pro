@@ -1,14 +1,9 @@
 import { NextFunction } from 'express';
 import { ReasonPhrases, StatusCodes } from 'http-status-codes';
+import { z } from 'zod';
 import { SessionRedis, jwt } from '../helpers';
 import { ApiResponse, AuthRequest } from '../types';
-import { verifyAdminAndStaffSchema, verifyReservationSchema } from '../validators';
-import { z } from 'zod';
-
-export const blackListedToken: string[] = [];
-
-// TODO
-// const verifyUserSchema = verifyAdminAndStaffSchema || verifyReservationSchema;
+import { verifyAdminAndStaffSchema } from '../validators';
 
 export const authMiddleware = async (req: AuthRequest, res: ApiResponse, next: NextFunction) => {
   try {

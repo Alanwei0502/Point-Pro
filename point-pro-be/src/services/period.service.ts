@@ -1,7 +1,6 @@
 import { Prisma } from '@prisma/client';
-import { redisClient } from '../helpers';
-import { DatePeriodInfo, PeriodInfo } from '../types/shared';
-import { appDayjs, prismaClient } from '../helpers';
+import { DatePeriodInfo, PeriodInfo } from '../types';
+import { appDayjs, prismaClient, redisClient } from '../helpers';
 
 export class PeriodService {
   // static getPeriods = async (isOnlineBooking: boolean, dateFrom: Date, dateTo: Date, excludeTime: boolean) => {

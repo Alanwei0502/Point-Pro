@@ -1,22 +1,28 @@
 import { Router } from 'express';
 import { ReservationController } from '../controllers';
-import { validateMiddleware } from '../middlewares';
-import { createReservationRequestBodySchema, findReservationByPhoneSchema } from '../validators';
+import { authMiddleware, validateMiddleware } from '../middlewares';
+import {
+  getReservationsRequestSchema,
+  createReservationRequestSchema,
+  updateReservationRequestSchema,
+  deleteReservationRequestSchema,
+} from '../validators';
 
 const reservationRouter = Router();
 
-reservationRouter.post(
-  '/',
-  validateMiddleware(createReservationRequestBodySchema, 'body'),
-  ReservationController.createReservationHandler,
+reservationRouter.get('/', authMiddleware, validateMiddleware(getReservationsRequestSchema, 'query'), ReservationController.getReservationsHandler);
+reservationRouter.post('/', validateMiddleware(createReservationRequestSchema), ReservationController.createReservationHandler);
+reservationRouter.patch(
+  '/:reservationId',
+  authMiddleware,
+  validateMiddleware(updateReservationRequestSchema, 'params'),
+  validateMiddleware(createReservationRequestSchema),
+  ReservationController.updateReservationHandler,
 );
-reservationRouter.get(
-  '/:phone',
-  validateMiddleware(findReservationByPhoneSchema, 'params'),
-  ReservationController.getReservationByPhoneHandler,
+reservationRouter.delete(
+  '/:reservationId',
+  validateMiddleware(deleteReservationRequestSchema, 'params'),
+  ReservationController.deleteReservationHandler,
 );
-// reservationRouter.get('/', ReservationController.getReservationsHandler);
-// reservationRouter.get('/:reservationId', ReservationController.getReservationDetailsHandler);
-// reservationRouter.patch('/:reservationId', ReservationController.updateReservationHandler);
 
 export default reservationRouter;

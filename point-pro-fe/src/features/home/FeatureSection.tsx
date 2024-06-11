@@ -63,65 +63,67 @@ const system = {
 export const FeatureSection: FC = () => {
   const deviceType = useDeviceType();
   return (
-    <Box pt={20} pb={deviceType === 'tablet' ? '7.5rem' : '5rem'} bgcolor={'background.paper'}>
-      <Container>
-        <Column sx={{ gap: deviceType === 'tablet' ? '5rem' : '2.5rem' }}>
-          <Box display={'flex'} flexDirection={deviceType === 'tablet' ? 'row' : 'column'} gap={deviceType === 'tablet' ? '6rem' : '2.5rem'}>
-            <Title title='產品功能特色' subtitle='為您的餐廳帶來卓越的管理體驗，PointPro POS 系統專為提升營運效率而設計' />
-            <Typography component='h3' fontSize={deviceType === 'tablet' ? 48 : 32} fontWeight={900}>
-              {feature.title}
-            </Typography>
-          </Box>
-          <Grid container spacing={deviceType === 'tablet' ? 3 : 2}>
-            {feature.content.map((feature, index) => {
-              return (
-                <Grid item xs={12} md={3} key={feature.title}>
-                  <img
-                    src={feature.imgUrl}
-                    alt=''
-                    style={{
-                      borderRadius: '2.5rem',
-                      width: '100%',
-                      maxHeight: deviceType === 'tablet' ? '17.625rem' : '21.9375rem',
-                      aspectRatio: deviceType === 'tablet' ? '51/47' : '1/1',
-                      objectFit: 'cover',
-                    }}
-                  />
-                  <Box flex={'column'} px={deviceType === 'tablet' ? 3 : 2} pt={deviceType === 'tablet' ? 4 : 3} pb={3} textAlign={'center'}>
-                    <Typography variant='h6' component={'h3'} fontSize={24} fontWeight={900} mb={2}>
-                      {feature.title}
-                    </Typography>
-                    <Typography variant='body1' component={'p'} color={'common.black_80'} fontSize={deviceType === 'tablet' ? 24 : 16}>
-                      {feature.description}
-                    </Typography>
-                  </Box>
-                </Grid>
-              );
-            })}
-          </Grid>
-          <Grid container spacing={deviceType === 'tablet' ? 3 : 5} justifyContent={'space-between'} alignItems={'stretch'}>
-            <Grid item xs={12} md={5} display={'flex'} flexDirection={'column'} justifyContent={'space-between'}>
-              <Typography component={'h3'} variant={deviceType === 'tablet' ? 'h1' : 'h3'} fontWeight={900} sx={{ maxWidth: '32rem' }}>
-                {system.title}
+    <Box component='section' id='feature'>
+      <Box pt={20} pb={deviceType === 'tablet' ? '7.5rem' : '5rem'} bgcolor={'background.paper'}>
+        <Container>
+          <Column sx={{ gap: deviceType === 'tablet' ? '5rem' : '2.5rem' }}>
+            <Box display={'flex'} flexDirection={deviceType === 'tablet' ? 'row' : 'column'} gap={deviceType === 'tablet' ? '6rem' : '2.5rem'}>
+              <Title title='產品功能特色' subtitle='為您的餐廳帶來卓越的管理體驗，PointPro POS 系統專為提升營運效率而設計' />
+              <Typography component='h3' fontSize={deviceType === 'tablet' ? 48 : 32} fontWeight={900}>
+                {feature.title}
               </Typography>
-              {deviceType === 'tablet' && (
-                <Box mt={'auto'} ml={'auto'}>
-                  <FeatureIllustration />
-                </Box>
-              )}
-            </Grid>
-            <Grid item xs={12} md={5} display={'flex'} flexDirection={'column'} gap={deviceType === 'tablet' ? '1rem' : '0.5rem'}>
-              {system.content.map((feature, index) => {
+            </Box>
+            <Grid container spacing={deviceType === 'tablet' ? 3 : 2}>
+              {feature.content.map((feature, index) => {
                 return (
-                  <FeatureCard key={feature.title} description={feature.description} title={feature.title}>
-                    {feature.icon}
-                  </FeatureCard>
+                  <Grid item xs={12} md={3} key={feature.title}>
+                    <img
+                      src={feature.imgUrl}
+                      alt=''
+                      style={{
+                        borderRadius: '2.5rem',
+                        width: '100%',
+                        maxHeight: deviceType === 'tablet' ? '17.625rem' : '21.9375rem',
+                        aspectRatio: deviceType === 'tablet' ? '51/47' : '1/1',
+                        objectFit: 'cover',
+                      }}
+                    />
+                    <Box flex={'column'} px={deviceType === 'tablet' ? 3 : 2} pt={deviceType === 'tablet' ? 4 : 3} pb={3} textAlign={'center'}>
+                      <Typography variant='h6' component={'h3'} fontSize={24} fontWeight={900} mb={2}>
+                        {feature.title}
+                      </Typography>
+                      <Typography variant='body1' component={'p'} color={'common.black_80'} fontSize={deviceType === 'tablet' ? 24 : 16}>
+                        {feature.description}
+                      </Typography>
+                    </Box>
+                  </Grid>
                 );
               })}
             </Grid>
-          </Grid>
-        </Column>
-      </Container>
+            <Grid container spacing={deviceType === 'tablet' ? 3 : 5} justifyContent={'space-between'} alignItems={'stretch'}>
+              <Grid item xs={12} md={5} display={'flex'} flexDirection={'column'} justifyContent={'space-between'}>
+                <Typography component={'h3'} variant={deviceType === 'tablet' ? 'h1' : 'h3'} fontWeight={900} sx={{ maxWidth: '32rem' }}>
+                  {system.title}
+                </Typography>
+                {deviceType === 'tablet' && (
+                  <Box mt={'auto'} ml={'auto'}>
+                    <FeatureIllustration />
+                  </Box>
+                )}
+              </Grid>
+              <Grid item xs={12} md={5} display={'flex'} flexDirection={'column'} gap={deviceType === 'tablet' ? '1rem' : '0.5rem'}>
+                {system.content.map((feature, index) => {
+                  return (
+                    <FeatureCard key={feature.title} description={feature.description} title={feature.title}>
+                      {feature.icon}
+                    </FeatureCard>
+                  );
+                })}
+              </Grid>
+            </Grid>
+          </Column>
+        </Container>
+      </Box>
     </Box>
   );
 };

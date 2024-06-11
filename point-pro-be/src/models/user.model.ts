@@ -1,60 +1,42 @@
 import { z } from 'zod';
 import { prismaClient } from '../helpers';
-import { createCustomerSchema, createStaffSchema, registerSchema } from '../validators';
-import { LogType } from '@prisma/client';
+import { createStaffSchema } from '../validators';
+import { LogType, User } from '@prisma/client';
 
-const createCustomerUser = async (params: z.infer<typeof createCustomerSchema>) => {
-  const user = await prismaClient.user.create({
-    data: {
-      username: params.username,
-      gender: params.gender,
-      phone: params.phone,
-      email: params?.email ?? null,
-      role: params.role,
-    },
-  });
+export class UserModel {
+  static findUser = async (params: { username?: User['username']; phone?: User['phone'] }) => {
+    const user = await prismaClient.user.findUnique({
+      where: {
+        username: params.username,
+        phone: params.phone,
+      },
+    });
 
-  return user;
-};
+    return user;
+  };
 
-const createStaffUser = async (params: z.infer<typeof createStaffSchema>) => {
-  const user = await prismaClient.user.create({
-    data: {
-      username: params.username,
-      gender: params.gender,
-      phone: params.phone,
-      email: params.email,
-      role: params.role,
-      passwordHash: params.passwordHash,
-    },
-  });
+  static createUser = async (params: z.infer<typeof createStaffSchema>) => {
+    const user = await prismaClient.user.create({
+      data: {
+        username: params.username,
+        gender: params.gender,
+        phone: params.phone,
+        email: params.email,
+        role: params.role,
+        passwordHash: params.passwordHash,
+      },
+    });
 
-  return user;
-};
+    return user;
+  };
 
-const findUserByUsername = async (params: { username: string }) => {
-  const user = await prismaClient.user.findUnique({
-    where: {
-      username: params.username,
-    },
-  });
-
-  return user;
-};
-
-const createLoginLog = async (params: { userId: string }) => {
-  const loginLog = await prismaClient.loginLog.create({
-    data: {
-      userId: params.userId,
-      logType: LogType.LOGIN,
-    },
-  });
-  return loginLog;
-};
-
-export const userModel = {
-  createCustomerUser,
-  createStaffUser,
-  findUserByUsername,
-  createLoginLog,
-};
+  static createLoginLog = async (params: { userId: User['id'] }) => {
+    const loginLog = await prismaClient.loginLog.create({
+      data: {
+        userId: params.userId,
+        logType: LogType.LOGIN,
+      },
+    });
+    return loginLog;
+  };
+}

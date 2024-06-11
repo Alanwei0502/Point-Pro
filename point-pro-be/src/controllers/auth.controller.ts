@@ -1,12 +1,11 @@
 import { NextFunction, Request } from 'express';
-import { Role } from '@prisma/client';
 import { ReasonPhrases, StatusCodes } from 'http-status-codes';
 import { object, string } from 'yup';
 import bcrypt from 'bcryptjs';
 import { AuthService } from '../services';
 import { ILoginRequest, IRegisterRequest, ApiResponse, AuthRequest } from '../types';
-import { userModel } from '../models';
-import { SessionRedis, jwt } from '../helpers';
+import { UserModel } from '../models';
+import { SessionRedis, hashPassword, jwt } from '../helpers';
 
 export class AuthController {
   static decodeTokenHandler = async (req: AuthRequest, res: ApiResponse) => {
@@ -52,7 +51,7 @@ export class AuthController {
       const { username, gender, phone, email, role } = req.body;
 
       // Check if user exists
-      const user = await userModel.findUserByUsername({ username });
+      const user = await UserModel.findUser({ username, phone });
 
       if (user) {
         return res.status(StatusCodes.CONFLICT).json({
@@ -62,11 +61,10 @@ export class AuthController {
       }
 
       // Hash password with bcrypt
-      if (!process.env.JWT_SALT_ROUND) throw new Error('No Salt Round');
-      const passwordHash = bcrypt.hashSync(req.body.phone, Number(process.env.JWT_SALT_ROUND));
+      const passwordHash = hashPassword(req.body.phone);
 
       // Create user and return JWT token
-      const newUser = await userModel.createStaffUser({
+      const newUser = await UserModel.createUser({
         username,
         gender,
         phone,
@@ -89,20 +87,12 @@ export class AuthController {
       const { username, password } = req.body;
 
       // Check if user exists
-      const user = await userModel.findUserByUsername({ username });
+      const user = await UserModel.findUser({ username });
 
       if (!user) {
         return res.status(StatusCodes.NOT_FOUND).send({
           message: ReasonPhrases.NOT_FOUND,
           result: 'User not found',
-        });
-      }
-
-      // Check if user is admin or staff
-      if (user.role === Role.CUSTOMER) {
-        return res.status(StatusCodes.FORBIDDEN).send({
-          message: ReasonPhrases.FORBIDDEN,
-          result: 'User is not admin or staff',
         });
       }
 
@@ -130,14 +120,13 @@ export class AuthController {
         username: user.username,
         phone: user.phone,
         email: user.email,
-        role: user.role,
       });
 
       // Redis set token
       await SessionRedis.setSession(user.id, jwt.expiresIn, token);
 
       // Create login log
-      await userModel.createLoginLog({ userId: user.id });
+      await UserModel.createLoginLog({ userId: user.id });
 
       return res.status(StatusCodes.OK).json({
         message: ReasonPhrases.OK,
@@ -150,7 +139,14 @@ export class AuthController {
 
   static logoutHandler = async (req: AuthRequest, res: ApiResponse, next: NextFunction) => {
     try {
-      await SessionRedis.deleteSession(req.auth.id);
+      if (!req.auth) {
+        return res.status(StatusCodes.FORBIDDEN).send({
+          message: ReasonPhrases.FORBIDDEN,
+          result: 'User not logged in',
+        });
+      }
+
+      await SessionRedis.deleteSession(req.auth?.id);
       return res.status(StatusCodes.OK).send({
         message: ReasonPhrases.OK,
         result: 'Logout successfully',

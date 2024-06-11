@@ -16,11 +16,11 @@ export const pathObj = {
   confirm: 'confirm',
   cancel: 'cancel',
   admin: 'admin',
-  orderManagement: 'order_management',
   menu: 'menu',
   takeOrder: 'take_order',
-  seat: 'seat',
-  menuSetting: 'menu_setting',
+  orderManagement: 'order_management',
+  reservationMangament: 'reservation_mangament',
+  menuManagament: 'menu_management',
 };
 
 interface ISideBarItem {
@@ -33,13 +33,6 @@ interface ISideBarItem {
 
 export const sideBarItemList: ISideBarItem[] = [
   {
-    id: pathObj.takeOrder,
-    name: '點餐系統',
-    src: RestaurantMenuIcon,
-    path: `/${pathObj.admin}/${pathObj.takeOrder}`,
-    list: [],
-  },
-  {
     id: pathObj.orderManagement,
     name: '訂單系統',
     src: StickyNote2Icon,
@@ -47,17 +40,24 @@ export const sideBarItemList: ISideBarItem[] = [
     list: [],
   },
   {
-    id: pathObj.seat,
-    name: '座位系統',
+    id: pathObj.reservationMangament,
+    name: '預約系統',
     src: EventSeatIcon,
-    path: `/${pathObj.admin}/${pathObj.seat}`,
+    path: `/${pathObj.admin}/${pathObj.reservationMangament}`,
     list: [],
   },
   {
-    id: pathObj.menuSetting,
+    id: pathObj.takeOrder,
+    name: '點餐系統',
+    src: RestaurantMenuIcon,
+    path: `/${pathObj.admin}/${pathObj.takeOrder}`,
+    list: [],
+  },
+  {
+    id: pathObj.menuManagament,
     name: '菜單系統',
     src: MenuBookIcon,
-    path: `/${pathObj.admin}/${pathObj.menuSetting}`,
+    path: `/${pathObj.admin}/${pathObj.menuManagament}`,
     list: [],
   },
 ];

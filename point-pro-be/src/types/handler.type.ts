@@ -24,6 +24,10 @@ import {
   updateOrderMealServedAmountPayloadSchema,
   orderIdValidatedSchema,
   verifyAdminAndStaffSchema,
+  createReservationRequestSchema,
+  getReservationsRequestSchema,
+  updateReservationRequestSchema,
+  deleteReservationRequestSchema,
 } from '../validators';
 // Request
 
@@ -73,7 +77,7 @@ type ReservationAuth = {
 
 export interface AuthRequest extends Request {
   // auth: UserAuth | ReservationAuth;
-  auth: z.infer<typeof verifyAdminAndStaffSchema>;
+  auth?: z.infer<typeof verifyAdminAndStaffSchema>;
 }
 
 export type ApiResponse<T = any> = Response<{
@@ -188,4 +192,22 @@ export interface ICancelOrderRequest extends Request {
 export interface IUpdateOrderMealServedAmountRequest extends Request {
   params: z.infer<typeof orderIdValidatedSchema>;
   body: z.infer<typeof updateOrderMealServedAmountPayloadSchema>;
+}
+
+// RESERVATION
+export interface ICreateReservationRequest extends Request {
+  body: z.infer<typeof createReservationRequestSchema>;
+}
+
+export interface IGetReservationsRequest extends Request {
+  query: z.infer<typeof getReservationsRequestSchema>;
+}
+
+export interface IUpdateReservationRequest extends Request {
+  params: z.infer<typeof updateReservationRequestSchema>;
+  body: z.infer<typeof createReservationRequestSchema>;
+}
+
+export interface IDeleteReservationRequest extends Request {
+  params: z.infer<typeof deleteReservationRequestSchema>;
 }

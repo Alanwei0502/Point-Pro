@@ -1,28 +1,30 @@
 import { http } from './http';
 import {
-  ReservationsResponse,
+  PatchReservationResponse,
   PostReservationPayload,
   PatchReservationPayload,
-  GetReservationByPhoneResponse,
   PostReservationResponse,
+  GetReservationResponse,
+  DeleteReservationResponse,
+  IReservation,
 } from '~/types';
 
 export class ReservationApi {
   public static path = 'reservation';
 
   static getReservations(date: Date) {
-    return http.get<string, ReservationsResponse>(`${ReservationApi.path}`, { params: { date: date ?? new Date() } });
-  }
-
-  static getReservationByPhone(phone: string) {
-    return http.get<string, GetReservationByPhoneResponse>(`${ReservationApi.path}/${phone}`);
+    return http.get<string, GetReservationResponse>(`${ReservationApi.path}`, { params: { date } });
   }
 
   static postReservation(payload: PostReservationPayload) {
-    return http.post<string, PostReservationResponse>(`${ReservationApi.path}`, payload);
+    return http.post<string, PostReservationResponse>(`${ReservationApi.path}`, payload, { withCredentials: true });
   }
 
-  static patchReservationById({ reservationId, payload }: PatchReservationPayload) {
-    return http.patch<string, ReservationsResponse>(`${ReservationApi.path}/${reservationId}`, payload);
+  static patchReservation({ id, ...payload }: PatchReservationPayload) {
+    return http.patch<string, PatchReservationResponse>(`${ReservationApi.path}/${id}`, payload, { withCredentials: true });
+  }
+
+  static deleteReservation(id: IReservation['id']) {
+    return http.delete<string, DeleteReservationResponse>(`${ReservationApi.path}/${id}`);
   }
 }

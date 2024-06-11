@@ -1,7 +1,6 @@
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { pathObj } from '~/components';
-import { getToken } from '~/utils/token.utils';
 
 export const apiHost = import.meta.env.VITE_API_HOST;
 
@@ -9,8 +8,7 @@ export const http = axios.create({ baseURL: `${apiHost}/api` });
 
 http.interceptors.request.use(
   (configs) => {
-    const token = getToken();
-
+    const token = sessionStorage.getItem('token') || '';
     configs.headers.authorization = `Bearer ${token}`;
     return configs;
   },

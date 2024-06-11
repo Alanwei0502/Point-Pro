@@ -8,27 +8,19 @@ export function insertReservations() {
     prisma.$executeRaw`
       DO $$
       DECLARE
-          user_record RECORD;
           period_record RECORD;
           random_is_cancelled BOOLEAN;
           random_people SMALLINT;
           random_remark VARCHAR(255);
       BEGIN
-          FOR i IN 1..80 LOOP
-              -- random user
-              SELECT * 
-              INTO user_record
-              FROM users
-              WHERE role != 'ADMIN' AND role != 'STAFF' AND users.phone IS NOT NULL
-              LIMIT 1 OFFSET i;
-  
+          FOR i IN 1..80 LOOP  
               -- random period
               SELECT * 
               INTO period_record
               FROM periods
               WHERE periods.start_time > NOW() + '1 day'
               LIMIT 1 OFFSET i % 20;
-  
+
               -- random cancellation
               random_is_cancelled := (random() < 0.1);
   
@@ -41,21 +33,33 @@ export function insertReservations() {
               -- insert records
               INSERT INTO reservations (
                   type, 
-                  is_cancelled, 
+                  username,
+                  phone,
+                  email,
+                  gender,
                   people, 
-                  user_id, 
-                  period_id,
-                  remark
+                  remark,
+                  is_cancelled, 
+                  period_id
               ) VALUES (
                   CASE 
-                      WHEN user_record.email IS NULL THEN 'PHONE'::reservation_type
-                      WHEN user_record.email IS NOT NULL THEN 'ONLINE'::reservation_type
+                      WHEN i % 2 = 0 IS NULL THEN 'PHONE'::reservation_type
+                      ELSE 'ONLINE'::reservation_type
                   END,
-                  random_is_cancelled,
+                  '顧客' || i::TEXT,
+                  '098' || LPAD(TRUNC(RANDOM() * 10000000)::VARCHAR, 7, '0'),
+                  CASE 
+                    WHEN i % 2 = 0 THEN NULL 
+                    ELSE 'customer_email_' || i::TEXT || '@example.com' 
+                  END,
+                  CASE 
+                    WHEN i % 2 = 0 THEN 'MALE'::gender
+                    ELSE 'FEMALE'::gender
+                  END,
                   random_people,
-                  user_record.id,
-                  period_record.id,
-                  random_remark
+                  random_remark,
+                  random_is_cancelled,
+                  period_record.id
               );
           END LOOP;
       END $$;

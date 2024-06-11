@@ -4,7 +4,7 @@ import { Box, Button, Card, CardActionArea, Typography } from '@mui/material';
 import { useAppDispatch, useAppSelector } from '~/hooks';
 import { clearNotifications, removeNotification } from '~/store/slices';
 import { ReservationType, OrderType, SocketTopic, MenuMessage, OrderMessage, ReservationMessage } from '~/types';
-import { appDayjs, genderObj } from '~/utils';
+import { appDayjs, GENDER_TRANSLATE } from '~/utils';
 import { BaseDraw } from '~/components';
 
 interface INotificationDrawerProps {
@@ -102,9 +102,7 @@ export const NotificationDrawer: FC<INotificationDrawerProps> = ({ open, setOpen
                           桌號：
                           {message === OrderMessage.PAY_ORDER
                             ? result.seats?.join(', ')
-                            : result?.reservationsLogs?.bookedSeats
-                                ?.map(({ seat }) => `${seat.prefix}-${seat.no}`)
-                                .join(',')}
+                            : result?.reservationsLogs?.bookedSeats?.map(({ seat }) => `${seat.prefix}-${seat.no}`).join(',')}
                         </Typography>
                       </Box>
                     ) : (
@@ -122,13 +120,11 @@ export const NotificationDrawer: FC<INotificationDrawerProps> = ({ open, setOpen
                   {notiType === SocketTopic.RESERVATION && (
                     <Box>
                       <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: '1rem' }}>
-                        <Typography fontWeight={700}>{`${reservationTitle1[message]} ${
-                          reservationTypeTitle[result.type] ?? ''
-                        }`}</Typography>
+                        <Typography fontWeight={700}>{`${reservationTitle1[message]} ${reservationTypeTitle[result.type] ?? ''}`}</Typography>
                         <Typography variant='small'>{appDayjs(result.reservedAt).format('HH:mm')}</Typography>
                       </Box>
                       <Typography variant='small'>
-                        姓名：{result.options.name} {genderObj[result.options.gender]}
+                        姓名：{result.options.name} {GENDER_TRANSLATE[result.options.gender]}
                       </Typography>
                       <Typography variant='small'>日期：{appDayjs(result.startTime).format('MM/DD HH:mm')}</Typography>
                       <Typography variant='small'>人數：{result.options.adults}</Typography>
@@ -138,10 +134,7 @@ export const NotificationDrawer: FC<INotificationDrawerProps> = ({ open, setOpen
               </Card>
             ))}
           </Box>
-          <Button
-            sx={{ bgcolor: 'primary.main', color: 'common.black', height: '4rem' }}
-            onClick={handleReadAllNotifications}
-          >
+          <Button sx={{ bgcolor: 'primary.main', color: 'common.black', height: '4rem' }} onClick={handleReadAllNotifications}>
             已讀所有通知
           </Button>
         </>

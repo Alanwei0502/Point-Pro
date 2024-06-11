@@ -1,7 +1,13 @@
-import { Prisma } from '@prisma/client';
-import { ResponseError } from '../types/shared';
+import { Gender, Prisma } from '@prisma/client';
 import { date as dateSchema, object } from 'yup';
+import { ResponseError } from '../types';
 import { Logger } from './logger.helper';
+
+export const genderTranslate = {
+  [Gender.MALE]: '先生',
+  [Gender.FEMALE]: '小姐',
+  [Gender.OTHER]: '先生/小姐',
+};
 
 export const ignoreUndefined = (newValue: any, defaultValue: any) => {
   return newValue !== undefined ? newValue : defaultValue;

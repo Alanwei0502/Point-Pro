@@ -1,7 +1,7 @@
 import { FC, Fragment, useEffect } from 'react';
-import { Box, Button, Divider, List, Typography } from '@mui/material';
+import { Box, Divider, List, Typography } from '@mui/material';
 import { CartMeal } from '~/features/customer/menu/CartMeal';
-import { MobileDialogLayout } from '~/components';
+import { MobileButton, MobileDialogLayout } from '~/components';
 import { calculateCartPrice } from '~/utils';
 import { useAppDispatch, useAppSelector } from '~/hooks';
 import { postOrder, closeDialog, openModal, deleteCartItem } from '~/store/slices';
@@ -42,7 +42,7 @@ export const CartDialog: FC<ICartDialogProps> = () => {
       title='購物車'
       titleSize='h2'
       isOpen={dialogType === MobileDialog.CART}
-      onCloseDialog={handleClose}
+      isShowCloseIcon={false}
       actionButton={
         <>
           <Box
@@ -80,9 +80,12 @@ export const CartDialog: FC<ICartDialogProps> = () => {
               </Typography>
             </Box>
           </Box>
-          <Button onClick={handleSubmitOrders} disabled={cart.length === 0}>
-            送出訂單
-          </Button>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, width: '100%' }}>
+            <MobileButton onClick={handleClose}>繼續點餐</MobileButton>
+            <MobileButton onClick={handleSubmitOrders} disabled={cart.length === 0}>
+              送出訂單
+            </MobileButton>
+          </Box>
         </>
       }
     >

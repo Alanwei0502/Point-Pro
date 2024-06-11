@@ -13,10 +13,6 @@ export class AuthApi {
     return http.post(`${AuthApi.path}/logout`, null, { withCredentials: true });
   }
 
-  static getUserInfo() {
-    return http.get<string, GetUserInfoResponse>(`${AuthApi.path}/user-info`);
-  }
-
   static generateToken(payload: GenerateTokenPayload) {
     return http.post<string, GenerateTokenResponse>(`${AuthApi.path}/token`, payload);
   }

@@ -1,39 +1,73 @@
 import { z } from 'zod';
-import { prismaClient } from '../helpers';
-import { createReservationSchema } from '../validators';
+import { appDayjs, prismaClient } from '../helpers';
+import { createReservationRequestSchema, getReservationsRequestSchema } from '../validators';
+import { Reservation } from '@prisma/client';
 
-const getReservationByUserPhone = async (phone: string) => {
-  const reservations = await prismaClient.user.findMany({
-    where: {
-      phone,
-    },
-    include: {
-      reservations: {
-        include: {
-          periods: true,
+export class ReservationModel {
+  static getReservationById = async (id: Reservation['id']) => {
+    const reservation = await prismaClient.reservation.findUnique({
+      where: {
+        id,
+      },
+      include: {
+        periods: true,
+      },
+    });
+
+    return reservation;
+  };
+
+  static getReservations = async (params: z.infer<typeof getReservationsRequestSchema>) => {
+    const reservations = await prismaClient.reservation.findMany({
+      where: {
+        periods: {
+          startTime: {
+            gte: appDayjs(params.date).startOf('day').toDate(),
+          },
+          endTime: {
+            lte: appDayjs(params.date).endOf('day').toDate(),
+          },
         },
       },
-    },
-  });
+      include: {
+        periods: true,
+      },
+    });
 
-  return reservations;
-};
+    return reservations;
+  };
 
-const createReservation = async (params: z.infer<typeof createReservationSchema>) => {
-  const reservation = await prismaClient.reservation.create({
-    data: {
-      type: params.type,
-      people: params.people,
-      remark: params.remark,
-      userId: params.userId,
-      periodId: params.periodId,
-    },
-  });
+  static createReservation = async (params: z.infer<typeof createReservationRequestSchema>) => {
+    const reservation = await prismaClient.reservation.create({
+      data: params,
+      include: {
+        periods: true,
+      },
+    });
+    return reservation;
+  };
 
-  return reservation;
-};
+  static updateReservation = async (id: Reservation['id'], params: z.infer<typeof createReservationRequestSchema>) => {
+    const reservation = await prismaClient.reservation.update({
+      where: {
+        id,
+      },
+      data: params,
+      include: {
+        periods: true,
+      },
+    });
 
-export const reservationModel = {
-  getReservationByUserPhone,
-  createReservation,
-};
+    return reservation;
+  };
+
+  static deleteReservation = async (id: Reservation['id']) => {
+    const reservation = await prismaClient.reservation.delete({
+      where: {
+        id,
+      },
+    });
+
+    return reservation;
+  };
+}

@@ -5,4 +5,3 @@ export * from './payment.api';
 export * from './seat.api';
 export * from './reservation.api';
 export * from './period.api';
-export * from './mailer.api';

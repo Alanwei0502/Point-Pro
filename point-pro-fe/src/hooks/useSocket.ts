@@ -2,10 +2,8 @@ import { useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 import io from 'socket.io-client';
 import { apiHost } from '~/api/http';
-import { useAppDispatch, useAppSelector } from '~/hooks';
-import { addNotification, resetSocket, setSocket, getOrders } from '~/store/slices';
-import { closeDialog, getMenu } from '~/store/slices/customer/menu.slice';
-import { getToken } from '~/utils';
+import { useAppDispatch, useAppSelector, useToken } from '~/hooks';
+import { addNotification, resetSocket, setSocket, getOrders, closeDialog, getMenu } from '~/store/slices';
 import { NameSpace, SocketTopic } from '~/types';
 
 type useSocketProps = {
@@ -16,6 +14,7 @@ export const useSocket = (props: useSocketProps) => {
   const { ns } = props;
 
   const { pathname } = useLocation();
+  const token = useToken();
 
   const dispatch = useAppDispatch();
 
@@ -27,7 +26,7 @@ export const useSocket = (props: useSocketProps) => {
       transports: ['polling', 'websocket'],
       autoConnect: false,
       auth: {
-        token: getToken(),
+        token,
       },
     }),
   );
@@ -41,7 +40,7 @@ export const useSocket = (props: useSocketProps) => {
       socket.disconnect();
       dispatch(resetSocket());
     };
-  }, [socket]);
+  }, [dispatch, socket]);
 
   // CONNECTION listener
   useEffect(() => {
@@ -87,7 +86,7 @@ export const useSocket = (props: useSocketProps) => {
     return () => {
       socket.off(SocketTopic.MENU);
     };
-  }, [socket, ns, pathname]);
+  }, [socket, ns, pathname, dispatch]);
 
   // ORDER listener
   useEffect(() => {
@@ -108,7 +107,7 @@ export const useSocket = (props: useSocketProps) => {
     return () => {
       socket.off(SocketTopic.ORDER);
     };
-  }, [socket, ns, orderStatus, pathname]);
+  }, [socket, ns, orderStatus, pathname, dispatch]);
 
   // RESERVATION listener
   useEffect(() => {
@@ -121,5 +120,5 @@ export const useSocket = (props: useSocketProps) => {
     return () => {
       socket.off(SocketTopic.RESERVATION);
     };
-  }, [socket, ns, pathname]);
+  }, [socket, ns, pathname, dispatch]);
 };

@@ -1159,6 +1159,8 @@ export async function insertMeals() {
     },
   ];
 
+  await prisma.meal.deleteMany();
+
   return await prisma.meal.createMany({
     data: mealData,
   });

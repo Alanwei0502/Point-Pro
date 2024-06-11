@@ -1,40 +1,35 @@
-import { date, object, string } from 'yup';
+import { Gender, ReservationType } from '@prisma/client';
 import { z } from 'zod';
-import { ReservationType } from '@prisma/client';
-import { createCustomerSchema } from './user.validator';
 
-// TODO: delete
-export const verifyReservationSchema = object({
-  reservationId: string().required(),
-  reservationType: string().optional(),
-  startTime: date().required(),
-  seatNo: string().required(),
-  periodStartTime: date().optional(),
-  periodEndTime: date().optional(),
+export const getReservationsRequestSchema = z.object({
+  date: z.string(),
 });
 
-export const createReservationSchema = z.object({
+export const createReservationRequestSchema = z.object({
   type: z.nativeEnum(ReservationType),
+  username: z.string(),
+  phone: z.string(),
+  email: z.string().nullable(),
+  gender: z.nativeEnum(Gender),
   people: z.number().max(10),
-  remark: z.string().optional(),
-  userId: z.string(),
+  remark: z.string().nullable(),
   periodId: z.string(),
 });
 
-export const createReservationRequestBodySchema = z
-  .intersection(
-    createCustomerSchema,
-    z.object({
-      periodId: z.string(),
-      remark: z.string().optional(),
-      people: z.number().max(10),
-      type: z.nativeEnum(ReservationType),
-    }),
-  )
-  .refine((data) => !data.email || data.type === ReservationType.ONLINE, {
-    message: 'email is required for online reservation',
-  });
+export const updateReservationRequestSchema = z.object({
+  reservationId: z.string(),
+});
 
-export const findReservationByPhoneSchema = z.object({
-  phone: z.string(),
+export const deleteReservationRequestSchema = z.object({
+  reservationId: z.string(),
+});
+
+// TODO: refactor
+export const verifyReservationSchema = z.object({
+  reservationId: z.string(),
+  reservationType: z.string().optional(),
+  startTime: z.date(),
+  seatNo: z.string(),
+  periodStartTime: z.date().optional(),
+  periodEndTime: z.date().optional(),
 });

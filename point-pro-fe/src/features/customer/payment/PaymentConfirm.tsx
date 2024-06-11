@@ -6,7 +6,9 @@ import { Column, MobileLayout, Row } from '~/components';
 import { IEcPayConfirmPayload, ILinePayConfirmPayload, IOrderMeal, MealDetails } from '~/types';
 import { theme } from '~/theme';
 import { appDayjs } from '~/utils';
-import { confirmEcPay, confirmLinePay, patchReservationById, getUserInfo } from '~/store/slices';
+import { confirmEcPay, confirmLinePay, reservationManagementSliceActions } from '~/store/slices';
+
+const { patchReservation } = reservationManagementSliceActions;
 
 interface IPaymentReturnDataProps {
   message: string;
@@ -23,7 +25,7 @@ const PaymentReturnData: FC<IPaymentReturnDataProps> = (props) => {
       const reservationId = result?.paymentLogs[0]?.parentOrder?.reservationId;
       reservationId &&
         dispatch(
-          patchReservationById({
+          patchReservation({
             reservationId,
             payload: { endOfMeal: appDayjs().toDate() },
           }),
@@ -172,7 +174,7 @@ export const PaymentConfirm: FC<IPaymentConfirmProps> = () => {
       }
     };
     const handleGetUserInfo = async () => {
-      await dispatch(getUserInfo());
+      // await dispatch(getUserInfo());
     };
     handleGetUserInfo();
     from === 'linePay' && handleConfirmLinePay();

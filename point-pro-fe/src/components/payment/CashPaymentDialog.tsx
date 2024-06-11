@@ -6,8 +6,10 @@ import { MobileDialogLayout, Column, Row } from '~/components';
 import { theme } from '~/theme';
 import { CashPaymentResponse, MealDetails, PaymentLogsResponse } from '~/types';
 import { useAppDispatch } from '~/hooks';
-import { clearCashPaymentResponse, patchReservationById } from '~/store/slices';
+import { clearCashPaymentResponse, reservationManagementSliceActions } from '~/store/slices';
 import { appDayjs } from '~/utils';
+
+const { patchReservation } = reservationManagementSliceActions;
 
 export const CashPaymentDialog = ({ result }: CashPaymentResponse) => {
   const dispatch = useAppDispatch();
@@ -20,13 +22,13 @@ export const CashPaymentDialog = ({ result }: CashPaymentResponse) => {
       setShowMobileDialog(true);
       const reservationId = result.paymentLogs[0].parentOrder.reservationId;
       dispatch(
-        patchReservationById({
+        patchReservation({
           reservationId,
           payload: { endOfMeal: appDayjs().toDate() },
         }),
       );
     }
-  }, [result]);
+  }, [dispatch, result]);
 
   const handleCloseCashPayment = () => {
     setShowMobileDialog(false);

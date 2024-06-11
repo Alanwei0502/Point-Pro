@@ -1,14 +1,14 @@
 import { http } from './http';
-import { PeriodsResponse } from '~/types';
+import { GetPeriodsResponse } from '~/types';
 
 export class PeriodApi {
   public static path = 'period';
 
   static getAvailablePeriods() {
-    return http.get<string, PeriodsResponse>(`${PeriodApi.path}/available`);
+    return http.get<string, GetPeriodsResponse>(`${PeriodApi.path}/available`);
   }
 
   static getPeriodByDate(params?: any) {
-    return http.get<string, PeriodsResponse>(`${PeriodApi.path}`, { params });
+    return http.get<string, GetPeriodsResponse>(`${PeriodApi.path}`, { params });
   }
 }

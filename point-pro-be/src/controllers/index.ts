@@ -1,12 +1,8 @@
 export * from './auth.controller';
 export * from './order.controller';
-// export * from './meal.controller';
-// export * from './category.controller';
-// export * from './specialty.controller';
 export * from './menu.controller';
 export * from './imgur.controller';
-// export * from './payment.controller';
-// export * from './seat.controller';
 export * from './period.controller';
 export * from './reservation.controller';
-// export * from './mailer.controller';
+export * from './seat.controller';
+// export * from './payment.controller';

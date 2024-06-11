@@ -1,28 +1,6 @@
 import { jwt, prismaClient, throwError } from '../helpers';
 
 export class AuthService {
-  static signJWT = async (
-    payload:
-      | {
-          sub: string;
-          memberId?: string;
-          name?: string;
-          phone?: string;
-          email?: string;
-          role: string;
-        }
-      | {
-          reservationId: string;
-          reservationType?: string;
-          startTime: Date;
-          seatNo: string;
-          periodStartTime?: Date;
-          periodEndTime?: Date;
-        },
-  ) => {
-    return jwt.sign(payload);
-  };
-
   static generateReservationToken = async (reservationId: string) => {
     try {
       const reservation = await prismaClient.reservationPeriodSeat.findFirst({
@@ -64,7 +42,7 @@ export class AuthService {
         const periodStartTime = reservation.periodSeats.periods.startTime;
         const periodEndTime = reservation.periodSeats.periods.endTime;
 
-        const token = await this.signJWT({
+        const token = await jwt.sign({
           seatNo,
           reservationType,
           startTime,

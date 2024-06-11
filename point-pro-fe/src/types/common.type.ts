@@ -40,7 +40,6 @@ export enum ReservationType {
 }
 
 export enum Role {
-  CUSTOMER = 'CUSTOMER',
   STAFF = 'STAFF',
   ADMIN = 'ADMIN',
 }
@@ -96,7 +95,7 @@ export interface IUser {
   phone: string;
   email: string | null;
   gender: Gender;
-  password: string | null;
+  password: string;
   role: Role;
   createdAt: Date;
   updatedAt: Date | null;
@@ -104,8 +103,8 @@ export interface IUser {
 
 export interface IPeriod {
   id: string;
-  startTime: Date;
-  endTime: Date;
+  startTime: string; // Date
+  endTime: string; // Date
   createdAt: Date;
   updatedAt: Date | null;
 }
@@ -113,6 +112,10 @@ export interface IPeriod {
 export interface IReservation {
   id: string;
   type: ReservationType;
+  username: string;
+  phone: string;
+  email: string | null;
+  gender: Gender;
   isCancelled: boolean;
   people: number;
   remark: string | null;

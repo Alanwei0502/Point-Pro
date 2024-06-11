@@ -1,18 +1,17 @@
 import { FC } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button, Typography } from '@mui/material';
-import { useAppSelector } from '~/hooks';
+import { useAppSelector, useToken } from '~/hooks';
 import { Column, MobileLayout } from '~/components';
-import { getToken } from '~/utils';
 
 interface IPaymentConfirmProps {}
 
 export const PaymentCancel: FC<IPaymentConfirmProps> = () => {
   const navigate = useNavigate();
   const userRole = useAppSelector(({ auth }) => auth.userRole);
+  const token = useToken();
 
   const handleReturnMeal = () => {
-    const token = getToken();
     userRole?.role === 'USER' ? navigate(`/orders?token=${token}`) : navigate('/admin/orders');
   };
   return (

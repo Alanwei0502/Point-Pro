@@ -1,10 +1,11 @@
-import { NextFunction } from 'express';
+import { Request, NextFunction } from 'express';
 import { Period, Prisma } from '@prisma/client';
 import { ReasonPhrases, StatusCodes } from 'http-status-codes';
 import { object, date as dateSchema, boolean } from 'yup';
 import { getDateOnly, getDefaultDate, prismaClient } from '../helpers';
 import { ApiResponse, AuthRequest } from '../types';
 import { PeriodService } from '../services';
+import { PeriodModel } from '../models/period.model';
 
 export class PeriodController {
   // public static getPeriods = async (req: AuthRequest, res: ApiResponse<DatePeriodInfo[]>) => {
@@ -145,51 +146,13 @@ export class PeriodController {
   //   });
   // };
 
-  static getAvailablePeriods = async (req: AuthRequest, res: ApiResponse<Pick<Period, 'id' | 'startTime' | 'endTime'>[]>, next: NextFunction) => {
+  static getAvailablePeriods = async (req: Request, res: ApiResponse, next: NextFunction) => {
     try {
-      const periods = await prismaClient.period.findMany({
-        select: {
-          id: true,
-          startTime: true,
-          endTime: true,
-          periodSeats: {
-            select: {
-              seats: {
-                select: {
-                  capacity: true,
-                },
-              },
-              reservationPeriodSeats: {
-                select: {
-                  reservationId: true,
-                },
-              },
-            },
-          },
-        },
-        where: {
-          startTime: {
-            gte: new Date(),
-          },
-        },
-        orderBy: {
-          startTime: 'asc',
-        },
-      });
-
-      const result = periods.map(({ periodSeats, ...rest }) => {
-        const available = periodSeats.reduce((acc, ps) => {
-          if (ps.reservationPeriodSeats.length === 0) {
-            acc += ps.seats.capacity;
-          }
-          return acc;
-        }, 0);
-        return { ...rest, available };
-      });
+      const periods = await PeriodModel.getAvailablePeriods();
 
       res.status(StatusCodes.OK).send({
         message: ReasonPhrases.OK,
-        result,
+        result: periods,
       });
     } catch (error) {
       next(error);

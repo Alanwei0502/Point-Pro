@@ -60,7 +60,6 @@ export const getMenu = createAppAsyncThunk(`${name}/getMenu`, async (_, { reject
     const menuRes = await MenuApi.getMenu();
     return menuRes.result;
   } catch (error) {
-    errorHandler(error);
     return rejectWithValue(error);
   }
 });

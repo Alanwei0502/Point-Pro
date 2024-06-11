@@ -3,11 +3,10 @@ import { Box, FormControl, FormLabel, MenuItem, Select, SelectChangeEvent, SxPro
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DateCalendar } from '@mui/x-date-pickers';
-import { BaseButton, Loading } from '~/components';
-import { appDayjs, formatTimeOnly, formatDateOnly } from '~/utils';
+import { Loading } from '~/components';
+import { appDayjs, formatTimeOnly, formatDateOnly, RESERVATION_PEOPLE_OPTIONS } from '~/utils';
 import { useAppDispatch, useAppSelector } from '~/hooks';
-import { setPeople, setSelectedDate, setSelectedPeriod, getAvailablePeriods, setDialog } from '~/store/slices';
-import { MobileBookingDialog } from '~/types';
+import { setPeople, setSelectedDate, setSelectedPeriod, getAvailablePeriods } from '~/store/slices';
 
 const formLabelStyle: SxProps<Theme> | undefined = { fontWeight: 700, color: 'common.black' };
 
@@ -36,7 +35,7 @@ export const PeopleAndTime: FC<IPeopleAndTimeProps> = () => {
 
     if (!choosedPeriodInfo) return [];
 
-    return choosedPeriodInfo.available > 10 ? [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] : Array.from({ length: choosedPeriodInfo.available }, (_, i) => i + 1);
+    return choosedPeriodInfo.capacity > 10 ? RESERVATION_PEOPLE_OPTIONS : Array.from({ length: choosedPeriodInfo.capacity }, (_, i) => i + 1);
   }, [availableTime, selectedPeriod]);
 
   useEffect(() => {
@@ -59,14 +58,10 @@ export const PeopleAndTime: FC<IPeopleAndTimeProps> = () => {
     dispatch(setSelectedPeriod({ id: selectedPeriod.id, startTime: selectedPeriod.startTime }));
   };
 
-  const handleOpenBookingSearch = () => {
-    dispatch(setDialog(MobileBookingDialog.RECORD_QUERY));
-  };
-
   return isLoading ? (
     <Loading open={isLoading} />
   ) : (
-    <Box height={800}>
+    <Box height={700}>
       <FormControl margin='normal' fullWidth required>
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <DateCalendar
@@ -90,9 +85,9 @@ export const PeopleAndTime: FC<IPeopleAndTimeProps> = () => {
           <MenuItem disabled value=''>
             請選擇
           </MenuItem>
-          {availablePeriods.map((slot) => (
-            <MenuItem value={`${slot.startTime}`} key={slot.id}>
-              {formatTimeOnly(slot.startTime)}
+          {availablePeriods.map((p) => (
+            <MenuItem value={`${p.startTime}`} key={p.id} disabled={p.capacity === 0 || appDayjs(selectedDate).isBefore(appDayjs())}>
+              {formatTimeOnly(p.startTime)}
             </MenuItem>
           ))}
         </Select>
@@ -111,19 +106,6 @@ export const PeopleAndTime: FC<IPeopleAndTimeProps> = () => {
           ))}
         </Select>
       </FormControl>
-
-      <BaseButton
-        onClick={handleOpenBookingSearch}
-        sx={{
-          textDecoration: 'underline',
-          fontWeight: 700,
-          fontSize: 'body1.fontSize',
-          mt: '2rem',
-          color: 'common.black',
-        }}
-      >
-        我已經有預約了，查詢預訂資訊
-      </BaseButton>
     </Box>
   );
 };

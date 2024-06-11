@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from 'react';
+import { FC, useEffect } from 'react';
 import { Box } from '@mui/material';
 import { theme } from '~/theme';
 import HeaderLogo from '~/assets/images/header-logo.svg';

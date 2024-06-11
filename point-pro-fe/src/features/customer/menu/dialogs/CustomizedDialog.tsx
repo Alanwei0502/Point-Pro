@@ -1,7 +1,7 @@
 import { FC, Fragment } from 'react';
 import { Box, Button, Divider, List, ListItemButton, ListSubheader, Typography } from '@mui/material';
 import { BaseCheckbox, MobileDialogLayout, NumberInput } from '~/components';
-import { calculateCartItemPrice, getToken } from '~/utils';
+import { calculateCartItemPrice } from '~/utils';
 import { useAppDispatch, useAppSelector } from '~/hooks';
 import { closeDialog, updateSpecialty, increaseMealAmount, decreaseMealAmount, createCartItem, updateCartItem } from '~/store/slices';
 import { MobileDialog, GetMenuResponseSpecialtiesWithItems, GetMenuResponseSpecialtyItem } from '~/types';
@@ -10,7 +10,6 @@ interface ICustomizedSpecialtiesProps {}
 
 const CustomizedSpecialties: FC<ICustomizedSpecialtiesProps> = () => {
   const dispatch = useAppDispatch();
-  const token = getToken();
   const specialtiesWithItems = useAppSelector((state) => state.menu.specialtiesWithItems);
   const customizedDialogData = useAppSelector((state) => state.menu.dialog.data);
 
@@ -21,8 +20,6 @@ const CustomizedSpecialties: FC<ICustomizedSpecialtiesProps> = () => {
     .filter((s) => s.specialtyItems.length > 0);
 
   const handleClickItem = (selectedSpecialty: GetMenuResponseSpecialtiesWithItems, selectedItem: GetMenuResponseSpecialtyItem) => () => {
-    // TODO: recover token
-    // if (!token) return;
     dispatch(updateSpecialty({ selectedSpecialty, selectedItem }));
   };
 
@@ -43,8 +40,7 @@ const CustomizedSpecialties: FC<ICustomizedSpecialtiesProps> = () => {
                     <ListItemButton onClick={handleClickItem(specialty, item)}>
                       <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
                         <Typography>{item.title}</Typography>
-                        {/* TODO: recover token */}
-                        {!token && <BaseCheckbox checked={!!customizedDialogData?.selectedSpecialtyItems.find(({ id }) => id === item.id)} />}
+                        <BaseCheckbox checked={!!customizedDialogData?.selectedSpecialtyItems.find(({ id }) => id === item.id)} />
                       </Box>
                     </ListItemButton>
                     <Divider light />
@@ -75,7 +71,6 @@ interface ICustomizedDialogProps {}
 export const CustomizedDialog: FC<ICustomizedDialogProps> = () => {
   const dispatch = useAppDispatch();
 
-  const token = getToken();
   const { type: dialogType, data: customizedDialogData } = useAppSelector((state) => state.menu.dialog);
   const isModifiedCartItem = useAppSelector((state) => state.menu.isModifiedCartItem);
 
@@ -107,32 +102,6 @@ export const CustomizedDialog: FC<ICustomizedDialogProps> = () => {
       isOpen={dialogType === MobileDialog.CUSTOMIZED}
       onCloseDialog={handleClose}
       actionButton={
-        // TODO: recover token
-        // <>
-        //   {token && (
-        //     <>
-        //       <Box
-        //         sx={{
-        //           display: 'flex',
-        //           justifyContent: 'space-between',
-        //           alignItems: 'center',
-        //           width: '100%',
-        //           userSelect: 'none',
-        //         }}
-        //       >
-        //         <NumberInput value={customizedDialogData.amount} onAdd={handleAdd} onMinus={handleMinus} />
-        //         <Typography variant='h5' fontWeight={900}>
-        //           {customizedDialogData.id ? calculateCartItemPrice(customizedDialogData) : 0}元
-        //         </Typography>
-        //       </Box>
-        //       {isModifiedCartItem ? (
-        //         <Button onClick={handleUpdateCartItem}>確認修改</Button>
-        //       ) : (
-        //         <Button onClick={handleAddToCart}>加入購物車</Button>
-        //       )}
-        //     </>
-        //   )}
-        // </>
         <>
           <Box
             sx={{

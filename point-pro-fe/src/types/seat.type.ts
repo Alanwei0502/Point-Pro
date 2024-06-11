@@ -1,9 +1,10 @@
-import { ReservationInfo, ReservationRecord } from "./book.type";
+import { ReservationInfo } from './api.type';
+import { ReservationRecord } from './book.type';
 
 export enum SeatStatus {
-  AVAILABLE = "AVAILABLE",
-  BOOKED = "BOOKED",
-  INUSE = "INUSE"
+  AVAILABLE = 'AVAILABLE',
+  BOOKED = 'BOOKED',
+  INUSE = 'INUSE',
 }
 
 export interface SeatInfo {

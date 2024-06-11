@@ -6,7 +6,7 @@ export const verifyAdminAndStaffSchema = z.object({
   username: z.string(),
   role: z.nativeEnum(Role),
   phone: z.string(),
-  email: z.string(),
+  email: z.string().optional(),
   iat: z.number(),
   exp: z.number(),
 });

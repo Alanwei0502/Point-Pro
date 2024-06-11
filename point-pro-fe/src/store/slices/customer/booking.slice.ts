@@ -2,23 +2,9 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { ReservationApi, PeriodApi } from '~/api';
 import { appDayjs } from '~/utils';
 import { createAppAsyncThunk } from '~/hooks';
-import {
-  IBookingInfo,
-  ReservationType,
-  MobileBookingDialog,
-  Gender,
-  SocketTopic,
-  IPeriod,
-  Role,
-  IReservation,
-  ReservationInfo,
-  IUser,
-} from '~/types';
-import { errorHandler } from '~/store/errorHandler';
+import { IBookingInfo, ReservationType, MobileBookingDialog, Gender, SocketTopic, IReservation, AvailablePeriod } from '~/types';
 
 const name = 'booking';
-
-type AvailablePeriod = Pick<IPeriod, 'id' | 'startTime' | 'endTime' | 'available'>;
 
 interface ICustomerBookingSliceState {
   isLoading: boolean;
@@ -26,11 +12,12 @@ interface ICustomerBookingSliceState {
   availableTime: AvailablePeriod[];
   selectedDate: appDayjs.Dayjs;
   selectedPeriod: Pick<AvailablePeriod, 'id' | 'startTime'> | null;
+  type: ReservationType;
   people: IReservation['people'];
-  username: IUser['username'];
-  phone: IUser['phone'];
-  email: IUser['email'];
-  gender: Gender;
+  username: IReservation['username'];
+  phone: IReservation['phone'];
+  email: IReservation['email'];
+  gender: IReservation['gender'];
   remark: IReservation['remark'];
   isAgreedPrivacyPolicy: boolean;
   dialog: MobileBookingDialog | null;
@@ -42,8 +29,9 @@ const initialState: ICustomerBookingSliceState = {
   isLoading: false,
   step: 0,
   availableTime: [],
-  selectedDate: appDayjs().add(1, 'day'),
+  selectedDate: appDayjs(),
   selectedPeriod: null,
+  type: ReservationType.ONLINE,
   people: 0,
   username: '',
   phone: '',
@@ -56,53 +44,38 @@ const initialState: ICustomerBookingSliceState = {
   token: '',
 };
 
-export const getAvailablePeriods = createAppAsyncThunk(`${name}/getAvailablePeriods`, async (_, { rejectWithValue }) => {
+export const getAvailablePeriods = createAppAsyncThunk(`${name}/getAvailablePeriods`, async (_, thunkApi) => {
   try {
     const result = await PeriodApi.getAvailablePeriods();
     return result?.result ?? [];
   } catch (error) {
-    errorHandler(error);
-    return rejectWithValue(error);
+    return thunkApi.rejectWithValue(error);
   }
 });
 
 export const postReservation = createAppAsyncThunk(`${name}/postReservation`, async (_, { getState, rejectWithValue }) => {
   try {
-    const { username, gender, phone, email, remark, people, selectedPeriod } = getState().booking;
+    const { username, gender, phone, email, remark, people, selectedPeriod, type } = getState().booking;
     const periodId = selectedPeriod?.id;
 
     if (!periodId) return;
-
-    const socket = getState().socket.socket;
 
     const response = await ReservationApi.postReservation({
       username,
       gender,
       phone,
       email,
-      role: Role.CUSTOMER,
       remark,
       people,
       periodId,
-      type: ReservationType.ONLINE,
+      type,
     });
 
+    const socket = getState().socket.socket;
     socket && socket.emit(SocketTopic.RESERVATION, response.result);
 
     return response.result;
   } catch (error) {
-    errorHandler(error);
-    return rejectWithValue(error);
-  }
-});
-
-export const getReservationByPhone = createAppAsyncThunk(`${name}/getReservationByPhone`, async (phone: string, { rejectWithValue, dispatch }) => {
-  try {
-    const result = await ReservationApi.getReservationByPhone(phone);
-
-    return result?.result ?? null;
-  } catch (error) {
-    errorHandler(error);
     return rejectWithValue(error);
   }
 });
@@ -183,25 +156,6 @@ export const bookingSlice = createSlice({
         state.isLoading = true;
       })
       .addCase(postReservation.rejected, (state) => {
-        state.isLoading = false;
-      })
-      .addCase(getReservationByPhone.pending, (state) => {
-        state.isLoading = true;
-      })
-      .addCase(getReservationByPhone.fulfilled, (state, action: PayloadAction<ReservationInfo | null>) => {
-        if (!action.payload) return;
-        state.step = -1; // TODO: prevent out of range of period in PeopleAndTime calendar
-        state.username = action.payload.username;
-        state.gender = action.payload.gender;
-        state.phone = action.payload.phone;
-        state.email = action.payload.email;
-        state.remark = action.payload?.remark ?? null;
-        state.people = action.payload.people;
-        state.selectedPeriod = action.payload.period;
-        state.dialog = MobileBookingDialog.REMINDER;
-        state.isLoading = false;
-      })
-      .addCase(getReservationByPhone.rejected, (state) => {
         state.isLoading = false;
       });
   },

@@ -2,7 +2,7 @@ import { FC, useState } from 'react';
 import { Box, ButtonBase, FormControl, FormControlLabel, FormLabel, Radio, RadioGroup, TextField } from '@mui/material';
 import { BaseCheckbox, BaseButton } from '~/components';
 import { MobileBookingDialog, Gender } from '~/types';
-import { emailRegex, genderObj, phoneRegex } from '~/utils';
+import { emailRegex, GENDER_TRANSLATE, phoneRegex } from '~/utils';
 import { useAppDispatch, useAppSelector } from '~/hooks';
 import { setPhone, setDialog, setName, setEmail, setRemark, setGender, setAgreedPolicy } from '~/store/slices';
 
@@ -26,7 +26,7 @@ export const BookerInfo: FC<IBookerInfoProps> = () => {
   const handleEnterName = (e: React.ChangeEvent<HTMLInputElement>) => {
     const isValidated = !!e.target.value;
     setNameIsError(!isValidated);
-    dispatch(setName(isValidated ? e.target.value : ''));
+    dispatch(setName(e.target.value));
   };
 
   const handleChooseGender = (e: React.ChangeEvent<HTMLInputElement>, value: string): void => {
@@ -36,13 +36,18 @@ export const BookerInfo: FC<IBookerInfoProps> = () => {
   const handleEnterPhone = (e: React.ChangeEvent<HTMLInputElement>) => {
     const isValidated = phoneRegex.test(e.target.value);
     setPhoneIsError(!isValidated);
-    dispatch(setPhone(isValidated ? e.target.value : ''));
+    dispatch(setPhone(e.target.value));
   };
 
   const handleEnterEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const isValidated = emailRegex.test(e.target.value);
-    setEmailIsError(!isValidated);
-    dispatch(setEmail(isValidated ? e.target.value : ''));
+    const email = e.target.value;
+    if (email) {
+      const isValidated = emailRegex.test(e.target.value);
+      setEmailIsError(!isValidated);
+    } else {
+      setEmailIsError(false);
+    }
+    dispatch(setEmail(e.target.value));
   };
 
   const handleEnterRemark = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -72,8 +77,8 @@ export const BookerInfo: FC<IBookerInfoProps> = () => {
 
       <FormControl>
         <RadioGroup row value={gender} onChange={handleChooseGender}>
-          <FormControlLabel value={Gender.MALE} control={<Radio />} label={genderObj.MALE} />
-          <FormControlLabel value={Gender.FEMALE} control={<Radio />} label={genderObj.FEMALE} />
+          <FormControlLabel value={Gender.MALE} control={<Radio />} label={GENDER_TRANSLATE.MALE} />
+          <FormControlLabel value={Gender.FEMALE} control={<Radio />} label={GENDER_TRANSLATE.FEMALE} />
         </RadioGroup>
       </FormControl>
 
@@ -89,7 +94,7 @@ export const BookerInfo: FC<IBookerInfoProps> = () => {
         />
       </FormControl>
 
-      <FormControl margin='normal' required fullWidth>
+      <FormControl margin='normal' fullWidth>
         <FormLabel sx={{ fontWeight: 700, color: 'common.black' }}>電子信箱</FormLabel>
         <TextField
           placeholder='example@email.com'

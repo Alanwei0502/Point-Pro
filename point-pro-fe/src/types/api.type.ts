@@ -6,6 +6,7 @@ import {
   IOrderMeal,
   IPeriod,
   IReservation,
+  ISeat,
   ISpecialty,
   ISpecialtyItem,
   ISpecialtyWithSpecialtyItems,
@@ -102,7 +103,7 @@ export type GetMenuResponse = ApiResponse<{
   specialtiesWithItems: GetMenuResponseSpecialtiesWithItems[];
 }>;
 
-// Order
+// ORDER
 export interface OrderMealWithMeal {
   id: string;
   orderId: string;
@@ -170,6 +171,29 @@ export type PostOrderResponse = ApiResponse<IOrder>;
 export type DeleteOrderResponse = ApiResponse<IOrder>;
 export type PatchOrderResponse = ApiResponse<IOrder>;
 export type GetOrdersResponse = ApiResponse<OrdersResult[]>;
+
+// RESERVATION
+export type PostReservationPayload = Pick<IReservation, 'username' | 'gender' | 'phone' | 'email' | 'people' | 'type' | 'remark'> & {
+  periodId: IPeriod['id'];
+};
+
+export type PatchReservationPayload = Pick<IReservation, 'id'> & PostReservationPayload;
+
+export type ReservationInfo = IReservation & {
+  periods: IPeriod;
+};
+
+export type GetReservationResponse = ApiResponse<ReservationInfo[]>;
+export type PostReservationResponse = ApiResponse<IReservation['id']>;
+export type PatchReservationResponse = ApiResponse<IReservation['id']>;
+export type DeleteReservationResponse = ApiResponse<IReservation['id']>;
+
+// PERIOD
+export interface AvailablePeriod extends Pick<IPeriod, 'id' | 'startTime'> {
+  capacity: number;
+}
+
+export type GetPeriodsResponse = ApiResponse<AvailablePeriod[]>;
 
 // Image
 export interface updateImgPayload {}
@@ -314,34 +338,6 @@ export type CashPaymentResponse = ApiResponse<{
   paymentLogs: PaymentLogsResponse[];
 }>;
 
-// Reservation
-export type PostReservationPayload = Pick<IUser, 'username' | 'gender' | 'phone' | 'email' | 'role'> & {
-  periodId: IPeriod['id'];
-  remark: IReservation['remark'];
-  people: IReservation['people'];
-  type: IReservation['type'];
-};
-
-export interface PatchReservation {
-  startOfMeal?: Date | null;
-  endOfMeal?: Date | null;
-  options?: { [key: string]: any };
-}
-
-export interface PatchReservationPayload {
-  reservationId: string;
-  payload: PatchReservation;
-}
-
-export type ReservationInfo = Pick<IUser, 'username' | 'gender' | 'phone' | 'email'> &
-  Pick<IReservation, 'people' | 'remark'> & { period: Pick<IPeriod, 'id' | 'startTime'> };
-
-export type PostReservationResponse = ApiResponse<IReservation['id']>;
-
-export type GetReservationByPhoneResponse = ApiResponse<ReservationInfo>;
-export type ReservationsResponse = ApiResponse<IReservation[]>;
-export type ReservationResponse = ApiResponse<IReservation>;
-
 // Seat
 export interface SeatsPayload {
   date?: string;
@@ -353,9 +349,8 @@ export interface SeatByIdPayload {
   date: string;
 }
 
-export type SeatsResponse = ApiResponse<SeatInfo[]>;
+export type GetSeatResponse = ApiResponse<ISeat[]>;
 export type SeatsDetailResponse = ApiResponse<SeatDetails>;
-export type PeriodsResponse = ApiResponse<IPeriod[]>;
 
 // Mailer
 export interface MailerRequestBody {

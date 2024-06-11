@@ -1,18 +1,18 @@
-import { FC, useState } from "react";
-import { Box } from "@mui/material";
-import { AboutUsSection } from "./AboutUsSection";
-import { BackToTopButton } from "./BackToTop";
-import { ContactFormModal } from "./ContactFormModal";
-import { FeatureSection } from "./FeatureSection";
-import { HeroSection } from "./HeroSection";
-import { MapSection } from "./MapSection";
-import { PricingSection } from "./PricingSection";
-import { SiteMapSection } from "./SiteMapSection";
-import { SubscribedSection } from "./SubscribedSection";
-import { TestimonialsSection } from "./TestimonialsSection";
-import { HeaderNavBar } from "./HeaderNavBar";
-import { SuccessCase } from "./SuccessCase";
-import { Footer } from "~/components";
+import { FC, useState } from 'react';
+import { Box } from '@mui/material';
+import { AboutUsSection } from './AboutUsSection';
+import { BackToTopButton } from './BackToTop';
+import { ContactFormModal } from './ContactFormModal';
+import { FeatureSection } from './FeatureSection';
+import { HeroSection } from './HeroSection';
+import { MapSection } from './MapSection';
+import { PricingSection } from './PricingSection';
+import { SiteMapSection } from './SiteMapSection';
+import { SubscribedSection } from './SubscribedSection';
+import { TestimonialsSection } from './TestimonialsSection';
+import { HeaderNavBar } from './HeaderNavBar';
+import { SuccessCase } from './SuccessCase';
+import { Footer } from '~/components';
 
 interface HomeProps {}
 
@@ -27,26 +27,16 @@ export const Home: FC<HomeProps> = ({ ...rest }) => {
   return (
     <>
       <BackToTopButton position={{ bottom: 50, right: 50 }} />
-      <Box sx={{ position: "fixed", top: 0, width: "100%", zIndex: 999 }}>
+      <Box sx={{ position: 'fixed', top: 0, width: '100%', zIndex: 999 }}>
         <HeaderNavBar />
       </Box>
-      <section id="hero-section">
-        <HeroSection openModal={handleOpenModal} />
-      </section>
-      <section id="feature">
-        <FeatureSection />
-      </section>
-      <section id="pricing">
-        <PricingSection openModal={handleOpenModal} />
-      </section>
+      <HeroSection openModal={handleOpenModal} />
+      <FeatureSection />
+      <PricingSection openModal={handleOpenModal} />
       <TestimonialsSection />
-      <section id="success-case">
-        <SuccessCase />
-      </section>
+      <SuccessCase />
       <SubscribedSection />
-      <section id="about">
-        <AboutUsSection />
-      </section>
+      <AboutUsSection />
       <MapSection />
       <SiteMapSection />
       <Footer />

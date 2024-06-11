@@ -144,88 +144,45 @@ export const PricingSection: FC<IPricingSectionProps> = ({ openModal }) => {
 
   if (deviceType === 'tablet') {
     return (
-      <Box bgcolor={'white'} py={15}>
-        <Container>
-          <Row
-            sx={{
-              alignItems: 'flex-start',
-              gap: deviceType === 'tablet' ? '6.5rem' : '2.5rem',
-              marginBottom: deviceType === 'tablet' ? '13.125rem' : '2.5rem',
-            }}
-          >
-            <Title title='我們的價格方案' subtitle='透明且無隱藏費用的定價，讓您放心選擇 PointPro 做為您的餐飲 POS 合作夥伴。' />
-            <Typography component={'h3'} fontSize={deviceType === 'tablet' ? 48 : 32} fontWeight={900}>
-              無論您是新創餐廳還是連鎖品牌， PointPro 都能為您提供最適合的解決方案。
-            </Typography>
-          </Row>
-        </Container>
-        <Grid container spacing={2}>
-          <GlobalStyles styles={globalStyles} />
-          {cards.map((card, index) => (
-            <Grid item xs={12} md={4} key={`card-${card.id}`}>
-              <AnimatedCard className={animationClass[index]} onClick={() => handleCardClick(index)} data-id={card.id} index={index}>
-                <img style={{ height: 262, borderRadius: '2.5rem', objectFit: 'cover', width: '100%' }} src={card.imgUrl} title={card.title} />
-                <Box
-                  pt={deviceType === 'tablet' ? 5 : 4}
-                  px={deviceType === 'tablet' ? 4 : 3}
-                  pb={deviceType === 'tablet' ? 3 : 2}
-                  borderRadius={5}
-                  bgcolor={'background.paper'}
-                >
-                  <Row sx={{ justifyContent: 'space-between' }} mb={5}>
-                    <Typography variant='h5' component='h2' sx={{ fontWeight: 900 }}>
-                      {card.title}
-                    </Typography>
-                    <Typography variant='h5' component='h2' sx={{ fontWeight: 900 }}>
-                      {card.price}
-                    </Typography>
-                  </Row>
-                  <List sx={{ marginBottom: '2.5rem' }}>
-                    {card.content.map((content, index) => (
-                      <ListItem key={`content-${index}`} sx={{ paddingTop: 0 }}>
-                        <ListItemText primary={content} />
-                      </ListItem>
-                    ))}
-                  </List>
-                  <CallToActionButton content='立即詢問' handleOnClick={() => openModal()} />
-                </Box>
-              </AnimatedCard>
-            </Grid>
-          ))}
-        </Grid>
-        <Typography component={'p'} fontSize={16} fontWeight={600} align={'center'} mt={5} mb={3}>
-          立即註冊，開始免費試用， 讓您的餐飲業務達到新的高峰
-        </Typography>
-      </Box>
-    );
-  } else {
-    return (
-      <Box bgcolor={'white'} py={5}>
-        <Column px={2} gap={5}>
-          <Title title='我們的價格方案' subtitle='透明且無隱藏費用的定價，讓您放心選擇 PointPro 做為您的餐飲 POS 合作夥伴。' />
-          <Typography component={'h3'} fontSize={32} fontWeight={900}>
-            無論您是新創餐廳還是連鎖品牌， PointPro 都能為您提供最適合的解決方案。
-          </Typography>
-          <Grid container justifyContent='center'>
-            <Grid item xs={12}>
-              <Card>
-                <CardContent>
-                  <Box pt={4} px={3} pb={2} borderRadius={5} bgcolor={'background.paper'}>
-                    <img
-                      style={{ height: 262, borderRadius: '2.5rem', objectFit: 'cover', width: '100%' }}
-                      src={cards[currentPage - 1].imgUrl}
-                      title={cards[currentPage - 1].title}
-                    />
+      <Box component='section' id='pricing'>
+        <Box bgcolor={'white'} py={15}>
+          <Container>
+            <Row
+              sx={{
+                alignItems: 'flex-start',
+                gap: deviceType === 'tablet' ? '6.5rem' : '2.5rem',
+                marginBottom: deviceType === 'tablet' ? '13.125rem' : '2.5rem',
+              }}
+            >
+              <Title title='我們的價格方案' subtitle='透明且無隱藏費用的定價，讓您放心選擇 PointPro 做為您的餐飲 POS 合作夥伴。' />
+              <Typography component={'h3'} fontSize={deviceType === 'tablet' ? 48 : 32} fontWeight={900}>
+                無論您是新創餐廳還是連鎖品牌， PointPro 都能為您提供最適合的解決方案。
+              </Typography>
+            </Row>
+          </Container>
+          <Grid container spacing={2}>
+            <GlobalStyles styles={globalStyles} />
+            {cards.map((card, index) => (
+              <Grid item xs={12} md={4} key={`card-${card.id}`}>
+                <AnimatedCard className={animationClass[index]} onClick={() => handleCardClick(index)} data-id={card.id} index={index}>
+                  <img style={{ height: 262, borderRadius: '2.5rem', objectFit: 'cover', width: '100%' }} src={card.imgUrl} title={card.title} />
+                  <Box
+                    pt={deviceType === 'tablet' ? 5 : 4}
+                    px={deviceType === 'tablet' ? 4 : 3}
+                    pb={deviceType === 'tablet' ? 3 : 2}
+                    borderRadius={5}
+                    bgcolor={'background.paper'}
+                  >
                     <Row sx={{ justifyContent: 'space-between' }} mb={5}>
                       <Typography variant='h5' component='h2' sx={{ fontWeight: 900 }}>
-                        {cards[currentPage - 1].title}
+                        {card.title}
                       </Typography>
                       <Typography variant='h5' component='h2' sx={{ fontWeight: 900 }}>
-                        {cards[currentPage - 1].price}
+                        {card.price}
                       </Typography>
                     </Row>
                     <List sx={{ marginBottom: '2.5rem' }}>
-                      {cards[currentPage - 1].content.map((content, index) => (
+                      {card.content.map((content, index) => (
                         <ListItem key={`content-${index}`} sx={{ paddingTop: 0 }}>
                           <ListItemText primary={content} />
                         </ListItem>
@@ -233,17 +190,64 @@ export const PricingSection: FC<IPricingSectionProps> = ({ openModal }) => {
                     </List>
                     <CallToActionButton content='立即詢問' handleOnClick={() => openModal()} />
                   </Box>
-                </CardContent>
-              </Card>
-            </Grid>
+                </AnimatedCard>
+              </Grid>
+            ))}
           </Grid>
-        </Column>
-        <Pagination
-          count={cards.length}
-          page={currentPage}
-          onChange={handlePageChange}
-          sx={{ display: 'flex', justifyContent: 'center', marginTop: '1rem' }}
-        />
+          <Typography component={'p'} fontSize={16} fontWeight={600} align={'center'} mt={5} mb={3}>
+            立即註冊，開始免費試用， 讓您的餐飲業務達到新的高峰
+          </Typography>
+        </Box>
+      </Box>
+    );
+  } else {
+    return (
+      <Box component='section' id='pricing'>
+        <Box bgcolor={'white'} py={5}>
+          <Column px={2} gap={5}>
+            <Title title='我們的價格方案' subtitle='透明且無隱藏費用的定價，讓您放心選擇 PointPro 做為您的餐飲 POS 合作夥伴。' />
+            <Typography component={'h3'} fontSize={32} fontWeight={900}>
+              無論您是新創餐廳還是連鎖品牌， PointPro 都能為您提供最適合的解決方案。
+            </Typography>
+            <Grid container justifyContent='center'>
+              <Grid item xs={12}>
+                <Card>
+                  <CardContent>
+                    <Box pt={4} px={3} pb={2} borderRadius={5} bgcolor={'background.paper'}>
+                      <img
+                        style={{ height: 262, borderRadius: '2.5rem', objectFit: 'cover', width: '100%' }}
+                        src={cards[currentPage - 1].imgUrl}
+                        title={cards[currentPage - 1].title}
+                      />
+                      <Row sx={{ justifyContent: 'space-between' }} mb={5}>
+                        <Typography variant='h5' component='h2' sx={{ fontWeight: 900 }}>
+                          {cards[currentPage - 1].title}
+                        </Typography>
+                        <Typography variant='h5' component='h2' sx={{ fontWeight: 900 }}>
+                          {cards[currentPage - 1].price}
+                        </Typography>
+                      </Row>
+                      <List sx={{ marginBottom: '2.5rem' }}>
+                        {cards[currentPage - 1].content.map((content, index) => (
+                          <ListItem key={`content-${index}`} sx={{ paddingTop: 0 }}>
+                            <ListItemText primary={content} />
+                          </ListItem>
+                        ))}
+                      </List>
+                      <CallToActionButton content='立即詢問' handleOnClick={() => openModal()} />
+                    </Box>
+                  </CardContent>
+                </Card>
+              </Grid>
+            </Grid>
+          </Column>
+          <Pagination
+            count={cards.length}
+            page={currentPage}
+            onChange={handlePageChange}
+            sx={{ display: 'flex', justifyContent: 'center', marginTop: '1rem' }}
+          />
+        </Box>
       </Box>
     );
   }

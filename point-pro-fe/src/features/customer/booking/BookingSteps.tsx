@@ -4,6 +4,8 @@ import { MobileButton } from '~/components';
 import { MobileBookingDialog } from '~/types';
 import { useAppDispatch, useAppSelector } from '~/hooks';
 import { setStep, setDialog, postReservation } from '~/store/slices';
+import { toast } from 'react-toastify';
+import { emailRegex, phoneRegex } from '~/utils';
 
 interface IBookingStepsProps {
   stepLength: number;
@@ -29,8 +31,14 @@ export const BookingSteps: FC<IBookingStepsProps> = (props) => {
     switch (step) {
       case 0:
         return !(selectedDate && selectedPeriod && people);
-      case 1:
-        return !(username && phone && email && isAgreedPrivacyPolicy);
+      case 1: {
+        if (email) {
+          return !(username && phoneRegex.test(phone) && emailRegex.test(email) && isAgreedPrivacyPolicy);
+        } else {
+          return !(username && phoneRegex.test(phone) && isAgreedPrivacyPolicy);
+        }
+      }
+
       case 2:
         return false;
       default:
@@ -46,9 +54,18 @@ export const BookingSteps: FC<IBookingStepsProps> = (props) => {
     dispatch(setStep(step + 1));
   };
 
-  const handleConfirm = async () => {
-    await dispatch(postReservation());
-    dispatch(setDialog(MobileBookingDialog.REMINDER));
+  const handleConfirm = () => {
+    toast.promise(
+      async () => {
+        await dispatch(postReservation()).unwrap();
+        dispatch(setDialog(MobileBookingDialog.REMINDER));
+      },
+      {
+        pending: '訂位中...',
+        success: '已為您安排訂位',
+        error: '訂位失敗',
+      },
+    );
   };
 
   return (

@@ -861,7 +861,7 @@ export function insertMealSpecialtyItems() {
             FROM
               specialty_items
             WHERE
-              title = '加10元'
+              title = '加量10元'
           ) AS specialty_id
         FROM
           meals
@@ -887,7 +887,7 @@ export function insertMealSpecialtyItems() {
             FROM
               specialty_items
             WHERE
-              title = '加20元'
+              title = '加量20元'
           ) AS specialty_id
         FROM
           meals

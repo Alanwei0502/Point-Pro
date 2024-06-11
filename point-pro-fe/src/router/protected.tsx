@@ -2,20 +2,15 @@ import { Navigate, Outlet, useLocation } from 'react-router-dom';
 import { Box } from '@mui/material';
 import { Header, headerHeight } from '~/components';
 import { AdminLoginLoading } from '~/components/loading/AdminLoginLoading';
-import { useAppSelector, useSocket } from '~/hooks';
+import { useSocket, useToken } from '~/hooks';
 import { NameSpace } from '~/types';
-import { getToken } from '~/utils';
 
 export const ProtectedRoute = () => {
   const location = useLocation();
 
-  // const authToken = useAppSelector(({ auth }) => auth.authToken);
-
   useSocket({ ns: NameSpace.admin });
 
-  const token = getToken();
-
-  console.log({ token });
+  const token = useToken();
 
   if (!token) {
     return <Navigate to='.' replace state={{ from: location }} />;

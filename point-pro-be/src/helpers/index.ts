@@ -6,3 +6,6 @@ export * from './imgurClient.helper';
 export * from './logger.helper';
 export * from './redisClient.helper';
 export * from './jwt.helper';
+export * from './bcrypt.helper';
+export * from './socket.helper';
+export * from './mailer.helper';

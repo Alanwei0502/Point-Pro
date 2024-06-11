@@ -8,9 +8,7 @@ import { PeopleAndTime } from './PeopleAndTime';
 import { BookerInfo } from './BookerInfo';
 import { ConfirmBookingInfo } from './ConfirmBookingInfo';
 import { PrivacyPolicyDialog } from './PrivacyPolicyDialog';
-import { BookingRecordQueryDialog } from './BookingRecordQueryDialog';
 import { BookingReminderDialog } from './BookingReminderDialog';
-// import { BookingQRCodeDialog } from './BookingQrCodeDialog';
 
 const stepTitle = ['訂位時間', '訂位資訊', '請確認訂位資訊'];
 
@@ -40,14 +38,10 @@ export const Booking: FC<IBookingProps> = () => {
 
       <BookingSteps stepLength={stepTitle.length} />
 
-      {/* 預訂查詢 */}
-      <BookingRecordQueryDialog />
       {/* 隱私權政策 */}
       <PrivacyPolicyDialog />
       {/* 已為您安排訂位 */}
       <BookingReminderDialog />
-      {/* TODO: 請出示此畫面 QR Code */}
-      {/* <BookingQRCodeDialog /> */}
     </MobileLayout>
   );
 };

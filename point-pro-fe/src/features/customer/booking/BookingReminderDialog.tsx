@@ -10,7 +10,7 @@ import {
 } from '@mui/icons-material';
 import { MobileDialogLayout, Loading, BaseButton } from '~/components';
 import { MobileBookingDialog } from '~/types';
-import { appDayjs, genderObj } from '~/utils';
+import { appDayjs, GENDER_TRANSLATE } from '~/utils';
 import { useAppDispatch, useAppSelector } from '~/hooks';
 import { setDialog, finishBooking } from '~/store/slices';
 import { ConfirmBookingInfo, ConfirmBookingTextField } from './ConfirmBookingInfo';
@@ -64,10 +64,6 @@ export const BookingReminderDialog: FC<IBookingReminderProps> = () => {
     dispatch(finishBooking());
   };
 
-  const handleQRCode = () => {
-    dispatch(setDialog(MobileBookingDialog.QRCODE));
-  };
-
   const handlePhoneCall = () => {
     const link = document.createElement('a');
     link.setAttribute('href', 'tel:+886-2-1234-5678');
@@ -106,12 +102,10 @@ export const BookingReminderDialog: FC<IBookingReminderProps> = () => {
         </Typography>
         <br />
         <Typography>
-          親愛的 {username} {genderObj[gender]},
+          親愛的 {username} {GENDER_TRANSLATE[gender]},
         </Typography>
         <br />
         <Typography>您的訂位已經成功囉, 感謝您選擇港都熱炒！</Typography>
-        <br />
-        <Typography>我們會竭誠為您提供美味佳餚和貼心的服務。請留意並保存以下資訊，並準時到達。 如需更改或取消，提前聯繫我們。</Typography>
         <br />
         <ConfirmBookingInfo isReminder />
         <Box
@@ -123,19 +117,17 @@ export const BookingReminderDialog: FC<IBookingReminderProps> = () => {
             marginBottom: '2rem',
           }}
         >
-          <ActionIcon icon={<QrCodeIcon />} title='QR Code' onClick={handleQRCode} />
           <ActionIcon icon={<LocalPhoneIcon />} title='撥打電話' onClick={handlePhoneCall} />
-          <ActionIcon icon={<MapSharpIcon />} title='地址' onClick={handleOpenGoogleMaps} />
+          <ActionIcon icon={<MapSharpIcon />} title='查看位置' onClick={handleOpenGoogleMaps} />
         </Box>
-        <ConfirmBookingTextField label='位置' value='台北市中山區民生東路一段52號' icon={<DirectionsIcon />} />
+        <ConfirmBookingTextField label='地址' value='台北市中山區民生東路一段52號' icon={<DirectionsIcon />} />
         <ConfirmBookingTextField
           label='溫馨提醒'
-          value='請您準時到達,如有遲到情況,請提前告知,以免影響您的用餐體驗。如遇特殊天氣或交通狀況,請提前安排出行,確保您能夠準時抵達餐廳。如果有特殊飲食需求或過敏情況,請在抵達餐廳時告知我們的服務人員。再次感謝您選擇港都熱炒,期待您的光臨!'
+          value='請您準時到達，如需更改或取消，請提前聯繫我們。如果有特殊飲食需求或過敏情況，請提前或在抵達餐廳時告知我們的服務人員，期待您的光臨！'
           icon={<InfoIcon />}
           multiline
-          rows={7}
         />
-        <Typography color='text.disabled' sx={{ padding: '3rem', textAlign: 'center', bgcolor: 'common.black_20' }}>
+        <Typography color='text.disabled' sx={{ padding: '2rem', textAlign: 'center', bgcolor: 'common.black_20' }}>
           Copyright © {appDayjs().year()} PointPro.
           <br />
           All Rights Reserved

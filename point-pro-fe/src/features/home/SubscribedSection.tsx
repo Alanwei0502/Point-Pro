@@ -1,15 +1,14 @@
-import { ChangeEvent, FC, useState } from "react";
-import { Box, Container, Grid, Typography } from "@mui/material";
-import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import { ChangeEvent, FC, useState } from 'react';
+import { Box, Container, Grid, Typography } from '@mui/material';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import {
   SubscribeSectionInputContainer,
   SubscribeSectionInputBase,
   SubscribeSectionStyledCard,
-  SubscribeSectionIconButton
-} from "./SubscribedSection.style";
-import { BaseModal, BaseButton } from "~/components";
-import { useAppDispatch, useDeviceType } from "~/hooks";
-import { sendMail } from "~/store/slices";
+  SubscribeSectionIconButton,
+} from './SubscribedSection.style';
+import { BaseModal, BaseButton } from '~/components';
+import { useAppDispatch, useDeviceType } from '~/hooks';
 
 interface SubscribeSectionDialogProps {
   open: boolean;
@@ -42,10 +41,11 @@ const SubscribeSectionDialog = (props: SubscribeSectionDialogProps) => {
     `;
     const request = {
       to: email,
-      subject: "歡迎訂閱「PointPro」電子報！",
-      html
+      subject: '歡迎訂閱「PointPro」電子報！',
+      html,
     };
-    await dispatch(sendMail(request));
+    // TODO
+    // await dispatch(sendMail(request));
     handleClose(val);
   };
 
@@ -53,23 +53,23 @@ const SubscribeSectionDialog = (props: SubscribeSectionDialogProps) => {
     <BaseModal open={open} onClose={() => handleCloseModal(true)}>
       <Box
         sx={{
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "center",
-          gap: "1rem",
-          width: "80%",
-          bgcolor: "common.white",
-          textAlign: "center",
-          position: "absolute",
-          top: "50%",
-          left: "50%",
-          transform: "translate(-50%, -50%)",
-          padding: "1.5rem"
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          alignItems: 'center',
+          gap: '1rem',
+          width: '80%',
+          bgcolor: 'common.white',
+          textAlign: 'center',
+          position: 'absolute',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          padding: '1.5rem',
         }}
       >
         {children}
-        <BaseButton variant={"contained"} color={"primary"} fullWidth onClick={() => handleCloseModal(true)}>
+        <BaseButton variant={'contained'} color={'primary'} fullWidth onClick={() => handleCloseModal(true)}>
           確認
         </BaseButton>
       </Box>
@@ -79,17 +79,17 @@ const SubscribeSectionDialog = (props: SubscribeSectionDialogProps) => {
 
 export const SubscribedSection: FC = () => {
   const [isFocused, setIsFocused] = useState(false);
-  const [email, setEmail] = useState("");
-  const [errorMessages, setErrorMessages] = useState("");
+  const [email, setEmail] = useState('');
+  const [errorMessages, setErrorMessages] = useState('');
   const [open, setOpen] = useState(false);
   const [buttonDisabled, setButtonDisabled] = useState(true);
   const deviceType = useDeviceType();
 
   const handleEmailAddressLocalStore = (val: string) => {
-    const emails = JSON.parse(localStorage.getItem("emails") || "[]");
+    const emails = JSON.parse(localStorage.getItem('emails') || '[]');
     if (!emails.includes(val)) {
       emails.push(val);
-      localStorage.setItem("emails", JSON.stringify(emails));
+      localStorage.setItem('emails', JSON.stringify(emails));
       setEmail(val);
     }
   };
@@ -108,8 +108,8 @@ export const SubscribedSection: FC = () => {
 
   const handleCloseModal = (val: boolean) => {
     val && setOpen(false);
-    val && setEmail("");
-    val && setErrorMessages("");
+    val && setEmail('');
+    val && setErrorMessages('');
   };
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -119,39 +119,37 @@ export const SubscribedSection: FC = () => {
       setEmail(e.target.value);
       if (emailRegex.test(email)) {
         setButtonDisabled(false);
-        setErrorMessages("");
+        setErrorMessages('');
       } else {
-        setErrorMessages("請輸入有效的電子郵件地址");
+        setErrorMessages('請輸入有效的電子郵件地址');
       }
     }
     if (e.target.value.length === 0) {
       setIsFocused(false);
       setButtonDisabled(true);
-      setErrorMessages("");
+      setErrorMessages('');
     }
   };
 
   return (
-    <Box bgcolor={"background.paper"} py={deviceType === "tablet" ? "5rem" : "2.5rem"}>
+    <Box bgcolor={'background.paper'} py={deviceType === 'tablet' ? '5rem' : '2.5rem'}>
       <Container>
         <SubscribeSectionStyledCard>
-          <Box py={deviceType === "tablet" ? "7.5rem" : "2rem"} px={deviceType === "tablet" ? "5rem" : "1.5rem"}>
-            <Grid container spacing={2} alignItems={"center"} justifyContent={"space-between"}>
+          <Box py={deviceType === 'tablet' ? '7.5rem' : '2rem'} px={deviceType === 'tablet' ? '5rem' : '1.5rem'}>
+            <Grid container spacing={2} alignItems={'center'} justifyContent={'space-between'}>
               <Grid item xs={12} md={6}>
-                <Typography variant={"h1"} component={"h2"} fontWeight={"900"} mb={3}>
-                  {"掌握第一手促銷"}
+                <Typography variant={'h1'} component={'h2'} fontWeight={'900'} mb={3}>
+                  {'掌握第一手促銷'}
                 </Typography>
-                <Typography component={"p"}>
-                  {"訂閱我們的電子報,了解最新餐飲趨勢和專家建議,還可獲得專屬優惠和折扣"}
-                </Typography>
+                <Typography component={'p'}>{'訂閱我們的電子報,了解最新餐飲趨勢和專家建議,還可獲得專屬優惠和折扣'}</Typography>
               </Grid>
               <Grid item xs={12} md={6}>
-                <Box sx={{ width: "100%", position: "relative" }}>
+                <Box sx={{ width: '100%', position: 'relative' }}>
                   <SubscribeSectionInputContainer
                     sx={{
-                      outlineWidth: "2px",
-                      outlineStyle: "solid",
-                      outlineColor: isFocused ? (theme) => theme.palette.primary.main : "transparent"
+                      outlineWidth: '2px',
+                      outlineStyle: 'solid',
+                      outlineColor: isFocused ? (theme) => theme.palette.primary.main : 'transparent',
                     }}
                   >
                     <Box>
@@ -160,26 +158,15 @@ export const SubscribedSection: FC = () => {
                         onBlur={handleBlur}
                         value={email}
                         onChange={handleInputChange}
-                        placeholder="請輸入您的 E-mail"
+                        placeholder='請輸入您的 E-mail'
                       />
                       {
-                        <Typography
-                          variant={"small"}
-                          component={"p"}
-                          fontWeight={"400"}
-                          hidden={!errorMessages}
-                          color={"error"}
-                        >
+                        <Typography variant={'small'} component={'p'} fontWeight={'400'} hidden={!errorMessages} color={'error'}>
                           {errorMessages}
                         </Typography>
                       }
                     </Box>
-                    <SubscribeSectionIconButton
-                      disabled={buttonDisabled}
-                      disableRipple={true}
-                      disableFocusRipple={true}
-                      onClick={handleButtonClick}
-                    >
+                    <SubscribeSectionIconButton disabled={buttonDisabled} disableRipple={true} disableFocusRipple={true} onClick={handleButtonClick}>
                       <ArrowForwardIcon />
                     </SubscribeSectionIconButton>
                   </SubscribeSectionInputContainer>
@@ -190,10 +177,10 @@ export const SubscribedSection: FC = () => {
         </SubscribeSectionStyledCard>
         <SubscribeSectionDialog open={open} handleClose={handleCloseModal} email={email}>
           <Box p={3}>
-            <Typography variant={"h4"} component={"h2"} fontWeight={"900"} mb={3}>
+            <Typography variant={'h4'} component={'h2'} fontWeight={'900'} mb={3}>
               感謝您的訂閱
             </Typography>
-            <Typography variant={"h6"} component={"p"}>
+            <Typography variant={'h6'} component={'p'}>
               我們將會寄送最新優惠及最新餐飲趨勢給您的電子郵件。
             </Typography>
           </Box>

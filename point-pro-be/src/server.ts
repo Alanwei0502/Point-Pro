@@ -3,8 +3,7 @@ import http from 'http';
 import express, { json, urlencoded } from 'express';
 import cookieParser from 'cookie-parser';
 import morgan from 'morgan';
-import createWsServer from './socket';
-import { Logger } from './helpers';
+import { Logger, createWsServer } from './helpers';
 import apiRouter from './routes';
 import { corsMiddleware, errorMiddleware, sessionMiddleware, rateLimiterMiddleware } from './middlewares';
 
@@ -59,9 +58,9 @@ const startServer = () => {
 
   server
     .on('error', (error) => {
-      Logger.error(`Server Error: ${error}`);
+      Logger.error(`Server ${error}`);
     })
-    .listen(port, async () => {
+    .listen(port, process.env.NODE_ENV === 'development' ? process.env.HOSTNAME : undefined, async () => {
       createWsServer(server);
 
       const addr = server.address();

@@ -66,4 +66,19 @@ export const convertToDatePayload = (date: appDayjs.ConfigType) => {
     : appDayjs(payload).format(dateForm.fullDatePayload);
 };
 
+export const getReservationPeriodsOptions = (date: appDayjs.ConfigType) => {
+  const startOfDay = appDayjs(date).startOf('day');
+  return [
+    startOfDay.add(17.5, 'h').toISOString(),
+    startOfDay.add(18, 'h').toISOString(),
+    startOfDay.add(18.5, 'h').toISOString(),
+    startOfDay.add(19, 'h').toISOString(),
+    startOfDay.add(19.5, 'h').toISOString(),
+    startOfDay.add(20, 'h').toISOString(),
+    startOfDay.add(20.5, 'h').toISOString(),
+    startOfDay.add(21, 'h').toISOString(),
+    startOfDay.add(21.5, 'h').toISOString(),
+  ];
+};
+
 export { appDayjs };

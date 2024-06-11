@@ -37,15 +37,15 @@ const logout = createAppAsyncThunk(`${name}/logout`, async (_, thunkApi) => {
   }
 });
 
-export const getUserInfo = createAppAsyncThunk<GetUserInfoResponse>(`${name}/getUserInfo`, async (payload, thunkApi) => {
-  try {
-    const data = await AuthApi.getUserInfo();
-    return data;
-  } catch (error) {
-    errorHandler(error);
-    return thunkApi.rejectWithValue(error);
-  }
-});
+// export const getUserInfo = createAppAsyncThunk<GetUserInfoResponse>(`${name}/getUserInfo`, async (payload, thunkApi) => {
+//   try {
+//     const data = await AuthApi.getUserInfo();
+//     return data;
+//   } catch (error) {
+//     errorHandler(error);
+//     return thunkApi.rejectWithValue(error);
+//   }
+// });
 
 export const getUserTokenByReservationLogId = createAppAsyncThunk<GenerateTokenResponse, GenerateTokenPayload>(
   `${name}/getUserTokenByReservationLogId`,
@@ -90,9 +90,9 @@ export const authSlice = createSlice({
         state.authToken = initialState.authToken;
         state.isLoading = initialState.isLoading;
       })
-      .addCase(getUserInfo.fulfilled, (state, action) => {
-        state.userRole = action.payload.result;
-      })
+      // .addCase(getUserInfo.fulfilled, (state, action) => {
+      //   state.userRole = action.payload.result;
+      // })
       .addCase(getUserTokenByReservationLogId.pending, (state) => {
         state.isLoading = true;
       })
@@ -110,6 +110,6 @@ export const authSliceActions = {
   ...authSlice.actions,
   login,
   logout,
-  getUserInfo,
+  // getUserInfo,
   getUserTokenByReservationLogId,
 };

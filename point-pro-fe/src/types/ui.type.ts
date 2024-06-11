@@ -14,10 +14,8 @@ export enum MobileModal {
 }
 
 export enum MobileBookingDialog {
-  RECORD_QUERY = 'RECORD_QUERY',
   PRIVACY_POLICY = 'PRIVACY_POLICY',
   REMINDER = 'REMINDER',
-  QRCODE = 'QRCODE',
 }
 
 export interface MobileModalPayload<T extends MobileModal | '', D = undefined> {

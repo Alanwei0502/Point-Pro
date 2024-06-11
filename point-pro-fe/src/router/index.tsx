@@ -2,10 +2,10 @@ import { Navigate, createBrowserRouter } from 'react-router-dom';
 import { Home } from '~/features/home';
 import { Login } from '~/features/admin/login';
 import { ProtectedRoute } from './protected';
-import { AdminOrders } from '~/features/admin/orders';
-import { AdminTakeOrder } from '~/features/admin/take-order';
-import { AdminMenuSettings } from '~/features/admin/menu';
-import { AdminSeat } from '~/features/admin/seat';
+import { OrderManagement } from '~/features/admin/orderManagement';
+import { TakeOrder } from '~/features/admin/takeOrder';
+import { MenuManagement } from '~/features/admin/menuManagement';
+import { ReservationManagement } from '~/features/admin/reservationManagement';
 import { Booking } from '~/features/customer/booking';
 import { Menu } from '~/features/customer/menu';
 import { PaymentCancel, PaymentConfirm } from '~/features/customer/payment';
@@ -49,19 +49,19 @@ const router = createBrowserRouter([
     children: [
       {
         path: pathObj.orderManagement,
-        element: <AdminOrders />,
+        element: <OrderManagement />,
       },
       {
         path: pathObj.takeOrder,
-        element: <AdminTakeOrder />,
+        element: <TakeOrder />,
       },
       {
-        path: pathObj.seat,
-        element: <AdminSeat />,
+        path: pathObj.reservationMangament,
+        element: <ReservationManagement />,
       },
       {
-        path: pathObj.menuSetting,
-        element: <AdminMenuSettings />,
+        path: pathObj.menuManagament,
+        element: <MenuManagement />,
       },
     ],
   },

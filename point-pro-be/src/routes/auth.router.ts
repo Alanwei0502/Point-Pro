@@ -8,6 +8,5 @@ authRouter.post('/register', validateMiddleware(registerSchema), AuthController.
 authRouter.post('/login', validateMiddleware(loginSchema), AuthController.loginHandler);
 authRouter.post('/logout', authMiddleware, AuthController.logoutHandler);
 authRouter.post('/token', AuthController.generateTokenHandler);
-authRouter.get('/user-info', authMiddleware, AuthController.decodeTokenHandler);
 
 export default authRouter;
