@@ -47,7 +47,6 @@ export * from './payment/PaymentDrawer';
 export * from './radio/BaseRadio';
 export * from './radio/GroupRadio';
 // Select
-export * from './select/BaseSelect';
 export * from './select/LabelSelect';
 export * from './select/MySelect';
 // Switch

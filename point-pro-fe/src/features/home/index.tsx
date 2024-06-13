@@ -31,7 +31,6 @@ export const Home: FC<IHomeProps> = () => {
       <SiteMap />
       <Footer />
       <BackToTopButton />
-
       {/* Modal */}
       <ContactFormModal />
     </>

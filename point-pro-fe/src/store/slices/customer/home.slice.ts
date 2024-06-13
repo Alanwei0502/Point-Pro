@@ -6,16 +6,10 @@ interface IHomeState {
   callToActionModal: {
     isOpen: boolean;
   };
-  thanksForSubscribingModal: {
-    isOpen: boolean;
-  };
 }
 
 const initialState: IHomeState = {
   callToActionModal: {
-    isOpen: false,
-  },
-  thanksForSubscribingModal: {
     isOpen: false,
   },
 };
@@ -29,12 +23,6 @@ export const homeSlice = createSlice({
     },
     closeCallToActionModal: (state) => {
       state.callToActionModal = initialState.callToActionModal;
-    },
-    openThanksForSubscribingModal: (state) => {
-      state.thanksForSubscribingModal.isOpen = true;
-    },
-    closeThanksForSubscribingModal: (state) => {
-      state.thanksForSubscribingModal = initialState.thanksForSubscribingModal;
     },
   },
 });
