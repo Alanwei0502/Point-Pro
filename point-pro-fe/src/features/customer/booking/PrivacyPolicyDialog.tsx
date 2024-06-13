@@ -18,13 +18,8 @@ export const PrivacyPolicyDialog: FC<IPrivacyPolicyDialogProps> = () => {
 
   return (
     <MobileDialogLayout
-      title={
-        <>
-          <Box>PointPro</Box>
-          <Box>隱私權政策</Box>
-        </>
-      }
-      titleSize='h1'
+      title={<Box>PointPro 隱私權政策</Box>}
+      titleSize='h3'
       isOpen={dialog === MobileBookingDialog.PRIVACY_POLICY}
       isShowCloseIcon={false}
       actionButton={<Button onClick={handleConfirm}>確認同意</Button>}

@@ -38,6 +38,15 @@ declare module '@mui/material/Typography' {
 
 // Create a theme instance.
 export const theme = createTheme({
+  breakpoints: {
+    values: {
+      xs: 0,
+      sm: 700,
+      md: 960,
+      lg: 1280,
+      xl: 1920,
+    },
+  },
   palette: {
     common: {
       black: '#020202',

@@ -3,56 +3,77 @@ import { Box, Button, Container, Drawer, Link, List, ListItem, ListItemText, Typ
 import MenuIcon from '@mui/icons-material/Menu';
 import CloseIcon from '@mui/icons-material/Close';
 import { Row } from '~/components';
-import { useDeviceType } from '~/hooks';
+import { useResponsiveStyles } from '~/hooks';
 import { NavLink } from './index.styles';
 import { ReactComponent as Logo } from '~/assets/logo.svg';
 
 const navData = [
   {
-    name: 'Home',
-    url: '/',
+    name: '產品功能',
+    url: '#feature',
   },
   {
-    title: 'Menu',
-    items: [
-      {
-        name: '產品功能',
-        url: '#feature',
-      },
-      {
-        name: '價格方案',
-        url: '#pricing',
-      },
-      {
-        name: '關於我們',
-        url: '#about',
-      },
-      {
-        name: '成功案例',
-        url: '#success-case',
-      },
-    ],
+    name: '價格方案',
+    url: '#pricing',
+  },
+  {
+    name: '成功案例',
+    url: '#success-case',
+  },
+  {
+    name: '關於我們',
+    url: '#about',
   },
 ];
 
-interface MenuItem {
-  name: string;
-  url: string;
-}
+interface IDesktopMenuProps {}
 
-interface SwipeableMenuProps {
-  menuItems?: MenuItem[];
-}
+const DeskTopMenu: FC<IDesktopMenuProps> = () => {
+  return (
+    <List
+      key='Menu'
+      sx={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        paddingTop: '1.25rem',
+      }}
+    >
+      {navData.map((item) => (
+        <ListItem
+          key={item.name}
+          disablePadding
+          sx={{
+            marginBottom: '1rem',
+            padding: '0.5rem 1rem',
+          }}
+        >
+          <ListItemText
+            primary={
+              <NavLink href={item.url} underline='none' color='white'>
+                <Typography variant='h6' component='span'>
+                  {item.name}
+                </Typography>
+              </NavLink>
+            }
+          />
+        </ListItem>
+      ))}
+    </List>
+  );
+};
 
-const SwipeableMenu: FC<SwipeableMenuProps> = ({ menuItems }) => {
+interface IMobileMenuProps {}
+
+const MobileMenu: FC<IMobileMenuProps> = () => {
   const [isOpen, setIsOpen] = useState(false);
 
-  const toggleDrawer = (open: boolean) => {
+  const toggleMenu = (open: boolean) => {
     setIsOpen(open);
   };
 
   return (
-    <Box sx={{ display: 'flex', justifyContent: 'flex-end', paddingTop: '1.25rem', paddingBottom: '1.25rem' }}>
+    <Box display='flex' justifyContent='flex-end' pt={1} pb={1}>
       <Button
         sx={{
           backgroundColor: 'primary.main',
@@ -65,27 +86,16 @@ const SwipeableMenu: FC<SwipeableMenuProps> = ({ menuItems }) => {
           borderRadius: '1.25rem 0 0 1.25rem',
           transform: 'translateX(1.25rem)',
         }}
-        onClick={() => toggleDrawer(true)}
+        onClick={() => toggleMenu(true)}
       >
         <MenuIcon />
-        <Typography variant='body1' component={'span'}>
-          MENU
-        </Typography>
+        <Typography>MENU</Typography>
       </Button>
-      <Drawer anchor='left' open={isOpen} onClose={() => toggleDrawer(false)} PaperProps={{ style: { minWidth: '100vw', minHeight: '100vh' } }}>
-        <Box
-          sx={{
-            width: '100vw',
-            height: '100vh',
-            display: 'flex',
-            flexDirection: 'column',
-          }}
-          bgcolor={'primary.main'}
-          color={'common.black'}
-        >
-          <Box sx={{ display: 'flex', justifyContent: 'flex-end', paddingTop: '1.25rem', paddingBottom: '1.25rem' }}>
+      <Drawer anchor='left' open={isOpen} onClose={() => toggleMenu(false)} PaperProps={{ style: { minWidth: '100vw', minHeight: '100vh' } }}>
+        <Box width='100vw' height='100vh' display='flex' flexDirection='column' bgcolor='primary.main' color='common.black'>
+          <Box display='flex' justifyContent='flex-end' pt={1} pb={1}>
             <Button
-              onClick={() => toggleDrawer(false)}
+              onClick={() => toggleMenu(false)}
               sx={{
                 backgroundColor: 'common.black',
                 color: 'white',
@@ -111,27 +121,26 @@ const SwipeableMenu: FC<SwipeableMenuProps> = ({ menuItems }) => {
               height: '100%',
             }}
           >
-            {menuItems &&
-              menuItems.map((item) => (
-                <ListItem
-                  key={item.name}
-                  disablePadding
-                  sx={{
-                    marginBottom: '1rem',
-                    padding: '0.5rem 1rem',
-                  }}
-                >
-                  <ListItemText
-                    primary={
-                      <NavLink href={item.url} underline={'none'} color={'common.black'} onClick={() => toggleDrawer(false)}>
-                        <Typography variant='h1' component={'span'} fontWeight={900} color={'common.black'}>
-                          {item.name}
-                        </Typography>
-                      </NavLink>
-                    }
-                  />
-                </ListItem>
-              ))}
+            {navData.map((item) => (
+              <ListItem
+                key={item.name}
+                disablePadding
+                sx={{
+                  marginBottom: '1rem',
+                  padding: '0.5rem 1rem',
+                }}
+              >
+                <ListItemText
+                  primary={
+                    <NavLink href={item.url} underline='none' color='common.black' onClick={() => toggleMenu(false)}>
+                      <Typography variant='h1' component='span' fontWeight={700} color='common.black'>
+                        {item.name}
+                      </Typography>
+                    </NavLink>
+                  }
+                />
+              </ListItem>
+            ))}
           </List>
         </Box>
       </Drawer>
@@ -139,8 +148,10 @@ const SwipeableMenu: FC<SwipeableMenuProps> = ({ menuItems }) => {
   );
 };
 
-export const HeaderNavBar: FC = () => {
-  const deviceType = useDeviceType();
+interface IHeaderNavBarProps {}
+
+export const HeaderNavBar: FC<IHeaderNavBarProps> = () => {
+  const { isTablet } = useResponsiveStyles();
 
   const [isHidden, setIsHidden] = useState(false);
   const [scrollTimeout, setScrollTimeout] = useState<number>(0);
@@ -159,82 +170,36 @@ export const HeaderNavBar: FC = () => {
   }, [scrollTimeout]);
 
   return (
-    <Box
-      width={'100%'}
-      sx={{
-        transition: 'transform 0.1s cubic-bezier(0.2, 0.9, 0.3, 1.2), height 0.3s cubic-bezier(0.2, 0.9, 0.3, 1.2)',
-        transform: isHidden ? 'translateY(-100%)' : 'translateY(0)',
-        height: isHidden ? '0' : '100%',
-        zIndex: 1000,
-        '&::before': {
-          content: '""',
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          backgroundImage: 'linear-gradient(to bottom, rgba(3, 3, 3, 0.5), rgba(0, 0, 0, 0))',
-          backdropFilter: 'blur(0.9rem)',
-        },
-      }}
-    >
-      <Container maxWidth='lg'>
-        <Row
-          sx={{
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            height: '100%',
-          }}
-        >
-          {navData.map((item, index) =>
-            index === 0 ? (
-              <Link href={item.url} key={item.name}>
-                <Logo
-                  style={{
-                    height: deviceType === 'tablet' ? 64 : 40,
-                    aspectRatio: 1,
-                  }}
-                />
-              </Link>
-            ) : deviceType === 'tablet' ? (
-              <List
-                key={item.title}
-                sx={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  gap: '1.5rem',
-                  paddingTop: '1.25rem',
-                }}
-              >
-                {deviceType === 'tablet' &&
-                  item.items?.map((item) => (
-                    <ListItem
-                      key={item.name}
-                      disablePadding
-                      sx={{
-                        marginBottom: '1rem',
-                        padding: '0.5rem 1rem',
-                      }}
-                    >
-                      <ListItemText
-                        primary={
-                          <NavLink href={item.url} underline={'none'} color={'white'}>
-                            <Typography variant='h6' component={'span'}>
-                              {item.name}
-                            </Typography>
-                          </NavLink>
-                        }
-                      />
-                    </ListItem>
-                  ))}
-              </List>
-            ) : (
-              <SwipeableMenu key={item.title} menuItems={item.items} />
-            ),
-          )}
-        </Row>
-      </Container>
+    <Box position='fixed' top={0} width='100%' zIndex={999}>
+      <Box
+        width='100%'
+        zIndex={1000}
+        height={isHidden ? '0%' : '100%'}
+        sx={{
+          transform: isHidden ? 'translateY(-100%)' : 'translateY(0)',
+          transition: '0.3s cubic-bezier(0.2, 0.9, 0.3, 1.2)',
+          '&::before': {
+            content: '""',
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundImage: 'linear-gradient(to bottom, rgba(3, 3, 3, 0.7), rgba(0, 0, 0, 0))',
+            backdropFilter: 'blur(.3rem)',
+          },
+        }}
+      >
+        <Container maxWidth='lg'>
+          <Row justifyContent='space-between' alignItems='center'>
+            <Link href='/' key='Home'>
+              <Logo style={{ height: isTablet ? 64 : 40, aspectRatio: 1 }} />
+            </Link>
+
+            {isTablet ? <DeskTopMenu /> : <MobileMenu />}
+          </Row>
+        </Container>
+      </Box>
     </Box>
   );
 };

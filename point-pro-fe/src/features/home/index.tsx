@@ -1,46 +1,39 @@
-import { FC, useState } from 'react';
-import { Box } from '@mui/material';
-import { AboutUsSection } from './AboutUsSection';
-import { BackToTopButton } from './BackToTop';
-import { ContactFormModal } from './ContactFormModal';
-import { FeatureSection } from './FeatureSection';
-import { HeroSection } from './HeroSection';
-import { MapSection } from './MapSection';
-import { PricingSection } from './PricingSection';
-import { SiteMapSection } from './SiteMapSection';
-import { SubscribedSection } from './SubscribedSection';
-import { TestimonialsSection } from './TestimonialsSection';
+import { FC } from 'react';
 import { HeaderNavBar } from './HeaderNavBar';
+import { Banner } from './Banner';
+import { Feature } from './Feature';
+import { Pricing } from './Pricing';
+import { Testimonial } from './Testimonial';
 import { SuccessCase } from './SuccessCase';
-import { Footer } from '~/components';
+import { Subscription } from './Subscription';
+import { AboutUs } from './AboutUs';
+import { Map } from './Map';
+import { SiteMap } from './SiteMap';
+import { ContactFormModal } from './ContactFormModal';
+import { BackToTopButton, Footer } from '~/components';
+import 'swiper/css';
+import 'swiper/css/pagination';
 
-interface HomeProps {}
+interface IHomeProps {}
 
-export const Home: FC<HomeProps> = ({ ...rest }) => {
-  const [isOpen, setIsOpen] = useState(false);
-  const handleOpenModal = () => {
-    setIsOpen(true);
-  };
-  const handleCloseModal = () => {
-    setIsOpen(false);
-  };
+export const Home: FC<IHomeProps> = () => {
   return (
     <>
-      <BackToTopButton position={{ bottom: 50, right: 50 }} />
-      <Box sx={{ position: 'fixed', top: 0, width: '100%', zIndex: 999 }}>
-        <HeaderNavBar />
-      </Box>
-      <HeroSection openModal={handleOpenModal} />
-      <FeatureSection />
-      <PricingSection openModal={handleOpenModal} />
-      <TestimonialsSection />
+      <HeaderNavBar />
+      <Banner />
+      <Feature />
+      <Pricing />
+      <Testimonial />
       <SuccessCase />
-      <SubscribedSection />
-      <AboutUsSection />
-      <MapSection />
-      <SiteMapSection />
+      <Subscription />
+      <AboutUs />
+      <Map />
+      <SiteMap />
       <Footer />
-      <ContactFormModal open={isOpen} onClose={handleCloseModal} />
+      <BackToTopButton />
+
+      {/* Modal */}
+      <ContactFormModal />
     </>
   );
 };

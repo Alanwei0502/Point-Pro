@@ -3,6 +3,7 @@ export * from './payment.slice';
 export * from './period.slice';
 export * from './socket.slice';
 // customer
+export * from './customer/home.slice';
 export * from './customer/booking.slice';
 export * from './customer/menu.slice';
 // admin

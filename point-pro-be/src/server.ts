@@ -55,12 +55,14 @@ const setUpMiddleware = () => {
 
 const startServer = () => {
   const port = parseInt(process.env.PORT!);
+  // const host = process.env.NODE_ENV === 'development' ? process.env.HOSTNAME : undefined;
+  const host = undefined;
 
   server
     .on('error', (error) => {
       Logger.error(`Server ${error}`);
     })
-    .listen(port, process.env.NODE_ENV === 'development' ? process.env.HOSTNAME : undefined, async () => {
+    .listen(port, host, async () => {
       createWsServer(server);
 
       const addr = server.address();

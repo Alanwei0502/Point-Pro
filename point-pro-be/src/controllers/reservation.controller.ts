@@ -87,7 +87,7 @@ export class ReservationController {
       const reservation = await ReservationModel.getReservationById(req.params.reservationId);
 
       if (!reservation) {
-        return res.status(StatusCodes.NOT_FOUND).json({
+        return res.status(StatusCodes.NOT_FOUND).send({
           message: ReasonPhrases.NOT_FOUND,
           result: null,
         });
@@ -95,7 +95,7 @@ export class ReservationController {
 
       await ReservationModel.deleteReservation(req.params.reservationId);
 
-      return res.status(StatusCodes.OK).json({
+      return res.status(StatusCodes.OK).send({
         message: ReasonPhrases.OK,
         result: reservation.id,
       });

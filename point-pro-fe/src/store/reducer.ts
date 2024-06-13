@@ -13,11 +13,13 @@ import {
   orderManagementSlice,
   reservationManagementSlice,
   seatManagementSlice,
+  homeSlice,
 } from './slices';
 import { counterSlice } from '~/features/home/slice';
 
 const reducer = combineReducers({
   // customer
+  [homeSlice.name]: homeSlice.reducer,
   [menuSlice.name]: menuSlice.reducer,
   [bookingSlice.name]: bookingSlice.reducer,
   [paymentSlice.name]: paymentSlice.reducer,

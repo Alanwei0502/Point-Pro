@@ -86,7 +86,7 @@ export const PeopleAndTime: FC<IPeopleAndTimeProps> = () => {
             請選擇
           </MenuItem>
           {availablePeriods.map((p) => (
-            <MenuItem value={`${p.startTime}`} key={p.id} disabled={p.capacity === 0 || appDayjs(selectedDate).isBefore(appDayjs())}>
+            <MenuItem value={`${p.startTime}`} key={p.id} disabled={p.capacity === 0 || appDayjs(p.startTime).isBefore(appDayjs())}>
               {formatTimeOnly(p.startTime)}
             </MenuItem>
           ))}

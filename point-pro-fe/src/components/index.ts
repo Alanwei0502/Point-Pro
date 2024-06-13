@@ -4,6 +4,8 @@ export * from './button/IconButton';
 export * from './button/MobileButton';
 export * from './button/CloseButton';
 export * from './button/UploadButton';
+export * from './button/BackToTopButton';
+export * from './button/CallToActionButton';
 // Checkbox
 export * from './checkbox/BaseCheckbox';
 // Date Picker
@@ -59,3 +61,6 @@ export * from './transfer/BaseTransfer';
 // Table
 export * from './table/StyledTableCell';
 export * from './table/StyledTableRow';
+// Home
+export * from './home/Title';
+export * from './home/Section';
