@@ -11,7 +11,7 @@ const emailInfo = {
     templateName: 'reservationConfirm.template.ejs',
   },
   newsletter: {
-    subject: '港都熱炒 - 感謝您的訂閱',
+    subject: 'PointPro - 感謝您的訂閱',
     templateName: 'newsletter.template.ejs',
   },
 };
@@ -27,9 +27,7 @@ interface IEmail {
     };
   };
   newsletter: {
-    context: {
-      username: string;
-    };
+    context: {};
   };
 }
 

@@ -5,4 +5,5 @@ export * from './imgur.controller';
 export * from './period.controller';
 export * from './reservation.controller';
 export * from './seat.controller';
+export * from './newsletter.controller';
 // export * from './payment.controller';

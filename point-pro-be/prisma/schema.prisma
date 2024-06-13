@@ -10,6 +10,15 @@ datasource db {
   extensions = [uuid_ossp(map: "uuid-ossp")]
 }
 
+model NewsletterSubscriber {
+  id        String    @id @default(dbgenerated("uuid_generate_v1mc()")) @db.Uuid
+  email     String    @unique @db.VarChar(100)
+  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(0)
+  updatedAt DateTime? @updatedAt @map("updated_at") @db.Timestamptz(0)
+
+  @@map("newsletter_subscribers")
+}
+
 model Category {
   id        String    @id @default(dbgenerated("uuid_generate_v1mc()")) @db.Uuid
   title     String    @unique @db.VarChar(50)

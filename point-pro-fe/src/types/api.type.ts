@@ -23,6 +23,11 @@ export interface ApiResponse<Result> {
   result: Result | null;
 }
 
+// Subscribe Newsletter
+export interface SubscribeNewsletterPayload {
+  email: string;
+}
+
 // Login
 export interface LoginPayload {
   username: IUser['username'];
@@ -38,9 +43,6 @@ export interface GenerateTokenPayload {
 export type GenerateTokenResponse = ApiResponse<{
   token: Token;
 }>;
-
-// Get User Info
-export type GetUserInfoResponse = ApiResponse<UserInfo>;
 
 // CATEGORY
 export type GetCategoriesResponse = ApiResponse<ICategory[]>;

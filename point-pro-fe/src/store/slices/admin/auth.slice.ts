@@ -2,7 +2,7 @@ import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { AuthApi } from '~/api';
 import { createAppAsyncThunk } from '~/hooks';
 import { errorHandler } from '~/store/errorHandler';
-import { GenerateTokenPayload, GenerateTokenResponse, GetUserInfoResponse, LoginPayload, LoginResponse, UserInfo } from '~/types';
+import { GenerateTokenPayload, GenerateTokenResponse, LoginPayload, LoginResponse, UserInfo } from '~/types';
 
 const name = 'auth';
 
@@ -36,16 +36,6 @@ const logout = createAppAsyncThunk(`${name}/logout`, async (_, thunkApi) => {
     return thunkApi.rejectWithValue(error);
   }
 });
-
-// export const getUserInfo = createAppAsyncThunk<GetUserInfoResponse>(`${name}/getUserInfo`, async (payload, thunkApi) => {
-//   try {
-//     const data = await AuthApi.getUserInfo();
-//     return data;
-//   } catch (error) {
-//     errorHandler(error);
-//     return thunkApi.rejectWithValue(error);
-//   }
-// });
 
 export const getUserTokenByReservationLogId = createAppAsyncThunk<GenerateTokenResponse, GenerateTokenPayload>(
   `${name}/getUserTokenByReservationLogId`,

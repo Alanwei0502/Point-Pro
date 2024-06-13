@@ -21,6 +21,7 @@ import { cityList, contactTimeList } from '~/utils';
 import { Row } from '~/components';
 import { homeSliceActions } from '~/store/slices';
 import { useAppDispatch, useAppSelector } from '~/hooks';
+import { toast } from 'react-toastify';
 
 const { closeCallToActionModal } = homeSliceActions;
 
@@ -32,13 +33,13 @@ const Transition = forwardRef(function Transition(
 ) {
   return <Slide direction='up' ref={ref} {...props} />;
 });
-interface ContactFormModalProps {}
+interface IContactFormModalProps {}
 
 interface InquiryContent {
   [key: string]: boolean | { [key: string]: boolean } | string[];
 }
 
-export const ContactFormModal: FC<ContactFormModalProps> = () => {
+export const ContactFormModal: FC<IContactFormModalProps> = () => {
   const dispatch = useAppDispatch();
 
   const isOpen = useAppSelector((state) => state.home.callToActionModal.isOpen);
@@ -51,29 +52,34 @@ export const ContactFormModal: FC<ContactFormModalProps> = () => {
     dispatch(closeCallToActionModal());
   };
 
+  // TODO
   const handleSubmit = (e: SyntheticEvent) => {
     e.preventDefault();
     // 驗證和提交表單
-    const corsUrl = 'https://cors-proxy.fringe.zone/';
-    const googleUrl = 'https://docs.google.com/forms/u/0/d/e/1FAIpQLSeS2HdhAsUft11Yee4OF5LCWutl2MDY7ilUSHWuEqWsfeTPDQ/formResponse';
+    // const corsUrl = 'https://cors-proxy.fringe.zone/';
+    // const googleUrl = 'https://docs.google.com/forms/u/0/d/e/1FAIpQLSeS2HdhAsUft11Yee4OF5LCWutl2MDY7ilUSHWuEqWsfeTPDQ/formResponse';
 
-    const data = new FormData();
-    data.set('entry.1962534612', JSON.stringify(formData.vendorName)); // 商家名稱
-    data.set('entry.1920691995_sentinel', JSON.stringify(formData.businessStatus));
-    data.set('entry.1802353228', JSON.stringify(formData.contactPerson));
-    data.set('entry.122567838', JSON.stringify(formData.phoneNumber));
-    data.set('entry.87711208', JSON.stringify(formData.city));
-    data.set('entry.1701296742', JSON.stringify(formData.contactTime));
-    data.set('entry.1937030945', JSON.stringify(formData.requirement));
-    data.set('entry.1711160904_sentinel', JSON.stringify(formData.quest));
-    axios
-      .post(`${corsUrl + googleUrl}`, data)
-      .then((res) => {
-        // onClose();
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    // const data = new FormData();
+    // data.set('entry.1962534612', JSON.stringify(formData.vendorName)); // 商家名稱
+    // data.set('entry.1920691995_sentinel', JSON.stringify(formData.businessStatus));
+    // data.set('entry.1802353228', JSON.stringify(formData.contactPerson));
+    // data.set('entry.122567838', JSON.stringify(formData.phoneNumber));
+    // data.set('entry.87711208', JSON.stringify(formData.city));
+    // data.set('entry.1701296742', JSON.stringify(formData.contactTime));
+    // data.set('entry.1937030945', JSON.stringify(formData.requirement));
+    // data.set('entry.1711160904_sentinel', JSON.stringify(formData.quest));
+    // axios
+    //   .post(`${corsUrl + googleUrl}`, data)
+    //   .then((res) => {
+    //     // onClose();
+    //   })
+    //   .catch((err) => {
+    //     console.log(err);
+    //   });
+
+    dispatch(closeCallToActionModal());
+    toast.success('表單已送出，我們將盡快與您聯繫');
+    setFormData({ quest: [] });
   };
 
   // get Data

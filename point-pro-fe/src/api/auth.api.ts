@@ -1,6 +1,6 @@
 import { LoginResponse } from '~/types';
 import { http } from './http';
-import { GenerateTokenPayload, GenerateTokenResponse, GetUserInfoResponse, LoginPayload } from '~/types';
+import { GenerateTokenPayload, GenerateTokenResponse, LoginPayload } from '~/types';
 
 export class AuthApi {
   static path = 'auth';
