@@ -1,21 +1,51 @@
 import { FC, ReactNode } from 'react';
-import { Box, Button, Card, CardActions, CardContent, CardHeader, Typography } from '@mui/material';
-import { useAppDispatch, useAppSelector } from '~/hooks';
-import { BaseModal } from '~/components';
+import {
+  Box,
+  Card,
+  CardActions,
+  CardActionsProps,
+  CardContent,
+  CardContentProps,
+  CardHeader,
+  CardHeaderProps,
+  CardProps,
+  Modal,
+  ModalProps,
+} from '@mui/material';
 import { theme } from '~/theme';
-import { cancelOrder, setCancelOrder } from '~/store/slices';
 
-interface ITabletModalLayoutProps {
-  children: ReactNode;
-  open: boolean;
+interface ITabletModalProps extends Omit<ModalProps, 'children'> {
+  children?: ReactNode;
+  cardProps?: CardProps;
+  cardHeaderProps?: CardHeaderProps;
+  cardContentProps?: CardContentProps;
+  cardActionsProps?: CardActionsProps;
 }
 
-export const TabletModalLayout: FC<ITabletModalLayoutProps> = ({ children, open }) => {
+export const TabletModal: FC<ITabletModalProps> = (props) => {
+  const { open, children, cardProps = {}, cardHeaderProps = {}, cardActionsProps = {}, cardContentProps = {}, ...restModalProps } = props;
+  const { sx: cardHeaderSx, ...restCardHeaderProps } = cardHeaderProps;
+  const { children: cardContentChildren, sx: cardContentSx, ...restCardContentProps } = cardContentProps;
+  const { children: cardActionsChildren, ...restCardActionsProps } = cardActionsProps;
   return (
-    <BaseModal open={open}>
-      <Box display='grid' sx={{ placeContent: 'center' }} height='100%'>
-        {children}
-      </Box>
-    </BaseModal>
+    <>
+      {open && (
+        <Modal open={open} {...restModalProps}>
+          {children ? (
+            <>{children}</>
+          ) : (
+            <Box display='grid' sx={{ placeContent: 'center' }} height='100%'>
+              <Card {...cardProps}>
+                <CardHeader sx={{ backgroundColor: theme.palette.primary.main, textAlign: 'center', ...cardHeaderSx }} {...restCardHeaderProps} />
+                <CardContent sx={{ padding: '1rem', minWidth: '50cqw', ...cardContentSx }} {...restCardContentProps}>
+                  {cardContentChildren}
+                </CardContent>
+                <CardActions {...restCardActionsProps}>{cardActionsChildren}</CardActions>
+              </Card>
+            </Box>
+          )}
+        </Modal>
+      )}
+    </>
   );
 };

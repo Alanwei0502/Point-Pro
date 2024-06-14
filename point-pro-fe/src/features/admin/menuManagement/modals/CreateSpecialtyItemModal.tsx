@@ -1,10 +1,9 @@
 import { ChangeEvent, FC, useState } from 'react';
 import { toast } from 'react-toastify';
-import { Card, CardActions, CardContent, CardHeader, FormControl, FormLabel, TextField } from '@mui/material';
-import { AppButton, TabletModalLayout } from '~/components';
+import { CardActions, CardContent, FormControl, FormLabel, TextField } from '@mui/material';
+import { AppButton, TabletModal } from '~/components';
 import { useAppDispatch, useAppSelector } from '~/hooks';
 import { closeCreateSpecialtyItemModal, getSpecialties, postSpecialtyItem } from '~/store/slices';
-import { theme } from '~/theme';
 import { ISpecialtyItem } from '~/types';
 
 interface ICreateSpecialtyItemModalProps {}
@@ -71,35 +70,44 @@ export const CreateSpecialtyItemModal: FC<ICreateSpecialtyItemModalProps> = () =
   };
 
   return (
-    <TabletModalLayout open={isOpen}>
-      <Card>
-        <CardHeader title='新增項目' sx={{ backgroundColor: theme.palette.primary.main, textAlign: 'center' }} />
-        <CardContent sx={{ padding: '1rem', width: '50cqw' }}>
-          <FormControl margin='dense' required fullWidth>
-            <FormLabel>名稱</FormLabel>
-            <TextField
-              autoFocus
-              size='small'
-              value={title}
-              error={hasSameSpecialtyExist}
-              helperText={hasSameSpecialtyExist && '已有相同的項目'}
-              onChange={handleChangeTitle}
-            />
-          </FormControl>
-          <FormControl margin='dense' required fullWidth>
-            <FormLabel>價格</FormLabel>
-            <TextField type='number' size='small' value={price.toString()} onChange={handleChangePrice} />
-          </FormControl>
-        </CardContent>
-        <CardActions>
-          <AppButton variant='outlined' color='secondary' fullWidth onClick={handleCancel}>
-            取消
-          </AppButton>
-          <AppButton fullWidth onClick={handleConfirmCreateSpecialty} disabled={isInvalid}>
-            確定
-          </AppButton>
-        </CardActions>
-      </Card>
-    </TabletModalLayout>
+    <TabletModal
+      open={isOpen}
+      cardHeaderProps={{
+        title: '新增項目',
+      }}
+      cardContentProps={{
+        children: (
+          <>
+            <FormControl margin='dense' required fullWidth>
+              <FormLabel>名稱</FormLabel>
+              <TextField
+                autoFocus
+                size='small'
+                value={title}
+                error={hasSameSpecialtyExist}
+                helperText={hasSameSpecialtyExist && '已有相同的項目'}
+                onChange={handleChangeTitle}
+              />
+            </FormControl>
+            <FormControl margin='dense' required fullWidth>
+              <FormLabel>價格</FormLabel>
+              <TextField type='number' size='small' value={price.toString()} onChange={handleChangePrice} />
+            </FormControl>
+          </>
+        ),
+      }}
+      cardActionsProps={{
+        children: (
+          <>
+            <AppButton variant='outlined' color='secondary' fullWidth onClick={handleCancel}>
+              取消
+            </AppButton>
+            <AppButton fullWidth onClick={handleConfirmCreateSpecialty} disabled={isInvalid}>
+              確定
+            </AppButton>
+          </>
+        ),
+      }}
+    />
   );
 };

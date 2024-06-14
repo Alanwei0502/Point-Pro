@@ -37,8 +37,7 @@ export * from './layout/MobileLayout';
 // Loading
 export * from './loading/Loading';
 // Modal
-export * from './modal/BaseModal';
-export * from './modal/Mobilemodal';
+export * from './modal/MobileModal';
 export * from './modal/TabletModal';
 // Payment
 export * from './payment/CashPaymentDialog';

@@ -1,21 +1,7 @@
 import { ChangeEvent, FC, useMemo, useState } from 'react';
 import { toast } from 'react-toastify';
-import {
-  Box,
-  Card,
-  CardActions,
-  CardContent,
-  CardHeader,
-  Chip,
-  FormControl,
-  FormLabel,
-  MenuItem,
-  Select,
-  SelectChangeEvent,
-  TextField,
-  Typography,
-} from '@mui/material';
-import { AppButton, BaseSwitch, TabletModalLayout, UploadButton } from '~/components';
+import { Box, Chip, FormControl, FormLabel, MenuItem, Select, SelectChangeEvent, TextField, Typography } from '@mui/material';
+import { AppButton, BaseSwitch, TabletModal, UploadButton } from '~/components';
 import { useAppDispatch, useAppSelector } from '~/hooks';
 import { closeCreateMealModal, getMeals, postMeal } from '~/store/slices';
 import { theme } from '~/theme';
@@ -136,93 +122,103 @@ export const CreateMealModal: FC<ICreateMealModalProps> = () => {
   };
 
   return (
-    <TabletModalLayout open={isOpen}>
-      <Card>
-        <CardHeader title='新增餐點' sx={{ backgroundColor: theme.palette.primary.main, textAlign: 'center' }} />
-        <CardContent sx={{ padding: '1rem', width: '50cqw', height: 640, overflow: 'scroll' }}>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-            <FormControl margin='dense' required fullWidth>
-              <FormLabel>名稱</FormLabel>
-              <TextField
-                autoFocus
-                size='small'
-                value={title}
-                error={hasSameMealExist}
-                helperText={hasSameMealExist && '已有相同的餐點'}
-                onChange={handleChangeTitle}
-              />
-            </FormControl>
-            <FormControl margin='dense' required fullWidth>
-              <FormLabel>價格</FormLabel>
-              <TextField type='number' size='small' value={price.toString()} onChange={handleChangePrice} />
-            </FormControl>
-          </Box>
-          <FormControl margin='dense' required fullWidth>
-            <FormLabel>照片</FormLabel>
-            <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 5 }}>
-              <Box sx={{ display: 'flex', flexDirection: 'column', width: '50%' }}>
-                <UploadButton
-                  btn={{ sx: { width: 200 } }}
-                  input={{ onChange: handleChangeImage, inputProps: { accept: MEAL_IMAGE_TYPES.join(',') } }}
+    <TabletModal
+      open={isOpen}
+      cardHeaderProps={{
+        title: '新增餐點',
+      }}
+      cardContentProps={{
+        sx: { height: 640, overflow: 'scroll' },
+        children: (
+          <>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+              <FormControl margin='dense' required fullWidth>
+                <FormLabel>名稱</FormLabel>
+                <TextField
+                  autoFocus
+                  size='small'
+                  value={title}
+                  error={hasSameMealExist}
+                  helperText={hasSameMealExist && '已有相同的餐點'}
+                  onChange={handleChangeTitle}
                 />
-                <Typography variant='caption' color='error'>
-                  {MEAL_IMAGE_FORMAT_REMINDER}
-                </Typography>
-              </Box>
-              <Box component='img' id='previewImage' sx={{ width: 130, height: 130, objectFit: 'cover' }} src={previewImage} />
+              </FormControl>
+              <FormControl margin='dense' required fullWidth>
+                <FormLabel>價格</FormLabel>
+                <TextField type='number' size='small' value={price.toString()} onChange={handleChangePrice} />
+              </FormControl>
             </Box>
-          </FormControl>
-          <FormControl margin='dense' fullWidth>
-            <FormLabel>備註</FormLabel>
-            <TextField size='small' multiline rows={4} value={description} onChange={handleChangeDescription} />
-          </FormControl>
-          <FormControl margin='dense' fullWidth>
-            <FormLabel>客製化選項</FormLabel>
-            <Select
-              multiple
-              size='small'
-              value={specialtyItems}
-              onChange={handleChangeSpecialtyItems}
-              renderValue={(selected) => (
-                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                  {selected.map((value) => {
-                    const { title, price } = allSpecialtyItems.find((si) => si.id === value) as ISpecialtyItem;
-                    return <Chip key={value} label={`${title}(${price}元)`} variant='filled' size='small' />;
-                  })}
+            <FormControl margin='dense' required fullWidth>
+              <FormLabel>照片</FormLabel>
+              <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 5 }}>
+                <Box sx={{ display: 'flex', flexDirection: 'column', width: '50%' }}>
+                  <UploadButton
+                    btn={{ sx: { width: 200 } }}
+                    input={{ onChange: handleChangeImage, inputProps: { accept: MEAL_IMAGE_TYPES.join(',') } }}
+                  />
+                  <Typography variant='caption' color='error'>
+                    {MEAL_IMAGE_FORMAT_REMINDER}
+                  </Typography>
                 </Box>
-              )}
-            >
-              {allSpecialtyItems.map((si) => (
-                <MenuItem
-                  key={si.id}
-                  value={si.id}
-                  sx={{ '&.Mui-selected': { bgcolor: theme.palette.primary.light, '&:hover': { bgcolor: theme.palette.primary.light } } }}
-                >
-                  {si.title}({si.price}元)
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-          <Box sx={{ display: 'flex' }}>
-            <FormControl margin='dense' sx={{ width: '50%' }}>
-              <FormLabel>是否為人氣商品？</FormLabel>
-              <BaseSwitch checked={isPopular} onChange={handleChangeIsPopular} />
+                <Box component='img' id='previewImage' sx={{ width: 130, height: 130, objectFit: 'cover' }} src={previewImage} />
+              </Box>
             </FormControl>
-            <FormControl margin='dense' sx={{ width: '50%' }}>
-              <FormLabel>是否上架？</FormLabel>
-              <BaseSwitch checked={!!publishedAt} onChange={handleChangePublishedAt} />
+            <FormControl margin='dense' fullWidth>
+              <FormLabel>備註</FormLabel>
+              <TextField size='small' multiline rows={4} value={description} onChange={handleChangeDescription} />
             </FormControl>
-          </Box>
-        </CardContent>
-        <CardActions>
-          <AppButton variant='outlined' color='secondary' fullWidth onClick={handleCancel}>
-            取消
-          </AppButton>
-          <AppButton fullWidth onClick={handleConfirmCreateMeal} disabled={isInvalid}>
-            確定
-          </AppButton>
-        </CardActions>
-      </Card>
-    </TabletModalLayout>
+            <FormControl margin='dense' fullWidth>
+              <FormLabel>客製化選項</FormLabel>
+              <Select
+                multiple
+                size='small'
+                value={specialtyItems}
+                onChange={handleChangeSpecialtyItems}
+                renderValue={(selected) => (
+                  <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                    {selected.map((value) => {
+                      const { title, price } = allSpecialtyItems.find((si) => si.id === value) as ISpecialtyItem;
+                      return <Chip key={value} label={`${title}(${price}元)`} variant='filled' size='small' />;
+                    })}
+                  </Box>
+                )}
+              >
+                {allSpecialtyItems.map((si) => (
+                  <MenuItem
+                    key={si.id}
+                    value={si.id}
+                    sx={{ '&.Mui-selected': { bgcolor: theme.palette.primary.light, '&:hover': { bgcolor: theme.palette.primary.light } } }}
+                  >
+                    {si.title}({si.price}元)
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+            <Box sx={{ display: 'flex' }}>
+              <FormControl margin='dense' sx={{ width: '50%' }}>
+                <FormLabel>是否為人氣商品？</FormLabel>
+                <BaseSwitch checked={isPopular} onChange={handleChangeIsPopular} />
+              </FormControl>
+              <FormControl margin='dense' sx={{ width: '50%' }}>
+                <FormLabel>是否上架？</FormLabel>
+                <BaseSwitch checked={!!publishedAt} onChange={handleChangePublishedAt} />
+              </FormControl>
+            </Box>
+          </>
+        ),
+      }}
+      cardActionsProps={{
+        children: (
+          <>
+            <AppButton variant='outlined' color='secondary' fullWidth onClick={handleCancel}>
+              取消
+            </AppButton>
+            <AppButton fullWidth onClick={handleConfirmCreateMeal} disabled={isInvalid}>
+              確定
+            </AppButton>
+          </>
+        ),
+      }}
+    />
   );
 };

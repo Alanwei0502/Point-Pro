@@ -5,7 +5,7 @@ import { MobileButton, MobileDialogLayout } from '~/components';
 import { calculateCartPrice } from '~/utils';
 import { useAppDispatch, useAppSelector } from '~/hooks';
 import { closeDialog, openModal, deleteCartItem } from '~/store/slices';
-import { MobileModal, MobileDialog } from '~/types';
+import { MobileModalType, MobileDialog } from '~/types';
 
 interface ICartDialogProps {}
 
@@ -32,7 +32,7 @@ export const CartDialog: FC<ICartDialogProps> = () => {
     cart.forEach((cartItem, idx) => {
       const meal = meals.find((meal) => meal.id === cartItem.id);
       if (!meal) {
-        dispatch(openModal({ type: MobileModal.CART_ITEM_IS_OFF, data: cartItem }));
+        dispatch(openModal({ type: MobileModalType.CART_ITEM_IS_OFF, data: cartItem }));
         dispatch(deleteCartItem(idx));
       }
     });

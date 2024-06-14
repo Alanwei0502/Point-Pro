@@ -1,25 +1,9 @@
 import { FC, useEffect, useMemo, useState } from 'react';
 import { toast } from 'react-toastify';
-import {
-  Box,
-  Card,
-  CardActions,
-  CardContent,
-  CardHeader,
-  FormControl,
-  FormControlLabel,
-  FormLabel,
-  MenuItem,
-  Radio,
-  RadioGroup,
-  Select,
-  SelectChangeEvent,
-  TextField,
-} from '@mui/material';
+import { Box, FormControl, FormControlLabel, FormLabel, MenuItem, Radio, RadioGroup, Select, SelectChangeEvent, TextField } from '@mui/material';
 import { DesktopDatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { AppButton, TabletModalLayout } from '~/components';
-import { theme } from '~/theme';
+import { AppButton, TabletModal } from '~/components';
 import { GENDER_TRANSLATE, RESERVATION_PEOPLE_OPTIONS, appDayjs, emailRegex, formatDateOnly, formatTimeOnly, phoneRegex } from '~/utils';
 import { AvailablePeriod, Gender } from '~/types';
 import { useAppDispatch, useAppSelector } from '~/hooks';
@@ -185,128 +169,137 @@ export const ReservationModal: FC<IReservationModalProps> = () => {
     setNewData(data);
   }, [data]);
 
-  return isOpen ? (
-    <TabletModalLayout open={isOpen}>
-      <Card>
-        <CardHeader title={ModalTitle[modalType as ReservationModalType]} sx={{ backgroundColor: theme.palette.primary.main, textAlign: 'center' }} />
-        <CardContent sx={{ padding: '1rem', width: '50cqw', height: 550, overflow: 'scroll' }}>
-          <FormControl margin='dense' required fullWidth>
-            <FormLabel>日期</FormLabel>
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <DesktopDatePicker
-                value={appDayjs(modalSelectedDate)}
-                format='YYYY年MM月DD日 (星期dd)'
-                views={['day']}
-                onChange={handleChangeDate}
-                disablePast
-                shouldDisableDate={(day) => !availableDate.includes(formatDateOnly(day))}
-                sx={{
-                  '&.MuiFormControl-root': {
-                    width: '100%',
-                  },
-                  '& .MuiInputBase-input': {
-                    padding: '.5rem',
-                  },
-                }}
-              />
-            </LocalizationProvider>
-          </FormControl>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+  return (
+    <TabletModal
+      open={isOpen}
+      cardHeaderProps={{
+        title: ModalTitle[modalType as ReservationModalType],
+      }}
+      cardContentProps={{
+        sx: { height: 550, overflow: 'scroll' },
+        children: (
+          <>
             <FormControl margin='dense' required fullWidth>
-              <FormLabel>時段</FormLabel>
-              <Select size='small' value={`${newData.selectedPeriod?.startTime ?? ''}`} onChange={handleChangePeriod} displayEmpty>
-                <MenuItem disabled value=''>
-                  請選擇
-                </MenuItem>
-                {availablePeriods.map((p) => (
-                  <MenuItem
-                    value={`${p.startTime}`}
-                    key={p.id}
-                    disabled={p.capacity <= 0 || p.capacity < newData.people || appDayjs(p.startTime).isBefore(appDayjs())}
-                  >
-                    {formatTimeOnly(p.startTime)}
-                  </MenuItem>
-                ))}
-              </Select>
+              <FormLabel>日期</FormLabel>
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <DesktopDatePicker
+                  value={appDayjs(modalSelectedDate)}
+                  format='YYYY年MM月DD日 (星期dd)'
+                  views={['day']}
+                  onChange={handleChangeDate}
+                  disablePast
+                  shouldDisableDate={(day) => !availableDate.includes(formatDateOnly(day))}
+                  sx={{
+                    '&.MuiFormControl-root': {
+                      width: '100%',
+                    },
+                    '& .MuiInputBase-input': {
+                      padding: '.5rem',
+                    },
+                  }}
+                />
+              </LocalizationProvider>
             </FormControl>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+              <FormControl margin='dense' required fullWidth>
+                <FormLabel>時段</FormLabel>
+                <Select size='small' value={`${newData.selectedPeriod?.startTime ?? ''}`} onChange={handleChangePeriod} displayEmpty>
+                  <MenuItem disabled value=''>
+                    請選擇
+                  </MenuItem>
+                  {availablePeriods.map((p) => (
+                    <MenuItem
+                      value={`${p.startTime}`}
+                      key={p.id}
+                      disabled={p.capacity <= 0 || p.capacity < newData.people || appDayjs(p.startTime).isBefore(appDayjs())}
+                    >
+                      {formatTimeOnly(p.startTime)}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+              <FormControl margin='dense' required fullWidth>
+                <FormLabel>人數</FormLabel>
+                <Select size='small' value={`${newData.people}`} onChange={handleChangePeople}>
+                  <MenuItem disabled value='0'>
+                    請選擇
+                  </MenuItem>
+                  {availablePeopleOptions.map((p) => (
+                    <MenuItem key={p} value={`${p}`}>
+                      {p}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Box>
+            <Box sx={{ display: 'flex', alignItems: 'flex-end', gap: 2 }}>
+              <FormControl margin='dense' required sx={{ flexGrow: 2 }}>
+                <FormLabel>姓名</FormLabel>
+                <TextField
+                  size='small'
+                  value={newData?.username ?? ''}
+                  error={nameIsError}
+                  helperText={nameIsError && '請輸入姓名'}
+                  onChange={handleChangeUsername}
+                />
+              </FormControl>
+              <FormControl margin='dense'>
+                <RadioGroup row value={newData.gender} onChange={handleChangeGender}>
+                  <FormControlLabel value={Gender.MALE} control={<Radio size='small' />} label={GENDER_TRANSLATE.MALE} />
+                  <FormControlLabel value={Gender.FEMALE} control={<Radio size='small' />} label={GENDER_TRANSLATE.FEMALE} />
+                </RadioGroup>
+              </FormControl>
+            </Box>
             <FormControl margin='dense' required fullWidth>
-              <FormLabel>人數</FormLabel>
-
-              <Select size='small' value={`${newData.people}`} onChange={handleChangePeople}>
-                <MenuItem disabled value='0'>
-                  請選擇
-                </MenuItem>
-                {availablePeopleOptions.map((p) => (
-                  <MenuItem key={p} value={`${p}`}>
-                    {p}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </Box>
-          <Box sx={{ display: 'flex', alignItems: 'flex-end', gap: 2 }}>
-            <FormControl margin='dense' required sx={{ flexGrow: 2 }}>
-              <FormLabel>姓名</FormLabel>
+              <FormLabel>電話</FormLabel>
               <TextField
+                type='tel'
                 size='small'
-                value={newData?.username ?? ''}
-                error={nameIsError}
-                helperText={nameIsError && '請輸入姓名'}
-                onChange={handleChangeUsername}
+                placeholder='0987654321'
+                error={phoneIsError}
+                helperText={phoneIsError && '手機號碼格式錯誤'}
+                value={newData?.phone ?? ''}
+                onChange={handleChangePhone}
               />
             </FormControl>
-            <FormControl margin='dense'>
-              <RadioGroup row value={newData.gender} onChange={handleChangeGender}>
-                <FormControlLabel value={Gender.MALE} control={<Radio size='small' />} label={GENDER_TRANSLATE.MALE} />
-                <FormControlLabel value={Gender.FEMALE} control={<Radio size='small' />} label={GENDER_TRANSLATE.FEMALE} />
-              </RadioGroup>
+            <FormControl margin='dense' fullWidth>
+              <FormLabel>信箱</FormLabel>
+              <TextField
+                type='email'
+                size='small'
+                error={emailIsError}
+                helperText={emailIsError && '電子信箱格式錯誤'}
+                placeholder='example@email.com'
+                value={newData?.email ?? ''}
+                onChange={handleChangeEmail}
+              />
             </FormControl>
-          </Box>
-          <FormControl margin='dense' required fullWidth>
-            <FormLabel>電話</FormLabel>
-            <TextField
-              type='tel'
-              size='small'
-              placeholder='0987654321'
-              error={phoneIsError}
-              helperText={phoneIsError && '手機號碼格式錯誤'}
-              value={newData?.phone ?? ''}
-              onChange={handleChangePhone}
-            />
-          </FormControl>
-          <FormControl margin='dense' fullWidth>
-            <FormLabel>信箱</FormLabel>
-            <TextField
-              type='email'
-              size='small'
-              error={emailIsError}
-              helperText={emailIsError && '電子信箱格式錯誤'}
-              placeholder='example@email.com'
-              value={newData?.email ?? ''}
-              onChange={handleChangeEmail}
-            />
-          </FormControl>
-          <FormControl margin='dense' fullWidth>
-            <FormLabel>備註</FormLabel>
-            <TextField
-              multiline
-              rows={4}
-              size='small'
-              value={newData?.remark ?? ''}
-              placeholder='有任何特殊需求嗎？可以先寫在這裡喔（例如：行動不便、過敏...等）。'
-              onChange={handleChangeRemark}
-            />
-          </FormControl>
-        </CardContent>
-        <CardActions>
-          <AppButton variant='outlined' color='secondary' fullWidth onClick={handleCancel}>
-            取消
-          </AppButton>
-          <AppButton fullWidth onClick={handleConfirm} disabled={isRequestLoading}>
-            確定
-          </AppButton>
-        </CardActions>
-      </Card>
-    </TabletModalLayout>
-  ) : null;
+            <FormControl margin='dense' fullWidth>
+              <FormLabel>備註</FormLabel>
+              <TextField
+                multiline
+                rows={4}
+                size='small'
+                value={newData?.remark ?? ''}
+                placeholder='有任何特殊需求嗎？可以先寫在這裡喔（例如：行動不便、過敏...等）。'
+                onChange={handleChangeRemark}
+              />
+            </FormControl>
+          </>
+        ),
+      }}
+      cardActionsProps={{
+        children: (
+          <>
+            <AppButton variant='outlined' color='secondary' fullWidth onClick={handleCancel}>
+              取消
+            </AppButton>
+            <AppButton fullWidth onClick={handleConfirm} disabled={isRequestLoading}>
+              確定
+            </AppButton>
+          </>
+        ),
+      }}
+    />
+  );
 };

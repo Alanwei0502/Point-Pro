@@ -1,7 +1,6 @@
 import { FC, useState } from 'react';
-import { Card, CardActions, CardContent, CardHeader, Typography } from '@mui/material';
-import { AppButton, TabletModalLayout } from '~/components';
-import { theme } from '~/theme';
+import { Typography } from '@mui/material';
+import { AppButton, TabletModal } from '~/components';
 import { GENDER_TRANSLATE } from '~/utils';
 import { useAppDispatch, useAppSelector } from '~/hooks';
 import { reservationManagementSliceActions } from '~/store/slices';
@@ -54,24 +53,33 @@ export const StartDiningConfirmModal: FC<IStartDiningConfirmModalProps> = () => 
       });
   };
 
-  return isOpen && data ? (
-    <TabletModalLayout open={isOpen}>
-      <Card>
-        <CardHeader title='開始用餐' sx={{ backgroundColor: theme.palette.primary.main, textAlign: 'center' }} />
-        <CardContent sx={{ padding: '1rem', width: '50cqw' }}>
+  if (!data) return null;
+
+  return (
+    <TabletModal
+      open={isOpen}
+      cardHeaderProps={{
+        title: '開始用餐',
+      }}
+      cardContentProps={{
+        children: (
           <Typography textAlign='center'>
             確定「{data.username} {GENDER_TRANSLATE[data.gender]}」準備入座開始用餐？
           </Typography>
-        </CardContent>
-        <CardActions>
-          <AppButton variant='outlined' color='secondary' fullWidth onClick={handleCancel}>
-            取消
-          </AppButton>
-          <AppButton fullWidth onClick={handleConfirm} disabled={isUpdateLoading}>
-            確定
-          </AppButton>
-        </CardActions>
-      </Card>
-    </TabletModalLayout>
-  ) : null;
+        ),
+      }}
+      cardActionsProps={{
+        children: (
+          <>
+            <AppButton variant='outlined' color='secondary' fullWidth onClick={handleCancel}>
+              取消
+            </AppButton>
+            <AppButton fullWidth onClick={handleConfirm} disabled={isUpdateLoading}>
+              確定
+            </AppButton>
+          </>
+        ),
+      }}
+    />
+  );
 };

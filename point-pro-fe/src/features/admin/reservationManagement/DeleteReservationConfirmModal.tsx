@@ -1,11 +1,10 @@
 import { FC, useEffect, useState } from 'react';
-import { Card, CardActions, CardContent, CardHeader, Typography } from '@mui/material';
-import { AppButton, TabletModalLayout } from '~/components';
-import { theme } from '~/theme';
+import { toast } from 'react-toastify';
+import { Typography } from '@mui/material';
+import { AppButton, TabletModal } from '~/components';
 import { GENDER_TRANSLATE } from '~/utils';
 import { useAppDispatch, useAppSelector } from '~/hooks';
 import { reservationManagementSliceActions } from '~/store/slices';
-import { toast } from 'react-toastify';
 
 const { closeDeleteReservationConfirmModal, getReservations, deleteReservation, getAvailablePeriods } = reservationManagementSliceActions;
 
@@ -49,24 +48,33 @@ export const DeleteReservationConfirmModal: FC<IDeleteReservationConfirmModalPro
     dispatch(getAvailablePeriods());
   }, [dispatch]);
 
-  return isOpen && data ? (
-    <TabletModalLayout open={isOpen}>
-      <Card>
-        <CardHeader title='取消預約' sx={{ backgroundColor: theme.palette.primary.main, textAlign: 'center' }} />
-        <CardContent sx={{ padding: '1rem', width: '50cqw' }}>
+  if (!data) return null;
+
+  return (
+    <TabletModal
+      open={isOpen}
+      cardHeaderProps={{
+        title: '取消預約',
+      }}
+      cardContentProps={{
+        children: (
           <Typography textAlign='center'>
             確定要取消「{data.username} {GENDER_TRANSLATE[data.gender]}」的預約？
           </Typography>
-        </CardContent>
-        <CardActions>
-          <AppButton variant='outlined' color='secondary' fullWidth onClick={handleCancel}>
-            取消
-          </AppButton>
-          <AppButton fullWidth onClick={handleConfirm} disabled={isDeleteLoading}>
-            確定
-          </AppButton>
-        </CardActions>
-      </Card>
-    </TabletModalLayout>
-  ) : null;
+        ),
+      }}
+      cardActionsProps={{
+        children: (
+          <>
+            <AppButton variant='outlined' color='secondary' fullWidth onClick={handleCancel}>
+              取消
+            </AppButton>
+            <AppButton fullWidth onClick={handleConfirm} disabled={isDeleteLoading}>
+              確定
+            </AppButton>
+          </>
+        ),
+      }}
+    />
+  );
 };

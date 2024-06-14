@@ -4,7 +4,7 @@ import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { useAppDispatch } from '~/hooks';
 import { viewCartItemCustomized, openModal } from '~/store/slices';
-import { ICartItem, MobileModal } from '~/types';
+import { ICartItem, MobileModalType } from '~/types';
 import { IMAGE_URL } from '~/utils';
 
 interface ICartMealProps {
@@ -28,7 +28,7 @@ export const CartMeal: FC<ICartMealProps> = (props) => {
 
   const handleRemoveCartItem = (idx: number) => (e: SyntheticEvent<Element, Event>) => {
     e.stopPropagation();
-    dispatch(openModal({ type: MobileModal.REMOVE_CART_CONFIRM, data: props }));
+    dispatch(openModal({ type: MobileModalType.REMOVE_CART_CONFIRM, data: props }));
   };
 
   return (

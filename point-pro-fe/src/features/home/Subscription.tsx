@@ -1,7 +1,7 @@
 import { ChangeEvent, FC, useState } from 'react';
-import { Box, FormControl, Grid, TextField, Typography } from '@mui/material';
+import { Box, FormControl, Grid, Modal, TextField, Typography } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
-import { BaseModal, Section, AppButton } from '~/components';
+import { Section, AppButton } from '~/components';
 import { useResponsiveStyles } from '~/hooks';
 import { theme } from '~/theme';
 import { emailRegex } from '~/utils';
@@ -92,7 +92,7 @@ export const Subscription: FC<ISubscriptionProps> = () => {
           </Grid>
         </Box>
       </Box>
-      <BaseModal open={open} onClose={handleCloseModal}>
+      <Modal open={open} onClose={handleCloseModal}>
         <Box
           display='flex'
           flexDirection='column'
@@ -120,7 +120,7 @@ export const Subscription: FC<ISubscriptionProps> = () => {
             確認
           </AppButton>
         </Box>
-      </BaseModal>
+      </Modal>
     </Section>
   );
 };

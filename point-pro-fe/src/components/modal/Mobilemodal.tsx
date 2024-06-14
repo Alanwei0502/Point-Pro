@@ -1,16 +1,16 @@
-import { FC } from 'react';
-import { Box } from '@mui/material';
-import { BaseModal } from '~/components';
+import { FC, ReactNode } from 'react';
+import { Box, BoxProps, Modal, ModalProps } from '@mui/material';
 import { useAppDispatch } from '~/hooks';
-import { closeModal } from '~/store/slices/customer/menu.slice';
+import { closeModal } from '~/store/slices';
 
-interface IMobileModalLayoutProps {
-  children: React.ReactNode;
-  open: boolean;
+interface IMobileModalProps extends Omit<ModalProps, 'children'> {
+  children?: ReactNode;
+  boxProps?: BoxProps;
 }
 
-export const MobileModalLayout: FC<IMobileModalLayoutProps> = (props) => {
-  const { children, open } = props;
+export const MobileModal: FC<IMobileModalProps> = (props) => {
+  const { children, open, boxProps = {}, ...restModalProps } = props;
+  const { sx, ...restBoxProps } = boxProps;
 
   const dispatch = useAppDispatch();
 
@@ -19,26 +19,32 @@ export const MobileModalLayout: FC<IMobileModalLayoutProps> = (props) => {
   };
 
   return (
-    <BaseModal open={open} onClose={handleClose}>
-      <Box
-        sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-          alignItems: 'center',
-          gap: '1rem',
-          width: '80%',
-          bgcolor: 'common.white',
-          textAlign: 'center',
-          position: 'absolute',
-          top: '50%',
-          left: '50%',
-          transform: 'translate(-50%, -50%)',
-          padding: '1rem',
-        }}
-      >
-        {open && children}
-      </Box>
-    </BaseModal>
+    <>
+      {open && (
+        <Modal onClose={handleClose} open={open} {...restModalProps}>
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'center',
+              alignItems: 'center',
+              gap: '1rem',
+              width: '80%',
+              bgcolor: 'common.white',
+              textAlign: 'center',
+              position: 'absolute',
+              top: '50%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)',
+              padding: '1rem',
+              ...sx,
+            }}
+            {...restBoxProps}
+          >
+            {open && children}
+          </Box>
+        </Modal>
+      )}
+    </>
   );
 };

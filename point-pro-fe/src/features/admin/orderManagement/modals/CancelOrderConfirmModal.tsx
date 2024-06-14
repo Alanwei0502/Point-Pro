@@ -1,8 +1,7 @@
 import { FC, useState } from 'react';
-import { Card, CardActions, CardContent, CardHeader, Typography } from '@mui/material';
-import { AppButton, TabletModalLayout } from '~/components';
+import { Typography } from '@mui/material';
+import { AppButton, TabletModal } from '~/components';
 import { useAppDispatch, useAppSelector } from '~/hooks';
-import { theme } from '~/theme';
 import { orderManagementSliceActions } from '~/store/slices';
 import { toast } from 'react-toastify';
 
@@ -46,21 +45,26 @@ export const CancelOrderConfirmModal: FC<ICancelOrderConfirmModalProps> = () => 
   };
 
   return (
-    <TabletModalLayout open={isOpen}>
-      <Card>
-        <CardHeader title={`取消「${data?.id.slice(-5)}」訂單`} sx={{ backgroundColor: theme.palette.primary.main, textAlign: 'center' }} />
-        <CardContent sx={{ padding: '1rem', minWidth: '50cqw' }}>
-          <Typography textAlign={'center'}>確定要取消此筆訂單？</Typography>
-        </CardContent>
-        <CardActions>
-          <AppButton variant='outlined' color='secondary' fullWidth onClick={handleCancel}>
-            取消
-          </AppButton>
-          <AppButton fullWidth onClick={handleCancelOrder} disabled={isCancelLoading}>
-            確定
-          </AppButton>
-        </CardActions>
-      </Card>
-    </TabletModalLayout>
+    <TabletModal
+      open={isOpen}
+      cardHeaderProps={{
+        title: `取消「${data?.id.slice(-5)}」訂單`,
+      }}
+      cardContentProps={{
+        children: <Typography textAlign='center'>確定要取消此筆訂單？</Typography>,
+      }}
+      cardActionsProps={{
+        children: (
+          <>
+            <AppButton variant='outlined' color='secondary' fullWidth onClick={handleCancel}>
+              取消
+            </AppButton>
+            <AppButton fullWidth onClick={handleCancelOrder} disabled={isCancelLoading}>
+              確定
+            </AppButton>
+          </>
+        ),
+      }}
+    />
   );
 };

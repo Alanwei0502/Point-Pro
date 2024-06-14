@@ -4,7 +4,7 @@ import { FC, useEffect, useMemo, useState } from 'react';
 // import { ORDER_STATUS_TRANSLATE, formatFullDateWithTime, calculateOrderPrice } from '~/utils';
 // import { useAppDispatch, useAppSelector } from '~/hooks';
 // import { setMobileOrderStatusTab, closeDialog, openModal } from '~/store/slices';
-// import { OrderType, MobileDialog, IOrder, OrderStatus, MobileModal } from '~/types';
+// import { OrderType, MobileDialog, IOrder, OrderStatus, MobileModalType } from '~/types';
 // import { MobileDialogLayout } from '~/components';
 // import { StyledTab } from '~/features/customer/menu/CategoryNavbar';
 
@@ -46,7 +46,7 @@ export const OrdersDialog: FC<IOrdersDialogProps> = () => {
   //     setToggleList(newToggleList);
   //   };
   //   const handleCheckout = () => {
-  //     dispatch(openModal({ type: MobileModal.PAYMENT }));
+  //     dispatch(openModal({ type: MobileModalType.PAYMENT }));
   //   };
   //   return (
   //     <MobileDialogLayout

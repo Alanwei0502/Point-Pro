@@ -1,11 +1,10 @@
 import { FC, useState } from 'react';
-import { Card, CardActions, CardContent, CardHeader, Typography } from '@mui/material';
-import { AppButton, TabletModalLayout } from '~/components';
+import { toast } from 'react-toastify';
+import { Typography } from '@mui/material';
+import { AppButton, TabletModal } from '~/components';
 import { useAppDispatch, useAppSelector } from '~/hooks';
 import { takeOrderSliceActions, orderManagementSliceActions } from '~/store/slices';
-import { theme } from '~/theme';
 import { OrderType } from '~/types';
-import { toast } from 'react-toastify';
 
 interface ISubmitCartConfirmModalProps {}
 
@@ -54,21 +53,26 @@ export const SubmitCartConfirmModal: FC<ISubmitCartConfirmModalProps> = () => {
   };
 
   return (
-    <TabletModalLayout open={isOpen}>
-      <Card>
-        <CardHeader title='送出訂單' sx={{ backgroundColor: theme.palette.primary.main, textAlign: 'center' }} />
-        <CardContent sx={{ padding: '1rem', minWidth: '50cqw' }}>
-          <Typography textAlign='center'>請再次確定訂單內容無誤，即將送出訂單。</Typography>
-        </CardContent>
-        <CardActions>
-          <AppButton variant='outlined' color='secondary' fullWidth onClick={handleCancel}>
-            取消
-          </AppButton>
-          <AppButton fullWidth onClick={handleSubmitOrder} disabled={isSubmitLoading}>
-            確定
-          </AppButton>
-        </CardActions>
-      </Card>
-    </TabletModalLayout>
+    <TabletModal
+      open={isOpen}
+      cardHeaderProps={{
+        title: '送出訂單',
+      }}
+      cardContentProps={{
+        children: <Typography textAlign='center'>請再次確定訂單內容無誤，即將送出訂單。</Typography>,
+      }}
+      cardActionsProps={{
+        children: (
+          <>
+            <AppButton variant='outlined' color='secondary' fullWidth onClick={handleCancel}>
+              取消
+            </AppButton>
+            <AppButton fullWidth onClick={handleSubmitOrder} disabled={isSubmitLoading}>
+              確定
+            </AppButton>
+          </>
+        ),
+      }}
+    />
   );
 };

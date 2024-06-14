@@ -1,10 +1,9 @@
 import { ChangeEvent, FC, useState } from 'react';
 import { toast } from 'react-toastify';
-import { Card, CardActions, CardContent, CardHeader, FormControl, FormLabel, MenuItem, Select, SelectChangeEvent, TextField } from '@mui/material';
-import { AppButton, TabletModalLayout } from '~/components';
+import { FormControl, FormLabel, MenuItem, Select, SelectChangeEvent, TextField } from '@mui/material';
+import { AppButton, TabletModal } from '~/components';
 import { useAppDispatch, useAppSelector } from '~/hooks';
 import { closeCreateSpecialtyModal, getSpecialties, postSpecialty } from '~/store/slices';
-import { theme } from '~/theme';
 import { ISpecialty, SelectionType } from '~/types';
 import { SELECTION_TYPE_TRANSLATE } from '~/utils';
 
@@ -67,41 +66,50 @@ export const CreateSpecialtyModal: FC<ICreateSpecialtyModalProps> = () => {
   };
 
   return (
-    <TabletModalLayout open={isOpen}>
-      <Card>
-        <CardHeader title='新增種類' sx={{ backgroundColor: theme.palette.primary.main, textAlign: 'center' }} />
-        <CardContent sx={{ padding: '1rem', width: '50cqw' }}>
-          <FormControl margin='dense' required fullWidth>
-            <FormLabel>名稱</FormLabel>
-            <TextField
-              autoFocus
-              size='small'
-              value={title}
-              error={hasSameSpecialtyExist}
-              helperText={hasSameSpecialtyExist && '已有相同的種類'}
-              onChange={handleChangeTitle}
-            />
-          </FormControl>
-          <FormControl margin='dense' required fullWidth>
-            <FormLabel>選擇方式</FormLabel>
-            <Select size='small' value={selectionType} onChange={handleChangeSelectionType}>
-              {Object.entries(SELECTION_TYPE_TRANSLATE).map((item) => (
-                <MenuItem key={item[0]} value={item[0]}>
-                  {item[1]}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-        </CardContent>
-        <CardActions>
-          <AppButton variant='outlined' color='secondary' fullWidth onClick={handleCancel}>
-            取消
-          </AppButton>
-          <AppButton fullWidth onClick={handleConfirmCreateSpecialty} disabled={isInvalid}>
-            確定
-          </AppButton>
-        </CardActions>
-      </Card>
-    </TabletModalLayout>
+    <TabletModal
+      open={isOpen}
+      cardHeaderProps={{
+        title: '新增種類',
+      }}
+      cardContentProps={{
+        children: (
+          <>
+            <FormControl margin='dense' required fullWidth>
+              <FormLabel>名稱</FormLabel>
+              <TextField
+                autoFocus
+                size='small'
+                value={title}
+                error={hasSameSpecialtyExist}
+                helperText={hasSameSpecialtyExist && '已有相同的種類'}
+                onChange={handleChangeTitle}
+              />
+            </FormControl>
+            <FormControl margin='dense' required fullWidth>
+              <FormLabel>選擇方式</FormLabel>
+              <Select size='small' value={selectionType} onChange={handleChangeSelectionType}>
+                {Object.entries(SELECTION_TYPE_TRANSLATE).map((item) => (
+                  <MenuItem key={item[0]} value={item[0]}>
+                    {item[1]}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </>
+        ),
+      }}
+      cardActionsProps={{
+        children: (
+          <>
+            <AppButton variant='outlined' color='secondary' fullWidth onClick={handleCancel}>
+              取消
+            </AppButton>
+            <AppButton fullWidth onClick={handleConfirmCreateSpecialty} disabled={isInvalid}>
+              確定
+            </AppButton>
+          </>
+        ),
+      }}
+    />
   );
 };

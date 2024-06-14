@@ -1,10 +1,9 @@
 import { FC, useState } from 'react';
-import { Card, CardActions, CardContent, CardHeader, Typography } from '@mui/material';
-import { AppButton, TabletModalLayout } from '~/components';
+import { toast } from 'react-toastify';
+import { Typography } from '@mui/material';
+import { AppButton, TabletModal } from '~/components';
 import { useAppDispatch, useAppSelector } from '~/hooks';
 import { closeDeleteSpecialtyConfirmModal, deleteSpecialty, getSpecialties } from '~/store/slices';
-import { theme } from '~/theme';
-import { toast } from 'react-toastify';
 
 interface IDeleteSpecialtyConfirmModalProps {}
 
@@ -44,21 +43,26 @@ export const DeleteSpecialtyConfirmModal: FC<IDeleteSpecialtyConfirmModalProps> 
   };
 
   return (
-    <TabletModalLayout open={isOpen}>
-      <Card>
-        <CardHeader title='刪除客製化種類' sx={{ backgroundColor: theme.palette.primary.main, textAlign: 'center' }} />
-        <CardContent sx={{ padding: '1rem', width: '50cqw' }}>
-          <Typography textAlign='center'>確定要刪除整個「{data?.title}」？</Typography>
-        </CardContent>
-        <CardActions>
-          <AppButton variant='outlined' color='secondary' fullWidth onClick={handleCancel}>
-            取消
-          </AppButton>
-          <AppButton fullWidth onClick={handleConfirmDelete} disabled={isInvalid}>
-            確定
-          </AppButton>
-        </CardActions>
-      </Card>
-    </TabletModalLayout>
+    <TabletModal
+      open={isOpen}
+      cardHeaderProps={{
+        title: '刪除客製化種類',
+      }}
+      cardContentProps={{
+        children: <Typography textAlign='center'>確定要刪除整個「{data?.title}」？</Typography>,
+      }}
+      cardActionsProps={{
+        children: (
+          <>
+            <AppButton variant='outlined' color='secondary' fullWidth onClick={handleCancel}>
+              取消
+            </AppButton>
+            <AppButton fullWidth onClick={handleConfirmDelete} disabled={isInvalid}>
+              確定
+            </AppButton>
+          </>
+        ),
+      }}
+    />
   );
 };

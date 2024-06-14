@@ -1,9 +1,7 @@
 import { FC } from 'react';
-import { Card, CardActions, CardContent, CardHeader } from '@mui/material';
-import { BaseButton, TabletModalLayout } from '~/components';
+import { AppButton, TabletModal } from '~/components';
 import { useAppDispatch, useAppSelector } from '~/hooks';
 import { closeSpecialtySettingModal } from '~/store/slices';
-import { theme } from '~/theme';
 import { SpecialtySettingTable } from '../tables/SpecialtySettingTable';
 
 interface ISpecialtyItemsSettingModalProps {}
@@ -18,18 +16,24 @@ export const SpecialtySettingModal: FC<ISpecialtyItemsSettingModalProps> = () =>
   };
 
   return (
-    <TabletModalLayout open={isOpen}>
-      <Card>
-        <CardHeader title='客製化設定' sx={{ backgroundColor: theme.palette.primary.main, textAlign: 'center' }} />
-        <CardContent sx={{ padding: 0, minWidth: '60cqw', maxHeight: 500, overflow: 'scroll' }}>
-          <SpecialtySettingTable />
-        </CardContent>
-        <CardActions>
-          <BaseButton variant='contained' color='primary' fullWidth onClick={handleCloseModal}>
-            關閉
-          </BaseButton>
-        </CardActions>
-      </Card>
-    </TabletModalLayout>
+    <TabletModal
+      open={isOpen}
+      cardHeaderProps={{
+        title: '客製化設定',
+      }}
+      cardContentProps={{
+        sx: { padding: 0, minWidth: '60cqw', maxHeight: 500, overflow: 'scroll' },
+        children: <SpecialtySettingTable />,
+      }}
+      cardActionsProps={{
+        children: (
+          <>
+            <AppButton fullWidth onClick={handleCloseModal}>
+              關閉
+            </AppButton>
+          </>
+        ),
+      }}
+    />
   );
 };

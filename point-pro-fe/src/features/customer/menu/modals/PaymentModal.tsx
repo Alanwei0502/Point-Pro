@@ -6,8 +6,8 @@ import { useAppDispatch, useAppSelector } from '~/hooks';
 import { openModal } from '~/store/slices/customer/menu.slice';
 import linePay from '~/assets/images/line-pay.png';
 import { requestEcPay, requestLinePay } from '~/store/slices';
-import { MobileModal, OrderStatus } from '~/types';
-import { MobileModalLayout } from '~/components';
+import { MobileModalType, OrderStatus } from '~/types';
+import { MobileModal } from '~/components';
 
 interface IPaymentModalProps {}
 
@@ -19,7 +19,7 @@ export const PaymentModal: FC<IPaymentModalProps> = () => {
   const linePayResponse = useAppSelector(({ payment }) => payment.linePayResponse);
 
   const handlePaymentByCash = () => {
-    dispatch(openModal({ type: MobileModal.COUNTER_REMINDER }));
+    dispatch(openModal({ type: MobileModalType.COUNTER_REMINDER }));
   };
 
   const handlePaymentByCard = async () => {
@@ -56,44 +56,42 @@ export const PaymentModal: FC<IPaymentModalProps> = () => {
   }, [linePayResponse]);
 
   return (
-    <MobileModalLayout open={modalType === MobileModal.PAYMENT}>
-      <>
-        <Typography variant='h6' fontWeight={900}>
-          請選擇付款方式
-        </Typography>
-        <Button
-          onClick={handlePaymentByCash}
-          startIcon={<MoneyIcon />}
-          sx={{
-            color: 'common.black',
-            bgcolor: 'primary.main',
-            width: '100%',
-          }}
-        >
-          現金付款
-        </Button>
-        <Button
-          onClick={handlePaymentByCard}
-          startIcon={<CreditCardIcon />}
-          sx={{
-            color: 'common.black',
-            bgcolor: 'primary.main',
-            width: '100%',
-          }}
-        >
-          信用卡
-        </Button>
-        <Button
-          onClick={handlePaymentByLinePay}
-          sx={{
-            color: 'common.black',
-            bgcolor: 'primary.main',
-            width: '100%',
-          }}
-        >
-          <img src={linePay} alt='LINE Pay' style={{ height: '1.8rem' }} />
-        </Button>
-      </>
-    </MobileModalLayout>
+    <MobileModal open={modalType === MobileModalType.PAYMENT}>
+      <Typography variant='h6' fontWeight={900}>
+        請選擇付款方式
+      </Typography>
+      <Button
+        onClick={handlePaymentByCash}
+        startIcon={<MoneyIcon />}
+        sx={{
+          color: 'common.black',
+          bgcolor: 'primary.main',
+          width: '100%',
+        }}
+      >
+        現金付款
+      </Button>
+      <Button
+        onClick={handlePaymentByCard}
+        startIcon={<CreditCardIcon />}
+        sx={{
+          color: 'common.black',
+          bgcolor: 'primary.main',
+          width: '100%',
+        }}
+      >
+        信用卡
+      </Button>
+      <Button
+        onClick={handlePaymentByLinePay}
+        sx={{
+          color: 'common.black',
+          bgcolor: 'primary.main',
+          width: '100%',
+        }}
+      >
+        <img src={linePay} alt='LINE Pay' style={{ height: '1.8rem' }} />
+      </Button>
+    </MobileModal>
   );
 };

@@ -1,10 +1,9 @@
 import { ChangeEvent, FC, useState } from 'react';
 import { toast } from 'react-toastify';
-import { Card, CardActions, CardContent, CardHeader, FormControl, FormLabel, TextField } from '@mui/material';
-import { AppButton, TabletModalLayout } from '~/components';
+import { FormControl, FormLabel, TextField } from '@mui/material';
+import { AppButton, TabletModal } from '~/components';
 import { useAppDispatch, useAppSelector } from '~/hooks';
 import { closeCreateCategoryModal, getCategories, postCategory } from '~/store/slices';
-import { theme } from '~/theme';
 import { ICategory } from '~/types';
 
 interface ICreateCategoryModalProps {}
@@ -59,10 +58,13 @@ export const CreateCategoryModal: FC<ICreateCategoryModalProps> = () => {
   };
 
   return (
-    <TabletModalLayout open={isOpen}>
-      <Card>
-        <CardHeader title='新增種類' sx={{ backgroundColor: theme.palette.primary.main, textAlign: 'center' }} />
-        <CardContent sx={{ padding: '1rem', width: '50cqw' }}>
+    <TabletModal
+      open={isOpen}
+      cardHeaderProps={{
+        title: '新增種類',
+      }}
+      cardContentProps={{
+        children: (
           <FormControl margin='dense' required fullWidth>
             <FormLabel>種類名稱</FormLabel>
             <TextField
@@ -74,16 +76,20 @@ export const CreateCategoryModal: FC<ICreateCategoryModalProps> = () => {
               onChange={handleChangeTitle}
             />
           </FormControl>
-        </CardContent>
-        <CardActions>
-          <AppButton variant='outlined' color='secondary' fullWidth onClick={handleCancel}>
-            取消
-          </AppButton>
-          <AppButton fullWidth onClick={handleConfirmCreateCategory} disabled={isInvalid}>
-            確定
-          </AppButton>
-        </CardActions>
-      </Card>
-    </TabletModalLayout>
+        ),
+      }}
+      cardActionsProps={{
+        children: (
+          <>
+            <AppButton variant='outlined' color='secondary' fullWidth onClick={handleCancel}>
+              取消
+            </AppButton>
+            <AppButton fullWidth onClick={handleConfirmCreateCategory} disabled={isInvalid}>
+              確定
+            </AppButton>
+          </>
+        ),
+      }}
+    />
   );
 };
