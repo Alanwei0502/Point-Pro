@@ -4,44 +4,44 @@ import { Autoplay } from 'swiper';
 import { Typography, Rating, Grid, Box } from '@mui/material';
 import { Section, Title } from '~/components';
 import { useResponsiveStyles } from '~/hooks';
-import { getImageUrl } from '~/utils';
+import { IMAGE_URL } from '~/utils';
 import { theme } from '~/theme';
 
 const testimonialsData = [
   {
     name: '林怡君',
     rate: 5,
-    imgUrl: getImageUrl('testimonials-1.jpg'),
+    imgUrl: `${IMAGE_URL}DaJNJXqm.jpeg`,
     content: '我們的餐廳使用了PointPro，非常滿意！系統操作簡單易懂，訂單處理更加快速，客戶滿意度也大幅提升了。',
   },
   {
     name: '李大偉',
     rate: 4.5,
-    imgUrl: getImageUrl('testimonials-2.jpg'),
+    imgUrl: `${IMAGE_URL}Hrwdunqm.jpeg`,
     content: '在PointPro的支援下，我們店裡的客戶服務更加高效率。系統可以追蹤訂單，幫助我們掌握客人喜好，並且快速處理退款等問題。',
   },
   {
     name: '張家豪',
     rate: 4,
-    imgUrl: getImageUrl('testimonials-3.jpg'),
+    imgUrl: `${IMAGE_URL}hHWUmdXm.jpeg`,
     content: '我在使用PointPro的餐廳點餐時，感到非常方便和快速。系統操作簡單易懂，訂單也能快速處理，餐點的味道也非常美味。',
   },
   {
     name: '黃雅婷',
     rate: 5,
-    imgUrl: getImageUrl('testimonials-4.jpg'),
+    imgUrl: `${IMAGE_URL}axRAW9am.jpeg`,
     content: '我們店裡使用了PointPro的內用點餐系統，大大減輕了我們員工的工作量，客人點餐更加方便快速。',
   },
   {
     name: '許志偉',
     rate: 4.5,
-    imgUrl: getImageUrl('testimonials-5.jpg'),
+    imgUrl: `${IMAGE_URL}6sCQPiIm.jpeg`,
     content: 'PointPro的外帶點餐系統非常好用，能夠快速處理訂單，大大提高了效率，也省去了客人等待的時間。',
   },
   {
     name: '郭承恩',
     rate: 5,
-    imgUrl: getImageUrl('testimonials-6.jpg'),
+    imgUrl: `${IMAGE_URL}AqccSr1m.jpeg`,
     content: '我們公司導入了PointPro，整合了POS系統、訂單管理等多個功能，讓我們的營運管理更加順暢。',
   },
 ];

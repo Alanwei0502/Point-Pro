@@ -5,7 +5,7 @@ import { useAppDispatch, useAppSelector } from '~/hooks';
 import { takeOrderSliceActions } from '~/store/slices';
 import { theme } from '~/theme';
 import { GetMenuResponseMeal } from '~/types';
-import { MEAL_IMAGE_URL } from '~/utils';
+import { IMAGE_URL } from '~/utils';
 
 interface MealItemProps {
   meal: GetMenuResponseMeal;
@@ -42,12 +42,7 @@ export const MealItem: FC<MealItemProps> = (props) => {
         {meal.title}
       </Typography>
       <Box height='6rem' sx={{ bgcolor: theme.palette.common.black, textAlign: 'center' }}>
-        <Box
-          component='img'
-          src={`${MEAL_IMAGE_URL}${meal.imageId}b.jpg`}
-          alt={meal.title}
-          sx={{ objectFit: 'fill', height: '100%', maxWidth: '100%' }}
-        />
+        <Box component='img' src={`${IMAGE_URL}${meal.imageId}b.jpg`} alt={meal.title} sx={{ objectFit: 'fill', height: '100%', maxWidth: '100%' }} />
       </Box>
       <Typography textAlign='center'>{meal.price}元</Typography>
       <Row justifyContent='space-between' alignItems='center'></Row>

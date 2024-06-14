@@ -4,7 +4,7 @@ import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import { usePrevious, useAppDispatch, useAppSelector } from '~/hooks';
 import { openDialog } from '~/store/slices';
 import { MobileDialog, GetMenuResponseMeal } from '~/types';
-import { MEAL_IMAGE_URL } from '~/utils';
+import { IMAGE_URL } from '~/utils';
 
 interface IMealsProps {}
 
@@ -43,7 +43,7 @@ export const Meals: FC<IMealsProps> = () => {
                     <Grid item sx={{ position: 'relative' }}>
                       <Box
                         component='img'
-                        src={`${MEAL_IMAGE_URL}${meal.imageId}s.jpg`}
+                        src={`${IMAGE_URL}${meal.imageId}s.jpg`}
                         alt={`${meal.title}-img`}
                         sx={{ width: '5rem', verticalAlign: 'middle' }}
                       />

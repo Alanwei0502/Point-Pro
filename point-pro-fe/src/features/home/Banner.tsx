@@ -1,6 +1,6 @@
 import { FC, useEffect, useRef, useState } from 'react';
 import { Container, Box, Typography, useTheme } from '@mui/material';
-import { getImageUrl } from '~/utils';
+import { IMAGE_URL } from '~/utils';
 import { useAppDispatch, useResponsiveStyles } from '~/hooks';
 import { CallToActionButton } from '~/components';
 import { homeSliceActions } from '~/store/slices';
@@ -72,7 +72,7 @@ export const Banner: FC<IBannerProps> = () => {
             objectFit: 'cover',
             objectPosition: '50% 50%',
           }}
-          src={getImageUrl('pexels-kampus-production-hero-section.mp4', null)}
+          src={`${IMAGE_URL}KOH3og1.mp4`}
           autoPlay={true}
           muted={true}
           loop={true}

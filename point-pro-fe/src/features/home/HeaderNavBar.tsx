@@ -4,7 +4,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import CloseIcon from '@mui/icons-material/Close';
 import { Row, NavLink } from '~/components';
 import { useResponsiveStyles } from '~/hooks';
-import { ReactComponent as Logo } from '~/assets/logo.svg';
+import { ReactComponent as Logo } from '~/assets/images/logo.svg';
 
 const navData = [
   {

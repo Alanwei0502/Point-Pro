@@ -1,10 +1,10 @@
 import { FC, useEffect } from 'react';
+import { toast } from 'react-toastify';
 import { Box } from '@mui/material';
 import { theme } from '~/theme';
 import HeaderLogo from '~/assets/images/header-logo.svg';
 import { useAppDispatch, useAppSelector } from '~/hooks';
 import { adminUISliceActions, getCategories, getMeals, getSpecialties, orderManagementSliceActions, takeOrderSliceActions } from '~/store/slices';
-import { toast } from 'react-toastify';
 
 const { getAdminMenu } = takeOrderSliceActions;
 const { getAllOrders } = orderManagementSliceActions;

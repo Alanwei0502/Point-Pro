@@ -1,5 +1,6 @@
 import { FC, useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { Box, Typography, InputAdornment, IconButton, OutlinedInput, FormControl, InputLabel } from '@mui/material';
@@ -7,7 +8,6 @@ import { useAppDispatch, useAppSelector } from '~/hooks';
 import { authSliceActions } from '~/store/slices';
 import HeaderLogo from '~/assets/images/header-logo.svg';
 import { AppButton, pathObj } from '~/components';
-import { toast } from 'react-toastify';
 
 const { login } = authSliceActions;
 

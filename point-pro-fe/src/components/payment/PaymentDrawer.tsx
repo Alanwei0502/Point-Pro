@@ -3,7 +3,7 @@ import { Accordion, AccordionDetails, AccordionSummary, Box, Button, Divider, Fo
 import MoneyIcon from '@mui/icons-material/Money';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { Column, Row, BaseDraw, CashPaymentDialog } from '~/components';
-import { ReactComponent as LinePayIcon } from '~/assets/line-pay-solid.svg';
+import { ReactComponent as LinePayIcon } from '~/assets/images/line-pay-solid.svg';
 import { theme } from '~/theme';
 import { useAppDispatch, useAppSelector } from '~/hooks';
 import { OrderType, OrderMessage, SocketTopic, IOrder } from '~/types';

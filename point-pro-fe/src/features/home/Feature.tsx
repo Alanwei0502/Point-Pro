@@ -3,9 +3,9 @@ import { Box, Grid, Typography } from '@mui/material';
 import { Assignment, MoreTime, MenuBook, Inventory } from '@mui/icons-material';
 import { Column, Section, Title } from '~/components';
 import { useResponsiveStyles } from '~/hooks';
-import { getImageUrl } from '~/utils';
+import { IMAGE_URL } from '~/utils';
 import { theme } from '~/theme';
-import { ReactComponent as FeatureIllustration } from '~/assets/featureIllustration.svg';
+import { ReactComponent as FeatureIllustration } from '~/assets/images/featureIllustration.svg';
 
 const systems = [
   {
@@ -69,22 +69,22 @@ export const SystemFeatureCards: FC<SystemFeatureCardProps> = () => {
 
 const features = [
   {
-    imgUrl: getImageUrl('feature01.jpg'),
+    imgUrl: `${IMAGE_URL}ZFJKU0lm.jpeg`,
     title: '客製化菜單',
     description: '提供客人個性化的餐飲選擇，讓他們品嚐到獨特的體驗。',
   },
   {
-    imgUrl: getImageUrl('feature02.jpg'),
+    imgUrl: `${IMAGE_URL}166GpEbm.jpeg`,
     title: '溫馨提醒',
     description: '智能POS助顧客餐點補充，感受關懷與新鮮度。',
   },
   {
-    imgUrl: getImageUrl('feature03.jpg'),
+    imgUrl: `${IMAGE_URL}Uox67gdm.jpeg`,
     title: '科技提升體驗',
     description: '智能點餐、雲端支付，顧客享受便利與舒適。',
   },
   {
-    imgUrl: getImageUrl('feature04.jpg'),
+    imgUrl: `${IMAGE_URL}xtLxX7Mm.jpeg`,
     title: '客人回饋',
     description: '定期收集意見，解決問題，顧客感受尊重。',
   },
