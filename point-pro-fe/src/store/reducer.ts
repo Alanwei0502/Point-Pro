@@ -6,16 +6,14 @@ import {
   socketSlice,
   bookingSlice,
   menuSlice,
-  periodSlice,
   menuManagementSlice,
   takeOrderSlice,
-  adminLoadingSlice,
+  adminUISlice,
   orderManagementSlice,
   reservationManagementSlice,
   seatManagementSlice,
   homeSlice,
 } from './slices';
-import { counterSlice } from '~/features/home/slice';
 
 const reducer = combineReducers({
   // customer
@@ -24,11 +22,9 @@ const reducer = combineReducers({
   [bookingSlice.name]: bookingSlice.reducer,
   [paymentSlice.name]: paymentSlice.reducer,
   [orderSlice.name]: orderSlice.reducer,
-  [counterSlice.name]: counterSlice.reducer,
   [socketSlice.name]: socketSlice.reducer,
-  [periodSlice.name]: periodSlice.reducer,
   // admin
-  [adminLoadingSlice.name]: adminLoadingSlice.reducer,
+  [adminUISlice.name]: adminUISlice.reducer,
   [authSlice.name]: authSlice.reducer,
   [takeOrderSlice.name]: takeOrderSlice.reducer,
   [menuManagementSlice.name]: menuManagementSlice.reducer,

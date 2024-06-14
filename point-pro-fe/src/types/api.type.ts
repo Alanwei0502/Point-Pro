@@ -14,8 +14,6 @@ import {
   OrderStatus,
   OrderType,
   SeatDetails,
-  SeatInfo,
-  UserInfo,
 } from '~/types';
 
 export interface ApiResponse<Result> {
@@ -23,26 +21,18 @@ export interface ApiResponse<Result> {
   result: Result | null;
 }
 
-// Subscribe Newsletter
+// NEWSLETTER
 export interface SubscribeNewsletterPayload {
   email: string;
 }
 
-// Login
+// LOGIN ADMIN
 export interface LoginPayload {
   username: IUser['username'];
   password: IUser['password'];
 }
 export type Token = string;
 export type LoginResponse = ApiResponse<Token>;
-
-// Generate Token
-export interface GenerateTokenPayload {
-  reservationId: string;
-}
-export type GenerateTokenResponse = ApiResponse<{
-  token: Token;
-}>;
 
 // CATEGORY
 export type GetCategoriesResponse = ApiResponse<ICategory[]>;

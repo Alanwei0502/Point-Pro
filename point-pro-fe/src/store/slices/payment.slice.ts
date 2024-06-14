@@ -5,7 +5,6 @@ import { PaymentApi } from '~/api';
 import {
   EcPayResponse,
   EcPayResponseBody,
-  GatherOrder,
   LinePayRequestBody,
   LinePayResponse,
   EcPayConfirmResponse,
@@ -20,7 +19,8 @@ const name = 'payment';
 interface IPaymentSliceState {
   isLoading: boolean;
   error: string | null;
-  paymentItem: GatherOrder | null;
+  // TODO
+  paymentItem: any | null;
   isOpenPaymentDrawer: boolean;
   linePayResponse: LinePayResponse;
   ecPayResponse: EcPayResponse;

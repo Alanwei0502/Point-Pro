@@ -8,7 +8,7 @@ export const http = axios.create({ baseURL: `${apiHost}/api` });
 
 http.interceptors.request.use(
   (configs) => {
-    const token = sessionStorage.getItem('token') || '';
+    const token = localStorage.getItem('token') || '';
     configs.headers.authorization = `Bearer ${token}`;
     return configs;
   },
@@ -32,7 +32,7 @@ const errorCodeCheck = (status: number) => {
   switch (status) {
     case 401:
     case 403: {
-      sessionStorage.removeItem('token');
+      localStorage.removeItem('token');
 
       const isInAdminLoginPage = location.pathname === `/${pathObj.admin}`;
       const isInCMS = location.pathname.includes('admin');

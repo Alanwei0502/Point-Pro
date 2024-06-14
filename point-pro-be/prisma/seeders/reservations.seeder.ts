@@ -1,68 +1,735 @@
+import { Reservation } from '@prisma/client';
 import prisma from '../client';
 
-export function insertReservations() {
-  return prisma.$transaction([
-    prisma.$executeRaw`
-      DELETE FROM reservations;
-    `,
-    prisma.$executeRaw`
-      DO $$
-      DECLARE
-          period_record RECORD;
-          random_is_cancelled BOOLEAN;
-          random_people SMALLINT;
-          random_remark VARCHAR(255);
-      BEGIN
-          FOR i IN 1..80 LOOP  
-              -- random period
-              SELECT * 
-              INTO period_record
-              FROM periods
-              WHERE periods.start_time > NOW() + '1 day'
-              LIMIT 1 OFFSET i % 20;
+const customers: Pick<Reservation, 'username' | 'gender' | 'people' | 'phone' | 'email' | 'remark' | 'type'>[] = [
+  {
+    username: '林雅婷',
+    phone: '0912112233',
+    gender: 'FEMALE',
+    email: 'ya.ting@domain.com',
+    people: 4,
+    type: 'PHONE',
+    remark: '慶生',
+  },
+  {
+    username: '陳冠宇',
+    phone: '0987654321',
+    gender: 'MALE',
+    email: 'guanyu.chen@domain.com',
+    people: 6,
+    type: 'ONLINE',
+    remark: '預定港都海鮮鍋大一碗',
+  },
+  {
+    username: '李慧君',
+    phone: '0911222333',
+    gender: 'FEMALE',
+    email: '',
+    people: 3,
+    type: 'PHONE',
+    remark: '約會',
+  },
+  {
+    username: '張志豪',
+    phone: '0922333444',
+    gender: 'MALE',
+    email: 'zhihao.zhang@domain.com',
+    people: 7,
+    type: 'ONLINE',
+    remark: '需要素食餐',
+  },
+  {
+    username: '王雅雯',
+    phone: '0933444555',
+    gender: 'FEMALE',
+    email: 'yawen.wang@domain.com',
+    people: 10,
+    type: 'PHONE',
+    remark: '公司員工聚餐',
+  },
+  {
+    username: '楊子豪',
+    phone: '0944555666',
+    gender: 'MALE',
+    email: '',
+    people: 8,
+    type: 'ONLINE',
+    remark: '',
+  },
+  {
+    username: '劉雅君',
+    phone: '0955666777',
+    gender: 'FEMALE',
+    email: 'yajun.liu@domain.com',
+    people: 5,
+    type: 'PHONE',
+    remark: '需要安排安靜的角落',
+  },
+  {
+    username: '黃志明',
+    phone: '0966777888',
+    gender: 'MALE',
+    email: '',
+    people: 6,
+    type: 'ONLINE',
+    remark: '慶祝母親節',
+  },
+  {
+    username: '吳雅婷',
+    phone: '0977888999',
+    gender: 'FEMALE',
+    email: 'yating.wu@domain.com',
+    people: 2,
+    type: 'PHONE',
+    remark: '需要輪椅通道',
+  },
+  {
+    username: '趙志強',
+    phone: '0988999000',
+    gender: 'MALE',
+    email: 'zhiqiang.zhao@domain.com',
+    people: 4,
+    type: 'ONLINE',
+    remark: '',
+  },
+  {
+    username: '許雅文',
+    phone: '0999000111',
+    gender: 'FEMALE',
+    email: 'yawen.xu@domain.com',
+    people: 3,
+    type: 'PHONE',
+    remark: '公司員工聚餐',
+  },
+  {
+    username: '鄭志宇',
+    phone: '0910111222',
+    gender: 'MALE',
+    email: '',
+    people: 5,
+    type: 'ONLINE',
+    remark: '',
+  },
+  {
+    username: '胡雅君',
+    phone: '0921222333',
+    gender: 'FEMALE',
+    email: 'yajun.hu@domain.com',
+    people: 2,
+    type: 'PHONE',
+    remark: '',
+  },
+  {
+    username: '林志明',
+    phone: '0932333444',
+    gender: 'MALE',
+    email: 'zhiming.lin@domain.com',
+    people: 8,
+    type: 'ONLINE',
+    remark: '慶生',
+  },
+  {
+    username: '陳雅雯',
+    phone: '0943444555',
+    gender: 'FEMALE',
+    email: '',
+    people: 9,
+    type: 'PHONE',
+    remark: '',
+  },
+  {
+    username: '張銘雄',
+    phone: '0954555666',
+    gender: 'MALE',
+    email: 'zhihao.zhang@domain.com',
+    people: 4,
+    type: 'ONLINE',
+    remark: '約會',
+  },
+  {
+    username: '王雅婷',
+    phone: '0965666777',
+    gender: 'FEMALE',
+    email: '',
+    people: 7,
+    type: 'PHONE',
+    remark: '',
+  },
+  {
+    username: '楊志明',
+    phone: '0976777888',
+    gender: 'MALE',
+    email: 'zhiming.yang@domain.com',
+    people: 6,
+    type: 'ONLINE',
+    remark: '',
+  },
+  {
+    username: '劉雅文',
+    phone: '0987888999',
+    gender: 'FEMALE',
+    email: '',
+    people: 5,
+    type: 'PHONE',
+    remark: '預定港都海鮮鍋大一碗',
+  },
+  {
+    username: '黃志豪',
+    phone: '0998999000',
+    gender: 'MALE',
+    email: 'zhihao.huang@domain.com',
+    people: 3,
+    type: 'ONLINE',
+    remark: '',
+  },
+  {
+    username: '吳雅婷',
+    phone: '0919000111',
+    gender: 'FEMALE',
+    email: 'yating.wu@domain.com',
+    people: 2,
+    type: 'PHONE',
+    remark: '公司員工聚餐',
+  },
+  {
+    username: '趙志強',
+    phone: '0920111222',
+    gender: 'MALE',
+    email: '',
+    people: 6,
+    type: 'ONLINE',
+    remark: '需要安排安靜的角落',
+  },
+  {
+    username: '許雅文',
+    phone: '0931222333',
+    gender: 'FEMALE',
+    email: 'yawen.xu@domain.com',
+    people: 4,
+    type: 'PHONE',
+    remark: '不吃辣',
+  },
+  {
+    username: '楊雅雯',
+    phone: '0990123456',
+    gender: 'FEMALE',
+    email: 'yawen.yang@example.com',
+    people: 9,
+    type: 'PHONE',
+    remark: '需要高背椅',
+  },
+  {
+    username: '唐志豪',
+    phone: '0956789023',
+    gender: 'MALE',
+    email: 'zhihao.tang@example.com',
+    people: 5,
+    type: 'ONLINE',
+    remark: '提前到場，希望早點安排座位',
+  },
+  {
+    username: '蘇志強',
+    phone: '0978901245',
+    gender: 'MALE',
+    email: 'zhiqiang.su@example.com',
+    people: 2,
+    type: 'ONLINE',
+    remark: '',
+  },
+  {
+    username: '袁雅雯',
+    phone: '0989012356',
+    gender: 'FEMALE',
+    email: 'yawen.yuan@example.com',
+    people: 3,
+    type: 'PHONE',
+    remark: '公司員工聚餐',
+  },
+  {
+    username: '鄭志宇',
+    phone: '0942333444',
+    gender: 'MALE',
+    email: 'zhiyu.zheng@domain.com',
+    people: 8,
+    type: 'ONLINE',
+    remark: '需要素食餐',
+  },
+  {
+    username: '鄭慧君',
+    phone: '0978901234',
+    gender: 'FEMALE',
+    email: 'huijun.zheng@example.com',
+    people: 3,
+    type: 'PHONE',
+    remark: '',
+  },
+  {
+    username: '胡雅君',
+    phone: '0953444555',
+    gender: 'FEMALE',
+    email: '',
+    people: 9,
+    type: 'PHONE',
+    remark: '',
+  },
+  {
+    username: '林志明',
+    phone: '0964555666',
+    gender: 'MALE',
+    email: 'zhiming.lin@domain.com',
+    people: 3,
+    type: 'ONLINE',
+    remark: '',
+  },
+  {
+    username: '陳雅雯',
+    phone: '0975666777',
+    gender: 'FEMALE',
+    email: 'yawen.chen@domain.com',
+    people: 4,
+    type: 'PHONE',
+    remark: '需要安排安靜的角落',
+  },
+  {
+    username: '林書鐘',
+    phone: '0986777888',
+    gender: 'MALE',
+    email: '',
+    people: 7,
+    type: 'ONLINE',
+    remark: '不吃辣',
+  },
+  {
+    username: '王瓊安',
+    phone: '0997888999',
+    gender: 'FEMALE',
+    email: 'yating.wang@domain.com',
+    people: 6,
+    type: 'PHONE',
+    remark: '公司員工聚餐',
+  },
+  {
+    username: '楊偉中',
+    phone: '0918779000',
+    gender: 'MALE',
+    email: 'zhiming.yang@domain.com',
+    people: 8,
+    type: 'ONLINE',
+    remark: '',
+  },
+  {
+    username: '徐雅惠',
+    phone: '0973158864',
+    gender: 'OTHER',
+    email: '',
+    people: 10,
+    type: 'ONLINE',
+    remark: '',
+  },
+  {
+    username: '周雅萍',
+    phone: '0941149414',
+    gender: 'FEMALE',
+    email: 'jinglai@xia.com',
+    people: 10,
+    type: 'ONLINE',
+    remark: '',
+  },
+  {
+    username: '謝冠宇',
+    phone: '0955989748',
+    gender: 'MALE',
+    email: '',
+    people: 7,
+    type: 'PHONE',
+    remark: '需要兒童椅',
+  },
+  {
+    username: '杜成功',
+    phone: '0996214634',
+    gender: 'MALE',
+    email: '',
+    people: 4,
+    type: 'ONLINE',
+    remark: '需要安排安靜的角落',
+  },
+  {
+    username: '王哲瑋',
+    phone: '0999701122',
+    gender: 'MALE',
+    email: '',
+    people: 6,
+    type: 'PHONE',
+    remark: '自備兩支威士忌，請問開瓶費',
+  },
+  {
+    username: '張家豪',
+    phone: '0955242335',
+    gender: 'MALE',
+    email: '',
+    people: 5,
+    type: 'PHONE',
+    remark: '慶生',
+  },
+  {
+    username: '白雅雯',
+    phone: '0941652991',
+    gender: 'FEMALE',
+    email: '',
+    people: 4,
+    type: 'PHONE',
+    remark: '需要高背椅',
+  },
+  {
+    username: '徐惠婷',
+    phone: '0941490600',
+    gender: 'OTHER',
+    email: '',
+    people: 6,
+    type: 'ONLINE',
+    remark: '',
+  },
+  {
+    username: '楚詩涵',
+    phone: '0911961401',
+    gender: 'FEMALE',
+    email: '',
+    people: 10,
+    type: 'PHONE',
+    remark: '自備兩支威士忌，請問開瓶費',
+  },
+  {
+    username: '秦宗翰',
+    phone: '0948217442',
+    gender: 'OTHER',
+    email: '',
+    people: 3,
+    type: 'ONLINE',
+    remark: '',
+  },
+  {
+    username: '陳家瑜',
+    phone: '0904658745',
+    gender: 'FEMALE',
+    email: 'wei43@gmail.com',
+    people: 10,
+    type: 'PHONE',
+    remark: '',
+  },
+  {
+    username: '劉郁婷',
+    phone: '0918499341',
+    gender: 'OTHER',
+    email: 'mingqiao@yahoo.com',
+    people: 7,
+    type: 'PHONE',
+    remark: '需要準備驚喜',
+  },
+  {
+    username: '楊志宏',
+    phone: '0928559189',
+    gender: 'MALE',
+    email: '',
+    people: 9,
+    type: 'ONLINE',
+    remark: '需要兒童椅',
+  },
+  {
+    username: '薛怡君',
+    phone: '0932008657',
+    gender: 'OTHER',
+    email: 'ganglai@gong.tw',
+    people: 4,
+    type: 'ONLINE',
+    remark: '',
+  },
+  {
+    username: '李政哲',
+    phone: '0910802474',
+    gender: 'MALE',
+    email: 'damei68@tang.tw',
+    people: 6,
+    type: 'PHONE',
+    remark: '需要兒童椅',
+  },
+  {
+    username: '劉冠宇',
+    phone: '0917768301',
+    gender: 'MALE',
+    email: 'jianwei@yahoo.com',
+    people: 3,
+    type: 'ONLINE',
+    remark: '提前到場，希望早點安排座位',
+  },
+  {
+    username: '何怡婷',
+    phone: '0945582418',
+    gender: 'FEMALE',
+    email: 'wguo@liao.org',
+    people: 6,
+    type: 'ONLINE',
+    remark: '',
+  },
+  {
+    username: '張婉婷',
+    phone: '0941146223',
+    gender: 'OTHER',
+    email: 'weichengli@yang.com',
+    people: 5,
+    type: 'ONLINE',
+    remark: '公司員工聚餐',
+  },
+  {
+    username: '楊淑慧',
+    phone: '0996516066',
+    gender: 'FEMALE',
+    email: 'baoyingxu@hotmail.com',
+    people: 9,
+    type: 'ONLINE',
+    remark: '約會',
+  },
+  {
+    username: '朱志豪',
+    phone: '0929284654',
+    gender: 'OTHER',
+    email: 'jieqingliang@tang.tw',
+    people: 5,
+    type: 'ONLINE',
+    remark: '需要素食餐',
+  },
+  {
+    username: '黃柏翰',
+    phone: '0995918856',
+    gender: 'OTHER',
+    email: 'huicai@yahoo.com',
+    people: 3,
+    type: 'ONLINE',
+    remark: '',
+  },
+  {
+    username: '馮怡萱',
+    phone: '0923665467',
+    gender: 'FEMALE',
+    email: 'hougang@chen.com',
+    people: 1,
+    type: 'PHONE',
+    remark: '',
+  },
+  {
+    username: '吳怡萱',
+    phone: '0997459670',
+    gender: 'FEMALE',
+    email: 'weideli@yahoo.com',
+    people: 8,
+    type: 'PHONE',
+    remark: '自備兩支威士忌，請問開瓶費',
+  },
+  {
+    username: '龔怡萱',
+    phone: '0919321560',
+    gender: 'FEMALE',
+    email: '',
+    people: 3,
+    type: 'ONLINE',
+    remark: '',
+  },
+  {
+    username: '郭雅涵',
+    phone: '0932822594',
+    gender: 'FEMALE',
+    email: 'jiawen@gmail.com',
+    people: 2,
+    type: 'PHONE',
+    remark: '需要輪椅通道',
+  },
+  {
+    username: '范雅雯',
+    phone: '0974270698',
+    gender: 'FEMALE',
+    email: 'fangguiying@gmail.com',
+    people: 10,
+    type: 'ONLINE',
+    remark: '需要安排安靜的角落',
+  },
+  {
+    username: '胡馨儀',
+    phone: '0971614099',
+    gender: 'OTHER',
+    email: '',
+    people: 7,
+    type: 'ONLINE',
+    remark: '需要準備驚喜',
+  },
+  {
+    username: '梁雅涵',
+    phone: '0926978809',
+    gender: 'FEMALE',
+    email: '',
+    people: 3,
+    type: 'ONLINE',
+    remark: '需要高背椅',
+  },
+  {
+    username: '蔡君齊',
+    phone: '0981737447',
+    gender: 'MALE',
+    email: '',
+    people: 1,
+    type: 'ONLINE',
+    remark: '海鮮過敏',
+  },
+  {
+    username: '周馨儀',
+    phone: '0937117344',
+    gender: 'FEMALE',
+    email: 'glu@du.com',
+    people: 1,
+    type: 'PHONE',
+    remark: '',
+  },
+  {
+    username: '孟龍',
+    phone: '0920895583',
+    gender: 'OTHER',
+    email: 'nashao@yan.org',
+    people: 4,
+    type: 'PHONE',
+    remark: '',
+  },
+  {
+    username: '龍鈺婷',
+    phone: '0966136186',
+    gender: 'OTHER',
+    email: 'ming58@gao.net',
+    people: 4,
+    type: 'ONLINE',
+    remark: '',
+  },
+  {
+    username: '郭傑克',
+    phone: '0987719720',
+    gender: 'OTHER',
+    email: '',
+    people: 5,
+    type: 'ONLINE',
+    remark: '公司員工聚餐',
+  },
+  {
+    username: '李婷婷',
+    phone: '0937915100',
+    gender: 'FEMALE',
+    email: 'smeng@hotmail.com',
+    people: 7,
+    type: 'PHONE',
+    remark: '海鮮過敏',
+  },
+  {
+    username: '魏雅文',
+    phone: '0932490637',
+    gender: 'FEMALE',
+    email: 'xiulanguo@yahoo.com',
+    people: 1,
+    type: 'PHONE',
+    remark: '提前到場，希望早點安排座位',
+  },
+  {
+    username: '李淑慧',
+    phone: '0912345678',
+    gender: 'FEMALE',
+    email: 'shuhui.li@example.com',
+    people: 3,
+    type: 'PHONE',
+    remark: '需要安排安靜的角落',
+  },
+  {
+    username: '王大明',
+    phone: '0923456789',
+    gender: 'MALE',
+    email: 'dam.wang@example.com',
+    people: 5,
+    type: 'ONLINE',
+    remark: '',
+  },
+];
 
-              -- random cancellation
-              random_is_cancelled := (random() < 0.1);
-  
-              -- random people
-              random_people := trunc(random() * 10 + 1)::SMALLINT;
+export const insertReservations = async () => {
+  await prisma.reservation.deleteMany();
+  const periods = await prisma.period.findMany({
+    where: {
+      startTime: {
+        gt: new Date(),
+        lt: new Date(new Date().getTime() + 1000 * 60 * 60 * 24 * 3),
+      },
+    },
+  });
+  await prisma.reservation.createMany({
+    data: customers.map((c, i) => ({ ...c, periodId: periods[i % periods.length].id })),
+  });
+};
 
-              -- random remark
-              random_remark := 'Remark ' || trunc(random() * 1000)::TEXT;
-  
-              -- insert records
-              INSERT INTO reservations (
-                  type, 
-                  username,
-                  phone,
-                  email,
-                  gender,
-                  people, 
-                  remark,
-                  is_cancelled, 
-                  period_id
-              ) VALUES (
-                  CASE 
-                      WHEN i % 2 = 0 IS NULL THEN 'PHONE'::reservation_type
-                      ELSE 'ONLINE'::reservation_type
-                  END,
-                  '顧客' || i::TEXT,
-                  '098' || LPAD(TRUNC(RANDOM() * 10000000)::VARCHAR, 7, '0'),
-                  CASE 
-                    WHEN i % 2 = 0 THEN NULL 
-                    ELSE 'customer_email_' || i::TEXT || '@example.com' 
-                  END,
-                  CASE 
-                    WHEN i % 2 = 0 THEN 'MALE'::gender
-                    ELSE 'FEMALE'::gender
-                  END,
-                  random_people,
-                  random_remark,
-                  random_is_cancelled,
-                  period_record.id
-              );
-          END LOOP;
-      END $$;
-    `,
-  ]);
-}
+// export function insertReservations() {
+//   return prisma.$transaction([
+//     prisma.$executeRaw`
+//       DELETE FROM reservations;
+//     `,
+//     prisma.$executeRaw`
+//       DO $$
+//       DECLARE
+//           period_record RECORD;
+//           random_is_cancelled BOOLEAN;
+//           random_people SMALLINT;
+//           random_remark VARCHAR(255);
+//       BEGIN
+//           FOR i IN 1..80 LOOP
+//               -- random period
+//               SELECT *
+//               INTO period_record
+//               FROM periods
+//               WHERE periods.start_time > NOW() + '1 day'
+//               LIMIT 1 OFFSET i % 20;
+
+//               -- random cancellation
+//               random_is_cancelled := (random() < 0.1);
+
+//               -- random people
+//               random_people := trunc(random() * 10 + 1)::SMALLINT;
+
+//               -- random remark
+//               random_remark := 'Remark ' || trunc(random() * 1000)::TEXT;
+
+//               -- insert records
+//               INSERT INTO reservations (
+//                   type,
+//                   username,
+//                   phone,
+//                   email,
+//                   gender,
+//                   people,
+//                   remark,
+//                   is_cancelled,
+//                   period_id
+//               ) VALUES (
+//                   CASE
+//                       WHEN i % 2 = 0 IS NULL THEN 'PHONE'::reservation_type
+//                       ELSE 'ONLINE'::reservation_type
+//                   END,
+//                   '顧客' || i::TEXT,
+//                   '098' || LPAD(TRUNC(RANDOM() * 10000000)::VARCHAR, 7, '0'),
+//                   CASE
+//                     WHEN i % 2 = 0 THEN NULL
+//                     ELSE 'customer_email_' || i::TEXT || '@example.com'
+//                   END,
+//                   CASE
+//                     WHEN i % 2 = 0 THEN 'MALE'::gender
+//                     ELSE 'FEMALE'::gender
+//                   END,
+//                   random_people,
+//                   random_remark,
+//                   random_is_cancelled,
+//                   period_record.id
+//               );
+//           END LOOP;
+//       END $$;
+//     `,
+//   ]);
+// }

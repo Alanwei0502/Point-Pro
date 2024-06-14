@@ -28,9 +28,13 @@ export class ReservationModel {
             lte: appDayjs(params.date).endOf('day').toDate(),
           },
         },
+        isCancelled: false,
       },
       include: {
         periods: true,
+      },
+      orderBy: {
+        username: 'asc',
       },
     });
 
@@ -61,10 +65,29 @@ export class ReservationModel {
     return reservation;
   };
 
-  static deleteReservation = async (id: Reservation['id']) => {
-    const reservation = await prismaClient.reservation.delete({
+  static startDiningResevation = async (id: Reservation['id']) => {
+    const reservation = await prismaClient.reservation.update({
       where: {
         id,
+      },
+      data: {
+        startAt: new Date(),
+      },
+      include: {
+        periods: true,
+      },
+    });
+
+    return reservation;
+  };
+
+  static deleteReservation = async (id: Reservation['id']) => {
+    const reservation = await prismaClient.reservation.update({
+      where: {
+        id,
+      },
+      data: {
+        isCancelled: true,
       },
     });
 

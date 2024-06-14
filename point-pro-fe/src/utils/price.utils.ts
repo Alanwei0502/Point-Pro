@@ -1,4 +1,4 @@
-import { IOrder, GatherOrder, ICartItem, GetMenuResponseSpecialtyItem } from '~/types';
+import { IOrder, ICartItem, GetMenuResponseSpecialtyItem } from '~/types';
 
 export const calculateSpecialtiesPrice = (selectedSpecialtyItems: GetMenuResponseSpecialtyItem[]) => {
   const specialtiesPrice = selectedSpecialtyItems.reduce((acc, specialtyItem) => {
@@ -21,18 +21,19 @@ export const calculateCartPrice = (cart: ICartItem[]) => {
   return cartPrice;
 };
 
-export const calculateOrderPrice = (order: IOrder) => {
-  const { orderMeals = [] } = order;
-  const orderPrice = orderMeals.reduce((acc, orderMeal) => (acc += orderMeal.price), 0);
+// TODO
+// export const calculateOrderPrice = (order: IOrder) => {
+//   const { orderMeals = [] } = order;
+//   const orderPrice = orderMeals.reduce((acc, orderMeal) => (acc += orderMeal.price), 0);
 
-  return orderPrice;
-};
+//   return orderPrice;
+// };
 
-export const calculateGatherOrderPrice = (gatherOrder: GatherOrder) => {
-  const { orders } = gatherOrder;
-  const gatherOrderPrice = orders.reduce((acc, order) => {
-    return acc + calculateOrderPrice(order);
-  }, 0);
+// export const calculateGatherOrderPrice = (gatherOrder: GatherOrder) => {
+//   const { orders } = gatherOrder;
+//   const gatherOrderPrice = orders.reduce((acc, order) => {
+//     return acc + calculateOrderPrice(order);
+//   }, 0);
 
-  return gatherOrderPrice;
-};
+//   return gatherOrderPrice;
+// };

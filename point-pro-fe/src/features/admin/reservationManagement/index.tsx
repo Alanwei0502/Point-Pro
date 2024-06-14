@@ -1,14 +1,19 @@
 import { FC } from 'react';
-import { ReservationList } from './tab';
+import { ReservationTable } from './ReservationTable';
 import { ReservationModal } from './ReservationModal';
+import { DeleteReservationConfirmModal } from './DeleteReservationConfirmModal';
+import { StartDiningConfirmModal } from './StartDiningConfirmModal';
 
 interface IReservationManagementProps {}
 
 export const ReservationManagement: FC<IReservationManagementProps> = () => {
   return (
     <>
-      <ReservationList />
+      <ReservationTable />
+      {/* MODAL */}
       <ReservationModal />
+      <DeleteReservationConfirmModal />
+      <StartDiningConfirmModal />
     </>
   );
 };

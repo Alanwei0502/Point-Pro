@@ -2,9 +2,8 @@ import { FC, useEffect, useState } from 'react';
 import { Box, Button, Container, Drawer, Link, List, ListItem, ListItemText, Typography } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import CloseIcon from '@mui/icons-material/Close';
-import { Row } from '~/components';
+import { Row, NavLink } from '~/components';
 import { useResponsiveStyles } from '~/hooks';
-import { NavLink } from './index.styles';
 import { ReactComponent as Logo } from '~/assets/logo.svg';
 
 const navData = [

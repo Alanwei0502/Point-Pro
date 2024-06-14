@@ -1,51 +1,11 @@
-import { NextFunction, Request } from 'express';
+import { NextFunction } from 'express';
 import { ReasonPhrases, StatusCodes } from 'http-status-codes';
-import { object, string } from 'yup';
 import bcrypt from 'bcryptjs';
-import { AuthService } from '../services';
 import { ILoginRequest, IRegisterRequest, ApiResponse, AuthRequest } from '../types';
 import { UserModel } from '../models';
 import { SessionRedis, hashPassword, jwt } from '../helpers';
 
 export class AuthController {
-  static decodeTokenHandler = async (req: AuthRequest, res: ApiResponse) => {
-    return res.status(StatusCodes.OK).send({
-      message: ReasonPhrases.OK,
-      result: req.auth,
-    });
-  };
-
-  static generateTokenHandler = async (req: Request, res: ApiResponse) => {
-    // validate input
-    const inputSchema = object({
-      reservationId: string().uuid().required().lowercase(),
-    });
-
-    try {
-      await inputSchema.validate(req.body);
-    } catch (error) {
-      if (error instanceof Error) {
-        return res.status(400).send({
-          message: `invalid input:${error.message}`,
-          result: null,
-        });
-      }
-    }
-
-    const { reservationId } = inputSchema.cast(req.body);
-
-    try {
-      const token = await AuthService.generateReservationToken(reservationId);
-
-      res.status(200).send({
-        message: 'successfully create token',
-        result: {
-          token,
-        },
-      });
-    } catch (error) {}
-  };
-
   static registerHandler = async (req: IRegisterRequest, res: ApiResponse, next: NextFunction) => {
     try {
       const { username, gender, phone, email, role } = req.body;
@@ -56,15 +16,15 @@ export class AuthController {
       if (user) {
         return res.status(StatusCodes.CONFLICT).json({
           message: ReasonPhrases.CONFLICT,
-          result: 'User already exists',
+          result: '使用者已存在',
         });
       }
 
       // Hash password with bcrypt
       const passwordHash = hashPassword(req.body.phone);
 
-      // Create user and return JWT token
-      const newUser = await UserModel.createUser({
+      // Create user
+      await UserModel.createUser({
         username,
         gender,
         phone,
@@ -92,7 +52,7 @@ export class AuthController {
       if (!user) {
         return res.status(StatusCodes.NOT_FOUND).send({
           message: ReasonPhrases.NOT_FOUND,
-          result: 'User not found',
+          result: '找不到使用者',
         });
       }
 
@@ -100,7 +60,7 @@ export class AuthController {
       if (!user.passwordHash) {
         return res.status(StatusCodes.FORBIDDEN).send({
           message: ReasonPhrases.FORBIDDEN,
-          result: 'User has not set password yet',
+          result: '未設立密碼',
         });
       }
 
@@ -110,7 +70,7 @@ export class AuthController {
       if (!isPasswordCorrect) {
         return res.status(StatusCodes.FORBIDDEN).send({
           message: ReasonPhrases.FORBIDDEN,
-          result: 'Password is incorrect',
+          result: '密碼錯誤',
         });
       }
 
@@ -123,7 +83,7 @@ export class AuthController {
       });
 
       // Redis set token
-      await SessionRedis.setSession(user.id, jwt.expiresIn, token);
+      await SessionRedis.setSession(user.id, jwt.adminExpirationTime, token);
 
       // Create login log
       await UserModel.createLoginLog({ userId: user.id });
@@ -142,14 +102,14 @@ export class AuthController {
       if (!req.auth) {
         return res.status(StatusCodes.FORBIDDEN).send({
           message: ReasonPhrases.FORBIDDEN,
-          result: 'User not logged in',
+          result: '未登入',
         });
       }
 
       await SessionRedis.deleteSession(req.auth?.id);
       return res.status(StatusCodes.OK).send({
         message: ReasonPhrases.OK,
-        result: 'Logout successfully',
+        result: '登出成功',
       });
     } catch (error) {
       next(error);

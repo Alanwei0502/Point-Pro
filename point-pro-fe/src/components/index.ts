@@ -63,3 +63,4 @@ export * from './table/StyledTableRow';
 // Home
 export * from './home/Title';
 export * from './home/Section';
+export * from './home/NavLink';

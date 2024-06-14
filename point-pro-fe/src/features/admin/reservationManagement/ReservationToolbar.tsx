@@ -1,4 +1,5 @@
-import { FC } from 'react';
+import { FC, useRef } from 'react';
+import { debounce } from 'lodash';
 import { Box } from '@mui/material';
 import { GridToolbar, GridToolbarProps } from '@mui/x-data-grid';
 import AddIcon from '@mui/icons-material/Add';
@@ -14,14 +15,24 @@ const { setDateFilter, openModal } = reservationManagementSliceActions;
 export const ReservationToolbar: FC<GridToolbarProps> = (props) => {
   const dispatch = useAppDispatch();
 
+  const debouncedChangeDateFilter = useRef(
+    debounce(
+      (date: appDayjs.Dayjs | null) => {
+        dispatch(setDateFilter(date));
+      },
+      500,
+      { leading: true, trailing: false },
+    ),
+  ).current;
+
   const dateFilter = useAppSelector((state) => state.reservationManagement.dateFilter);
 
   const handleChangeDateFilter = (date: appDayjs.Dayjs | null) => {
-    dispatch(setDateFilter(date));
+    debouncedChangeDateFilter(date);
   };
 
   const handleClickCreateReservation = () => {
-    dispatch(openModal({ type: ReservationModalType.CREATE }));
+    dispatch(openModal({ modalType: ReservationModalType.CREATE }));
   };
 
   return (

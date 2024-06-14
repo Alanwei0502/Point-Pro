@@ -4,7 +4,7 @@ import { CartMeal } from '~/features/customer/menu/CartMeal';
 import { MobileButton, MobileDialogLayout } from '~/components';
 import { calculateCartPrice } from '~/utils';
 import { useAppDispatch, useAppSelector } from '~/hooks';
-import { postOrder, closeDialog, openModal, deleteCartItem } from '~/store/slices';
+import { closeDialog, openModal, deleteCartItem } from '~/store/slices';
 import { MobileModal, MobileDialog } from '~/types';
 
 interface ICartDialogProps {}
@@ -24,7 +24,8 @@ export const CartDialog: FC<ICartDialogProps> = () => {
   };
 
   const handleSubmitOrders = () => {
-    dispatch(postOrder({ isCustomer: true }));
+    // TODO
+    // dispatch(postOrder({ isCustomer: true }));
   };
 
   useEffect(() => {

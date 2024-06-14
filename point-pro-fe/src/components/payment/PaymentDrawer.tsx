@@ -6,9 +6,9 @@ import { Column, Row, BaseDraw, CashPaymentDialog } from '~/components';
 import { ReactComponent as LinePayIcon } from '~/assets/line-pay-solid.svg';
 import { theme } from '~/theme';
 import { useAppDispatch, useAppSelector } from '~/hooks';
-import { OrderType, OrderMessage, SocketTopic } from '~/types';
+import { OrderType, OrderMessage, SocketTopic, IOrder } from '~/types';
 import { getOrders, requestLinePay, requestCashPayment, closePaymentDrawer } from '~/store/slices';
-import { calculateGatherOrderPrice } from '~/utils';
+// import { calculateGatherOrderPrice } from '~/utils';
 
 interface IPaymentDrawerProps {}
 
@@ -27,7 +27,9 @@ export const PaymentDrawer: FC<IPaymentDrawerProps> = () => {
   const [selectPayment, setSelectPayment] = useState<string>('');
   const [cash, setCash] = useState<number | string>(0);
 
-  const totalPrice = paymentItem ? calculateGatherOrderPrice(paymentItem) : 0;
+  // TODO
+  // const totalPrice = paymentItem ? calculateGatherOrderPrice(paymentItem) : 0;
+  const totalPrice = 0;
 
   const handleCompleteOrder = async () => {
     await handlePaymentRequest();
@@ -69,7 +71,8 @@ export const PaymentDrawer: FC<IPaymentDrawerProps> = () => {
 
   const handlePaymentRequest = async () => {
     if (!paymentItem) return;
-    const id = paymentItem.orders.map((order) => order.id);
+    // TODO: order type is IOrder?
+    const id = paymentItem.orders.map((order: IOrder) => order.id);
     if (selectPayment === 'line-pay') {
       const { host } = window.location;
       await dispatch(

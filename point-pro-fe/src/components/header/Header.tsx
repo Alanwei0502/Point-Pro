@@ -8,9 +8,10 @@ import { useAppDispatch, useAppSelector } from '~/hooks';
 import { appDayjs, dateForm } from '~/utils';
 import { theme } from '~/theme';
 import { LeftMenuDrawer, NotificationDrawer, pathObj, sideBarItemList } from '~/components';
-import { authSliceActions } from '~/store/slices';
+import { adminUISliceActions, authSliceActions } from '~/store/slices';
 
 const { logout } = authSliceActions;
+const { setClock } = adminUISliceActions;
 
 const drawerExpandWidth = '250px';
 const drawerCollapseWidth = '100px';
@@ -25,9 +26,9 @@ export const Header: FC<IHeaderProps> = () => {
 
   const [isLeftMenuOpen, setIsLeftMenuOpen] = useState(false);
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
-  const [showTime, setShowTime] = useState(appDayjs().format(dateForm.fullDateWithSecond));
 
   const notifications = useAppSelector(({ socket }) => socket.notifications);
+  const clock = useAppSelector((state) => state.adminUI.clock);
 
   const flatSideBarItemList = sideBarItemList.flatMap((item) => (item.list.length ? item.list : item));
 
@@ -50,10 +51,10 @@ export const Header: FC<IHeaderProps> = () => {
   // show time
   useEffect(() => {
     const interval = setInterval(() => {
-      setShowTime(appDayjs().format(dateForm.fullDateWithSecond));
+      dispatch(setClock());
     }, 1000);
     return () => clearInterval(interval);
-  }, []);
+  }, [dispatch]);
 
   return (
     <>
@@ -125,7 +126,7 @@ export const Header: FC<IHeaderProps> = () => {
           <Typography variant='h3' sx={{ flexGrow: 1, pl: 2 }}>
             {routerInfo?.name ?? '未知頁面'}
           </Typography>
-          <Typography sx={{ pr: 2 }}>{showTime}</Typography>
+          <Typography sx={{ pr: 2 }}>{clock}</Typography>
 
           {/* action icon */}
           <Box

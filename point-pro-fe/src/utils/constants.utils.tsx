@@ -1,7 +1,14 @@
-import { Box } from '@mui/material';
+import { ReactElement } from 'react';
+import { Box, ChipTypeMap } from '@mui/material';
 import { GridLocaleText } from '@mui/x-data-grid';
+import AirlineSeatReclineNormalIcon from '@mui/icons-material/AirlineSeatReclineNormal';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import HourglassTopIcon from '@mui/icons-material/HourglassTop';
+import LocalPhoneIcon from '@mui/icons-material/LocalPhone';
+import AssignmentLateIcon from '@mui/icons-material/AssignmentLate';
+import MoreTimeIcon from '@mui/icons-material/MoreTime';
 import { theme } from '~/theme';
-import { OrderStatus, SelectionType, Gender, SeatStatus, OrderType } from '~/types';
+import { OrderStatus, SelectionType, Gender, OrderType } from '~/types';
 
 export const MEAL_IMAGE_URL = 'https://i.imgur.com/';
 export const MEAL_IMAGE_TYPES = ['image/jpeg', 'image/jpg', 'image/png'];
@@ -30,7 +37,46 @@ export const ORDER_TYPE_TRANSLATE = {
   [OrderType.TAKE_OUT]: '外帶',
 };
 
-export const cityList = [
+export const RESERVATION_STATUS: {
+  [key: string]: {
+    label: string;
+    color: ChipTypeMap['props']['color'];
+    icon: ReactElement;
+  };
+} = {
+  NOT_ATTENDED: {
+    label: '未到',
+    color: 'default',
+    icon: <HourglassTopIcon />,
+  },
+  REMIND: {
+    label: '通知',
+    color: 'primary',
+    icon: <LocalPhoneIcon />,
+  },
+  LATE: {
+    label: '遲到',
+    color: 'error',
+    icon: <AssignmentLateIcon />,
+  },
+  IN_USE: {
+    label: '用餐',
+    color: 'info',
+    icon: <AirlineSeatReclineNormalIcon />,
+  },
+  OVERTIME: {
+    label: '超時',
+    color: 'warning',
+    icon: <MoreTimeIcon />,
+  },
+  COMPLETED: {
+    label: '結束',
+    color: 'success',
+    icon: <CheckCircleIcon />,
+  },
+};
+
+export const CITY_LIST = [
   '臺北市',
   '新北市',
   '桃園市',
@@ -55,26 +101,11 @@ export const cityList = [
   '連江縣',
 ];
 
+export const RESERVATION_STATUS_OPTIONS = ['未到', '通知', '遲到', '用餐', '超時', '結束'];
 export const RESERVATION_PEOPLE_OPTIONS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 export const RESERVATION_PERIODS = ['17:30', '18:00', '18:30', '19:00', '19:30', '20:00', '20:30', '21:00', '21:30'];
 
-export const contactTimeList = ['9:00~11:30', '13:00~18:00', '18:00之後'];
-
-export const seatStatusList = [
-  { id: SeatStatus.AVAILABLE, title: '未使用', color: '#F2F2F2' },
-  { id: SeatStatus.BOOKED, title: '已預訂', color: '#CFF561' },
-  { id: SeatStatus.INUSE, title: '使用中', color: '#FEE391' },
-];
-
-export const seatStatusListObj = seatStatusList.reduce((obj: { [key: string]: any }, currnt) => ({ ...obj, [currnt.id]: currnt }), {});
-
-export const reservationStatusList = [
-  { id: 'NOT_ATTENDED', title: '未入席', color: '#CFF561' },
-  { id: 'IN_USE', title: '使用中', color: '#FEE391' },
-  { id: 'COMPLETED', title: '已完成', color: '#D1D1D1' },
-];
-
-export const reservationStatusListObj = reservationStatusList.reduce((obj: { [key: string]: any }, currnt) => ({ ...obj, [currnt.id]: currnt }), {});
+export const CONTACT_TIME_LIST = ['9:00~11:30', '13:00~18:00', '18:00之後'];
 
 export const GRID_DEFAULT_LOCALE_TEXT: GridLocaleText = {
   // Root

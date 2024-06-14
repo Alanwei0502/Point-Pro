@@ -19,6 +19,12 @@ reservationRouter.patch(
   validateMiddleware(createReservationRequestSchema),
   ReservationController.updateReservationHandler,
 );
+reservationRouter.patch(
+  '/:reservationId/start',
+  authMiddleware,
+  validateMiddleware(updateReservationRequestSchema, 'params'),
+  ReservationController.startDiningReservationHandler,
+);
 reservationRouter.delete(
   '/:reservationId',
   validateMiddleware(deleteReservationRequestSchema, 'params'),

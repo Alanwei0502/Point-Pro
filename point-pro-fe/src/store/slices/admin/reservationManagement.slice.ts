@@ -9,7 +9,6 @@ const name = 'reservationManagement';
 export enum ReservationModalType {
   EDIT = 'EDIT',
   CREATE = 'CREATE',
-  DELETE = 'DELETE',
 }
 
 export interface IReservationModalData extends Pick<IReservation, 'type' | 'username' | 'phone' | 'email' | 'gender' | 'people' | 'remark'> {
@@ -25,10 +24,22 @@ export interface IReservationManagementSliceState {
   // MODAL
   availableTime: AvailablePeriod[];
   reservationModal: {
-    type: ReservationModalType | null;
+    modalType: ReservationModalType | null;
     isOpen: boolean;
     modalSelectedDate: Date;
     data: IReservationModalData;
+  };
+  deleteReservationConfirmModal: {
+    isOpen: boolean;
+    data: Pick<IReservation, 'id' | 'username' | 'gender'> | null;
+  };
+  startDiningConfirmModal: {
+    isOpen: boolean;
+    data: Pick<IReservation, 'id' | 'username' | 'gender'> | null;
+  };
+  qrCodeModal: {
+    isOpen: boolean;
+    data: (Pick<IReservation, 'id' | 'people' | 'startAt'> & { token: string }) | null;
   };
 }
 
@@ -40,7 +51,7 @@ const initialState: IReservationManagementSliceState = {
   // MODAL
   availableTime: [],
   reservationModal: {
-    type: null,
+    modalType: null,
     isOpen: false,
     modalSelectedDate: appDayjs().toDate(),
     data: {
@@ -54,6 +65,18 @@ const initialState: IReservationManagementSliceState = {
       people: 0,
       selectedPeriod: null,
     },
+  },
+  deleteReservationConfirmModal: {
+    isOpen: false,
+    data: null,
+  },
+  startDiningConfirmModal: {
+    isOpen: false,
+    data: null,
+  },
+  qrCodeModal: {
+    isOpen: false,
+    data: null,
   },
 };
 
@@ -75,11 +98,10 @@ const getAvailablePeriods = createAppAsyncThunk(`${name}/getAvailablePeriods`, a
   }
 });
 
-const postReservation = createAppAsyncThunk(`${name}/postReservation`, async (_, thunkApi) => {
+const postReservation = createAppAsyncThunk(`${name}/postReservation`, async (payload: IReservationModalData, thunkApi) => {
   try {
-    const { id, selectedPeriod, ...restPayload } = thunkApi.getState().reservationManagement.reservationModal.data;
-    const payload = { ...restPayload, periodId: selectedPeriod?.id as string };
-    const response = await ReservationApi.postReservation(payload);
+    const { id, selectedPeriod, ...restPayload } = payload;
+    const response = await ReservationApi.postReservation({ ...restPayload, periodId: selectedPeriod?.id as string });
     const socket = thunkApi.getState().socket.socket;
     socket && socket.emit(SocketTopic.RESERVATION, response);
     return response;
@@ -88,11 +110,10 @@ const postReservation = createAppAsyncThunk(`${name}/postReservation`, async (_,
   }
 });
 
-const patchReservation = createAppAsyncThunk(`${name}/patchReservation`, async (_, thunkApi) => {
+const patchReservation = createAppAsyncThunk(`${name}/patchReservation`, async (payload: IReservationModalData, thunkApi) => {
   try {
-    const { id, selectedPeriod, ...restPayload } = thunkApi.getState().reservationManagement.reservationModal.data;
-    const payload = { ...restPayload, periodId: selectedPeriod?.id as string, id: id as string };
-    const response = await ReservationApi.patchReservation(payload);
+    const { id, selectedPeriod, ...restPayload } = payload;
+    const response = await ReservationApi.patchReservation({ ...restPayload, periodId: selectedPeriod?.id as string, id: id as string });
     const socket = thunkApi.getState().socket.socket;
     socket && socket.emit(SocketTopic.RESERVATION, response);
     return response;
@@ -101,9 +122,21 @@ const patchReservation = createAppAsyncThunk(`${name}/patchReservation`, async (
   }
 });
 
-const deleteReservation = createAppAsyncThunk(`${name}/deleteReservation`, async (_, thunkApi) => {
+const startDiningReservation = createAppAsyncThunk(`${name}/startDiningReservation`, async (_, thunkApi) => {
   try {
-    const id = thunkApi.getState().reservationManagement.reservationModal.data.id as string;
+    const data = thunkApi.getState().reservationManagement.startDiningConfirmModal.data;
+    const payload = { id: data?.id as IReservation['id'] };
+    const response = await ReservationApi.startDiningReservation(payload);
+    const socket = thunkApi.getState().socket.socket;
+    socket && socket.emit(SocketTopic.RESERVATION, response);
+    return response;
+  } catch (error) {
+    return thunkApi.rejectWithValue(error);
+  }
+});
+
+const deleteReservation = createAppAsyncThunk(`${name}/deleteReservation`, async (id: IReservation['id'], thunkApi) => {
+  try {
     const response = await ReservationApi.deleteReservation(id);
     const socket = thunkApi.getState().socket.socket;
     socket && socket.emit(SocketTopic.RESERVATION, response);
@@ -127,19 +160,32 @@ export const reservationManagementSlice = createSlice({
     },
     setModalData: (state, action: PayloadAction<IReservationManagementSliceState['reservationModal']['data']>) => {
       state.reservationModal.data = action.payload;
-      console.log('setModalData', state.reservationModal.data);
     },
     openModal: (
       state,
-      action: PayloadAction<{ type: ReservationModalType; data?: IReservationManagementSliceState['reservationModal']['data'] }>,
+      action: PayloadAction<{ modalType: ReservationModalType; data?: IReservationManagementSliceState['reservationModal']['data'] }>,
     ) => {
       state.reservationModal.isOpen = true;
       state.reservationModal.modalSelectedDate = state.dateFilter;
-      state.reservationModal.type = action.payload.type;
+      state.reservationModal.modalType = action.payload.modalType;
       state.reservationModal.data = action.payload.data ?? initialState.reservationModal.data;
     },
     closeModal: (state) => {
       state.reservationModal = initialState.reservationModal;
+    },
+    openDeleteReservationConfirmModal: (state, action: PayloadAction<IReservationManagementSliceState['deleteReservationConfirmModal']['data']>) => {
+      state.deleteReservationConfirmModal.isOpen = true;
+      state.deleteReservationConfirmModal.data = action.payload;
+    },
+    closeDeleteReservationConfirmModal: (state) => {
+      state.deleteReservationConfirmModal = initialState.deleteReservationConfirmModal;
+    },
+    openStartDiningConfirmModal: (state, action: PayloadAction<IReservationManagementSliceState['startDiningConfirmModal']['data']>) => {
+      state.startDiningConfirmModal.isOpen = true;
+      state.startDiningConfirmModal.data = action.payload;
+    },
+    closeStartDiningConfirmModal: (state) => {
+      state.startDiningConfirmModal = initialState.startDiningConfirmModal;
     },
   },
   extraReducers: (builder) => {
@@ -176,5 +222,6 @@ export const reservationManagementSliceActions = {
   getReservations,
   postReservation,
   patchReservation,
+  startDiningReservation,
   deleteReservation,
 };

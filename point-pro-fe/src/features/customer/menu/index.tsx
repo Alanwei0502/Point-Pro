@@ -9,7 +9,7 @@ import { Meals } from './Meals';
 import { Footer } from './Footer';
 import { CartDialog } from './dialogs/CartDialog';
 import { CustomizedDialog } from './dialogs/CustomizedDialog';
-import { OrdersDialog } from './dialogs/OrderDialog';
+// import { OrdersDialog } from './dialogs/OrderDialog';
 import { ConfirmRemoveCartItemModal } from './modals/ConfirmRemovecartItemModal';
 import { PaymentModal } from './modals/PaymentModal';
 import { CounterReminderModal } from './modals/CounterReminderModal';
@@ -45,7 +45,7 @@ export const Menu: FC<IMenuProps> = () => {
       {/* 客製化、購物車、訂單畫面 */}
       <CustomizedDialog />
       <CartDialog />
-      <OrdersDialog />
+      {/* <OrdersDialog /> */}
 
       {/* 提示彈窗 */}
       <ConfirmRemoveCartItemModal />

@@ -4,7 +4,6 @@ import {
   Event as EventIcon,
   Directions as DirectionsIcon,
   Info as InfoIcon,
-  QrCode as QrCodeIcon,
   LocalPhone as LocalPhoneIcon,
   MapSharp as MapSharpIcon,
 } from '@mui/icons-material';
@@ -12,7 +11,7 @@ import { MobileDialogLayout, Loading, BaseButton } from '~/components';
 import { MobileBookingDialog } from '~/types';
 import { appDayjs, GENDER_TRANSLATE } from '~/utils';
 import { useAppDispatch, useAppSelector } from '~/hooks';
-import { setDialog, finishBooking } from '~/store/slices';
+import { finishBooking } from '~/store/slices';
 import { ConfirmBookingInfo, ConfirmBookingTextField } from './ConfirmBookingInfo';
 
 interface IAtionIconProps {

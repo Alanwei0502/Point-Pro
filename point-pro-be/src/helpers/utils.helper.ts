@@ -1,7 +1,5 @@
 import { Gender, Prisma } from '@prisma/client';
 import { date as dateSchema, object } from 'yup';
-import { ResponseError } from '../types';
-import { Logger } from './logger.helper';
 
 export const genderTranslate = {
   [Gender.MALE]: '先生',
@@ -9,10 +7,7 @@ export const genderTranslate = {
   [Gender.OTHER]: '先生/小姐',
 };
 
-export const ignoreUndefined = (newValue: any, defaultValue: any) => {
-  return newValue !== undefined ? newValue : defaultValue;
-};
-
+// below are all seatController utils
 export const formatReservationOptions = (options: Prisma.JsonValue) => {
   return typeof options === 'object' && options ? options : undefined;
 };
@@ -39,13 +34,4 @@ export const getDefaultDate = () => {
   const { date } = dateInput.cast({ date: todayDateString });
 
   return date;
-};
-
-export const throwError = (options: { code?: number; message: string; sendError?: boolean } = { message: '', sendError: true }) => {
-  const error: ResponseError = new Error(options.message);
-  error.code = options.code;
-  if (options.sendError) {
-    Logger.error(error);
-  }
-  throw error;
 };

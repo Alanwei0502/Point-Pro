@@ -17,7 +17,7 @@ import {
 import Slide from '@mui/material/Slide';
 import { TransitionProps } from '@mui/material/transitions';
 import axios from 'axios';
-import { cityList, contactTimeList } from '~/utils';
+import { CITY_LIST, CONTACT_TIME_LIST } from '~/utils';
 import { Row } from '~/components';
 import { homeSliceActions } from '~/store/slices';
 import { useAppDispatch, useAppSelector } from '~/hooks';
@@ -173,7 +173,7 @@ export const ContactFormModal: FC<IContactFormModalProps> = () => {
               value={getData('city')}
               onChange={(e) => setData('city', e.target.value)}
             >
-              {cityList.map((city) => (
+              {CITY_LIST.map((city) => (
                 <MenuItem key={city} value={city}>
                   {city}
                 </MenuItem>
@@ -190,7 +190,7 @@ export const ContactFormModal: FC<IContactFormModalProps> = () => {
               value={getData('contactTime')}
               onChange={(e) => setData('contactTime', e.target.value)}
             >
-              {contactTimeList.map((time) => (
+              {CONTACT_TIME_LIST.map((time) => (
                 <MenuItem key={time} value={time}>
                   {time}
                 </MenuItem>

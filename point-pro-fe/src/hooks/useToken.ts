@@ -4,9 +4,9 @@ export const useToken = () => {
   const tokenRef = useRef<string | null>(null);
 
   const isAdmin = location.href.includes('admin');
-  const sessionToken = sessionStorage.getItem('token');
+  const sessionToken = localStorage.getItem('token');
 
-  // 後台店員操作畫面，token 來自 sessionStorage
+  // 後台店員操作畫面，token 來自 localStorage
   if (isAdmin) {
     tokenRef.current = sessionToken;
   } else {
@@ -14,7 +14,7 @@ export const useToken = () => {
     const params = new URLSearchParams(window.location.search);
     const newToken = params.get('token');
     if (newToken) {
-      sessionStorage.setItem('token', newToken);
+      localStorage.setItem('token', newToken);
       tokenRef.current = newToken;
     } else if (sessionToken) {
       tokenRef.current = sessionToken;

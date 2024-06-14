@@ -11,7 +11,7 @@ interface SocketSliceState {
 
 const initialState: SocketSliceState = {
   socket: undefined,
-  notifications: JSON.parse(sessionStorage.getItem('notifications') ?? '[]'),
+  notifications: JSON.parse(localStorage.getItem('notifications') ?? '[]'),
 };
 
 export const socketSlice = createSlice({
@@ -26,15 +26,15 @@ export const socketSlice = createSlice({
     },
     addNotification: (state, action) => {
       state.notifications.unshift(action.payload);
-      sessionStorage.setItem('notifications', JSON.stringify(state.notifications));
+      localStorage.setItem('notifications', JSON.stringify(state.notifications));
     },
     removeNotification: (state, action) => {
       state.notifications.splice(action.payload, 1);
-      sessionStorage.setItem('notifications', JSON.stringify(state.notifications));
+      localStorage.setItem('notifications', JSON.stringify(state.notifications));
     },
     clearNotifications: (state) => {
       state.notifications = [];
-      sessionStorage.setItem('notifications', JSON.stringify(state.notifications));
+      localStorage.setItem('notifications', JSON.stringify(state.notifications));
     },
   },
 });

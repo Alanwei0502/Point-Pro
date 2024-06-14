@@ -21,12 +21,13 @@ export const CashPaymentDialog = ({ result }: CashPaymentResponse) => {
       setPaymentLogs(result.paymentLogs);
       setShowMobileDialog(true);
       const reservationId = result.paymentLogs[0].parentOrder.reservationId;
-      dispatch(
-        patchReservation({
-          reservationId,
-          payload: { endOfMeal: appDayjs().toDate() },
-        }),
-      );
+      // TODO
+      // dispatch(
+      //   patchReservation({
+      //     reservationId,
+      //     payload: { endOfMeal: appDayjs().toDate() },
+      //   }),
+      // );
     }
   }, [dispatch, result]);
 
@@ -71,17 +72,18 @@ export const CashPaymentDialog = ({ result }: CashPaymentResponse) => {
                     <Row gap={1} justifyContent={'space-between'}>
                       <Typography fontSize={20}>菜單名稱</Typography>
                       <Typography fontWeight={700} fontSize={24}>
-                        {orderMeal.meal?.title}
+                        {/* TODO */}
+                        {/* {orderMeal.meal?.title} */}
                       </Typography>
                     </Row>
                     <Row gap={1} justifyContent={'space-between'}>
                       <Typography fontSize={20}>菜單價格</Typography>
                       <Typography fontWeight={700} fontSize={24}>
-                        {orderMeal.meal?.price} x {orderMeal.amount}
+                        {/* {orderMeal.meal?.price} x {orderMeal.amount} */}
                       </Typography>
                     </Row>
                     <List sx={{ margin: 0, padding: 0 }}>
-                      {JSON.parse(orderMeal?.mealDetails ?? '[]').map((mealDetail: MealDetails) => (
+                      {/* {JSON.parse(orderMeal?.mealDetails ?? '[]').map((mealDetail: MealDetails) => (
                         <ListItem
                           key={mealDetail.id}
                           sx={{
@@ -95,7 +97,7 @@ export const CashPaymentDialog = ({ result }: CashPaymentResponse) => {
                         >
                           [{mealDetail.title}]: {mealDetail.items && mealDetail.items.map((item) => item.title).join('、')}
                         </ListItem>
-                      ))}
+                      ))} */}
                     </List>
                     <Divider />
                   </Fragment>

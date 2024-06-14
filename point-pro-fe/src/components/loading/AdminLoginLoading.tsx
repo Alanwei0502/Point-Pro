@@ -3,26 +3,19 @@ import { Box } from '@mui/material';
 import { theme } from '~/theme';
 import HeaderLogo from '~/assets/images/header-logo.svg';
 import { useAppDispatch, useAppSelector } from '~/hooks';
-import {
-  adminLoadingSliceActions,
-  getCategories,
-  getMeals,
-  getSpecialties,
-  orderManagementSliceActions,
-  takeOrderSliceActions,
-} from '~/store/slices';
+import { adminUISliceActions, getCategories, getMeals, getSpecialties, orderManagementSliceActions, takeOrderSliceActions } from '~/store/slices';
 import { toast } from 'react-toastify';
 
 const { getAdminMenu } = takeOrderSliceActions;
 const { getAllOrders } = orderManagementSliceActions;
-const { openAdminLoginLoading, closeAdminLoginLoading } = adminLoadingSliceActions;
+const { openAdminLoginLoading, closeAdminLoginLoading } = adminUISliceActions;
 
 interface IAdminLoginLoadingProps {}
 
 export const AdminLoginLoading: FC<IAdminLoginLoadingProps> = () => {
   const dispatch = useAppDispatch();
 
-  const isOpen = useAppSelector((state) => state.adminLoading.loginLoading.isOpen);
+  const isOpen = useAppSelector((state) => state.adminUI.loginLoading.isOpen);
 
   // initial data
   useEffect(() => {

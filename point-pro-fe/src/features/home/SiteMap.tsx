@@ -1,9 +1,9 @@
 import { FC } from 'react';
 import { Box, Container, Grid, List, ListItem, Typography, Link } from '@mui/material';
-import { NavLink } from './index.styles';
 import { ReactComponent as LogoText } from '~/assets/Logo_text.svg';
 import { useResponsiveStyles } from '~/hooks';
 import { theme } from '~/theme';
+import { NavLink } from '~/components';
 
 const siteMapData = [
   {

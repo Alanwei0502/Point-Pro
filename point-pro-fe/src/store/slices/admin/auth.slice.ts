@@ -1,8 +1,7 @@
-import { PayloadAction, createSlice } from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
 import { AuthApi } from '~/api';
 import { createAppAsyncThunk } from '~/hooks';
-import { errorHandler } from '~/store/errorHandler';
-import { GenerateTokenPayload, GenerateTokenResponse, LoginPayload, LoginResponse, UserInfo } from '~/types';
+import { LoginPayload, LoginResponse, UserInfo } from '~/types';
 
 const name = 'auth';
 
@@ -37,19 +36,6 @@ const logout = createAppAsyncThunk(`${name}/logout`, async (_, thunkApi) => {
   }
 });
 
-export const getUserTokenByReservationLogId = createAppAsyncThunk<GenerateTokenResponse, GenerateTokenPayload>(
-  `${name}/getUserTokenByReservationLogId`,
-  async (payload, thunkApi) => {
-    try {
-      const response = await AuthApi.generateToken({ reservationId: payload.reservationId });
-      return response;
-    } catch (error) {
-      errorHandler(error);
-      return thunkApi.rejectWithValue(error);
-    }
-  },
-);
-
 export const authSlice = createSlice({
   name,
   initialState,
@@ -63,12 +49,12 @@ export const authSlice = createSlice({
         const { result } = action.payload;
         if (result) {
           state.authToken = result;
-          sessionStorage.setItem('token', result);
+          localStorage.setItem('token', result);
         }
         state.isLoading = false;
       })
       .addCase(login.rejected, (state) => {
-        sessionStorage.removeItem('token');
+        localStorage.removeItem('token');
         state.authToken = initialState.authToken;
         state.isLoading = initialState.isLoading;
       })
@@ -76,22 +62,9 @@ export const authSlice = createSlice({
         state.isLoading = initialState.isLoading;
       })
       .addCase(logout.fulfilled, (state) => {
-        sessionStorage.removeItem('token');
+        localStorage.removeItem('token');
         state.authToken = initialState.authToken;
         state.isLoading = initialState.isLoading;
-      })
-      // .addCase(getUserInfo.fulfilled, (state, action) => {
-      //   state.userRole = action.payload.result;
-      // })
-      .addCase(getUserTokenByReservationLogId.pending, (state) => {
-        state.isLoading = true;
-      })
-      .addCase(getUserTokenByReservationLogId.fulfilled, (state, action) => {
-        state.userToken = action?.payload?.result?.token ?? null; // TODO
-        state.isLoading = true;
-      })
-      .addCase(getUserTokenByReservationLogId.rejected, (state) => {
-        state.userToken = initialState.userToken;
       });
   },
 });
@@ -100,6 +73,4 @@ export const authSliceActions = {
   ...authSlice.actions,
   login,
   logout,
-  // getUserInfo,
-  getUserTokenByReservationLogId,
 };

@@ -24,6 +24,10 @@ export class ReservationApi {
     return http.patch<string, PatchReservationResponse>(`${ReservationApi.path}/${id}`, payload, { withCredentials: true });
   }
 
+  static startDiningReservation({ id }: { id: IReservation['id'] }) {
+    return http.patch<string, PatchReservationResponse>(`${ReservationApi.path}/${id}/start`);
+  }
+
   static deleteReservation(id: IReservation['id']) {
     return http.delete<string, DeleteReservationResponse>(`${ReservationApi.path}/${id}`);
   }

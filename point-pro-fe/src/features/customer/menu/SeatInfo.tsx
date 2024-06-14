@@ -25,14 +25,12 @@ export const SeatInfo: FC<ISeatInfoProps> = () => {
             }}
           >
             <Grid item xs={6} sx={{ padding: '0 1rem' }}>
-              <Box sx={{ color: 'common.black_60', fontWeight: 500 }}>座位</Box>
-              <Box sx={{ fontSize: 'h5.fontSize', fontWeight: 900, color: 'common.black' }}>{userInfo.seatNo}</Box>
+              <Box sx={{ color: 'common.black_60', fontWeight: 500 }}>人數</Box>
+              <Box sx={{ fontSize: 'h5.fontSize', fontWeight: 900, color: 'common.black' }}>{/* {userInfo.seatNo} */}</Box>
             </Grid>
             <Grid item xs={6} sx={{ padding: '0 1rem', borderLeft: '1px solid', borderColor: 'common.black_40' }}>
               <Box sx={{ color: 'common.black_60', fontWeight: 500 }}>入座時間</Box>
-              <Box sx={{ fontSize: 'h5.fontSize', fontWeight: 900, color: 'common.black' }}>
-                {formatFullDateWithTime(userInfo.startTime)}
-              </Box>
+              <Box sx={{ fontSize: 'h5.fontSize', fontWeight: 900, color: 'common.black' }}>{/* {formatFullDateWithTime(userInfo.startTime)} */}</Box>
             </Grid>
           </Grid>
         </Box>

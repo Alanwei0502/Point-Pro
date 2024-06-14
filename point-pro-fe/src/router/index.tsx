@@ -8,7 +8,7 @@ import { MenuManagement } from '~/features/admin/menuManagement';
 import { ReservationManagement } from '~/features/admin/reservationManagement';
 import { Booking } from '~/features/customer/booking';
 import { Menu } from '~/features/customer/menu';
-import { PaymentCancel, PaymentConfirm } from '~/features/customer/payment';
+// import { PaymentCancel, PaymentConfirm } from '~/features/customer/payment';
 import { pathObj } from '~/components';
 
 const router = createBrowserRouter([
@@ -28,14 +28,14 @@ const router = createBrowserRouter([
   {
     path: pathObj.payment,
     children: [
-      {
-        path: pathObj.confirm,
-        element: <PaymentConfirm />,
-      },
-      {
-        path: pathObj.cancel,
-        element: <PaymentCancel />,
-      },
+      // {
+      //   path: pathObj.confirm,
+      //   element: <PaymentConfirm />,
+      // },
+      // {
+      //   path: pathObj.cancel,
+      //   element: <PaymentCancel />,
+      // },
     ],
   },
   // Admin
