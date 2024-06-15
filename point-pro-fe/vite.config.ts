@@ -6,6 +6,7 @@ import svgr from 'vite-plugin-svgr';
 // https://vitejs.dev/config/
 export default defineConfig({
   resolve: {
+    extensions: ['.js', '.ts', '.jsx', '.tsx'],
     alias: {
       '~': resolve(__dirname, './src'),
     },

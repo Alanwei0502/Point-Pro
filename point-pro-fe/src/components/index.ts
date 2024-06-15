@@ -40,9 +40,9 @@ export * from './loading/AdminLoginLoading';
 // Mask
 export * from './mask/MobileMask';
 // Modal
-export * from './modal/MobileModal';
-export * from './modal/TabletModal';
-export * from './modal/StartDiningQRCodeModal';
+export * from './modals/MobileModal';
+export * from './modals/TabletModal';
+export * from './modals/StartDiningQRCodeModal';
 // Payment
 export * from './payment/CashPaymentDialog';
 export * from './payment/PaymentDrawer';
