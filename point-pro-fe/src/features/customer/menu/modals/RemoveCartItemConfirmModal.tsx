@@ -5,9 +5,9 @@ import { useAppDispatch, useAppSelector } from '~/hooks';
 import { closeModal, deleteCartItem } from '~/store/slices';
 import { MobileModalType } from '~/types';
 
-interface IConfirmRemoveCartItemModalProps {}
+interface IRemoveCartItemConfirmModalProps {}
 
-export const ConfirmRemoveCartItemModal: FC<IConfirmRemoveCartItemModalProps> = () => {
+export const RemoveCartItemConfirmModal: FC<IRemoveCartItemConfirmModalProps> = () => {
   const dispatch = useAppDispatch();
 
   const { type: modalType, data } = useAppSelector((state) => state.menu.modal);

@@ -10,7 +10,7 @@ import { Footer } from './Footer';
 import { CartDialog } from './dialogs/CartDialog';
 import { CustomizedDialog } from './dialogs/CustomizedDialog';
 import { OrdersDialog } from './dialogs/OrderDialog';
-import { ConfirmRemoveCartItemModal } from './modals/ConfirmRemovecartItemModal';
+import { ConfirmRemoveCartItemModal } from './modals/ConfirmRemoveCartItemModal';
 import { PaymentModal } from './modals/PaymentModal';
 import { CounterReminderModal } from './modals/CounterReminderModal';
 import { CartItemIsOffReminderModal } from './modals/CartItemIsOffReminderModal';

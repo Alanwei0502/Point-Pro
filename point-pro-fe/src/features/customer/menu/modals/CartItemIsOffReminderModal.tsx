@@ -1,8 +1,8 @@
 import { FC } from 'react';
 import { Typography } from '@mui/material';
-import { MobileModal } from '~/components';
 import { useAppSelector } from '~/hooks';
 import { MobileModalType } from '~/types';
+import { MobileModal } from '~/components';
 
 interface ICartItemIsOffReminderModalProps {}
 
