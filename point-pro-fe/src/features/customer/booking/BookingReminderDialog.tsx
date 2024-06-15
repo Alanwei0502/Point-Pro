@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { Box, Button, Typography } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import {
   Event as EventIcon,
   Directions as DirectionsIcon,
@@ -7,19 +7,19 @@ import {
   LocalPhone as LocalPhoneIcon,
   MapSharp as MapSharpIcon,
 } from '@mui/icons-material';
-import { MobileDialogLayout, Loading, BaseButton } from '~/components';
+import { MobileDialogLayout, Loading, AppButton } from '~/components';
 import { MobileBookingDialog } from '~/types';
 import { appDayjs, GENDER_TRANSLATE } from '~/utils';
 import { useAppDispatch, useAppSelector } from '~/hooks';
 import { finishBooking } from '~/store/slices';
 import { ConfirmBookingInfo, ConfirmBookingTextField } from './ConfirmBookingInfo';
 
-interface IAtionIconProps {
+interface IActionIconProps {
   icon: React.ReactNode;
   title: string;
   onClick: () => void;
 }
-export const ActionIcon: FC<IAtionIconProps> = (props) => {
+export const ActionIcon: FC<IActionIconProps> = (props) => {
   const { icon, title, onClick } = props;
   return (
     <Box
@@ -30,20 +30,18 @@ export const ActionIcon: FC<IAtionIconProps> = (props) => {
         alignItems: 'center',
       }}
     >
-      <BaseButton
+      <AppButton
         sx={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
           padding: '2rem',
           borderRadius: '50%',
           bgcolor: 'common.white',
           marginBottom: '.5rem',
         }}
+        variant='outlined'
         onClick={onClick}
       >
         {icon}
-      </BaseButton>
+      </AppButton>
       <Typography fontWeight={700}>{title}</Typography>
     </Box>
   );
@@ -86,10 +84,8 @@ export const BookingReminderDialog: FC<IBookingReminderProps> = () => {
         </Box>
       }
       titleSize='h6'
-      isShowCloseIcon={false}
       isOpen={dialog === MobileBookingDialog.REMINDER}
-      onCloseDialog={handleClose}
-      actionButton={<Button onClick={handleClose}>關閉</Button>}
+      actionButton={<AppButton onClick={handleClose}>關閉</AppButton>}
       dialogTitleProps={{
         sx: { '.MuiTypography-h6': { textAlign: 'center' }, bgcolor: 'primary.main' },
       }}

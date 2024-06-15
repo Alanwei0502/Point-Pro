@@ -11,6 +11,13 @@ export const verifyAdminAndStaffSchema = z.object({
   exp: z.number(),
 });
 
+export const verifyCustomerSchema = z.object({
+  id: z.string(),
+  username: z.string(),
+  people: z.number(),
+  startAt: z.string().date(),
+});
+
 export const loginSchema = z.object({
   username: z.string(),
   password: z.string(),

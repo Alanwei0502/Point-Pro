@@ -7,6 +7,9 @@ import {
   GetReservationResponse,
   DeleteReservationResponse,
   IReservation,
+  StartDiningReservationPayload,
+  StartDiningReservationResponse,
+  DeleteReservationPayload,
 } from '~/types';
 
 export class ReservationApi {
@@ -24,11 +27,11 @@ export class ReservationApi {
     return http.patch<string, PatchReservationResponse>(`${ReservationApi.path}/${id}`, payload, { withCredentials: true });
   }
 
-  static startDiningReservation({ id }: { id: IReservation['id'] }) {
-    return http.patch<string, PatchReservationResponse>(`${ReservationApi.path}/${id}/start`);
+  static startDiningReservation(id: StartDiningReservationPayload) {
+    return http.patch<string, StartDiningReservationResponse>(`${ReservationApi.path}/${id}/start`);
   }
 
-  static deleteReservation(id: IReservation['id']) {
+  static deleteReservation(id: DeleteReservationPayload) {
     return http.delete<string, DeleteReservationResponse>(`${ReservationApi.path}/${id}`);
   }
 }

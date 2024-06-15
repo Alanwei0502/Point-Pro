@@ -83,7 +83,7 @@ export class AuthController {
       });
 
       // Redis set token
-      await SessionRedis.setSession(user.id, jwt.adminExpirationTime, token);
+      await SessionRedis.setSession('admin', user.id, jwt.adminExpirationTime, token);
 
       // Create login log
       await UserModel.createLoginLog({ userId: user.id });
@@ -106,7 +106,7 @@ export class AuthController {
         });
       }
 
-      await SessionRedis.deleteSession(req.auth?.id);
+      await SessionRedis.deleteSession('admin', req.auth?.id);
       return res.status(StatusCodes.OK).send({
         message: ReasonPhrases.OK,
         result: '登出成功',

@@ -8,8 +8,9 @@ export const http = axios.create({ baseURL: `${apiHost}/api` });
 
 http.interceptors.request.use(
   (configs) => {
-    const token = localStorage.getItem('token') || '';
-    configs.headers.authorization = `Bearer ${token}`;
+    const token = sessionStorage.getItem('token') || '';
+    configs.headers['isAdmin'] = window.location.href.includes('admin');
+    configs.headers['Authorization'] = `Bearer ${token}`;
     return configs;
   },
   (error) => {
@@ -32,15 +33,23 @@ const errorCodeCheck = (status: number) => {
   switch (status) {
     case 401:
     case 403: {
-      localStorage.removeItem('token');
-
+      sessionStorage.removeItem('token');
       const isInAdminLoginPage = location.pathname === `/${pathObj.admin}`;
       const isInCMS = location.pathname.includes('admin');
 
       if (isInCMS && !isInAdminLoginPage) {
+        // 後台
         toast.error('登入逾時，請重新登入');
         setTimeout(() => {
           location.replace(`${location.origin}/admin`);
+        }, 1000);
+      } else if (!isInCMS) {
+        // 前台
+        sessionStorage.removeItem('people');
+        sessionStorage.removeItem('startAt');
+        toast.error('登入逾時，請重新登入');
+        setTimeout(() => {
+          location.replace(`${location.origin}/menu`);
         }, 1000);
       }
       break;

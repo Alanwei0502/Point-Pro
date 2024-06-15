@@ -3,15 +3,14 @@ import { OrderApi } from '~/api';
 import { createAppAsyncThunk } from '~/hooks';
 import { clearCart, openDialog } from '~/store/slices/customer/menu.slice';
 import { appDayjs, calculateCartItemPrice } from '~/utils';
-import { MobileDialog, IOrder, OrderStatus, SocketTopic } from '~/types';
+import { MobileDialog, OrdersResult, OrderStatus, SocketTopic, OrderType } from '~/types';
 import { openPaymentDrawer } from './payment.slice';
-import { errorHandler } from '../errorHandler';
 
 const name = 'order';
 
 interface IOrderSliceState {
   status: OrderStatus;
-  orders: IOrder[];
+  orders: OrdersResult[];
   currentOrder: any | null;
   mobileOrderStatusTab: number;
   cancelOrderId: string;
@@ -27,89 +26,40 @@ const initialState: IOrderSliceState = {
   isLoading: false,
 };
 
-export const getOrders = createAppAsyncThunk(`${name}/getOrders`, async (payload: { status: OrderStatus }, { rejectWithValue }) => {
+export const getOrders = createAppAsyncThunk(`${name}/getOrders`, async (payload: { status: OrderStatus } | undefined, { rejectWithValue }) => {
   try {
-    const orderRes = await OrderApi.getOrders(payload);
+    const orderRes = await OrderApi.getOrders(payload ?? {});
     const { result = [] } = orderRes;
-    const orders = result?.sort((a: IOrder, b: IOrder) => appDayjs(b.createdAt).valueOf() - appDayjs(a.createdAt).valueOf());
+    const orders = result?.sort((a: OrdersResult, b: OrdersResult) => appDayjs(b.createdAt).valueOf() - appDayjs(a.createdAt).valueOf());
 
     return { orders };
   } catch (error) {
-    errorHandler(error);
     return rejectWithValue(error);
   }
 });
 
-// TODO
-// export const postOrder = createAppAsyncThunk(
-//   `${name}/postOrder`,
-//   async (payload: { isCustomer: boolean }, { getState, dispatch, rejectWithValue }) => {
-//     try {
-//       const cart = getState().takeOrder.cart;
-//       const socket = getState().socket.socket;
-//       const orderMeals = cart.map((cartItem) => {
-//         const { id, amount, selectedSpecialtyItems } = cartItem;
-//         return {
-//           id,
-//           amount,
-//           price: calculateCartItemPrice(cartItem),
-//           selectedSpecialtyItems,
-//         };
-//       });
-//       // const reservationId = '69727eec-1701-11ef-b470-6f61e1d3261a';
-
-//       const response = await OrderApi.postOrder(orderMeals);
-//       const { id, status, type, seats = [], paymentLogs, reservationId } = response.result!;
-//       const gatherOrder: GatherOrder = {
-//         id,
-//         status,
-//         type,
-//         seats,
-//         paymentLogs,
-//         orders: [response.result!],
-//       };
-
-//       if (payload.isCustomer) {
-//         dispatch(getOrders({ status: getState()[name].status }));
-//         dispatch(setMobileOrderStatusTab(0));
-//         dispatch(openDialog({ type: MobileDialog.ORDER }));
-//       } else {
-//         // 後台外帶訂單先結帳
-//         dispatch(openPaymentDrawer(gatherOrder));
-//       }
-//       dispatch(clearCart());
-//       socket && socket.emit(SocketTopic.ORDER, response);
-//     } catch (error) {
-//       if (error instanceof Error) {
-//         return rejectWithValue({ message: error.message });
-//       } else {
-//         return rejectWithValue({ message: 'unknown error' });
-//       }
-//     }
-//   },
-// );
-
-export const cancelOrder = createAppAsyncThunk(`${name}/cancelOrder`, async (arg, { getState, dispatch, rejectWithValue }) => {
+export const postOrder = createAppAsyncThunk(`${name}/postOrder`, async (_, { getState, dispatch, rejectWithValue }) => {
   try {
-    const orderId = getState()[name].cancelOrderId;
-    const socket = getState().socket.socket;
-    const cancelOrder = await OrderApi.deleteOrder({ orderId });
-    socket && socket.emit(SocketTopic.ORDER, cancelOrder);
-    dispatch(getOrders({ status: getState()[name].status }));
-  } catch (error) {
-    errorHandler(error);
-    return rejectWithValue(error);
-  }
-});
+    const cart = getState().menu.cart;
 
-export const patchOrder = createAppAsyncThunk(`${name}/patchOrder`, async (order: IOrder, { getState, dispatch, rejectWithValue }) => {
-  try {
+    const payload = {
+      type: OrderType.DINE_IN,
+      totalPrice: cart.reduce((acc, cartItem) => acc + calculateCartItemPrice(cartItem), 0),
+      orderMeals: cart.map((cartItem) => ({
+        id: cartItem.id,
+        amount: cartItem.amount,
+        specialtyItems: cartItem.selectedSpecialtyItems.map((ssi) => ssi.id),
+      })),
+    };
+
+    const response = await OrderApi.postOrder(payload);
+    dispatch(getOrders());
+    dispatch(setMobileOrderStatusTab(0));
+    dispatch(openDialog({ type: MobileDialog.ORDER }));
+    dispatch(clearCart());
     const socket = getState().socket.socket;
-    const updatedOrder = await OrderApi.patchOrder(order);
-    socket && socket.emit(SocketTopic.ORDER, updatedOrder);
-    dispatch(getOrders({ status: getState()[name].status }));
+    socket && socket.emit(SocketTopic.ORDER, response);
   } catch (error) {
-    errorHandler(error);
     return rejectWithValue(error);
   }
 });
@@ -142,38 +92,6 @@ export const orderSlice = createSlice({
       .addCase(getOrders.rejected, (state) => {
         state.isLoading = false;
         state.orders = initialState.orders;
-      })
-      // post order
-      // .addCase(postOrder.pending, (state) => {
-      //   state.isLoading = true;
-      // })
-      // .addCase(postOrder.fulfilled, (state) => {
-      //   state.isLoading = false;
-      // })
-      // .addCase(postOrder.rejected, (state) => {
-      //   state.isLoading = false;
-      // })
-      // delete order
-      .addCase(cancelOrder.pending, (state) => {
-        state.isLoading = true;
-      })
-      .addCase(cancelOrder.fulfilled, (state) => {
-        state.cancelOrderId = initialState.cancelOrderId;
-        state.isLoading = false;
-      })
-      .addCase(cancelOrder.rejected, (state) => {
-        state.cancelOrderId = initialState.cancelOrderId;
-        state.isLoading = false;
-      })
-      // patch order
-      .addCase(patchOrder.pending, (state) => {
-        state.isLoading = true;
-      })
-      .addCase(patchOrder.fulfilled, (state) => {
-        state.isLoading = false;
-      })
-      .addCase(patchOrder.rejected, (state) => {
-        state.isLoading = false;
       });
   },
 });

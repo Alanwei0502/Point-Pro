@@ -1,4 +1,5 @@
 import { FC } from 'react';
+import { StartDiningQRCodeModal } from '~/components';
 import { ReservationTable } from './ReservationTable';
 import { ReservationModal } from './ReservationModal';
 import { DeleteReservationConfirmModal } from './DeleteReservationConfirmModal';
@@ -14,6 +15,7 @@ export const ReservationManagement: FC<IReservationManagementProps> = () => {
       <ReservationModal />
       <DeleteReservationConfirmModal />
       <StartDiningConfirmModal />
+      <StartDiningQRCodeModal />
     </>
   );
 };

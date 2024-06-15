@@ -37,10 +37,6 @@ export interface IReservationManagementSliceState {
     isOpen: boolean;
     data: Pick<IReservation, 'id' | 'username' | 'gender'> | null;
   };
-  qrCodeModal: {
-    isOpen: boolean;
-    data: (Pick<IReservation, 'id' | 'people' | 'startAt'> & { token: string }) | null;
-  };
 }
 
 const initialState: IReservationManagementSliceState = {
@@ -71,10 +67,6 @@ const initialState: IReservationManagementSliceState = {
     data: null,
   },
   startDiningConfirmModal: {
-    isOpen: false,
-    data: null,
-  },
-  qrCodeModal: {
     isOpen: false,
     data: null,
   },
@@ -125,8 +117,8 @@ const patchReservation = createAppAsyncThunk(`${name}/patchReservation`, async (
 const startDiningReservation = createAppAsyncThunk(`${name}/startDiningReservation`, async (_, thunkApi) => {
   try {
     const data = thunkApi.getState().reservationManagement.startDiningConfirmModal.data;
-    const payload = { id: data?.id as IReservation['id'] };
-    const response = await ReservationApi.startDiningReservation(payload);
+    const id = data?.id as string;
+    const response = await ReservationApi.startDiningReservation(id);
     const socket = thunkApi.getState().socket.socket;
     socket && socket.emit(SocketTopic.RESERVATION, response);
     return response;

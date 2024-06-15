@@ -1,11 +1,12 @@
-import { FC, Fragment, useEffect } from 'react';
+import { FC, Fragment, useEffect, useState } from 'react';
 import { Box, Divider, List, Typography } from '@mui/material';
 import { CartMeal } from '~/features/customer/menu/CartMeal';
-import { MobileButton, MobileDialogLayout } from '~/components';
+import { AppButton, MobileDialogLayout } from '~/components';
 import { calculateCartPrice } from '~/utils';
 import { useAppDispatch, useAppSelector } from '~/hooks';
-import { closeDialog, openModal, deleteCartItem } from '~/store/slices';
+import { closeDialog, openModal, deleteCartItem, postOrder } from '~/store/slices';
 import { MobileModalType, MobileDialog } from '~/types';
+import { toast } from 'react-toastify';
 
 interface ICartDialogProps {}
 
@@ -16,16 +17,32 @@ export const CartDialog: FC<ICartDialogProps> = () => {
   const meals = useAppSelector((state) => state.menu.meals);
   const cart = useAppSelector((state) => state.menu.cart);
 
+  // TODO: loading and toast
+  const [isSubmitLoading, setIsSubmitLoading] = useState(false);
+
   const totalAmount = cart.reduce((acc, cur) => (acc += cur.amount), 0);
   const totaPrice = calculateCartPrice(cart);
 
-  const handleClose = () => {
+  const handleGoBackToMenu = () => {
     dispatch(closeDialog());
   };
 
   const handleSubmitOrders = () => {
-    // TODO
-    // dispatch(postOrder({ isCustomer: true }));
+    setIsSubmitLoading(true);
+    toast
+      .promise(
+        async () => {
+          await dispatch(postOrder());
+        },
+        {
+          pending: '送出訂單中...',
+          success: '訂單送出成功！',
+          error: '訂單送出失敗！',
+        },
+      )
+      .finally(() => {
+        setIsSubmitLoading(false);
+      });
   };
 
   useEffect(() => {
@@ -41,9 +58,8 @@ export const CartDialog: FC<ICartDialogProps> = () => {
   return (
     <MobileDialogLayout
       title='購物車'
-      titleSize='h2'
+      titleSize='h4'
       isOpen={dialogType === MobileDialog.CART}
-      isShowCloseIcon={false}
       actionButton={
         <>
           <Box
@@ -82,10 +98,12 @@ export const CartDialog: FC<ICartDialogProps> = () => {
             </Box>
           </Box>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, width: '100%' }}>
-            <MobileButton onClick={handleClose}>繼續點餐</MobileButton>
-            <MobileButton onClick={handleSubmitOrders} disabled={cart.length === 0}>
+            <AppButton fullWidth onClick={handleGoBackToMenu}>
+              繼續點餐
+            </AppButton>
+            <AppButton fullWidth onClick={handleSubmitOrders} disabled={cart.length === 0 || isSubmitLoading}>
               送出訂單
-            </MobileButton>
+            </AppButton>
           </Box>
         </>
       }

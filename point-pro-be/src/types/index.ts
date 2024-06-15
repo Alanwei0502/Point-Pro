@@ -28,65 +28,36 @@ import {
   getReservationsRequestSchema,
   updateReservationRequestSchema,
   deleteReservationRequestSchema,
+  verifyCustomerSchema,
 } from '../validators';
-// Request
 
-// P = path params, expects a [key: string]: string dictionary
-// T = response body, expects any
-// R = request body, expects any
-// S ReqQuery = request query, expects any
-// L Locas = request locals, expects any
+// LOGIN
+export enum SessionRole {
+  admin = 'admin_session',
+  customer = 'customer_session',
+}
 
-// Request<P, T, R, S, L>
+export interface CustomerAuth {
+  role: 'customer';
+  auth: z.infer<typeof verifyCustomerSchema>;
+}
 
-// examples
+export interface AdminAuth {
+  role: 'admin';
+  auth: z.infer<typeof verifyAdminAndStaffSchema>;
+}
 
-// // Request with any in all Generics
-// Request<any, any, any ,any ,any>
-
-// // Request expecting variables in body and request query
-// Request<any, any, { userId: number } ,{ bookId: number } ,any>
-
-// // Request expecting variables in query params
-// Request<{ userName: string }, any, any ,any ,any>
-
-// Response
-
-// S ReqQuery = response body, expects any
-// L Locas = response locals, expects [string]: any
-
-// Response<S, L>
-
-// examples
-
-// // Response expects string array in response body
-// Response<string[]>
-
-// // Response expects success boolean array and number in data
-// Response<{ success: boolean, data: number }>
-
-type ReservationAuth = {
-  reservationId: string;
-  reservationType?: string;
-  startTime: Date;
-  seatNo: string;
-  periodStartTime?: Date;
-  periodEndTime?: Date;
-  role?: string;
-};
+export type AuthInfo = AdminAuth | CustomerAuth;
 
 export interface AuthRequest extends Request {
-  // auth: UserAuth | ReservationAuth;
-  auth?: z.infer<typeof verifyAdminAndStaffSchema>;
+  role?: AuthInfo['role'];
+  auth?: AuthInfo['auth'];
 }
 
 export type ApiResponse<T = any> = Response<{
   message: string;
   result: T | null;
 }>;
-
-// MENU
-export interface IGetAllMealsRequest extends Request {}
 
 export interface ILoginRequest extends Request {
   body: z.infer<typeof loginSchema>;
@@ -96,122 +67,125 @@ export interface IRegisterRequest extends Request {
   body: z.infer<typeof registerSchema>;
 }
 
+// MENU
+export interface IGetAllMealsRequest extends Request {}
+
 // CATEGORY
-export interface IGetCategoryByIdRequest extends Request {
+export interface IGetCategoryByIdRequest extends AuthRequest {
   params: z.infer<typeof getCategoryByIdRequestSchema>;
 }
 
-export interface ICreateCategoryRequest extends Request {
+export interface ICreateCategoryRequest extends AuthRequest {
   body: z.infer<typeof createCategoryRequestSchema>;
 }
 
-export interface IUpdateCategoryRequest extends Request {
+export interface IUpdateCategoryRequest extends AuthRequest {
   params: z.infer<typeof getCategoryByIdRequestSchema>;
   body: z.infer<typeof createCategoryRequestSchema>;
 }
 
-export interface IUpdateCategoriesOrderRequest extends Request {
+export interface IUpdateCategoriesOrderRequest extends AuthRequest {
   body: z.infer<typeof updateCategoryOrderRequestSchema>;
 }
 
-export interface IDeleteCategoryRequest extends Request {
+export interface IDeleteCategoryRequest extends AuthRequest {
   params: z.infer<typeof getCategoryByIdRequestSchema>;
 }
 
 // MEAL
-export interface IUpdateMealRequest extends Request {
+export interface IUpdateMealRequest extends AuthRequest {
   params: z.infer<typeof getMealByIdRequestSchema>;
   body: z.infer<typeof updateMealRequestSchema>;
 }
-export interface IUpdateMealOrderRequest extends Request {
+export interface IUpdateMealOrderRequest extends AuthRequest {
   body: z.infer<typeof updateMealOrderRequestSchema>;
 }
 
-export interface ICreateMealRequest extends Request {
+export interface ICreateMealRequest extends AuthRequest {
   body: z.infer<typeof createMealRequestSchema>;
 }
 
-export interface IDeleteMealRequest extends Request {
+export interface IDeleteMealRequest extends AuthRequest {
   params: z.infer<typeof deleteMealRequestSchma>;
 }
 
 // SPECIALTY
-export interface ICreateSpecialtyRequest extends Request {
+export interface ICreateSpecialtyRequest extends AuthRequest {
   body: z.infer<typeof createSpecialtyRequestSchema>;
 }
 
-export interface IUpdateSpecialtyRequest extends Request {
+export interface IUpdateSpecialtyRequest extends AuthRequest {
   params: z.infer<typeof getSpecialtyByIdRequestSchema>;
   body: z.infer<typeof updateSpecialtyRequestSchema>;
 }
 
-export interface IDeleteSpecialtyRequest extends Request {
+export interface IDeleteSpecialtyRequest extends AuthRequest {
   params: z.infer<typeof deleteSpecialtyRequestSchema>;
 }
 
-export interface IUpdateSpecialtyOrderRequest extends Request {
+export interface IUpdateSpecialtyOrderRequest extends AuthRequest {
   body: z.infer<typeof updateSpecialtyOrderRequestSchema>;
 }
 
 // SPECIALTY ITEM
-export interface ICreateSpecialtyItemRequest extends Request {
+export interface ICreateSpecialtyItemRequest extends AuthRequest {
   body: z.infer<typeof createSpecialtyItemRequestSchema>;
 }
 
-export interface IUpdateSpecialtyItemsOrderRequest extends Request {
+export interface IUpdateSpecialtyItemsOrderRequest extends AuthRequest {
   body: z.infer<typeof updateSpecialtyItemOrderRequestSchema>;
 }
 
-export interface IDeleteSpecialtyItemRequest extends Request {
+export interface IDeleteSpecialtyItemRequest extends AuthRequest {
   params: z.infer<typeof deleteSpecialtyItemRequestSchema>;
 }
 
 // IMGUR
-export interface IUploadImageRequest extends Request {
+export interface IUploadImageRequest extends AuthRequest {
   file?: Express.Multer.File;
   body: z.infer<typeof createMealRequestSchema>;
 }
 
-export interface IPatchImageRequest extends Request {
+export interface IPatchImageRequest extends AuthRequest {
   file?: Express.Multer.File;
   body: z.infer<typeof updateMealRequestSchema>;
 }
 
 // ORDER
-export interface IGetOrderRequest extends Request {
+export interface IGetOrderRequest extends AuthRequest {
   query: z.infer<typeof getOrderRequestSchema>;
 }
-export interface IPostOrderRequest extends Request {
+export interface IPostOrderRequest extends AuthRequest {
   body: z.infer<typeof createOrderRequestSchema>;
 }
 
-export interface ICancelOrderRequest extends Request {
+export interface ICancelOrderRequest extends AuthRequest {
   params: z.infer<typeof orderIdValidatedSchema>;
 }
 
-export interface IUpdateOrderMealServedAmountRequest extends Request {
+export interface IUpdateOrderMealServedAmountRequest extends AuthRequest {
   params: z.infer<typeof orderIdValidatedSchema>;
   body: z.infer<typeof updateOrderMealServedAmountPayloadSchema>;
 }
 
 // RESERVATION
-export interface ICreateReservationRequest extends Request {
+export interface ICreateReservationRequest extends AuthRequest {
   body: z.infer<typeof createReservationRequestSchema>;
 }
 
-export interface IGetReservationsRequest extends Request {
+export interface IGetReservationsRequest extends AuthRequest {
   query: z.infer<typeof getReservationsRequestSchema>;
 }
 
-export interface IUpdateReservationRequest extends Request {
+export interface IUpdateReservationRequest extends AuthRequest {
   params: z.infer<typeof updateReservationRequestSchema>;
   body: z.infer<typeof createReservationRequestSchema>;
 }
 
-export interface IStartDiningReservationRequest extends Request {
+export interface IStartDiningReservationRequest extends AuthRequest {
   params: z.infer<typeof updateReservationRequestSchema>;
 }
 
-export interface IDeleteReservationRequest extends Request {
+export interface IDeleteReservationRequest extends AuthRequest {
   params: z.infer<typeof deleteReservationRequestSchema>;
 }

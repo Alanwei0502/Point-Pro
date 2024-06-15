@@ -39,7 +39,7 @@ export const PaymentDrawer: FC<IPaymentDrawerProps> = () => {
         message: OrderMessage.PAY_ORDER,
         result: paymentItem?.orders[0],
       });
-    dispatch(getOrders({ status }));
+    dispatch(getOrders());
     dispatch(closePaymentDrawer());
   };
 

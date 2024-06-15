@@ -39,7 +39,6 @@ export const CashPaymentDialog = ({ result }: CashPaymentResponse) => {
   return (
     <MobileDialogLayout
       isOpen={showMobileDialog}
-      onCloseDialog={handleCloseCashPayment}
       title='現金付款'
       actionButton={
         <Button variant='contained' color='primary' onClick={handleCloseCashPayment}>

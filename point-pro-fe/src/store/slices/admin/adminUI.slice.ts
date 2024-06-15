@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { appDayjs, dateForm } from '~/utils';
 
 const name = 'adminUI';
@@ -9,6 +9,10 @@ export interface IadminUISliceState {
     isOpen: boolean;
     progress: number;
   };
+  startDiningQRCodeModal: {
+    isOpen: boolean;
+    data: string | null; // 前台點餐連結（queryString含token,people,startAt）
+  };
 }
 
 const initialState: IadminUISliceState = {
@@ -16,6 +20,10 @@ const initialState: IadminUISliceState = {
   loginLoading: {
     isOpen: false,
     progress: 0,
+  },
+  startDiningQRCodeModal: {
+    isOpen: false,
+    data: null,
   },
 };
 
@@ -31,6 +39,13 @@ export const adminUISlice = createSlice({
     },
     closeAdminLoginLoading(state) {
       state.loginLoading = initialState.loginLoading;
+    },
+    openStartDiningQRCodeModal(state, action: PayloadAction<IadminUISliceState['startDiningQRCodeModal']['data']>) {
+      state.startDiningQRCodeModal.isOpen = true;
+      state.startDiningQRCodeModal.data = action.payload;
+    },
+    closeStartDiningQRCodeModal(state) {
+      state.startDiningQRCodeModal = initialState.startDiningQRCodeModal;
     },
   },
 });

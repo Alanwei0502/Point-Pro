@@ -1,6 +1,6 @@
 import { FC } from 'react';
 import { MobileStepper } from '@mui/material';
-import { MobileButton } from '~/components';
+import { AppButton } from '~/components';
 import { MobileBookingDialog } from '~/types';
 import { useAppDispatch, useAppSelector } from '~/hooks';
 import { setStep, setDialog, postReservation } from '~/store/slices';
@@ -75,15 +75,23 @@ export const BookingSteps: FC<IBookingStepsProps> = (props) => {
       activeStep={step}
       backButton={
         <>
-          {isNotFirstStep && <MobileButton onClick={handleGoBack}>回上一步</MobileButton>}
-          {!isNotLastStep && <MobileButton onClick={handleConfirm}>確認預定</MobileButton>}
+          {isNotFirstStep && (
+            <AppButton fullWidth onClick={handleGoBack}>
+              回上一步
+            </AppButton>
+          )}
+          {!isNotLastStep && (
+            <AppButton fullWidth onClick={handleConfirm}>
+              確認預定
+            </AppButton>
+          )}
         </>
       }
       nextButton={
         isNotLastStep && (
-          <MobileButton onClick={handleGoNext} disabled={isBookingNextStepBtnDisabled()}>
+          <AppButton fullWidth onClick={handleGoNext} disabled={isBookingNextStepBtnDisabled()}>
             下一步
-          </MobileButton>
+          </AppButton>
         )
       }
       sx={{

@@ -2,13 +2,15 @@ import { z } from 'zod';
 import { prismaClient } from '../helpers';
 import { createOrderRequestSchema, getOrderRequestSchema } from '../validators';
 import { Order, OrderMeal, OrderStatus } from '@prisma/client';
+import { AuthInfo } from '../types';
 
 export class OrderModel {
-  static getOrders = async (query: z.infer<typeof getOrderRequestSchema>) => {
+  static getOrders = async (query: z.infer<typeof getOrderRequestSchema>, role: AuthInfo['role'], auth: AuthInfo['auth']) => {
     const orders = await prismaClient.order.findMany({
       where: {
         type: query.type,
         status: query.status,
+        reservationId: role === 'admin' ? undefined : auth.id,
         createdAt: {
           gte: new Date(new Date().setHours(0, 0, 0, 0)).toISOString(),
         },
@@ -41,15 +43,6 @@ export class OrderModel {
             },
           },
         },
-        reservations: {
-          include: {
-            reservationPeriodSeats: {
-              include: {
-                periodSeats: true,
-              },
-            },
-          },
-        },
       },
       orderBy: {
         createdAt: 'desc',
@@ -59,11 +52,12 @@ export class OrderModel {
     return orders;
   };
 
-  static createOrder = async (order: z.infer<typeof createOrderRequestSchema>) => {
+  static createOrder = async (order: z.infer<typeof createOrderRequestSchema>, role: AuthInfo['role'], auth: AuthInfo['auth']) => {
     const createdOrder = await prismaClient.order.create({
       data: {
         type: order.type,
         totalPrice: order.totalPrice,
+        reservationId: role === 'admin' ? undefined : auth.id,
         orderMeals: {
           create: order.orderMeals.map((m) => ({
             amount: m.amount,

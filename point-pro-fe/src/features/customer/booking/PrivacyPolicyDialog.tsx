@@ -1,6 +1,6 @@
 import { FC } from 'react';
-import { Box, Button, Typography } from '@mui/material';
-import { MobileDialogLayout } from '~/components';
+import { Box, Typography } from '@mui/material';
+import { AppButton, MobileDialogLayout } from '~/components';
 import { MobileBookingDialog } from '~/types';
 import { useAppDispatch, useAppSelector } from '~/hooks';
 import { confirmPrivacyPolicyDialog } from '~/store/slices';
@@ -21,8 +21,7 @@ export const PrivacyPolicyDialog: FC<IPrivacyPolicyDialogProps> = () => {
       title={<Box>PointPro 隱私權政策</Box>}
       titleSize='h3'
       isOpen={dialog === MobileBookingDialog.PRIVACY_POLICY}
-      isShowCloseIcon={false}
-      actionButton={<Button onClick={handleConfirm}>確認同意</Button>}
+      actionButton={<AppButton onClick={handleConfirm}>確認同意</AppButton>}
     >
       <Typography>我們非常尊重您的隱私，因此我們採用各種措施來保護您的個人資料。</Typography>
       <br />

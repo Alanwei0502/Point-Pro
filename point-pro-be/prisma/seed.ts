@@ -13,6 +13,7 @@ import {
   insertSpecialtyItems,
   insertUsers,
 } from './seeders';
+import { insertOrders } from './seeders/orders.seeder';
 
 const main = async () => {
   try {
@@ -98,6 +99,13 @@ const main = async () => {
       await insertReservationPeriodSeats();
     } catch (error) {
       console.log('error seeding reservation period seats:', error);
+    }
+
+    try {
+      console.log('seeding orders...');
+      await insertOrders();
+    } catch (error) {
+      console.log('error seeding orders:', error);
     }
 
     console.log('data seeded successfully');

@@ -1,6 +1,6 @@
 import { FC, useMemo } from 'react';
 import { Box, List, ListItem, Typography } from '@mui/material';
-import { BaseButton, headerHeight, Column, Row, AppButton } from '~/components';
+import { AppButton, headerHeight, Column, Row } from '~/components';
 import { useAppDispatch, useAppSelector } from '~/hooks';
 import { theme } from '~/theme';
 import { takeOrderSliceActions } from '~/store/slices';
@@ -79,17 +79,11 @@ export const CartList: FC<ICartListProps> = () => {
             <Typography fontWeight={700}>{totalPrice}元</Typography>
           </Row>
         </Column>
-        <BaseButton
-          sx={{ width: '100%', padding: '1rem', borderRadius: 0 }}
-          variant='contained'
-          color='primary'
-          onClick={handleClickSubmit}
-          disabled={!hasCartItems}
-        >
+        <AppButton fullWidth onClick={handleClickSubmit} disabled={!hasCartItems}>
           <Typography fontWeight={700} textAlign='center'>
             送出訂單
           </Typography>
-        </BaseButton>
+        </AppButton>
       </Box>
     </Column>
   );

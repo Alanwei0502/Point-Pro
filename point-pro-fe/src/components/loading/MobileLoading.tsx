@@ -3,17 +3,17 @@ import { Box, Typography } from '@mui/material';
 import { theme } from '~/theme';
 import HeaderLogo from '~/assets/images/header-logo.svg';
 
-interface IMobileMaskProps {}
+interface IMobileLoadingProps {}
 
-export const MobileMask: FC<IMobileMaskProps> = () => {
+export const MobileLoading: FC<IMobileLoadingProps> = () => {
   return (
     <Box
       sx={{
         bgcolor: theme.palette.primary.main,
         zIndex: theme.zIndex.modal + 1,
         position: 'fixed',
-        width: '100vw',
-        height: '100vh',
+        width: '100%',
+        height: '100%',
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'center',
@@ -36,9 +36,6 @@ export const MobileMask: FC<IMobileMaskProps> = () => {
           },
         }}
       />
-      <Typography component='p' pt={5}>
-        非用餐時段，無法點餐
-      </Typography>
     </Box>
   );
 };

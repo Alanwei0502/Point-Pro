@@ -1,13 +1,12 @@
 import { FC, useEffect } from 'react';
-import { Button, Typography } from '@mui/material';
+import { Typography } from '@mui/material';
 import MoneyIcon from '@mui/icons-material/Money';
 import CreditCardIcon from '@mui/icons-material/CreditCard';
 import { useAppDispatch, useAppSelector } from '~/hooks';
-import { openModal } from '~/store/slices/customer/menu.slice';
-import linePay from '~/assets/images/line-pay.png';
-import { requestEcPay, requestLinePay } from '~/store/slices';
+import { requestEcPay, requestLinePay, openModal } from '~/store/slices';
 import { MobileModalType, OrderStatus } from '~/types';
-import { MobileModal } from '~/components';
+import { AppButton, MobileModal } from '~/components';
+import linePay from '~/assets/images/line-pay.png';
 
 interface IPaymentModalProps {}
 
@@ -60,7 +59,7 @@ export const PaymentModal: FC<IPaymentModalProps> = () => {
       <Typography variant='h6' fontWeight={900}>
         請選擇付款方式
       </Typography>
-      <Button
+      <AppButton
         onClick={handlePaymentByCash}
         startIcon={<MoneyIcon />}
         sx={{
@@ -70,8 +69,8 @@ export const PaymentModal: FC<IPaymentModalProps> = () => {
         }}
       >
         現金付款
-      </Button>
-      <Button
+      </AppButton>
+      <AppButton
         onClick={handlePaymentByCard}
         startIcon={<CreditCardIcon />}
         sx={{
@@ -81,8 +80,8 @@ export const PaymentModal: FC<IPaymentModalProps> = () => {
         }}
       >
         信用卡
-      </Button>
-      <Button
+      </AppButton>
+      <AppButton
         onClick={handlePaymentByLinePay}
         sx={{
           color: 'common.black',
@@ -91,7 +90,7 @@ export const PaymentModal: FC<IPaymentModalProps> = () => {
         }}
       >
         <img src={linePay} alt='LINE Pay' style={{ height: '1.8rem' }} />
-      </Button>
+      </AppButton>
     </MobileModal>
   );
 };

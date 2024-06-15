@@ -2,11 +2,13 @@ import { NextFunction } from 'express';
 import { ReasonPhrases, StatusCodes } from 'http-status-codes';
 import { ApiResponse, ICancelOrderRequest, IGetOrderRequest, IPostOrderRequest, IUpdateOrderMealServedAmountRequest } from '../types';
 import { OrderModel } from '../models';
+import { getRoleAndAuth } from '../helpers';
 
 export class OrderController {
   static getOrdersHandler = async (req: IGetOrderRequest, res: ApiResponse, next: NextFunction) => {
     try {
-      const orders = await OrderModel.getOrders(req.query);
+      const { role, auth } = getRoleAndAuth(req);
+      const orders = await OrderModel.getOrders(req.query, role, auth);
 
       return res.status(StatusCodes.OK).send({
         message: ReasonPhrases.OK,
@@ -19,7 +21,8 @@ export class OrderController {
 
   static createOrderHandler = async (req: IPostOrderRequest, res: ApiResponse, next: NextFunction) => {
     try {
-      const newOrder = await OrderModel.createOrder(req.body);
+      const { role, auth } = getRoleAndAuth(req);
+      const newOrder = await OrderModel.createOrder(req.body, role, auth);
 
       return res.status(StatusCodes.CREATED).send({
         message: ReasonPhrases.CREATED,

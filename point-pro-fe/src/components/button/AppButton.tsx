@@ -1,7 +1,7 @@
-import { Button, ButtonProps, styled } from '@mui/material';
 import { FC } from 'react';
+import { Button, ButtonProps, styled } from '@mui/material';
 
-export const BaseButton = styled(Button)<ButtonProps>(({ theme, size }) => ({
+const BaseButton = styled(Button)<ButtonProps>(({ theme, size }) => ({
   fontSize: size || 14,
   display: 'flex',
   flexDirection: 'row',

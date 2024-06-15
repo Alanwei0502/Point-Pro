@@ -105,39 +105,43 @@ export class ReservationController {
         });
       }
 
-      // Check if reservation is already started
-      if (reservation?.startAt) {
-        return res.status(StatusCodes.BAD_REQUEST).send({
-          message: ReasonPhrases.BAD_REQUEST,
-          result: '此預約已經開始用餐',
-        });
-      }
+      //temp
+      if (!['朱志豪', '林雅婷', '鄭志宇'].includes(reservation?.username ?? '')) {
+        // Check if reservation is already started
+        if (reservation?.startAt) {
+          return res.status(StatusCodes.BAD_REQUEST).send({
+            message: ReasonPhrases.BAD_REQUEST,
+            result: '此預約已經開始用餐',
+          });
+        }
 
-      // Check if reservation is cancelled
-      if (reservation?.isCancelled) {
-        return res.status(StatusCodes.BAD_REQUEST).send({
-          message: ReasonPhrases.BAD_REQUEST,
-          result: '此預約已被取消',
-        });
-      }
+        // Check if reservation is cancelled
+        if (reservation?.isCancelled) {
+          return res.status(StatusCodes.BAD_REQUEST).send({
+            message: ReasonPhrases.BAD_REQUEST,
+            result: '此預約已被取消',
+          });
+        }
 
-      // Check if reservation is in the future
-      // Can start dining 10 minutes before reservation
-      if (appDayjs().isBefore(appDayjs(reservation?.periods.startTime).add(-10, 'minutes'))) {
-        return res.status(StatusCodes.BAD_REQUEST).send({
-          message: ReasonPhrases.BAD_REQUEST,
-          result: '此預約還未到用餐時間',
-        });
-      }
+        // Check if reservation is in the future
+        // Can start dining 10 minutes before reservation
+        if (appDayjs().isBefore(appDayjs(reservation?.periods.startTime).add(-10, 'minutes'))) {
+          return res.status(StatusCodes.BAD_REQUEST).send({
+            message: ReasonPhrases.BAD_REQUEST,
+            result: '此預約還未到用餐時間',
+          });
+        }
 
-      // Check if reservation is in the past
-      // Can start dining 10 minutes after reservation
-      // if (appDayjs().isAfter(appDayjs(reservation?.periods.startTime).add(10, 'minutes'))) {
-      //   return res.status(StatusCodes.BAD_REQUEST).send({
-      //     message: ReasonPhrases.BAD_REQUEST,
-      //     result: '此預約已過用餐時間',
-      //   });
-      // }
+        // Check if reservation is in the past
+        // Can start dining 10 minutes after reservation
+        // TODO
+        // if (appDayjs().isAfter(appDayjs(reservation?.periods.startTime).add(10, 'minutes'))) {
+        //   return res.status(StatusCodes.BAD_REQUEST).send({
+        //     message: ReasonPhrases.BAD_REQUEST,
+        //     result: '此預約已過用餐時間',
+        //   });
+        // }
+      }
 
       // Update reservation start time
       const newReservation = await ReservationModel.startDiningResevation(reservation.id);
@@ -151,15 +155,21 @@ export class ReservationController {
       });
 
       // Redis set token
-      await SessionRedis.setSession(newReservation.id, jwt.customerExpirationTime, token);
+      await SessionRedis.setSession('customer', newReservation.id, jwt.customerExpirationTime, token);
+
+      const url = new URL(process.env.FRONTEND_URL!);
+      const searchParams = new URLSearchParams({
+        token,
+        id: reservation.id,
+        people: `${newReservation.people}`,
+        startAt: `${newReservation.startAt}`,
+      });
+      url.search = searchParams.toString();
+      const fullUrl = url.toString();
 
       return res.status(StatusCodes.OK).send({
         message: ReasonPhrases.OK,
-        result: {
-          token,
-          people: newReservation.people,
-          startAt: newReservation.startAt,
-        },
+        result: fullUrl,
       });
     } catch (error) {
       next(error);

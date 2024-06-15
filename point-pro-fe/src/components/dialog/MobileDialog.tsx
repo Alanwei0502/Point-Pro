@@ -17,10 +17,8 @@ import CancelIcon from '@mui/icons-material/Cancel';
 interface IMobileDialogLayoutProps {
   title?: React.ReactNode;
   titleSize?: Variant;
-  isShowCloseIcon?: boolean;
   children?: React.ReactNode;
   isOpen: boolean;
-  onCloseDialog?: () => void;
   actionButton?: React.ReactNode;
   dialogProps?: DialogProps;
   dialogTitleProps?: DialogTitleProps;
@@ -32,10 +30,8 @@ export const MobileDialogLayout: FC<IMobileDialogLayoutProps> = (props) => {
   const {
     title = '',
     titleSize = 'h4',
-    isShowCloseIcon = true,
     children = null,
     isOpen,
-    onCloseDialog = () => {},
     actionButton,
     dialogProps,
     dialogTitleProps,
@@ -45,19 +41,16 @@ export const MobileDialogLayout: FC<IMobileDialogLayoutProps> = (props) => {
 
   return (
     <Dialog
-      {...dialogProps}
       fullScreen
-      onClose={onCloseDialog}
       open={isOpen}
       sx={{ bgcolor: '#E1E1E1', width: '100vw', maxWidth: '768px', margin: '0 auto', userSelect: 'none' }}
+      {...dialogProps}
     >
       <DialogTitle {...dialogTitleProps}>
         <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
           <Typography variant={titleSize} fontWeight={900} sx={{ flexGrow: 1 }}>
             {title}
           </Typography>
-
-          {isShowCloseIcon && <CancelIcon sx={{ fontSize: '2.5rem', cursor: 'pointer' }} onClick={onCloseDialog} />}
         </Box>
       </DialogTitle>
 

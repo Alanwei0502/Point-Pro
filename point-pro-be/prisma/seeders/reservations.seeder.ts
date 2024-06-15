@@ -495,7 +495,7 @@ const customers: Pick<Reservation, 'username' | 'gender' | 'people' | 'phone' | 
     email: 'jieqingliang@tang.tw',
     people: 5,
     type: 'ONLINE',
-    remark: '需要素食餐',
+    remark: '',
   },
   {
     username: '黃柏翰',

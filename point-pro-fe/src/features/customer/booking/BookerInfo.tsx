@@ -1,6 +1,6 @@
 import { FC, useState } from 'react';
 import { Box, ButtonBase, FormControl, FormControlLabel, FormLabel, Radio, RadioGroup, TextField } from '@mui/material';
-import { BaseCheckbox, BaseButton } from '~/components';
+import { BaseCheckbox } from '~/components';
 import { MobileBookingDialog, Gender } from '~/types';
 import { emailRegex, GENDER_TRANSLATE, phoneRegex } from '~/utils';
 import { useAppDispatch, useAppSelector } from '~/hooks';

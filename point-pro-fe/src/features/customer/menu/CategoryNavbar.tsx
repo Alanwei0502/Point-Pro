@@ -25,41 +25,32 @@ interface ICategoryNavbarProps {}
 export const CategoryNavbar: FC<ICategoryNavbarProps> = () => {
   const dispatch = useAppDispatch();
 
-  const [isShowDropdown, setIsShowDropdown] = useState(false);
+  // const [isShowDropdown, setIsShowDropdown] = useState(false);
 
+  const currentCategory = useAppSelector((state) => state.menu.currentCategory);
   const categories = useAppSelector((state) => state.menu.categories);
   const meals = useAppSelector((state) => state.menu.meals);
   const showCategories = useMemo(() => categories.filter((c) => meals.some((m) => m.categoryId === c.id)), [categories, meals]);
-  const currentCategory = useAppSelector((state) => state.menu.currentCategory);
 
   const handleClickCategory = (categoryId: string) => {
-    setIsShowDropdown(false);
+    // setIsShowDropdown(false);
     dispatch(setCurrentCategory(categoryId));
   };
 
-  const handleToggleCategoryDropdown = () => {
-    setIsShowDropdown((prev) => !prev);
-  };
+  // const handleToggleCategoryDropdown = () => {
+  //   setIsShowDropdown((prev) => !prev);
+  // };
 
   return (
     <>
-      <Typography variant='h3' sx={{ fontWeight: 900, paddingBottom: '1rem', userSelect: 'none' }}>
+      <Typography variant='h5' fontWeight={900} sx={{ userSelect: 'none', mt: 1 }}>
         菜單
       </Typography>
-      <Box
-        sx={{
-          position: 'sticky',
-          top: '4.5rem',
-          zIndex: 2,
-          bgcolor: 'background.paper',
-          transform: 'translateY(10%)', // sticky jumping when scroll in mobile
-          userSelect: 'none',
-        }}
-        id='category-tabs'
-      >
-        <Box sx={{ display: 'flex' }}>
+      <Box sx={{ bgcolor: 'background.paper', userSelect: 'none' }}>
+        <Box display='flex'>
           {/* 菜單類別 */}
           <Tabs
+            visibleScrollbar
             value={currentCategory}
             onChange={(_, value) => handleClickCategory(value)}
             variant='scrollable'
@@ -70,15 +61,14 @@ export const CategoryNavbar: FC<ICategoryNavbarProps> = () => {
               '& .MuiTabs-indicator': {
                 display: 'none',
               },
-              marginBottom: '10px',
             }}
           >
             {showCategories.map(({ id, title }) => (
-              <StyledTab key={id} value={id} label={title} />
+              <StyledTab key={id} value={id} label={title} sx={{ marginBottom: 1 }} />
             ))}
           </Tabs>
           {/* 下拉菜單按鈕 */}
-          <ToggleButton
+          {/* <ToggleButton
             value='check'
             size='small'
             selected={isShowDropdown}
@@ -93,20 +83,23 @@ export const CategoryNavbar: FC<ICategoryNavbarProps> = () => {
                 transition: '.3s',
               }}
             />
-          </ToggleButton>
+          </ToggleButton> */}
         </Box>
         {/* 下拉式菜單 */}
-        <Box
+        {/* <Box
           sx={{
             display: isShowDropdown ? 'block' : 'none',
             maxHeight: '60vh',
             border: '1px solid',
             borderColor: 'common.black_40',
             position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translateX(-50%) translateY(-50%)',
             overflowY: 'auto',
             zIndex: 2,
             bgcolor: 'common.white',
-            width: '100%',
+            width: '80%',
           }}
         >
           <List>
@@ -119,7 +112,7 @@ export const CategoryNavbar: FC<ICategoryNavbarProps> = () => {
               </Fragment>
             ))}
           </List>
-        </Box>
+        </Box> */}
       </Box>
     </>
   );

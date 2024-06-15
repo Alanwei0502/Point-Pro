@@ -49,12 +49,12 @@ export const authSlice = createSlice({
         const { result } = action.payload;
         if (result) {
           state.authToken = result;
-          localStorage.setItem('token', result);
+          sessionStorage.setItem('token', result);
         }
         state.isLoading = false;
       })
       .addCase(login.rejected, (state) => {
-        localStorage.removeItem('token');
+        sessionStorage.removeItem('token');
         state.authToken = initialState.authToken;
         state.isLoading = initialState.isLoading;
       })
@@ -62,7 +62,7 @@ export const authSlice = createSlice({
         state.isLoading = initialState.isLoading;
       })
       .addCase(logout.fulfilled, (state) => {
-        localStorage.removeItem('token');
+        sessionStorage.removeItem('token');
         state.authToken = initialState.authToken;
         state.isLoading = initialState.isLoading;
       });

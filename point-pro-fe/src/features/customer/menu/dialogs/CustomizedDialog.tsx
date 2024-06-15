@@ -1,6 +1,6 @@
 import { FC, Fragment } from 'react';
-import { Box, Button, Divider, List, ListItemButton, ListSubheader, Typography } from '@mui/material';
-import { BaseCheckbox, MobileDialogLayout, NumberInput } from '~/components';
+import { Box, Divider, List, ListItemButton, ListSubheader, Typography } from '@mui/material';
+import { BaseCheckbox, MobileDialogLayout, NumberInput, AppButton } from '~/components';
 import { calculateCartItemPrice } from '~/utils';
 import { useAppDispatch, useAppSelector } from '~/hooks';
 import { closeDialog, updateSpecialty, increaseMealAmount, decreaseMealAmount, createCartItem, updateCartItem } from '~/store/slices';
@@ -38,7 +38,7 @@ const CustomizedSpecialties: FC<ICustomizedSpecialtiesProps> = () => {
                 {specialty.specialtyItems.map((item) => (
                   <Fragment key={item.id}>
                     <ListItemButton onClick={handleClickItem(specialty, item)}>
-                      <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
+                      <Box display='flex' justifyContent='space-between' width='100%' py={1}>
                         <Typography>{item.title}</Typography>
                         <BaseCheckbox checked={!!customizedDialogData?.selectedSpecialtyItems.find(({ id }) => id === item.id)} />
                       </Box>
@@ -100,7 +100,6 @@ export const CustomizedDialog: FC<ICustomizedDialogProps> = () => {
     <MobileDialogLayout
       title={customizedDialogData.title}
       isOpen={dialogType === MobileDialog.CUSTOMIZED}
-      onCloseDialog={handleClose}
       actionButton={
         <>
           <Box
@@ -117,7 +116,20 @@ export const CustomizedDialog: FC<ICustomizedDialogProps> = () => {
               {customizedDialogData.id ? calculateCartItemPrice(customizedDialogData) : 0}元
             </Typography>
           </Box>
-          {isModifiedCartItem ? <Button onClick={handleUpdateCartItem}>確認修改</Button> : <Button onClick={handleAddToCart}>加入購物車</Button>}
+          <Box display='flex' alignItems='center' justifyContent='space-between' width='100%' gap={1}>
+            <AppButton fullWidth onClick={handleClose}>
+              繼續點餐
+            </AppButton>
+            {isModifiedCartItem ? (
+              <AppButton fullWidth onClick={handleUpdateCartItem}>
+                確認修改
+              </AppButton>
+            ) : (
+              <AppButton fullWidth onClick={handleAddToCart}>
+                加入購物車
+              </AppButton>
+            )}
+          </Box>
         </>
       }
     >

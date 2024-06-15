@@ -2,7 +2,7 @@ import { FC, useMemo } from 'react';
 import { Box, Chip, Typography } from '@mui/material';
 import DoneIcon from '@mui/icons-material/Done';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
-import { BaseButton, CloseButton, NumberInput } from '~/components';
+import { AppButton, CloseButton, NumberInput } from '~/components';
 import { useAppDispatch, useAppSelector } from '~/hooks';
 import { theme } from '~/theme';
 import { GetMenuResponseSpecialtyItem, ISpecialty, SelectionType } from '~/types';
@@ -133,26 +133,13 @@ export const MealDrawer: FC<IMealDrawerProps> = () => {
                 ))
               : null}
           </Box>
-          <Box sx={{ marginTop: '1rem', display: 'flex', justifyContent: 'end' }}>
+          <Box sx={{ marginTop: '1rem', display: 'flex', justifyContent: 'end', gap: 1 }}>
             <NumberInput value={selectMeal.amount} onAdd={handleAdd} onMinus={handleMinus} />
-            <BaseButton
-              sx={{
-                backgroundColor: 'common.black',
-                color: 'white',
-                padding: '.5rem 1rem',
-                marginLeft: '1.5rem',
-                '&:hover': {
-                  backgroundColor: 'common.black_80',
-                  color: 'common.black_20',
-                },
-              }}
-              onClick={isEditing ? handleUpdateCartItem : handleAddToCart}
-              startIcon={isEditing ? <DoneIcon /> : <ShoppingCartIcon />}
-            >
+            <AppButton onClick={isEditing ? handleUpdateCartItem : handleAddToCart} startIcon={isEditing ? <DoneIcon /> : <ShoppingCartIcon />}>
               <Typography variant='body1' fontWeight={700}>
                 {isEditing ? '確認修改' : '加入購物車'}
               </Typography>
-            </BaseButton>
+            </AppButton>
           </Box>
         </Box>
       )}

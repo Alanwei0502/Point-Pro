@@ -1,7 +1,6 @@
 import { Navigate, Outlet, useLocation } from 'react-router-dom';
 import { Box } from '@mui/material';
-import { Header, headerHeight } from '~/components';
-import { AdminLoginLoading } from '~/components/loading/AdminLoginLoading';
+import { Header, headerHeight, AdminLoginLoading } from '~/components';
 import { useSocket, useToken } from '~/hooks';
 import { NameSpace } from '~/types';
 

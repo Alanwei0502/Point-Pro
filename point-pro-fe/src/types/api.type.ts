@@ -4,6 +4,7 @@ import {
   IMealWithCategoryAndSpecialtyItems,
   IOrder,
   IOrderMeal,
+  IPayment,
   IPeriod,
   IReservation,
   ISeat,
@@ -155,7 +156,9 @@ export interface IOrderMealInOrdersResult extends IOrderMeal {
   }[];
 }
 
-export type OrdersResult = Pick<IOrder, 'id' | 'status' | 'type' | 'totalPrice' | 'createdAt' | 'updatedAt'> & {
+export type OrdersResult = IOrder & {
+  reservationId: IReservation['id'];
+  paymentId: IPayment['id'];
   orderMeals: IOrderMealInOrdersResult[];
 };
 
@@ -165,19 +168,17 @@ export type PatchOrderResponse = ApiResponse<IOrder>;
 export type GetOrdersResponse = ApiResponse<OrdersResult[]>;
 
 // RESERVATION
+export type ReservationInfo = IReservation & { periods: IPeriod };
 export type PostReservationPayload = Pick<IReservation, 'username' | 'gender' | 'phone' | 'email' | 'people' | 'type' | 'remark'> & {
   periodId: IPeriod['id'];
 };
-
 export type PatchReservationPayload = Pick<IReservation, 'id'> & PostReservationPayload;
-
-export type ReservationInfo = IReservation & {
-  periods: IPeriod;
-};
-
+export type StartDiningReservationPayload = IReservation['id'];
+export type DeleteReservationPayload = IReservation['id'];
 export type GetReservationResponse = ApiResponse<ReservationInfo[]>;
 export type PostReservationResponse = ApiResponse<IReservation['id']>;
 export type PatchReservationResponse = ApiResponse<IReservation['id']>;
+export type StartDiningReservationResponse = ApiResponse<string>;
 export type DeleteReservationResponse = ApiResponse<IReservation['id']>;
 
 // PERIOD

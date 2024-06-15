@@ -1,4 +1,5 @@
 import { ReactElement, FC, Ref, forwardRef, useState, SyntheticEvent } from 'react';
+import { toast } from 'react-toastify';
 import {
   Button,
   Checkbox,
@@ -16,12 +17,10 @@ import {
 } from '@mui/material';
 import Slide from '@mui/material/Slide';
 import { TransitionProps } from '@mui/material/transitions';
-import axios from 'axios';
 import { CITY_LIST, CONTACT_TIME_LIST } from '~/utils';
 import { Row } from '~/components';
 import { homeSliceActions } from '~/store/slices';
 import { useAppDispatch, useAppSelector } from '~/hooks';
-import { toast } from 'react-toastify';
 
 const { closeCallToActionModal } = homeSliceActions;
 

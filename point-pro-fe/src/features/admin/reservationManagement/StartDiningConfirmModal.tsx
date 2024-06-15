@@ -3,11 +3,12 @@ import { Typography } from '@mui/material';
 import { AppButton, TabletModal } from '~/components';
 import { GENDER_TRANSLATE } from '~/utils';
 import { useAppDispatch, useAppSelector } from '~/hooks';
-import { reservationManagementSliceActions } from '~/store/slices';
+import { adminUISliceActions, reservationManagementSliceActions } from '~/store/slices';
 import { toast } from 'react-toastify';
 import { AxiosError } from 'axios';
 
 const { closeStartDiningConfirmModal, getReservations, startDiningReservation, getAvailablePeriods } = reservationManagementSliceActions;
+const { openStartDiningQRCodeModal } = adminUISliceActions;
 
 interface IStartDiningConfirmModalProps {}
 
@@ -33,7 +34,7 @@ export const StartDiningConfirmModal: FC<IStartDiningConfirmModalProps> = () => 
           dispatch(getReservations(dateFilter));
           dispatch(getAvailablePeriods());
           dispatch(closeStartDiningConfirmModal());
-          // dispatch(openQrCodeModal(res));
+          dispatch(openStartDiningQRCodeModal(res.result));
         },
         {
           pending: '更新中...',

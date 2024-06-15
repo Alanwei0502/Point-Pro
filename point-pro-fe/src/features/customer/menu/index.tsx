@@ -1,43 +1,50 @@
-import { FC, useEffect } from 'react';
-import { MobileLayout, MobileHeader } from '~/components';
+import { FC, useEffect, useState } from 'react';
+import { MobileLayout, MobileHeader, MobileMask, MobileLoading } from '~/components';
 import { getMenu, getOrders } from '~/store/slices';
 import { useSocket, useAppDispatch, useToken } from '~/hooks';
 import { OrderStatus, NameSpace } from '~/types';
-import { SeatInfo } from './SeatInfo';
+import { UserInfo } from './UserInfo';
 import { CategoryNavbar } from './CategoryNavbar';
 import { Meals } from './Meals';
 import { Footer } from './Footer';
 import { CartDialog } from './dialogs/CartDialog';
 import { CustomizedDialog } from './dialogs/CustomizedDialog';
-// import { OrdersDialog } from './dialogs/OrderDialog';
+import { OrdersDialog } from './dialogs/OrderDialog';
 import { ConfirmRemoveCartItemModal } from './modals/ConfirmRemovecartItemModal';
 import { PaymentModal } from './modals/PaymentModal';
 import { CounterReminderModal } from './modals/CounterReminderModal';
 import { CartItemIsOffReminderModal } from './modals/CartItemIsOffReminderModal';
 import { EcPayFormModal } from './modals/EcPayFormModal';
-import MobileMask from '~/components/mask/MobileMask';
 
 interface IMenuProps {}
 
 export const Menu: FC<IMenuProps> = () => {
   const dispatch = useAppDispatch();
 
+  const [isLoading, setIsLoading] = useState(false);
+
   // useSocket({ ns: NameSpace.user });
   const token = useToken();
 
   useEffect(() => {
-    if (token) {
-      dispatch(getMenu());
-      // TODO: getReservation
-      // dispatch(getUserInfo());
-      // dispatch(getOrders({ status: OrderStatus.WORKING }));
-    }
+    if (!token) return;
+
+    setIsLoading(true);
+    (async () => {
+      Promise.all([dispatch(getMenu()), dispatch(getOrders())]).finally(() => {
+        setIsLoading(false);
+      });
+    })();
   }, [token, dispatch]);
 
-  return token ? (
+  if (!token) return <MobileMask />;
+
+  if (isLoading) return <MobileLoading />;
+
+  return (
     <MobileLayout>
       <MobileHeader />
-      <SeatInfo />
+      <UserInfo />
       <CategoryNavbar />
       <Meals />
       <Footer />
@@ -45,7 +52,7 @@ export const Menu: FC<IMenuProps> = () => {
       {/* 客製化、購物車、訂單畫面 */}
       <CustomizedDialog />
       <CartDialog />
-      {/* <OrdersDialog /> */}
+      <OrdersDialog />
 
       {/* 提示彈窗 */}
       <ConfirmRemoveCartItemModal />
@@ -54,7 +61,5 @@ export const Menu: FC<IMenuProps> = () => {
       <CartItemIsOffReminderModal />
       <EcPayFormModal />
     </MobileLayout>
-  ) : (
-    <MobileMask />
   );
 };

@@ -1,5 +1,6 @@
 import Redis from 'ioredis';
 import { Logger } from './logger.helper';
+import { SessionRole } from '../types';
 
 export const redisClient = new Redis({
   password: process.env.REDIS_PASSWORD,
@@ -15,25 +16,25 @@ export const redisClient = new Redis({
   });
 
 export class SessionRedis {
-  static setSession(userId: string, expiresIn: number, token: string) {
+  static setSession(role: keyof typeof SessionRole, userId: string, expiresIn: number, token: string) {
     if (!userId) throw new Error('userId is required');
     if (!token) throw new Error('token is required');
     try {
-      return redisClient.setex(`session:${userId}`, expiresIn, token);
+      return redisClient.setex(`${SessionRole[role]}:${userId}`, expiresIn, token);
     } catch (error) {
       console.error(error);
     }
   }
 
-  static getSession(userId: string) {
+  static getSession(role: keyof typeof SessionRole, userId: string) {
     if (!userId) throw new Error('userId is required');
-    return redisClient.get(`session:${userId}`);
+    return redisClient.get(`${SessionRole[role]}:${userId}`);
   }
 
-  static deleteSession(userId: string) {
+  static deleteSession(role: keyof typeof SessionRole, userId: string) {
     if (!userId) throw new Error('userId is required');
     try {
-      return redisClient.del(`session:${userId}`);
+      return redisClient.del(`${SessionRole[role]}:${userId}`);
     } catch (error) {
       console.error(error);
     }

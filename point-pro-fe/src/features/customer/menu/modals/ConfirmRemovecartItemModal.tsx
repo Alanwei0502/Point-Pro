@@ -1,8 +1,8 @@
 import { FC } from 'react';
-import { Button, Typography } from '@mui/material';
-import { MobileModal } from '~/components';
+import { Typography } from '@mui/material';
+import { AppButton, MobileModal } from '~/components';
 import { useAppDispatch, useAppSelector } from '~/hooks';
-import { closeModal, deleteCartItem } from '~/store/slices/customer/menu.slice';
+import { closeModal, deleteCartItem } from '~/store/slices';
 import { MobileModalType } from '~/types';
 
 interface IConfirmRemoveCartItemModalProps {}
@@ -24,16 +24,9 @@ export const ConfirmRemoveCartItemModal: FC<IConfirmRemoveCartItemModalProps> = 
       <Typography variant='h6' fontWeight={900}>
         從購物車中移除？
       </Typography>
-      <Button
-        onClick={handleConfirm}
-        sx={{
-          color: 'common.black',
-          bgcolor: 'primary.main',
-          width: '100%',
-        }}
-      >
+      <AppButton fullWidth onClick={handleConfirm}>
         確定
-      </Button>
+      </AppButton>
     </MobileModal>
   );
 };
