@@ -13,7 +13,7 @@
 //     LINE_PAY_CHANNEL_SECRET: string;
 //     LINE_PAY_ENV: 'development' | 'production';
 //     NODE_ENV: 'dev' | 'production';
-//     BACKEND_URL: string;
+//     SERVER_URL: string;
 //     EC_PAY_MERCHANT_ID: string;
 //     EC_PAY_HASH_KEY: string;
 //     EC_PAY_HASH_IV: string;
@@ -409,7 +409,7 @@
 //   MerchantID: process.env.EC_PAY_MERCHANT_ID as string,
 //   HashKey: process.env.EC_PAY_HASH_KEY as string,
 //   HashIV: process.env.EC_PAY_HASH_IV as string,
-//   ReturnURL: `${process.env.BACKEND_URL}/api/payment/ec-pay/confirm`, // Server 端的轉導網址 (付款完成後，POST接受綠界的付款結果訊息，並回應接收訊息)
+//   ReturnURL: `${process.env.SERVER_URL}/api/payment/ec-pay/confirm`, // Server 端的轉導網址 (付款完成後，POST接受綠界的付款結果訊息，並回應接收訊息)
 // });
 
 // export default PaymentController;

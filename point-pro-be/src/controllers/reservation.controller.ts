@@ -157,7 +157,7 @@ export class ReservationController {
       // Redis set token
       await SessionRedis.setSession('customer', newReservation.id, jwt.customerExpirationTime, token);
 
-      const url = new URL(process.env.FRONTEND_URL!);
+      const url = new URL(`${process.env.CLIENT_URL!}/menu`);
       const searchParams = new URLSearchParams({
         token,
         id: reservation.id,
