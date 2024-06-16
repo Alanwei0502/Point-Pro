@@ -9,19 +9,7 @@ import MenuBookIcon from '@mui/icons-material/MenuBook';
 import EventSeatIcon from '@mui/icons-material/EventSeat';
 import { BaseDraw } from '~/components';
 import { theme } from '~/theme';
-
-export const pathObj = {
-  booking: 'booking',
-  payment: 'payment',
-  confirm: 'confirm',
-  cancel: 'cancel',
-  admin: 'admin',
-  menu: 'menu',
-  takeOrder: 'take_order',
-  orderManagement: 'order_management',
-  reservationMangement: 'reservation_mangament',
-  menuManagement: 'menu_management',
-};
+import { ROUTE_PATH } from '~/router/App';
 
 interface ISideBarItem {
   id: string;
@@ -33,31 +21,31 @@ interface ISideBarItem {
 
 export const sideBarItemList: ISideBarItem[] = [
   {
-    id: pathObj.orderManagement,
+    id: ROUTE_PATH.orderManagement,
     name: '訂單系統',
     src: StickyNote2Icon,
-    path: `/${pathObj.admin}/${pathObj.orderManagement}`,
+    path: `/${ROUTE_PATH.admin}/${ROUTE_PATH.orderManagement}`,
     list: [],
   },
   {
-    id: pathObj.reservationMangement,
+    id: ROUTE_PATH.reservationMangement,
     name: '預約系統',
     src: EventSeatIcon,
-    path: `/${pathObj.admin}/${pathObj.reservationMangement}`,
+    path: `/${ROUTE_PATH.admin}/${ROUTE_PATH.reservationMangement}`,
     list: [],
   },
   {
-    id: pathObj.takeOrder,
+    id: ROUTE_PATH.takeOrder,
     name: '點餐系統',
     src: RestaurantMenuIcon,
-    path: `/${pathObj.admin}/${pathObj.takeOrder}`,
+    path: `/${ROUTE_PATH.admin}/${ROUTE_PATH.takeOrder}`,
     list: [],
   },
   {
-    id: pathObj.menuManagement,
+    id: ROUTE_PATH.menuManagement,
     name: '菜單系統',
     src: MenuBookIcon,
-    path: `/${pathObj.admin}/${pathObj.menuManagement}`,
+    path: `/${ROUTE_PATH.admin}/${ROUTE_PATH.menuManagement}`,
     list: [],
   },
 ];

@@ -7,7 +7,8 @@ import { Box, Typography, InputAdornment, IconButton, OutlinedInput, FormControl
 import { useAppDispatch, useAppSelector } from '~/hooks';
 import { authSliceActions } from '~/store/slices';
 import HeaderLogo from '~/assets/images/header-logo.svg';
-import { AppButton, pathObj } from '~/components';
+import { AppButton } from '~/components';
+import { ROUTE_PATH } from '~/router/App';
 
 const { login } = authSliceActions;
 
@@ -44,7 +45,7 @@ export const Login: FC<ILoginProps> = () => {
 
   useEffect(() => {
     if (authToken) {
-      navigate(`/${pathObj.admin}/${pathObj.orderManagement}`);
+      navigate(`/${ROUTE_PATH.admin}/${ROUTE_PATH.orderManagement}`);
     }
   }, [authToken, navigate]);
 

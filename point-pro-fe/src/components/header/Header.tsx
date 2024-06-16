@@ -6,8 +6,9 @@ import { DoubleArrow, NotificationsNone, PowerSettingsNew } from '@mui/icons-mat
 import HeaderLogo from '~/assets/images/header-logo.svg';
 import { useAppDispatch, useAppSelector } from '~/hooks';
 import { theme } from '~/theme';
-import { LeftMenuDrawer, NotificationDrawer, pathObj, sideBarItemList } from '~/components';
+import { LeftMenuDrawer, NotificationDrawer, sideBarItemList } from '~/components';
 import { adminUISliceActions, authSliceActions } from '~/store/slices';
+import { pathObj } from '~/router/App';
 
 const { logout } = authSliceActions;
 const { setClock } = adminUISliceActions;

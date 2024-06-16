@@ -9,8 +9,20 @@ import { ReservationManagement } from '~/features/admin/reservationManagement';
 import { Booking } from '~/features/customer/booking';
 import { Menu } from '~/features/customer/menu';
 // import { PaymentCancel, PaymentConfirm } from '~/features/customer/payment';
-import { pathObj } from '~/components';
 import { Box } from '@mui/material';
+
+export const ROUTE_PATH = {
+  booking: 'booking',
+  payment: 'payment',
+  confirm: 'confirm',
+  cancel: 'cancel',
+  admin: 'admin',
+  menu: 'menu',
+  takeOrder: 'take_order',
+  orderManagement: 'order_management',
+  reservationMangement: 'reservation_mangament',
+  menuManagement: 'menu_management',
+};
 
 export const App = () => {
   const router = createBrowserRouter(
@@ -21,55 +33,55 @@ export const App = () => {
         element: <Home />,
       },
       {
-        path: pathObj.booking,
+        path: ROUTE_PATH.booking,
         element: <Booking />,
       },
       {
-        path: pathObj.menu,
+        path: ROUTE_PATH.menu,
         element: <Menu />,
       },
       {
-        path: pathObj.payment,
+        path: ROUTE_PATH.payment,
         children: [
           // {
-          //   path: pathObj.confirm,
+          //   path: ROUTE_PATH.confirm,
           //   element: <PaymentConfirm />,
           // },
           // {
-          //   path: pathObj.cancel,
+          //   path: ROUTE_PATH.cancel,
           //   element: <PaymentCancel />,
           // },
         ],
       },
       // Admin
       {
-        path: pathObj.admin,
+        path: ROUTE_PATH.admin,
         element: <Login />,
       },
       {
-        path: pathObj.admin,
+        path: ROUTE_PATH.admin,
         element: <ProtectedRoute />,
         children: [
           {
-            path: pathObj.orderManagement,
+            path: ROUTE_PATH.orderManagement,
             element: <OrderManagement />,
           },
           {
-            path: pathObj.takeOrder,
+            path: ROUTE_PATH.takeOrder,
             element: <TakeOrder />,
           },
           {
-            path: pathObj.reservationMangement,
+            path: ROUTE_PATH.reservationMangement,
             element: <ReservationManagement />,
           },
           {
-            path: pathObj.menuManagement,
+            path: ROUTE_PATH.menuManagement,
             element: <MenuManagement />,
           },
         ],
       },
       {
-        path: `${pathObj.admin}/*`,
+        path: `${ROUTE_PATH.admin}/*`,
         element: <Navigate to='.' replace />,
       },
     ],
@@ -84,15 +96,15 @@ export const App = () => {
     <BrowserRouter basename='/'>
       <Routes>
         <Route index element={<Home />} />
-        <Route path={pathObj.booking} element={<Booking />} />
-        <Route path={pathObj.menu} element={<Menu />} />
-        {/* <Route path={pathObj.payment} /> */}
-        <Route path={pathObj.admin} element={<Login />} />
-        <Route path={pathObj.admin} element={<ProtectedRoute />}>
-          <Route path={pathObj.orderManagement} element={<OrderManagement />} />
-          <Route path={pathObj.takeOrder} element={<TakeOrder />} />
-          <Route path={pathObj.menuManagement} element={<MenuManagement />} />
-          <Route path={pathObj.reservationMangement} element={<ReservationManagement />} />
+        <Route path={ROUTE_PATH.booking} element={<Booking />} />
+        <Route path={ROUTE_PATH.menu} element={<Menu />} />
+        {/* <Route path={ROUTE_PATH.payment} /> */}
+        <Route path={ROUTE_PATH.admin} element={<Login />} />
+        <Route path={ROUTE_PATH.admin} element={<ProtectedRoute />}>
+          <Route path={ROUTE_PATH.orderManagement} element={<OrderManagement />} />
+          <Route path={ROUTE_PATH.takeOrder} element={<TakeOrder />} />
+          <Route path={ROUTE_PATH.menuManagement} element={<MenuManagement />} />
+          <Route path={ROUTE_PATH.reservationMangement} element={<ReservationManagement />} />
           <Route
             path='*'
             element={

@@ -3,9 +3,10 @@ import { useNavigate } from 'react-router-dom';
 import { Box } from '@mui/material';
 import InsertInvitationIcon from '@mui/icons-material/InsertInvitation';
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
-import { AppButton, Section, Title, pathObj } from '~/components';
+import { AppButton, Section, Title } from '~/components';
 import { theme } from '~/theme';
 import { useResponsiveStyles } from '~/hooks';
+import { ROUTE_PATH } from '~/router/App';
 
 interface ISuccessCaseProps {}
 
@@ -28,7 +29,7 @@ export const SuccessCase: FC<ISuccessCaseProps> = () => {
             margin: 1,
           }}
           onClick={() => {
-            navigate(`/${pathObj.booking}`);
+            navigate(`/${ROUTE_PATH.booking}`);
           }}
         >
           我要預約
@@ -43,7 +44,7 @@ export const SuccessCase: FC<ISuccessCaseProps> = () => {
             margin: 1,
           }}
           onClick={() => {
-            navigate(`/${pathObj.admin}`);
+            navigate(`/${ROUTE_PATH.admin}`);
           }}
         >
           後台管理
