@@ -1,8 +1,9 @@
 import { FC } from 'react';
-import { Box, Container } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
+import { Box } from '@mui/material';
 import InsertInvitationIcon from '@mui/icons-material/InsertInvitation';
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
-import { AppButton, Column, Section, Title } from '~/components';
+import { AppButton, Section, Title, pathObj } from '~/components';
 import { theme } from '~/theme';
 import { useResponsiveStyles } from '~/hooks';
 
@@ -10,6 +11,8 @@ interface ISuccessCaseProps {}
 
 export const SuccessCase: FC<ISuccessCaseProps> = () => {
   const { isTablet } = useResponsiveStyles();
+
+  const navigate = useNavigate();
 
   return (
     <Section id='success-case'>
@@ -25,7 +28,7 @@ export const SuccessCase: FC<ISuccessCaseProps> = () => {
             margin: 1,
           }}
           onClick={() => {
-            window.location.href = `${window.location.origin}/booking`;
+            navigate(`/${pathObj.booking}`);
           }}
         >
           我要預約
@@ -40,7 +43,7 @@ export const SuccessCase: FC<ISuccessCaseProps> = () => {
             margin: 1,
           }}
           onClick={() => {
-            window.location.href = `${window.location.origin}/admin`;
+            navigate(`/${pathObj.admin}`);
           }}
         >
           後台管理

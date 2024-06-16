@@ -18,11 +18,11 @@ const router = createBrowserRouter([
     element: <Home />,
   },
   {
-    path: `/${pathObj.booking}`,
+    path: pathObj.booking,
     element: <Booking />,
   },
   {
-    path: `/${pathObj.menu}`,
+    path: pathObj.menu,
     element: <Menu />,
   },
   {
