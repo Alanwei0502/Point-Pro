@@ -64,11 +64,15 @@ const router = createBrowserRouter(
               path: ROUTE_PATH.menuManagement,
               element: <MenuManagement />,
             },
+            {
+              path: '*',
+              element: (
+                <Box display='flex' height='100%' alignItems='center' justifyContent='center'>
+                  無此頁面
+                </Box>
+              ),
+            },
           ],
-        },
-        {
-          path: `${ROUTE_PATH.admin}/*`,
-          element: <Navigate to='.' replace />,
         },
       ],
     },
