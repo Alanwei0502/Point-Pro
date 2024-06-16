@@ -2,15 +2,15 @@ import cors, { CorsOptions, CorsOptionsDelegate, CorsRequest } from 'cors';
 
 const corsOptionDelegate: CorsOptionsDelegate = (req: CorsRequest, callback: (error: Error | null, options: CorsOptions) => void) => {
   const host = req.headers['host'];
-  const origin = req.headers['origin'] || '';
-
-  console.log('[[[[[[CORS]]]]]', new URL(origin));
-  console.log('[[[[[PROCESS.ENV.CLIENT_URL]]]]]', new URL(process.env.CLIENT_URL!));
+  const origin = req.headers.origin;
 
   if (!host || !origin) {
     callback(null, { credentials: false, origin: false });
     return;
   }
+
+  console.log('[[[[[[CORS]]]]]', new URL(origin));
+  console.log('[[[[[PROCESS.ENV.CLIENT_URL]]]]]', new URL(process.env.CLIENT_URL!));
 
   if (process.env.NODE_ENV === 'development') {
     callback(null, { credentials: true, origin: true });
