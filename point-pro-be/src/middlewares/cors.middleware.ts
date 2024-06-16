@@ -9,9 +9,6 @@ const corsOptionDelegate: CorsOptionsDelegate = (req: CorsRequest, callback: (er
     return;
   }
 
-  console.log('[[[[[[CORS]]]]]', new URL(origin));
-  console.log('[[[[[PROCESS.ENV.CLIENT_URL]]]]]', new URL(process.env.CLIENT_URL!));
-
   if (process.env.NODE_ENV === 'development') {
     callback(null, { credentials: true, origin: true });
     return;
