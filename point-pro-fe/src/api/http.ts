@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { toast } from 'react-toastify';
-import { ROUTE_PATH } from '~/router/App';
+import { ROUTE_PATH } from '~/utils';
 
 export const apiHost = import.meta.env.VITE_API_HOST;
 

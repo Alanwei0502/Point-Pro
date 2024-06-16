@@ -8,7 +8,7 @@ import { useAppDispatch, useAppSelector } from '~/hooks';
 import { theme } from '~/theme';
 import { LeftMenuDrawer, NotificationDrawer, sideBarItemList } from '~/components';
 import { adminUISliceActions, authSliceActions } from '~/store/slices';
-import { ROUTE_PATH } from '~/router/App';
+import { ROUTE_PATH } from '~/utils';
 
 const { logout } = authSliceActions;
 const { setClock } = adminUISliceActions;

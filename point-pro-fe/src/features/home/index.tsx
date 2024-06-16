@@ -13,10 +13,15 @@ import { ContactFormModal } from './ContactFormModal';
 import { BackToTopButton, Footer } from '~/components';
 import 'swiper/css';
 import 'swiper/css/pagination';
+import { Outlet, useLocation } from 'react-router-dom';
 
 interface IHomeProps {}
 
 export const Home: FC<IHomeProps> = () => {
+  const location = useLocation();
+
+  if (location.pathname !== '/') return <Outlet />;
+
   return (
     <>
       <HeaderNavBar />

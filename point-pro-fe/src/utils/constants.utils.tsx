@@ -10,6 +10,19 @@ import MoreTimeIcon from '@mui/icons-material/MoreTime';
 import { theme } from '~/theme';
 import { OrderStatus, SelectionType, Gender, OrderType } from '~/types';
 
+export const ROUTE_PATH = {
+  booking: 'booking',
+  payment: 'payment',
+  confirm: 'confirm',
+  cancel: 'cancel',
+  admin: 'admin',
+  menu: 'menu',
+  takeOrder: 'take_order',
+  orderManagement: 'order_management',
+  reservationMangement: 'reservation_mangament',
+  menuManagement: 'menu_management',
+};
+
 export const IMAGE_URL = 'https://i.imgur.com/';
 export const MEAL_IMAGE_TYPES = ['image/jpeg', 'image/jpg', 'image/png'];
 export const MEAL_IMAGE_SIZE_LIMIT = 2 * 1024 * 1024;

@@ -10,112 +10,153 @@ import { Booking } from '~/features/customer/booking';
 import { Menu } from '~/features/customer/menu';
 // import { PaymentCancel, PaymentConfirm } from '~/features/customer/payment';
 import { Box } from '@mui/material';
+import { ROUTE_PATH } from '~/utils';
 
-export const ROUTE_PATH = {
-  booking: 'booking',
-  payment: 'payment',
-  confirm: 'confirm',
-  cancel: 'cancel',
-  admin: 'admin',
-  menu: 'menu',
-  takeOrder: 'take_order',
-  orderManagement: 'order_management',
-  reservationMangement: 'reservation_mangament',
-  menuManagement: 'menu_management',
-};
+const router = createBrowserRouter(
+  [
+    // User
+    {
+      path: '/',
+      element: <Home />,
+      children: [
+        {
+          path: ROUTE_PATH.booking,
+          element: <Booking />,
+        },
+        {
+          path: ROUTE_PATH.menu,
+          element: <Menu />,
+        },
+        {
+          path: ROUTE_PATH.payment,
+          children: [
+            // {
+            //   path: ROUTE_PATH.confirm,
+            //   element: <PaymentConfirm />,
+            // },
+            // {
+            //   path: ROUTE_PATH.cancel,
+            //   element: <PaymentCancel />,
+            // },
+          ],
+        },
+        {
+          path: ROUTE_PATH.admin,
+          element: <Login />,
+        },
+        {
+          path: ROUTE_PATH.admin,
+          element: <ProtectedRoute />,
+          children: [
+            {
+              path: ROUTE_PATH.orderManagement,
+              element: <OrderManagement />,
+            },
+            {
+              path: ROUTE_PATH.takeOrder,
+              element: <TakeOrder />,
+            },
+            {
+              path: ROUTE_PATH.reservationMangement,
+              element: <ReservationManagement />,
+            },
+            {
+              path: ROUTE_PATH.menuManagement,
+              element: <MenuManagement />,
+            },
+          ],
+        },
+        {
+          path: `${ROUTE_PATH.admin}/*`,
+          element: <Navigate to='.' replace />,
+        },
+      ],
+    },
+    // {
+    //   path: ROUTE_PATH.booking,
+    //   element: <Booking />,
+    // },
+    // {
+    //   path: ROUTE_PATH.menu,
+    //   element: <Menu />,
+    // },
+    // {
+    //   path: ROUTE_PATH.payment,
+    //   children: [
+    //     // {
+    //     //   path: ROUTE_PATH.confirm,
+    //     //   element: <PaymentConfirm />,
+    //     // },
+    //     // {
+    //     //   path: ROUTE_PATH.cancel,
+    //     //   element: <PaymentCancel />,
+    //     // },
+    //   ],
+    // },
+    // Admin
+    // {
+    //   path: ROUTE_PATH.admin,
+    //   element: <Login />,
+    // },
+    // {
+    //   path: ROUTE_PATH.admin,
+    //   element: <ProtectedRoute />,
+    //   children: [
+    //     {
+    //       path: ROUTE_PATH.orderManagement,
+    //       element: <OrderManagement />,
+    //     },
+    //     {
+    //       path: ROUTE_PATH.takeOrder,
+    //       element: <TakeOrder />,
+    //     },
+    //     {
+    //       path: ROUTE_PATH.reservationMangement,
+    //       element: <ReservationManagement />,
+    //     },
+    //     {
+    //       path: ROUTE_PATH.menuManagement,
+    //       element: <MenuManagement />,
+    //     },
+    //   ],
+    // },
+    // {
+    //   path: `${ROUTE_PATH.admin}/*`,
+    //   element: <Navigate to='.' replace />,
+    // },
+  ],
+  {
+    basename: '/',
+  },
+);
 
 export const App = () => {
-  const router = createBrowserRouter(
-    [
-      // User
-      {
-        path: '/',
-        element: <Home />,
-      },
-      {
-        path: ROUTE_PATH.booking,
-        element: <Booking />,
-      },
-      {
-        path: ROUTE_PATH.menu,
-        element: <Menu />,
-      },
-      {
-        path: ROUTE_PATH.payment,
-        children: [
-          // {
-          //   path: ROUTE_PATH.confirm,
-          //   element: <PaymentConfirm />,
-          // },
-          // {
-          //   path: ROUTE_PATH.cancel,
-          //   element: <PaymentCancel />,
-          // },
-        ],
-      },
-      // Admin
-      {
-        path: ROUTE_PATH.admin,
-        element: <Login />,
-      },
-      {
-        path: ROUTE_PATH.admin,
-        element: <ProtectedRoute />,
-        children: [
-          {
-            path: ROUTE_PATH.orderManagement,
-            element: <OrderManagement />,
-          },
-          {
-            path: ROUTE_PATH.takeOrder,
-            element: <TakeOrder />,
-          },
-          {
-            path: ROUTE_PATH.reservationMangement,
-            element: <ReservationManagement />,
-          },
-          {
-            path: ROUTE_PATH.menuManagement,
-            element: <MenuManagement />,
-          },
-        ],
-      },
-      {
-        path: `${ROUTE_PATH.admin}/*`,
-        element: <Navigate to='.' replace />,
-      },
-    ],
-    {
-      basename: '/',
-    },
-  );
+  return <RouterProvider router={router} />;
 
-  // return <RouterProvider router={router} />;
-
-  return (
-    <BrowserRouter basename='/'>
-      <Routes>
-        <Route index element={<Home />} />
-        <Route path={ROUTE_PATH.booking} element={<Booking />} />
-        <Route path={ROUTE_PATH.menu} element={<Menu />} />
-        {/* <Route path={ROUTE_PATH.payment} /> */}
-        <Route path={ROUTE_PATH.admin} element={<Login />} />
-        <Route path={ROUTE_PATH.admin} element={<ProtectedRoute />}>
-          <Route path={ROUTE_PATH.orderManagement} element={<OrderManagement />} />
-          <Route path={ROUTE_PATH.takeOrder} element={<TakeOrder />} />
-          <Route path={ROUTE_PATH.menuManagement} element={<MenuManagement />} />
-          <Route path={ROUTE_PATH.reservationMangement} element={<ReservationManagement />} />
-          <Route
-            path='*'
-            element={
-              <Box display='flex' height='100%' alignItems='center' justifyContent='center'>
-                無此頁面
-              </Box>
-            }
-          />
-        </Route>
-        <Route path='*' element={<Navigate to='/' replace />} />
-      </Routes>
-    </BrowserRouter>
-  );
+  // return (
+  //   <BrowserRouter basename='/'>
+  //     <Routes>
+  //       <Route index element={<Home />} />
+  //       <Route path={ROUTE_PATH.booking} element={<Booking />} />
+  //       <Route path={ROUTE_PATH.menu} element={<Menu />} />
+  //       {/* <Route path={ROUTE_PATH.payment} /> */}
+  //       <Route path={ROUTE_PATH.admin} element={<Login />} />
+  //       <Route path={ROUTE_PATH.admin} element={<ProtectedRoute />}>
+  //         <Route path={ROUTE_PATH.orderManagement} element={<OrderManagement />} />
+  //         <Route path={ROUTE_PATH.takeOrder} element={<TakeOrder />} />
+  //         <Route path={ROUTE_PATH.menuManagement} element={<MenuManagement />} />
+  //         <Route path={ROUTE_PATH.reservationMangement} element={<ReservationManagement />} />
+  //         <Route
+  //           path='*'
+  //           element={
+  //             <Box display='flex' height='100%' alignItems='center' justifyContent='center'>
+  //               無此頁面
+  //             </Box>
+  //           }
+  //         />
+  //       </Route>
+  //       <Route path='*' element={<Navigate to='/' replace />} />
+  //     </Routes>
+  //   </BrowserRouter>
+  // );
 };
