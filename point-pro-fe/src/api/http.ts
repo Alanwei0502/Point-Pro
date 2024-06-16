@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { toast } from 'react-toastify';
-import { pathObj } from '~/router/App';
+import { ROUTE_PATH } from '~/router/App';
 
 export const apiHost = import.meta.env.VITE_API_HOST;
 
@@ -34,7 +34,7 @@ const errorCodeCheck = (status: number) => {
     case 401:
     case 403: {
       sessionStorage.removeItem('token');
-      const isInAdminLoginPage = location.pathname === `/${pathObj.admin}`;
+      const isInAdminLoginPage = location.pathname === `/${ROUTE_PATH.admin}`;
       const isInCMS = location.pathname.includes('admin');
 
       if (isInCMS && !isInAdminLoginPage) {

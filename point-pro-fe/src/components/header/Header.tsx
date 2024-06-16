@@ -8,7 +8,7 @@ import { useAppDispatch, useAppSelector } from '~/hooks';
 import { theme } from '~/theme';
 import { LeftMenuDrawer, NotificationDrawer, sideBarItemList } from '~/components';
 import { adminUISliceActions, authSliceActions } from '~/store/slices';
-import { pathObj } from '~/router/App';
+import { ROUTE_PATH } from '~/router/App';
 
 const { logout } = authSliceActions;
 const { setClock } = adminUISliceActions;
@@ -38,7 +38,7 @@ export const Header: FC<IHeaderProps> = () => {
     toast.promise(
       async () => {
         await dispatch(logout()).unwrap();
-        navigate(pathObj.admin, { replace: true });
+        navigate(ROUTE_PATH.admin, { replace: true });
       },
       {
         pending: '登出中...',
