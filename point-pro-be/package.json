@@ -10,10 +10,10 @@
     "build": "tsc -p .",
     "build:prod": "prisma migrate deploy && prisma generate && tsc -p .",
     "start": "node dist/server.js",
-    "testquery": "npx ts-node prisma/script.ts"
+    "testquery": "ts-node-dev prisma/script.ts"
   },
   "prisma": {
-    "seed": "ts-node --transpile-only prisma/seed.ts"
+    "seed": "ts-node-dev --transpile-only prisma/seed.ts"
   },
   "dependencies": {
     "@prisma/client": "^5.14.0",
