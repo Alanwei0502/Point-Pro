@@ -11,69 +11,69 @@ import { Menu } from '~/features/customer/menu';
 // import { PaymentCancel, PaymentConfirm } from '~/features/customer/payment';
 import { pathObj } from '~/components';
 
-const router = createBrowserRouter([
+const router = createBrowserRouter(
+  [
+    // User
+    {
+      index: true,
+      element: <Home />,
+    },
+    {
+      path: pathObj.booking,
+      element: <Booking />,
+    },
+    {
+      path: pathObj.menu,
+      element: <Menu />,
+    },
+    {
+      path: pathObj.payment,
+      children: [
+        // {
+        //   path: pathObj.confirm,
+        //   element: <PaymentConfirm />,
+        // },
+        // {
+        //   path: pathObj.cancel,
+        //   element: <PaymentCancel />,
+        // },
+      ],
+    },
+    // Admin
+    {
+      path: pathObj.admin,
+      element: <Login />,
+    },
+    {
+      path: pathObj.admin,
+      element: <ProtectedRoute />,
+      children: [
+        {
+          path: pathObj.orderManagement,
+          element: <OrderManagement />,
+        },
+        {
+          path: pathObj.takeOrder,
+          element: <TakeOrder />,
+        },
+        {
+          path: pathObj.reservationMangement,
+          element: <ReservationManagement />,
+        },
+        {
+          path: pathObj.menuManagement,
+          element: <MenuManagement />,
+        },
+      ],
+    },
+    {
+      path: `${pathObj.admin}/*`,
+      element: <Navigate to='.' replace />,
+    },
+  ],
   {
-    path: '/',
-    children: [
-      // User
-      {
-        index: true,
-        element: <Home />,
-      },
-      {
-        path: pathObj.booking,
-        element: <Booking />,
-      },
-      {
-        path: pathObj.menu,
-        element: <Menu />,
-      },
-      {
-        path: pathObj.payment,
-        children: [
-          // {
-          //   path: pathObj.confirm,
-          //   element: <PaymentConfirm />,
-          // },
-          // {
-          //   path: pathObj.cancel,
-          //   element: <PaymentCancel />,
-          // },
-        ],
-      },
-      // Admin
-      {
-        path: pathObj.admin,
-        element: <Login />,
-      },
-      {
-        path: pathObj.admin,
-        element: <ProtectedRoute />,
-        children: [
-          {
-            path: pathObj.orderManagement,
-            element: <OrderManagement />,
-          },
-          {
-            path: pathObj.takeOrder,
-            element: <TakeOrder />,
-          },
-          {
-            path: pathObj.reservationMangement,
-            element: <ReservationManagement />,
-          },
-          {
-            path: pathObj.menuManagement,
-            element: <MenuManagement />,
-          },
-        ],
-      },
-      {
-        path: `${pathObj.admin}/*`,
-        element: <Navigate to='.' replace />,
-      },
-    ],
+    basename: '/',
   },
-]);
+);
 
 export default router;
