@@ -10,17 +10,19 @@ import { store } from './store/store';
 import { theme } from './theme';
 import './index.css';
 import 'react-toastify/dist/ReactToastify.css';
+import { App } from './router/App';
 
 const root = document.getElementById('root')!;
 
 ReactDOM.createRoot(root).render(
   <React.StrictMode>
-    <ThemeProvider theme={theme}>
-      <Provider store={store}>
-        <CssBaseline />
-        <RouterProvider router={router} />
-        <ToastContainer position='top-center' limit={3} hideProgressBar autoClose={1000} />
-      </Provider>
-    </ThemeProvider>
+    {/* <ThemeProvider theme={theme}> */}
+    {/* <Provider store={store}> */}
+    <CssBaseline />
+    {/* <RouterProvider router={router} /> */}
+    <App />
+    <ToastContainer position='top-center' limit={3} hideProgressBar autoClose={1000} />
+    {/* </Provider> */}
+    {/* </ThemeProvider> */}
   </React.StrictMode>,
 );

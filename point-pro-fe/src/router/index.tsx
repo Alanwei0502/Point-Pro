@@ -59,11 +59,11 @@ const router = createBrowserRouter([
             element: <TakeOrder />,
           },
           {
-            path: pathObj.reservationMangament,
+            path: pathObj.reservationMangement,
             element: <ReservationManagement />,
           },
           {
-            path: pathObj.menuManagament,
+            path: pathObj.menuManagement,
             element: <MenuManagement />,
           },
         ],

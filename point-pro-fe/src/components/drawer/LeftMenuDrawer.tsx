@@ -19,8 +19,8 @@ export const pathObj = {
   menu: 'menu',
   takeOrder: 'take_order',
   orderManagement: 'order_management',
-  reservationMangament: 'reservation_mangament',
-  menuManagament: 'menu_management',
+  reservationMangement: 'reservation_mangament',
+  menuManagement: 'menu_management',
 };
 
 interface ISideBarItem {
@@ -40,10 +40,10 @@ export const sideBarItemList: ISideBarItem[] = [
     list: [],
   },
   {
-    id: pathObj.reservationMangament,
+    id: pathObj.reservationMangement,
     name: '預約系統',
     src: EventSeatIcon,
-    path: `/${pathObj.admin}/${pathObj.reservationMangament}`,
+    path: `/${pathObj.admin}/${pathObj.reservationMangement}`,
     list: [],
   },
   {
@@ -54,10 +54,10 @@ export const sideBarItemList: ISideBarItem[] = [
     list: [],
   },
   {
-    id: pathObj.menuManagament,
+    id: pathObj.menuManagement,
     name: '菜單系統',
     src: MenuBookIcon,
-    path: `/${pathObj.admin}/${pathObj.menuManagament}`,
+    path: `/${pathObj.admin}/${pathObj.menuManagement}`,
     list: [],
   },
 ];
