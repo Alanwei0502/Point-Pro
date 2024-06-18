@@ -9,6 +9,8 @@ import {
   GetOrderPayload,
   CancelOrderPayload,
   PatchOrderMealServedAmountPayload,
+  GetOrderToCheckOutPayload,
+  GetOrdersToCheckoutResponse,
 } from '~/types';
 
 export class OrderApi {
@@ -38,5 +40,9 @@ export class OrderApi {
 
   static cancelOrder(orderId: CancelOrderPayload) {
     return http.patch<string, PatchOrderResponse>(`${OrderApi.path}/${orderId}/cancel`);
+  }
+
+  static getOrdersToCheckout(params: GetOrderToCheckOutPayload) {
+    return http.get<string, GetOrdersToCheckoutResponse>(`${OrderApi.path}/checkout`, { params });
   }
 }

@@ -118,7 +118,7 @@ export const CustomizedDialog: FC<ICustomizedDialogProps> = () => {
           </Box>
           <Box display='flex' alignItems='center' justifyContent='space-between' width='100%' gap={1}>
             <AppButton fullWidth onClick={handleClose}>
-              繼續點餐
+              返回點餐
             </AppButton>
             {isModifiedCartItem ? (
               <AppButton fullWidth onClick={handleUpdateCartItem}>

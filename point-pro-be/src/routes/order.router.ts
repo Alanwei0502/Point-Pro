@@ -6,6 +6,7 @@ import {
   createOrderRequestSchema,
   getOrderRequestSchema,
   updateOrderMealServedAmountPayloadSchema,
+  getOrdersToCheckoutRequestSchema,
 } from '../validators';
 import { authMiddleware, validateMiddleware } from '../middlewares';
 
@@ -20,5 +21,6 @@ orderRouter.patch(
   validateMiddleware(updateOrderMealServedAmountPayloadSchema),
   OrderController.updateOrderMealServedAmountHandler,
 );
+orderRouter.get('/checkout', validateMiddleware(getOrdersToCheckoutRequestSchema, 'query'), OrderController.getOrdersToCheckoutHandler);
 // orderRouter.patch('/', validateMiddleware(updateOrderReqBodySchema), OrderController.updateOrderHandler);
 export default orderRouter;

@@ -1,46 +1,27 @@
-import { http } from "./http";
-import {
-  EcPayResponse,
-  EcPayResponseBody,
-  LinePayRequestBody,
-  LinePayResponse,
-  EcPayConfirmResponse,
-  LinePayConfirmResponse,
-  CashPaymentResponse
-} from "~/types";
+import { http } from './http';
+import { LinePayResponse, LinePayConfirmResponse, CashPaymentResponse, OrdersResult, IOrder, LinePayConfirmRedirectPayload, PatchPaymentStatusPayload } from '~/types';
 
 export class PaymentApi {
-  public static path = "payment";
+  static path = 'payment';
+  static linePay = 'line-pay';
 
-  static paymentLinePayRequest = (payload: LinePayRequestBody) => {
-    return http.post<string, LinePayResponse>(`${PaymentApi.path}/line-pay/request`, payload);
+  static patchPaymentStatus = (payload: PatchPaymentStatusPayload) => {
+    return http.patch(`${PaymentApi.path}/${payload.id}`, payload);
   };
 
-  static paymentLinePayConfirm = (transactionId: string, orderId: string) => {
-    return http.get<string, LinePayConfirmResponse>(`${PaymentApi.path}/line-pay/confirm`, {
-      params: { transactionId, orderId }
-    });
+  static postCashPayment = (payload: OrdersResult[]) => {
+    return http.post<string, CashPaymentResponse>(`${PaymentApi.path}/cash/request`, payload);
   };
 
-  static paymentLinePayCancel = (orderId: string) => {
-    return http.get<string, LinePayResponse>(`${PaymentApi.path}/line-pay/cancel`, { params: { orderId } });
+  static postLinePayPayment = (payload: OrdersResult[]) => {
+    return http.post<string, LinePayResponse>(`${PaymentApi.path}/${PaymentApi.linePay}/request`, payload);
   };
 
-  static paymentEcPayRequest = (payload: EcPayResponseBody) => {
-    return http.post<string, EcPayResponse>(`${PaymentApi.path}/ec-pay/request`, payload);
+  static getLinePayConfirm = (params: LinePayConfirmRedirectPayload) => {
+    return http.get<string, LinePayConfirmResponse>(`${PaymentApi.path}/${PaymentApi.linePay}/confirm`, { params });
   };
 
-  static paymentEcPayConfirm = (transactionId: string, orderId: string) => {
-    return http.get<string, EcPayConfirmResponse>(`${PaymentApi.path}/ec-pay/confirm`, {
-      params: { transactionId, orderId }
-    });
-  };
-
-  static paymentEcPayCancel = () => {
-    return http.post<string, EcPayResponse>(`${PaymentApi.path}/ec-pay/cancel`);
-  };
-
-  static cashPaymentRequest = (orderId: string | string[]) => {
-    return http.post<string, CashPaymentResponse>(`${PaymentApi.path}/cash/request`, { orderId });
+  static getLinePayCancel = (params: { orderId: IOrder['id'] }) => {
+    return http.get<string, LinePayResponse>(`${PaymentApi.path}/${PaymentApi.linePay}/cancel`, { params });
   };
 }

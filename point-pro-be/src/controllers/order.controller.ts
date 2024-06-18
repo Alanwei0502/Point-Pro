@@ -1,8 +1,16 @@
 import { NextFunction } from 'express';
 import { ReasonPhrases, StatusCodes } from 'http-status-codes';
-import { ApiResponse, ICancelOrderRequest, IGetOrderRequest, IPostOrderRequest, IUpdateOrderMealServedAmountRequest } from '../types';
-import { OrderModel } from '../models';
+import {
+  ApiResponse,
+  ICancelOrderRequest,
+  IGetOrderRequest,
+  IGetOrdersToCheckoutRequest,
+  IPostOrderRequest,
+  IUpdateOrderMealServedAmountRequest,
+} from '../types';
+import { OrderModel, PaymentModel } from '../models';
 import { getRoleAndAuth } from '../helpers';
+import { OrderStatus, OrderType } from '@prisma/client';
 
 export class OrderController {
   static getOrdersHandler = async (req: IGetOrderRequest, res: ApiResponse, next: NextFunction) => {
@@ -77,6 +85,37 @@ export class OrderController {
       return res.status(StatusCodes.OK).send({
         message: ReasonPhrases.OK,
         result,
+      });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  static getOrdersToCheckoutHandler = async (req: IGetOrdersToCheckoutRequest, res: ApiResponse, next: NextFunction) => {
+    try {
+      // check if dine in or take out
+      const orders = await OrderModel.getOrdersToCheckout(req.query);
+      let msg = '';
+
+      if (!orders.length) {
+        msg = '無點餐紀錄';
+      } else if (orders.every((o) => o.status === OrderStatus.CANCEL)) {
+        msg = '所有餐點已取消';
+      } else if (req.query.type === OrderType.DINE_IN && orders.some((o) => o.status === OrderStatus.WORKING)) {
+        msg = '尚有餐點未完成';
+      } else if (orders.every((o) => o.paymentId)) {
+        const payment = await PaymentModel.getPaymentById(orders[0].paymentId!);
+        if (payment?.status === 'PAID') {
+          msg = '餐點已付款';
+        }
+      }
+
+      return res.status(StatusCodes.OK).send({
+        message: ReasonPhrases.OK,
+        result: {
+          msg,
+          orders,
+        },
       });
     } catch (error) {
       next(error);

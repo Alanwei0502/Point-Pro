@@ -13,7 +13,7 @@ import 'react-toastify/dist/ReactToastify.css';
 const root = document.getElementById('root')!;
 
 ReactDOM.createRoot(root).render(
-  <React.StrictMode>
+  <>
     <ThemeProvider theme={theme}>
       <Provider store={store}>
         <CssBaseline />
@@ -21,5 +21,5 @@ ReactDOM.createRoot(root).render(
         <ToastContainer position='top-center' limit={3} hideProgressBar autoClose={1000} />
       </Provider>
     </ThemeProvider>
-  </React.StrictMode>,
+  </>,
 );

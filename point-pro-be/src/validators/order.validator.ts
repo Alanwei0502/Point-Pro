@@ -30,16 +30,6 @@ export const orderMealsValidatedSchema = z.array(
 );
 
 // TODO
-export const orderStatusValidatedSchema = z.object({
-  status: z.nativeEnum(OrderStatus),
-});
-
-// TODO
-export const reservationValidatedSchema = z.object({
-  reservationId: z.string().uuid(),
-});
-
-// TODO
 export const orderIdValidatedSchema = z.object({
   orderId: z.string().uuid(),
 });
@@ -71,6 +61,12 @@ export const updateOrderMealServedAmountPayloadSchema = z.object({
   ),
 });
 
+export const getOrdersToCheckoutRequestSchema = z.object({
+  type: z.nativeEnum(OrderType),
+  reservationId: z.string().optional(),
+  id: z.string().optional(),
+});
+
 // TODO
 export const updateOrderReqBodySchema = z.object({
   id: z.string().uuid(),
@@ -78,23 +74,3 @@ export const updateOrderReqBodySchema = z.object({
   type: z.nativeEnum(OrderType),
   orderMeals: orderMealsValidatedSchema,
 });
-
-// TDOO
-// export const getOrderHandlerValidation = (req: AuthRequest, res: ApiResponse, next: NextFunction) => {
-//   try {
-//     if (req.auth.role === 'MERCHANT') {
-//       orderStatusValidatedSchema.validateSync(req.query);
-//     }
-//     if (req.auth.role === 'USER') {
-//       reservationValidatedSchema.validateSync(req.auth);
-//     }
-//     next();
-//   } catch (error) {
-//     if (error instanceof Error) {
-//       return res.status(400).send({
-//         message: error.message,
-//         result: [],
-//       });
-//     }
-//   }
-// };

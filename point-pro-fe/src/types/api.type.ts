@@ -160,12 +160,17 @@ export type OrdersResult = IOrder & {
   reservationId: IReservation['id'];
   paymentId: IPayment['id'];
   orderMeals: IOrderMealInOrdersResult[];
+  payments?: IPayment;
 };
 
 export type PostOrderResponse = ApiResponse<IOrder>;
 export type DeleteOrderResponse = ApiResponse<IOrder>;
 export type PatchOrderResponse = ApiResponse<IOrder>;
 export type GetOrdersResponse = ApiResponse<OrdersResult[]>;
+export type GetOrdersToCheckoutResponse = ApiResponse<{
+  msg: string;
+  orders: OrdersResult[];
+}>;
 
 // RESERVATION
 export type ReservationInfo = IReservation & { periods: IPeriod };
@@ -188,10 +193,11 @@ export interface AvailablePeriod extends Pick<IPeriod, 'id' | 'startTime'> {
 
 export type GetPeriodsResponse = ApiResponse<AvailablePeriod[]>;
 
-// Image
+// IMAGE
 export interface updateImgPayload {}
 export type updateImgResponse = ApiResponse<string>;
 
+// PAYMENT
 export type PaymentLogsResponse = {
   orderId: string;
   price: number;
@@ -223,19 +229,21 @@ export type PaymentLogsResponse = {
   };
 };
 
-export interface PaymentConfirmProps {
+export type PatchPaymentStatusPayload = Pick<IPayment, 'id' | 'status'>;
+
+export interface LinePayConfirmRedirectPayload {
+  paymentId: string;
   transactionId: string;
-  orderId: string;
 }
 
-// Line Pay
-export interface LinePayRequestBody {
-  orderId: string | string[];
-  confirmUrl: string;
-  cancelUrl: string;
+export interface GetOrderToCheckOutPayload {
+  type: OrderType;
+  reservationId?: IReservation['id'];
+  id?: IOrder['id'];
 }
 
 export type LinePayResponse = ApiResponse<{
+  paymentId: IPayment['id'];
   returnCode: string;
   returnMessage: string;
   info: {
@@ -300,30 +308,6 @@ export interface ILinePayConfirmPayload {
   };
 }
 export type LinePayConfirmResponse = ApiResponse<ILinePayConfirmPayload>;
-
-// Ec Pay
-export interface EcPayResponseBody {
-  orderId: string | string[];
-  confirmUrl: string;
-}
-
-export type EcPayResponse = ApiResponse<{
-  RtnCode: string;
-  RtnMsg: string;
-  TradeNo: string;
-  TradeAmt: string;
-  PaymentDate: string;
-  PaymentType: string;
-  PaymentTypeChargeFee: string;
-  TradeDate: string;
-  SimulatePaid: string;
-}>;
-
-export interface IEcPayConfirmPayload {
-  paymentLogs: PaymentLogsResponse[];
-}
-
-export type EcPayConfirmResponse = ApiResponse<IEcPayConfirmPayload>;
 
 // Cash Pay
 export type CashPaymentResponse = ApiResponse<{

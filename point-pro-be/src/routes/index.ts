@@ -17,6 +17,6 @@ apiRouter.use('/period', periodRouter);
 apiRouter.use('/reservation', reservationRouter);
 apiRouter.use('/seat', seatRouter);
 apiRouter.use('/newsletter', newsletterRouter);
-// apiRouter.use('/payment', paymentRouter);
+apiRouter.use('/payment', paymentRouter);
 
 export default apiRouter;

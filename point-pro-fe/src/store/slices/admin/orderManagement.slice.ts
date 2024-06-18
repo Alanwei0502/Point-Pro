@@ -1,7 +1,6 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { OrderApi } from '~/api';
 import { createAppAsyncThunk } from '~/hooks';
-import { errorHandler } from '~/store/errorHandler';
 import {
   CancelOrderPayload,
   GetOrderPayload,
@@ -21,6 +20,7 @@ export interface IOrderManagementSliceState {
   workingOrders: OrdersResult[];
   finishedOrders: OrdersResult[];
   cancelOrders: OrdersResult[];
+  checkOutOrder: OrdersResult[];
   cancelOrderConfirmModal: {
     isOpen: boolean;
     data: OrdersResult | null;
@@ -30,11 +30,10 @@ export interface IOrderManagementSliceState {
 const initialState: IOrderManagementSliceState = {
   statusTab: OrderStatus.WORKING,
   typeTab: OrderType.DINE_IN,
-
   workingOrders: [],
   finishedOrders: [],
   cancelOrders: [],
-
+  checkOutOrder: [],
   cancelOrderConfirmModal: {
     isOpen: false,
     data: null,
@@ -64,6 +63,7 @@ const postOrder = createAppAsyncThunk(`${name}/postTakeOutOrder`, async (payload
     const createOrder = await OrderApi.postOrder(payload);
     const socket = thunkApi.getState().socket.socket;
     socket && socket.emit(SocketTopic.ORDER, createOrder);
+    return createOrder;
   } catch (error) {
     return thunkApi.rejectWithValue(error);
   }
@@ -92,6 +92,17 @@ const patchOrderMealServedAmount = createAppAsyncThunk(
   },
 );
 
+const getOrdersToCheckout = createAppAsyncThunk(`${name}/getOrdersToCheckout`, async (_, thunkApi) => {
+  try {
+    const payload = thunkApi.getState().payment.paymentModal.data;
+    if (!payload) throw new Error('payload is empty');
+    const response = await OrderApi.getOrdersToCheckout(payload);
+    return response.result;
+  } catch (error) {
+    return thunkApi.rejectWithValue(error);
+  }
+});
+
 export const orderManagementSlice = createSlice({
   name,
   initialState,
@@ -109,11 +120,14 @@ export const orderManagementSlice = createSlice({
     closeCancelOrderConfirmModal: (state) => {
       state.cancelOrderConfirmModal = initialState.cancelOrderConfirmModal;
     },
+    clearCheckoutOrder: (state) => {
+      state.checkOutOrder = initialState.checkOutOrder;
+    },
   },
   extraReducers: (builder) => {
     builder
       .addCase(getAllOrders.fulfilled, (state, action) => {
-        const orders = action?.payload ?? [];
+        const orders = action.payload ?? [];
         if (orders.length === 0) return;
 
         const newWorkingOrders: OrdersResult[] = [];
@@ -139,7 +153,7 @@ export const orderManagementSlice = createSlice({
         state.cancelOrders = newCancelOrders;
       })
       .addCase(getOrders.fulfilled, (state, action) => {
-        const orders = action?.payload ?? [];
+        const orders = action.payload ?? [];
 
         const orderList: OrdersResult[] = [];
 
@@ -160,6 +174,9 @@ export const orderManagementSlice = createSlice({
             state.cancelOrders = orderList;
             break;
         }
+      })
+      .addCase(getOrdersToCheckout.fulfilled, (state, action) => {
+        state.checkOutOrder = action.payload?.orders ?? [];
       });
   },
 });
@@ -171,4 +188,5 @@ export const orderManagementSliceActions = {
   postOrder,
   cancelOrder,
   patchOrderMealServedAmount,
+  getOrdersToCheckout,
 };

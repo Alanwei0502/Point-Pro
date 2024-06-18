@@ -11,10 +11,8 @@ import { CartDialog } from './dialogs/CartDialog';
 import { CustomizedDialog } from './dialogs/CustomizedDialog';
 import { OrdersDialog } from './dialogs/OrderDialog';
 import { RemoveCartItemConfirmModal } from './modals/RemoveCartItemConfirmModal';
-import { PaymentModal } from './modals/PaymentModal';
 import { CounterReminderModal } from './modals/CounterReminderModal';
 import { CartItemIsOffReminderModal } from './modals/CartItemIsOffReminderModal';
-import { EcPayFormModal } from './modals/EcPayFormModal';
 
 interface IMenuProps {}
 
@@ -56,10 +54,8 @@ export const Menu: FC<IMenuProps> = () => {
 
       {/* 提示彈窗 */}
       <RemoveCartItemConfirmModal />
-      <PaymentModal />
       <CounterReminderModal />
       <CartItemIsOffReminderModal />
-      <EcPayFormModal />
     </MobileLayout>
   );
 };

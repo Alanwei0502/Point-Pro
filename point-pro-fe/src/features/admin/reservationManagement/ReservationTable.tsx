@@ -17,9 +17,9 @@ import {
   RESERVATION_STATUS_OPTIONS,
 } from '~/utils';
 import { headerHeight } from '~/components';
-import { ReservationInfo } from '~/types';
+import { OrderType, ReservationInfo } from '~/types';
 import { useAppDispatch, useAppSelector } from '~/hooks';
-import { ReservationModalType, reservationManagementSliceActions } from '~/store/slices';
+import { ReservationModalType, paymentSliceActions, reservationManagementSliceActions } from '~/store/slices';
 import { theme } from '~/theme';
 import { ReservationToolbar } from './ReservationToolbar';
 import { ReservationTablePagination } from './ReservationPagination';
@@ -27,6 +27,8 @@ import { ReservationTablePagination } from './ReservationPagination';
 const defaultPage = 0;
 const defaultRowsPerPage = 20;
 const { getReservations, openModal, openDeleteReservationConfirmModal, openStartDiningConfirmModal } = reservationManagementSliceActions;
+const { openPaymentModal } = paymentSliceActions;
+
 const allReservationStatus = Object.values(RESERVATION_STATUS);
 
 interface IReservationListProps {}
@@ -62,7 +64,12 @@ export const ReservationTable: FC<IReservationListProps> = () => {
   };
 
   const handleClickCheckout = (params: ReservationInfo) => {
-    // TODO: checkout
+    dispatch(
+      openPaymentModal({
+        type: OrderType.DINE_IN,
+        reservationId: params.id,
+      }),
+    );
   };
 
   const handleClickEdit = (params: ReservationInfo) => {

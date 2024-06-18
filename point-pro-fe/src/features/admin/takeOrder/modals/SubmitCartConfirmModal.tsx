@@ -3,8 +3,12 @@ import { toast } from 'react-toastify';
 import { Typography } from '@mui/material';
 import { AppButton, TabletModal } from '~/components';
 import { useAppDispatch, useAppSelector } from '~/hooks';
-import { takeOrderSliceActions, orderManagementSliceActions } from '~/store/slices';
+import { takeOrderSliceActions, orderManagementSliceActions, paymentSliceActions } from '~/store/slices';
 import { OrderType } from '~/types';
+
+const { postOrder } = orderManagementSliceActions;
+const { clearCart, setUnselectMeal } = takeOrderSliceActions;
+const { openPaymentModal } = paymentSliceActions;
 
 interface ISubmitCartConfirmModalProps {}
 
@@ -33,12 +37,15 @@ export const SubmitCartConfirmModal: FC<ISubmitCartConfirmModalProps> = () => {
               };
             }),
           };
-          await dispatch(orderManagementSliceActions.postOrder(orderPayload)).unwrap();
-          dispatch(takeOrderSliceActions.clearCart());
+          const res = await dispatch(postOrder(orderPayload)).unwrap();
+          dispatch(setUnselectMeal());
+          dispatch(clearCart());
+          if (res.result?.id) {
+            dispatch(openPaymentModal({ type: OrderType.TAKE_OUT, id: res.result.id }));
+          }
         },
         {
           pending: '送出訂單中...',
-          success: '訂單已送出',
           error: '送出訂單失敗',
         },
       )

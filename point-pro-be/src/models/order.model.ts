@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { prismaClient } from '../helpers';
-import { createOrderRequestSchema, getOrderRequestSchema } from '../validators';
-import { Order, OrderMeal, OrderStatus } from '@prisma/client';
+import { createOrderRequestSchema, getOrderRequestSchema, getOrdersToCheckoutRequestSchema } from '../validators';
+import { Order, OrderMeal, OrderStatus, OrderType, Reservation } from '@prisma/client';
 import { AuthInfo } from '../types';
 
 export class OrderModel {
@@ -16,6 +16,7 @@ export class OrderModel {
         },
       },
       include: {
+        payments: true,
         orderMeals: {
           select: {
             id: true,
@@ -125,5 +126,51 @@ export class OrderModel {
     });
 
     return updatedOrder;
+  };
+
+  static getOrdersToCheckout = async (params: z.infer<typeof getOrdersToCheckoutRequestSchema>) => {
+    const { id, reservationId, type } = params;
+
+    const orders = await prismaClient.order.findMany({
+      where: {
+        id,
+        reservationId,
+        type,
+      },
+      include: {
+        orderMeals: {
+          select: {
+            id: true,
+            amount: true,
+            servedAmount: true,
+            meals: {
+              select: {
+                id: true,
+                imageId: true,
+                isPopular: true,
+                price: true,
+                title: true,
+              },
+            },
+            orderMealSpecialtyItems: {
+              select: {
+                specialtyItems: {
+                  select: {
+                    id: true,
+                    price: true,
+                    title: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
+
+    return orders;
   };
 }

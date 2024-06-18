@@ -3,7 +3,6 @@ import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 // Others
 import { MenuApi } from '~/api';
 import { createAppAsyncThunk } from '~/hooks';
-import { errorHandler } from '~/store/errorHandler';
 import {
   MobileDialog,
   ICategory,

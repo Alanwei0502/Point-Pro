@@ -121,13 +121,13 @@ model Order {
 }
 
 model Payment {
-  id        String        @id @default(dbgenerated("uuid_generate_v1mc()")) @db.Uuid
-  paymentNo String?       @unique @map("payment_no") @db.VarChar(50)
+  id        String         @id @default(dbgenerated("uuid_generate_v1mc()")) @db.Uuid
+  paymentNo String?        @unique @map("payment_no") @db.VarChar(50)
   price     Int
-  gateway   String        @db.VarChar(50)
-  status    PaymentStatus @default(UNPAID)
-  createdAt DateTime      @default(now()) @map("created_at") @db.Timestamptz(0)
-  updatedAt DateTime?     @updatedAt @map("updated_at") @db.Timestamptz(0)
+  gateway   PaymentGateway @default(CASH)
+  status    PaymentStatus  @default(UNPAID)
+  createdAt DateTime       @default(now()) @map("created_at") @db.Timestamptz(0)
+  updatedAt DateTime?      @updatedAt @map("updated_at") @db.Timestamptz(0)
   orders    Order[]
 
   @@map("payments")
@@ -271,6 +271,13 @@ enum OrderType {
   TAKE_OUT
 
   @@map("order_type")
+}
+
+enum PaymentGateway {
+  CASH
+  LINE_PAY
+
+  @@map("payment_gateway")
 }
 
 enum PaymentStatus {

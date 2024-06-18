@@ -1,7 +1,7 @@
 import { Accordion, AccordionDetails, AccordionSummary, Box, Divider, List, Typography } from '@mui/material';
 import { FC, useMemo, useState } from 'react';
 import { theme } from '~/theme';
-import { IOrderMeal, OrderStatus, OrderType, OrdersResult } from '~/types';
+import { IOrderMeal, OrderStatus, OrderType, OrdersResult, PaymentStatus } from '~/types';
 import RemoveIcon from '@mui/icons-material/Remove';
 import AddIcon from '@mui/icons-material/Add';
 import { AppButton, Column, Row } from '~/components';
@@ -9,10 +9,11 @@ import { formatFullDateWithTime, ORDER_TYPE_TRANSLATE } from '~/utils';
 import { LinearProgressWithLabel } from './LinearProgressWithLabel';
 import { useAppDispatch, useAppSelector } from '~/hooks';
 import { OrderMealItem } from './OrderMealItem';
-import { orderManagementSliceActions } from '~/store/slices';
+import { orderManagementSliceActions, paymentSliceActions } from '~/store/slices';
 import { toast } from 'react-toastify';
 
 const { openCancelOrderConfirmModal, patchOrderMealServedAmount, getOrders } = orderManagementSliceActions;
+const { openPaymentModal } = paymentSliceActions;
 
 interface IOrderItemProps {
   order: OrdersResult;
@@ -48,7 +49,7 @@ export const OrderItem: FC<IOrderItemProps> = (props) => {
 
   const progress = (servedMeals / totalMeals) * 100;
 
-  const cancellable = order.status === OrderStatus.WORKING && progress === 0;
+  const cancellable = order.status === OrderStatus.WORKING && progress === 0 && order.payments?.status !== PaymentStatus.PAID;
 
   const handleExpand = (event: React.SyntheticEvent<Element, Event>, value: boolean) => {
     setExpanded((prev) => !prev);
@@ -62,6 +63,10 @@ export const OrderItem: FC<IOrderItemProps> = (props) => {
         servedAmount: m.id === id ? newAmount : m.servedAmount,
       })),
     }));
+  };
+
+  const handlePayment = () => {
+    dispatch(openPaymentModal({ type: OrderType.TAKE_OUT, id: order.id }));
   };
 
   const handleCancelOrder = () => {
@@ -119,11 +124,6 @@ export const OrderItem: FC<IOrderItemProps> = (props) => {
           <Divider orientation='vertical' flexItem variant='middle' sx={{ margin: 2 }} />
           <Column sx={{ flex: '0 70%' }}>
             <Typography fontWeight={700}>{ORDER_TYPE_TRANSLATE[order.type]}</Typography>
-            {typeTab === OrderType.DINE_IN && (
-              <Typography variant='h6' fontWeight={900}>
-                {/* {seats.join(', ')} */}
-              </Typography>
-            )}
           </Column>
           <Divider orientation='vertical' flexItem variant='middle' sx={{ margin: 2 }} />
           <Column sx={{ flex: '0 70%' }}>
@@ -158,6 +158,11 @@ export const OrderItem: FC<IOrderItemProps> = (props) => {
         <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 2, marginTop: 2 }}>
           {statusTab === OrderStatus.WORKING && (
             <>
+              {order.type === OrderType.TAKE_OUT && order?.payments && order.payments.status !== PaymentStatus.PAID && (
+                <AppButton variant='outlined' loading={isUpdateServedAmountLoading} onClick={handlePayment}>
+                  結帳
+                </AppButton>
+              )}
               {cancellable && (
                 <AppButton variant='outlined' color='error' onClick={handleCancelOrder} disabled={isUpdateServedAmountLoading}>
                   取消訂單

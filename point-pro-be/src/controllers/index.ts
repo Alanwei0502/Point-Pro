@@ -6,4 +6,4 @@ export * from './period.controller';
 export * from './reservation.controller';
 export * from './seat.controller';
 export * from './newsletter.controller';
-// export * from './payment.controller';
+export * from './payment.controller';

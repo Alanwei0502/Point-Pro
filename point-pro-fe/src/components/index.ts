@@ -40,12 +40,12 @@ export * from './loading/AdminLoginLoading';
 // Mask
 export * from './mask/MobileMask';
 // Modal
+export * from './modals/ConfirmCloseLinePayModal';
 export * from './modals/MobileModal';
+export * from './modals/LinePayModal';
+export * from './modals/PaymentModal';
 export * from './modals/TabletModal';
 export * from './modals/StartDiningQRCodeModal';
-// Payment
-export * from './payment/CashPaymentDialog';
-export * from './payment/PaymentDrawer';
 // Radio
 export * from './radio/BaseRadio';
 export * from './radio/GroupRadio';
@@ -67,3 +67,6 @@ export * from './table/StyledTableRow';
 export * from './home/Title';
 export * from './home/Section';
 export * from './home/NavLink';
+// line-pay-redirect
+export * from './line-pay-redirect/LinePayConfirm';
+export * from './line-pay-redirect/LinePayCancel';

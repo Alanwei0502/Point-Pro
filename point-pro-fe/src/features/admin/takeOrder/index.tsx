@@ -3,7 +3,7 @@ import { Grid } from '@mui/material';
 import { useAppDispatch } from '~/hooks';
 import { takeOrderSliceActions } from '~/store/slices';
 import { theme } from '~/theme';
-import { headerHeight, PaymentDrawer } from '~/components';
+import { headerHeight } from '~/components';
 import { Menu } from './Menu';
 import { MealDrawer } from './MealDrawer';
 import { CartList } from './CartList';
@@ -36,10 +36,6 @@ export const TakeOrder: FC<ITakeOrderProps> = () => {
           <CartList />
         </Grid>
       </Grid>
-      {/* <Grid item xs={4} sx={{ borderLeft: `1px solid ${theme.palette.common.black_40}` }}>
-        <CartList />
-        <PaymentDrawer />
-      </Grid> */}
       <ClearCartConfirmModal />
       <SubmitCartConfirmModal />
     </>

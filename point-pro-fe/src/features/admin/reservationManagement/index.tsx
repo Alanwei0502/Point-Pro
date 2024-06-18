@@ -1,9 +1,9 @@
 import { FC } from 'react';
-import { StartDiningQRCodeModal } from '~/components';
+import { PaymentModal, StartDiningQRCodeModal } from '~/components';
 import { ReservationTable } from './ReservationTable';
-import { ReservationModal } from './ReservationModal';
-import { DeleteReservationConfirmModal } from './DeleteReservationConfirmModal';
-import { StartDiningConfirmModal } from './StartDiningConfirmModal';
+import { ReservationModal } from './modals/ReservationModal';
+import { DeleteReservationConfirmModal } from './modals/DeleteReservationConfirmModal';
+import { StartDiningConfirmModal } from './modals/StartDiningConfirmModal';
 
 interface IReservationManagementProps {}
 
@@ -16,6 +16,7 @@ export const ReservationManagement: FC<IReservationManagementProps> = () => {
       <DeleteReservationConfirmModal />
       <StartDiningConfirmModal />
       <StartDiningQRCodeModal />
+      <PaymentModal />
     </>
   );
 };

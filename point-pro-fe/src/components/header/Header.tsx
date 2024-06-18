@@ -6,7 +6,7 @@ import { DoubleArrow, NotificationsNone, PowerSettingsNew } from '@mui/icons-mat
 import HeaderLogo from '~/assets/images/header-logo.svg';
 import { useAppDispatch, useAppSelector } from '~/hooks';
 import { theme } from '~/theme';
-import { LeftMenuDrawer, NotificationDrawer, sideBarItemList } from '~/components';
+import { LeftMenuDrawer, NotificationDrawer, PaymentModal, sideBarItemList, LinePayModal, ConfirmCloseLinePayModal } from '~/components';
 import { adminUISliceActions, authSliceActions } from '~/store/slices';
 import { ROUTE_PATH } from '~/utils';
 
@@ -153,6 +153,10 @@ export const Header: FC<IHeaderProps> = () => {
       {/* drawers */}
       <LeftMenuDrawer drawerExpandWidth={drawerExpandWidth} open={isLeftMenuOpen} setOpen={setIsLeftMenuOpen} />
       <NotificationDrawer open={isNotificationOpen} setOpen={setIsNotificationOpen} />
+      {/* Modal */}
+      <PaymentModal />
+      <LinePayModal />
+      <ConfirmCloseLinePayModal />
     </>
   );
 };

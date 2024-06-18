@@ -17,7 +17,6 @@ export const CartDialog: FC<ICartDialogProps> = () => {
   const meals = useAppSelector((state) => state.menu.meals);
   const cart = useAppSelector((state) => state.menu.cart);
 
-  // TODO: loading and toast
   const [isSubmitLoading, setIsSubmitLoading] = useState(false);
 
   const totalAmount = cart.reduce((acc, cur) => (acc += cur.amount), 0);
@@ -32,7 +31,7 @@ export const CartDialog: FC<ICartDialogProps> = () => {
     toast
       .promise(
         async () => {
-          await dispatch(postOrder());
+          await dispatch(postOrder()).unwrap();
         },
         {
           pending: '送出訂單中...',
@@ -99,7 +98,7 @@ export const CartDialog: FC<ICartDialogProps> = () => {
           </Box>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, width: '100%' }}>
             <AppButton fullWidth onClick={handleGoBackToMenu}>
-              繼續點餐
+              返回點餐
             </AppButton>
             <AppButton fullWidth onClick={handleSubmitOrders} disabled={cart.length === 0 || isSubmitLoading}>
               送出訂單

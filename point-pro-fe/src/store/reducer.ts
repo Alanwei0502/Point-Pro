@@ -20,12 +20,12 @@ const reducer = combineReducers({
   [homeSlice.name]: homeSlice.reducer,
   [menuSlice.name]: menuSlice.reducer,
   [bookingSlice.name]: bookingSlice.reducer,
-  [paymentSlice.name]: paymentSlice.reducer,
   [orderSlice.name]: orderSlice.reducer,
   [socketSlice.name]: socketSlice.reducer,
   // admin
   [adminUISlice.name]: adminUISlice.reducer,
   [authSlice.name]: authSlice.reducer,
+  [paymentSlice.name]: paymentSlice.reducer,
   [takeOrderSlice.name]: takeOrderSlice.reducer,
   [menuManagementSlice.name]: menuManagementSlice.reducer,
   [orderManagementSlice.name]: orderManagementSlice.reducer,

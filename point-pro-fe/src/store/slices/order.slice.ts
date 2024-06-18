@@ -4,7 +4,6 @@ import { createAppAsyncThunk } from '~/hooks';
 import { clearCart, openDialog } from '~/store/slices/customer/menu.slice';
 import { appDayjs, calculateCartItemPrice } from '~/utils';
 import { MobileDialog, OrdersResult, OrderStatus, SocketTopic, OrderType } from '~/types';
-import { openPaymentDrawer } from './payment.slice';
 
 const name = 'order';
 
@@ -26,7 +25,7 @@ const initialState: IOrderSliceState = {
   isLoading: false,
 };
 
-export const getOrders = createAppAsyncThunk(`${name}/getOrders`, async (payload: { status: OrderStatus } | undefined, { rejectWithValue }) => {
+export const getOrders = createAppAsyncThunk(`${name}/getOrders`, async (payload: { status: OrderStatus } | undefined, thunkApi) => {
   try {
     const orderRes = await OrderApi.getOrders(payload ?? {});
     const { result = [] } = orderRes;
@@ -34,13 +33,13 @@ export const getOrders = createAppAsyncThunk(`${name}/getOrders`, async (payload
 
     return { orders };
   } catch (error) {
-    return rejectWithValue(error);
+    return thunkApi.rejectWithValue(error);
   }
 });
 
-export const postOrder = createAppAsyncThunk(`${name}/postOrder`, async (_, { getState, dispatch, rejectWithValue }) => {
+export const postOrder = createAppAsyncThunk(`${name}/postOrder`, async (_, thunkApi) => {
   try {
-    const cart = getState().menu.cart;
+    const cart = thunkApi.getState().menu.cart;
 
     const payload = {
       type: OrderType.DINE_IN,
@@ -53,14 +52,14 @@ export const postOrder = createAppAsyncThunk(`${name}/postOrder`, async (_, { ge
     };
 
     const response = await OrderApi.postOrder(payload);
-    dispatch(getOrders());
-    dispatch(setMobileOrderStatusTab(0));
-    dispatch(openDialog({ type: MobileDialog.ORDER }));
-    dispatch(clearCart());
-    const socket = getState().socket.socket;
+    thunkApi.dispatch(getOrders());
+    thunkApi.dispatch(setMobileOrderStatusTab(0));
+    thunkApi.dispatch(openDialog({ type: MobileDialog.ORDER }));
+    thunkApi.dispatch(clearCart());
+    const socket = thunkApi.getState().socket.socket;
     socket && socket.emit(SocketTopic.ORDER, response);
   } catch (error) {
-    return rejectWithValue(error);
+    return thunkApi.rejectWithValue(error);
   }
 });
 

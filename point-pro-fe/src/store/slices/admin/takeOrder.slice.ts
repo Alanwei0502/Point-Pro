@@ -1,7 +1,6 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { MenuApi } from '~/api';
 import { createAppAsyncThunk } from '~/hooks';
-import { errorHandler } from '~/store/errorHandler';
 import {
   GetMenuResponseCategory,
   GetMenuResponseMeal,

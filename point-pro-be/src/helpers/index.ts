@@ -8,3 +8,4 @@ export * from './jwt.helper';
 export * from './bcrypt.helper';
 export * from './socket.helper';
 export * from './mailer.helper';
+export * from './linePayClient.helper';

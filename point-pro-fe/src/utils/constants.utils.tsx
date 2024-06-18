@@ -12,7 +12,7 @@ import { OrderStatus, SelectionType, Gender, OrderType } from '~/types';
 
 export const ROUTE_PATH = {
   booking: 'booking',
-  payment: 'payment',
+  linepay: 'linepay',
   confirm: 'confirm',
   cancel: 'cancel',
   admin: 'admin',

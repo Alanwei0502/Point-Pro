@@ -1,4 +1,4 @@
-import { IOrder, ICartItem, GetMenuResponseSpecialtyItem, IOrderMealInOrdersResult } from '~/types';
+import { ICartItem, GetMenuResponseSpecialtyItem, IOrderMealInOrdersResult } from '~/types';
 
 export const calculateSpecialtiesPrice = (selectedSpecialtyItems: GetMenuResponseSpecialtyItem[]) => {
   const specialtiesPrice = selectedSpecialtyItems.reduce((acc, specialtyItem) => {
@@ -28,13 +28,3 @@ export const calculateOrderPrice = (orderMeal: IOrderMealInOrdersResult) => {
   const orderPrice = mealPrice + specialtiresPrice;
   return orderPrice;
 };
-
-// TODO
-// export const calculateGatherOrderPrice = (gatherOrder: GatherOrder) => {
-//   const { orders } = gatherOrder;
-//   const gatherOrderPrice = orders.reduce((acc, order) => {
-//     return acc + calculateOrderPrice(order);
-//   }, 0);
-
-//   return gatherOrderPrice;
-// };

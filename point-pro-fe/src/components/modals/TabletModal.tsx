@@ -27,25 +27,21 @@ export const TabletModal: FC<ITabletModalProps> = (props) => {
   const { sx: cardHeaderSx, ...restCardHeaderProps } = cardHeaderProps;
   const { children: cardContentChildren, sx: cardContentSx, ...restCardContentProps } = cardContentProps;
   const { children: cardActionsChildren, ...restCardActionsProps } = cardActionsProps;
-  return (
-    <>
-      {open && (
-        <Modal open={open} {...restModalProps}>
-          {children ? (
-            <>{children}</>
-          ) : (
-            <Box display='grid' sx={{ placeContent: 'center' }} height='100%'>
-              <Card {...cardProps}>
-                <CardHeader sx={{ backgroundColor: theme.palette.primary.main, textAlign: 'center', ...cardHeaderSx }} {...restCardHeaderProps} />
-                <CardContent sx={{ padding: '1rem', minWidth: '50cqw', ...cardContentSx }} {...restCardContentProps}>
-                  {cardContentChildren}
-                </CardContent>
-                <CardActions {...restCardActionsProps}>{cardActionsChildren}</CardActions>
-              </Card>
-            </Box>
-          )}
-        </Modal>
+  return open ? (
+    <Modal open={open} {...restModalProps}>
+      {children ? (
+        <>{children}</>
+      ) : (
+        <Box display='grid' sx={{ placeContent: 'center' }} height='100%'>
+          <Card {...cardProps}>
+            <CardHeader sx={{ backgroundColor: theme.palette.primary.main, textAlign: 'center', ...cardHeaderSx }} {...restCardHeaderProps} />
+            <CardContent sx={{ padding: '1rem', minWidth: '50cqw', ...cardContentSx }} {...restCardContentProps}>
+              {cardContentChildren}
+            </CardContent>
+            <CardActions {...restCardActionsProps}>{cardActionsChildren}</CardActions>
+          </Card>
+        </Box>
       )}
-    </>
-  );
+    </Modal>
+  ) : null;
 };

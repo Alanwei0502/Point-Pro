@@ -18,7 +18,6 @@ export const OrdersDialog: FC<IOrdersDialogProps> = () => {
   const mobileOrderStatusTab = useAppSelector((state) => state.order.mobileOrderStatusTab);
 
   const [toggleList, setToggleList] = useState<IOrder['id'][]>([]);
-  const [canPay, setCanPay] = useState<boolean>(false);
 
   const showOrders = orders.filter(({ status }) => status === Object.keys(ORDER_STATUS_TRANSLATE)[mobileOrderStatusTab]);
 
@@ -42,20 +41,12 @@ export const OrdersDialog: FC<IOrdersDialogProps> = () => {
     dispatch(closeDialog());
   };
 
-  const handleCheckout = () => {
-    dispatch(openModal({ type: MobileModalType.PAYMENT }));
-  };
-
   useEffect(() => {
     const newOrder = orders[0];
     if (newOrder) {
       setToggleList((prevToggleList) => [...prevToggleList, newOrder.id]);
     }
   }, [orders]);
-
-  useEffect(() => {
-    orders.filter(({ status }) => status === OrderStatus.FINISHED).length === showOrders.length ? setCanPay(true) : setCanPay(false);
-  }, [orders, showOrders]);
 
   return (
     <MobileDialogLayout
@@ -82,7 +73,7 @@ export const OrdersDialog: FC<IOrdersDialogProps> = () => {
               </Typography>
             </Box>
           )}
-          <AppButton onClick={handleGoBackToMenu}>繼續點餐</AppButton>
+          <AppButton onClick={handleGoBackToMenu}>返回點餐</AppButton>
         </>
       }
     >
