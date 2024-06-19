@@ -81,7 +81,7 @@ export const Footer: FC<IFooterProps> = () => {
       >
         <StyledBottomNavigationAction label='菜單' value='' icon={<RestaurantMenuIcon />} />
         <StyledBottomNavigationAction label='購物車' value={MobileDialog.CART} icon={<CartIcon />} amount={cartAmount} />
-        <StyledBottomNavigationAction label='訂單' value={MobileDialog.ORDER} icon={<StickyNote2Icon />} amount={unPaidOrderAmount} />
+        <StyledBottomNavigationAction label='點餐紀錄' value={MobileDialog.ORDER} icon={<StickyNote2Icon />} amount={unPaidOrderAmount} />
       </BottomNavigation>
     </Box>
   );

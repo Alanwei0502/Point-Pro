@@ -50,7 +50,7 @@ export const OrdersDialog: FC<IOrdersDialogProps> = () => {
 
   return (
     <MobileDialogLayout
-      title='訂單'
+      title='點餐紀錄'
       titleSize='h4'
       isOpen={dialogType === MobileDialog.ORDER}
       actionButton={
