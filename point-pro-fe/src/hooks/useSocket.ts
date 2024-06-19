@@ -20,8 +20,6 @@ export const useSocket = (props: useSocketProps) => {
 
   const dispatch = useAppDispatch();
 
-  const orderStatus = useAppSelector(({ order }) => order.status);
-
   // Socket Instance
   const { current: socket } = useRef(
     io(`${apiHost}${ns}`, {
@@ -94,14 +92,14 @@ export const useSocket = (props: useSocketProps) => {
   useEffect(() => {
     socket.on(SocketTopic.ORDER, (data) => {
       if (ns === NameSpace.user) {
-        dispatch(getOrders({ status: orderStatus })); // TODO
+        dispatch(getOrders());
       }
 
       if (ns === NameSpace.admin) {
         dispatch(addNotification({ ...data, notiType: SocketTopic.ORDER }));
 
         if (pathname.includes('/admin/orders')) {
-          dispatch(getOrders({ status: orderStatus }));
+          dispatch(getOrders());
         }
       }
     });
@@ -109,7 +107,7 @@ export const useSocket = (props: useSocketProps) => {
     return () => {
       socket.off(SocketTopic.ORDER);
     };
-  }, [socket, ns, orderStatus, pathname, dispatch]);
+  }, [socket, ns, pathname, dispatch]);
 
   // RESERVATION listener
   useEffect(() => {
