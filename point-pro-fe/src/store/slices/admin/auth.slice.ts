@@ -1,22 +1,18 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { AuthApi } from '~/api';
 import { createAppAsyncThunk } from '~/hooks';
-import { LoginPayload, LoginResponse, UserInfo } from '~/types';
+import { LoginPayload, LoginResponse } from '~/types';
 
 const name = 'auth';
 
 interface IAuthState {
   isLoading: boolean;
   authToken: string | null;
-  userRole: UserInfo | null;
-  userToken: string | null;
 }
 
 const initialState: IAuthState = {
   isLoading: false,
   authToken: null,
-  userRole: null,
-  userToken: null,
 };
 
 const login = createAppAsyncThunk<LoginResponse, LoginPayload>(`${name}/login`, async (payload, thunkApi) => {

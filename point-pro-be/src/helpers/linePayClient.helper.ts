@@ -80,15 +80,13 @@ export class LinePayClient {
 
     const linePayHeader = LinePayClient.createSignature(LinePayClient.requestUri, linePayBody);
 
-    const linePayRes = await (
-      await fetch(`${LinePayClient.url}${LinePayClient.requestUri}`, {
-        method: 'POST',
-        headers: linePayHeader,
-        body: JSON.stringify(linePayBody),
-      })
-    ).json();
+    const linePayRes = await fetch(`${LinePayClient.url}${LinePayClient.requestUri}`, {
+      method: 'POST',
+      headers: linePayHeader,
+      body: JSON.stringify(linePayBody),
+    });
 
-    return linePayRes;
+    return await linePayRes.json();
   }
 
   static async confirmRequest(amount: number, transactionId: string) {

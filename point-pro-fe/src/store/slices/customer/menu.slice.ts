@@ -7,11 +7,10 @@ import {
   MobileDialog,
   ICategory,
   SelectionType,
-  UserInfo,
-  GetMenuResponseCategory,
-  GetMenuResponseMeal,
-  GetMenuResponseSpecialtiesWithItems,
-  GetMenuResponseSpecialtyItem,
+  MenuCategory,
+  MenuMeal,
+  MenuSpecialtiesWithItems,
+  MenuSpecialtyItem,
   ICartItem,
   MobileModalState,
   MobileDialogState,
@@ -20,11 +19,10 @@ import {
 const name = 'menu';
 
 type menuSliceState = {
-  userInfo: UserInfo | null;
   currentCategory: ICategory['id'];
-  categories: GetMenuResponseCategory[];
-  meals: GetMenuResponseMeal[];
-  specialtiesWithItems: GetMenuResponseSpecialtiesWithItems[];
+  categories: MenuCategory[];
+  meals: MenuMeal[];
+  specialtiesWithItems: MenuSpecialtiesWithItems[];
   modal: MobileModalState;
   dialog: MobileDialogState;
 
@@ -35,7 +33,6 @@ type menuSliceState = {
 };
 
 const initialState: menuSliceState = {
-  userInfo: null,
   currentCategory: '',
   categories: [],
   meals: [],
@@ -89,8 +86,8 @@ export const menuSlice = createSlice({
     updateSpecialty: (
       state,
       action: PayloadAction<{
-        selectedSpecialty: GetMenuResponseSpecialtiesWithItems;
-        selectedItem: GetMenuResponseSpecialtyItem;
+        selectedSpecialty: MenuSpecialtiesWithItems;
+        selectedItem: MenuSpecialtyItem;
       }>,
     ) => {
       if (!state.dialog.data) return;

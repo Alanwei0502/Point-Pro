@@ -3,7 +3,7 @@ import { MobileLayout, MobileHeader, MobileMask, MobileLoading } from '~/compone
 import { getMenu, getOrders } from '~/store/slices';
 import { useSocket, useAppDispatch, useToken } from '~/hooks';
 import { OrderStatus, NameSpace } from '~/types';
-import { UserInfo } from './UserInfo';
+import { DineInInfo } from './DineInInfo';
 import { CategoryNavbar } from './CategoryNavbar';
 import { Meals } from './Meals';
 import { Footer } from './Footer';
@@ -42,7 +42,7 @@ export const Menu: FC<IMenuProps> = () => {
   return (
     <MobileLayout>
       <MobileHeader />
-      <UserInfo />
+      <DineInInfo />
       <CategoryNavbar />
       <Meals />
       <Footer />

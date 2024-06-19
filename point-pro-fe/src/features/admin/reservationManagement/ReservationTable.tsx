@@ -17,9 +17,9 @@ import {
   RESERVATION_STATUS_OPTIONS,
 } from '~/utils';
 import { headerHeight } from '~/components';
-import { OrderType, ReservationInfo } from '~/types';
+import { OrderType, ReservationInfo, ReservationModalType } from '~/types';
 import { useAppDispatch, useAppSelector } from '~/hooks';
-import { ReservationModalType, paymentSliceActions, reservationManagementSliceActions } from '~/store/slices';
+import { paymentSliceActions, reservationManagementSliceActions } from '~/store/slices';
 import { theme } from '~/theme';
 import { ReservationToolbar } from './ReservationToolbar';
 import { ReservationTablePagination } from './ReservationPagination';

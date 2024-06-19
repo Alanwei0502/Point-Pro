@@ -54,6 +54,13 @@ export const formatDateOnly = (date: appDayjs.ConfigType) => {
 export const formatTimeOnly = (date: appDayjs.ConfigType) => {
   return appDayjs(date).format(dateForm.timeOnly);
 };
+export const formatTimeLeft = (milliseconds: number) => {
+  const timeDuration = appDayjs.duration(milliseconds);
+  const hours = timeDuration.hours().toString().padStart(2, '0');
+  const minutes = timeDuration.minutes().toString().padStart(2, '0');
+  const seconds = timeDuration.seconds().toString().padStart(2, '0');
+  return `${hours}:${minutes}:${seconds}`;
+};
 export const percentOfUsed = (start: appDayjs.ConfigType, end: appDayjs.ConfigType) => {
   const startAt = appDayjs(start);
   const endAt = appDayjs(end);

@@ -12,7 +12,7 @@ import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { MySelect, StyledTableCell, TextInput } from '~/components';
 import { useAppDispatch, useAppSelector } from '~/hooks';
-import { ISpecialtyWithSpecialtyItems, SelectionType } from '~/types';
+import { SpecialtyWithSpecialtyItems, SelectionType } from '~/types';
 import { theme } from '~/theme';
 import { CollapseSpecialtyItemsTable } from '../tables/CollapseSpecialtyItemsTable';
 import { SELECTION_TYPE_TRANSLATE } from '~/utils';
@@ -29,7 +29,7 @@ const StyledSpecialtyRow = styled(TableRow)(() => ({
 }));
 
 interface ISpecialtyRowProps {
-  specialty: ISpecialtyWithSpecialtyItems;
+  specialty: SpecialtyWithSpecialtyItems;
 }
 export const SpecialtyRow: FC<ISpecialtyRowProps> = (props) => {
   const { specialty } = props;

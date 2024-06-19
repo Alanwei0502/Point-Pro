@@ -6,8 +6,8 @@ import {
   PostCategoryPayload,
   ISpecialty,
   SocketTopic,
-  IMealWithCategoryAndSpecialtyItems,
-  ISpecialtyWithSpecialtyItems,
+  MealWithCategoryAndSpecialtyItems,
+  SpecialtyWithSpecialtyItems,
   PatchSpecialtyPayload,
   PostSpecialtyPayload,
   PatchCategoryPayload,
@@ -15,7 +15,7 @@ import {
   PatchSpecialtyItemPayload,
   PostSpecialtyItemPayload,
   PatchCategoryOrderPayload,
-  PatchMealOrderPayload,
+  PatchMealSortingPayload,
   PatchSpecialtyOrderPayload,
   DeleteCategoryPayload,
   DeleteMealPaylaod,
@@ -29,8 +29,8 @@ const name = 'menuManagement';
 
 interface IMenuManagementSliceState {
   categories: ICategory[];
-  meals: IMealWithCategoryAndSpecialtyItems[];
-  specialties: ISpecialtyWithSpecialtyItems[];
+  meals: MealWithCategoryAndSpecialtyItems[];
+  specialties: SpecialtyWithSpecialtyItems[];
   // CATEGORY
   createCategoryModal: {
     isOpen: boolean;
@@ -46,12 +46,12 @@ interface IMenuManagementSliceState {
   };
   deleteMealConfirmModal: {
     isOpen: boolean;
-    data: IMealWithCategoryAndSpecialtyItems | null;
+    data: MealWithCategoryAndSpecialtyItems | null;
   };
   // SPECIALTY
   specialtySettingModal: {
     isOpen: boolean;
-    data: ISpecialtyWithSpecialtyItems[] | null;
+    data: SpecialtyWithSpecialtyItems[] | null;
   };
   createSpecialtyModal: {
     isOpen: boolean;
@@ -63,11 +63,11 @@ interface IMenuManagementSliceState {
   // SPECIALTY ITEM
   deleteSpecialtyItemConfirmModal: {
     isOpen: boolean;
-    data: ISpecialtyWithSpecialtyItems['specialtyItems'][0] | null;
+    data: SpecialtyWithSpecialtyItems['specialtyItems'][0] | null;
   };
   createSpecialtyItemModal: {
     isOpen: boolean;
-    data: ISpecialtyWithSpecialtyItems | null;
+    data: SpecialtyWithSpecialtyItems | null;
   };
 }
 
@@ -191,7 +191,7 @@ export const patchMeal = createAppAsyncThunk(`${name}/patchMeal`, async (payload
   }
 });
 
-export const patchMealOrder = createAppAsyncThunk(`${name}/patchMealOrder`, async (payload: PatchMealOrderPayload, thunkApi) => {
+export const patchMealOrder = createAppAsyncThunk(`${name}/patchMealOrder`, async (payload: PatchMealSortingPayload, thunkApi) => {
   try {
     await MenuApi.patchMealOrder(payload);
   } catch (error) {
@@ -330,7 +330,7 @@ export const menuManagementSlice = createSlice({
     closeCreateMealModal: (state) => {
       state.createMealModal = initialState.createMealModal;
     },
-    openDeleteMealConfirmModal: (state, action: PayloadAction<IMealWithCategoryAndSpecialtyItems>) => {
+    openDeleteMealConfirmModal: (state, action: PayloadAction<MealWithCategoryAndSpecialtyItems>) => {
       state.deleteMealConfirmModal.isOpen = true;
       state.deleteMealConfirmModal.data = action.payload;
     },
@@ -355,7 +355,7 @@ export const menuManagementSlice = createSlice({
       state.deleteSpecialtyConfirmModal = initialState.deleteSpecialtyConfirmModal;
     },
     // SPECIALTY ITEM
-    setSpecialtyItems: (state, action: PayloadAction<ISpecialtyWithSpecialtyItems['specialtyItems']>) => {
+    setSpecialtyItems: (state, action: PayloadAction<SpecialtyWithSpecialtyItems['specialtyItems']>) => {
       state.specialties = state.specialties.map((s) => {
         if (s.id === action.payload[0].specialtyId) {
           s.specialtyItems = action.payload;
@@ -367,20 +367,20 @@ export const menuManagementSlice = createSlice({
       state.specialtySettingModal.isOpen = true;
       state.specialtySettingModal.data = state.specialties;
     },
-    setSpecialtySettingModalData: (state, action: PayloadAction<ISpecialtyWithSpecialtyItems[]>) => {
+    setSpecialtySettingModalData: (state, action: PayloadAction<SpecialtyWithSpecialtyItems[]>) => {
       state.specialtySettingModal.data = action.payload;
     },
     closeSpecialtySettingModal: (state) => {
       state.specialtySettingModal = initialState.specialtySettingModal;
     },
-    openCreateSpecialtyItemModal: (state, action: PayloadAction<ISpecialtyWithSpecialtyItems>) => {
+    openCreateSpecialtyItemModal: (state, action: PayloadAction<SpecialtyWithSpecialtyItems>) => {
       state.createSpecialtyItemModal.isOpen = true;
       state.createSpecialtyItemModal.data = action.payload;
     },
     closeCreateSpecialtyItemModal: (state) => {
       state.createSpecialtyItemModal = initialState.createSpecialtyItemModal;
     },
-    openDeleteSpecialtyItemConfirmModal: (state, action: PayloadAction<ISpecialtyWithSpecialtyItems['specialtyItems'][0]>) => {
+    openDeleteSpecialtyItemConfirmModal: (state, action: PayloadAction<SpecialtyWithSpecialtyItems['specialtyItems'][0]>) => {
       state.deleteSpecialtyItemConfirmModal.isOpen = true;
       state.deleteSpecialtyItemConfirmModal.data = action.payload;
     },

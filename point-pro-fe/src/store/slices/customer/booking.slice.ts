@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { ReservationApi, PeriodApi } from '~/api';
 import { appDayjs } from '~/utils';
 import { createAppAsyncThunk } from '~/hooks';
-import { IBookingInfo, ReservationType, MobileBookingDialog, Gender, SocketTopic, IReservation, AvailablePeriod } from '~/types';
+import { ReservationType, MobileBookingDialog, Gender, SocketTopic, IReservation, AvailablePeriod } from '~/types';
 
 const name = 'booking';
 
@@ -99,22 +99,22 @@ export const bookingSlice = createSlice({
       state.selectedPeriod = action.payload;
       state.people = initialState.people;
     },
-    setPeople: (state, action: PayloadAction<IBookingInfo['adults']>) => {
+    setPeople: (state, action: PayloadAction<ICustomerBookingSliceState['people']>) => {
       state.people = action.payload;
     },
-    setName: (state, action: PayloadAction<IBookingInfo['name']>) => {
+    setName: (state, action: PayloadAction<ICustomerBookingSliceState['username']>) => {
       state.username = action.payload;
     },
-    setGender: (state, action: PayloadAction<IBookingInfo['gender']>) => {
+    setGender: (state, action: PayloadAction<ICustomerBookingSliceState['gender']>) => {
       state.gender = action.payload;
     },
-    setPhone: (state, action: PayloadAction<IBookingInfo['phone']>) => {
+    setPhone: (state, action: PayloadAction<ICustomerBookingSliceState['phone']>) => {
       state.phone = action.payload;
     },
-    setEmail: (state, action: PayloadAction<IBookingInfo['email']>) => {
+    setEmail: (state, action: PayloadAction<ICustomerBookingSliceState['email']>) => {
       state.email = action.payload;
     },
-    setRemark: (state, action: PayloadAction<IBookingInfo['remark']>) => {
+    setRemark: (state, action: PayloadAction<ICustomerBookingSliceState['remark']>) => {
       state.remark = action.payload;
     },
     setDialog: (state, action: PayloadAction<ICustomerBookingSliceState['dialog']>) => {

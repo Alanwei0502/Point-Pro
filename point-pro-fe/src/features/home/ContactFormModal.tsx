@@ -35,7 +35,7 @@ const Transition = forwardRef(function Transition(
 interface IContactFormModalProps {}
 
 interface InquiryContent {
-  [key: string]: boolean | { [key: string]: boolean } | string[];
+  [key: PropertyKey]: boolean | { [key: PropertyKey]: boolean } | string[];
 }
 
 export const ContactFormModal: FC<IContactFormModalProps> = () => {

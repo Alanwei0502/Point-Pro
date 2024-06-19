@@ -2,12 +2,12 @@ import { FC } from 'react';
 import { Typography, List, ListItem, Box, Select, MenuItem, SelectChangeEvent } from '@mui/material';
 import { Row } from '~/components';
 import { theme } from '~/theme';
-import { OrderStatus, IOrderMealInOrdersResult, IOrderMeal } from '~/types';
+import { OrderStatus, OrderMealInOrdersResult, IOrderMeal } from '~/types';
 import { useAppSelector } from '~/hooks';
 
 interface IOrderMealItemProps {
   idx: number;
-  orderMeal: IOrderMealInOrdersResult;
+  orderMeal: OrderMealInOrdersResult;
   isUpdateServedAmountLoading: boolean;
   handleChangeServedAmount: (id: IOrderMeal['id'], newAmount: IOrderMeal['amount']) => void;
 }

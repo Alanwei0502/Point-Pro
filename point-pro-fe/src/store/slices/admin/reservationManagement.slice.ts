@@ -1,15 +1,10 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { PeriodApi, ReservationApi } from '~/api';
 import { createAppAsyncThunk } from '~/hooks';
-import { AvailablePeriod, Gender, IReservation, ReservationInfo, ReservationType, SocketTopic } from '~/types';
+import { AvailablePeriod, Gender, IReservation, ReservationInfo, ReservationModalType, ReservationType, SocketTopic } from '~/types';
 import { appDayjs } from '~/utils';
 
 const name = 'reservationManagement';
-
-export enum ReservationModalType {
-  EDIT = 'EDIT',
-  CREATE = 'CREATE',
-}
 
 export interface IReservationModalData extends Pick<IReservation, 'type' | 'username' | 'phone' | 'email' | 'gender' | 'people' | 'remark'> {
   id: IReservation['id'] | null;

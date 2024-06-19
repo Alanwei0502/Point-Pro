@@ -5,9 +5,9 @@ import { DesktopDatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { AppButton, TabletModal } from '~/components';
 import { GENDER_TRANSLATE, RESERVATION_PEOPLE_OPTIONS, appDayjs, emailRegex, formatDateOnly, formatTimeOnly, phoneRegex } from '~/utils';
-import { AvailablePeriod, Gender } from '~/types';
+import { AvailablePeriod, Gender, ReservationModalType } from '~/types';
 import { useAppDispatch, useAppSelector } from '~/hooks';
-import { ReservationModalType, reservationManagementSliceActions } from '~/store/slices';
+import { reservationManagementSliceActions } from '~/store/slices';
 
 const { closeModal, getReservations, patchReservation, postReservation, setModalSelectedDate, getAvailablePeriods } =
   reservationManagementSliceActions;

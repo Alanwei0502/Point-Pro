@@ -1,23 +1,9 @@
-// Libs
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-// Others
 import { PaymentApi } from '~/api';
 import { createAppAsyncThunk } from '~/hooks';
-import {
-  LinePayResponse,
-  CashPaymentResponse,
-  LinePayConfirmRedirectPayload,
-  LinePayConfirmResponse,
-  OrderType,
-  PatchPaymentStatusPayload,
-} from '~/types';
+import { PostLinePayResponse, LinePayConfirmRedirectPayload, OrderType, PatchPaymentStatusPayload, PaymentType } from '~/types';
 
 const name = 'payment';
-
-export enum PaymentType {
-  CASH = 'cash',
-  LINE_PAY = 'linePay',
-}
 
 interface IPaymentSliceState {
   paymentType: PaymentType;
@@ -27,7 +13,7 @@ interface IPaymentSliceState {
   };
   linePayModal: {
     isOpen: boolean;
-    data: LinePayResponse | null;
+    data: PostLinePayResponse | null;
   };
   confirmCloseLinePayModal: {
     isOpen: boolean;

@@ -8,7 +8,8 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { AppButton } from '~/components';
 import { appDayjs } from '~/utils';
 import { useAppDispatch, useAppSelector } from '~/hooks';
-import { ReservationModalType, reservationManagementSliceActions } from '~/store/slices';
+import { reservationManagementSliceActions } from '~/store/slices';
+import { ReservationModalType } from '~/types';
 
 const { setDateFilter, openModal } = reservationManagementSliceActions;
 

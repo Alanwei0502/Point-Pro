@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { Typography } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import { AppButton, MobileModal } from '~/components';
 import { useAppDispatch, useAppSelector } from '~/hooks';
 import { closeModal, deleteCartItem } from '~/store/slices';
@@ -12,21 +12,29 @@ export const RemoveCartItemConfirmModal: FC<IRemoveCartItemConfirmModalProps> = 
 
   const { type: modalType, data } = useAppSelector((state) => state.menu.modal);
 
+  if (!data) return null;
+  if (modalType !== MobileModalType.REMOVE_CART_CONFIRM) return null;
+
+  const handleCancel = () => {
+    dispatch(closeModal());
+  };
+
   const handleConfirm = () => {
-    if (data && modalType === MobileModalType.REMOVE_CART_CONFIRM) {
-      dispatch(deleteCartItem(data.idx));
-      dispatch(closeModal());
-    }
+    dispatch(deleteCartItem(data.idx));
+    dispatch(closeModal());
   };
 
   return (
     <MobileModal open={modalType === MobileModalType.REMOVE_CART_CONFIRM}>
-      <Typography variant='h6' fontWeight={900}>
-        從購物車中移除？
-      </Typography>
-      <AppButton fullWidth onClick={handleConfirm}>
-        確定
-      </AppButton>
+      <Typography fontWeight={700}>確定移除「{data.cartItem.title}」？</Typography>
+      <Box display='flex' width='100%' gap={1}>
+        <AppButton fullWidth onClick={handleCancel}>
+          否
+        </AppButton>
+        <AppButton fullWidth onClick={handleConfirm}>
+          是
+        </AppButton>
+      </Box>
     </MobileModal>
   );
 };

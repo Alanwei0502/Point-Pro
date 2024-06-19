@@ -4,7 +4,6 @@ import {
   GetCategoriesResponse,
   PostCategoryPayload,
   GetMealsWithCategoryAndSpecialtyItemsResponse,
-  MealResponse,
   GetSpecialtyWithSpecialtyItemsResponse,
   SpecialtyResponse,
   PatchCategoryOrderPayload,
@@ -15,7 +14,7 @@ import {
   PatchSpecialtyItemOrderPayload,
   PatchSpecialtyItemPayload,
   PostSpecialtyItemPayload,
-  PatchMealOrderPayload,
+  PatchMealSortingPayload,
   DeleteMealPaylaod,
   DeleteCategoryPayload,
   DeleteSpecialtyPayload,
@@ -114,7 +113,7 @@ export class MenuApi {
     });
   }
 
-  static patchMealOrder(payload: PatchMealOrderPayload) {
+  static patchMealOrder(payload: PatchMealSortingPayload) {
     return http.patch(MenuApi.mealPath, payload);
   }
 

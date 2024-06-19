@@ -1,4 +1,4 @@
-import { IOrderMeal, OrderStatus, OrderType, ReservationType, Gender, IBookingInfo } from '~/types';
+import { IOrderMeal, OrderStatus, OrderType, ReservationType, Gender, IReservation } from '~/types';
 
 export enum SocketTopic {
   MENU = 'MENU',
@@ -49,7 +49,7 @@ export interface IOrderResult {
   seats?: string[];
   reservationsLogs: {
     id: string;
-    options: Omit<IBookingInfo, 'id' | 'reservedAt'>;
+    options: Omit<IReservation, 'id' | 'startAt'>;
     bookedSeats: {
       seat: {
         prefix: string;

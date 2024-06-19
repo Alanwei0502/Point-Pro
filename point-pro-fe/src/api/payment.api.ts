@@ -1,5 +1,5 @@
 import { http } from './http';
-import { LinePayResponse, LinePayConfirmResponse, CashPaymentResponse, OrdersResult, IOrder, LinePayConfirmRedirectPayload, PatchPaymentStatusPayload } from '~/types';
+import { PostLinePayResponse, LinePayConfirmResponse, OrdersResult, IOrder, LinePayConfirmRedirectPayload, PatchPaymentStatusPayload } from '~/types';
 
 export class PaymentApi {
   static path = 'payment';
@@ -10,11 +10,11 @@ export class PaymentApi {
   };
 
   static postCashPayment = (payload: OrdersResult[]) => {
-    return http.post<string, CashPaymentResponse>(`${PaymentApi.path}/cash/request`, payload);
+    return http.post(`${PaymentApi.path}/cash/request`, payload);
   };
 
   static postLinePayPayment = (payload: OrdersResult[]) => {
-    return http.post<string, LinePayResponse>(`${PaymentApi.path}/${PaymentApi.linePay}/request`, payload);
+    return http.post<string, PostLinePayResponse>(`${PaymentApi.path}/${PaymentApi.linePay}/request`, payload);
   };
 
   static getLinePayConfirm = (params: LinePayConfirmRedirectPayload) => {
@@ -22,6 +22,6 @@ export class PaymentApi {
   };
 
   static getLinePayCancel = (params: { orderId: IOrder['id'] }) => {
-    return http.get<string, LinePayResponse>(`${PaymentApi.path}/${PaymentApi.linePay}/cancel`, { params });
+    return http.get<string, PostLinePayResponse>(`${PaymentApi.path}/${PaymentApi.linePay}/cancel`, { params });
   };
 }

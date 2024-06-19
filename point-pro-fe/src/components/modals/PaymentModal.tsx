@@ -1,4 +1,5 @@
 import { FC, useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import {
   Alert,
@@ -15,12 +16,11 @@ import {
   CircularProgress,
 } from '@mui/material';
 import { useAppDispatch, useAppSelector } from '~/hooks';
-import { PaymentType, orderManagementSliceActions, paymentSliceActions } from '~/store/slices';
+import { orderManagementSliceActions, paymentSliceActions } from '~/store/slices';
 import { AppButton } from '~/components';
 import { theme } from '~/theme';
-import { OrderStatus, OrderType } from '~/types';
+import { OrderStatus, PaymentType } from '~/types';
 import { TabletModal } from './TabletModal';
-import { useLocation } from 'react-router-dom';
 import { ROUTE_PATH } from '~/utils';
 
 interface ICheckoutOrderListProps {

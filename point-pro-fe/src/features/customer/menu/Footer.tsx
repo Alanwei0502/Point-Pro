@@ -37,7 +37,6 @@ interface IFooterProps {}
 export const Footer: FC<IFooterProps> = () => {
   const dispatch = useAppDispatch();
 
-  const userInfo = useAppSelector((state) => state.menu.userInfo);
   const dialogType = useAppSelector((state) => state.menu.dialog.type);
   const cart = useAppSelector((state) => state.menu.cart);
   const orders = useAppSelector(({ order }) => order.orders);
@@ -53,41 +52,37 @@ export const Footer: FC<IFooterProps> = () => {
   };
 
   return (
-    <>
-      {!userInfo && (
-        <Box
-          sx={{
-            position: 'fixed',
-            bottom: '.5rem',
-            left: '50%',
-            transform: 'translateX(-50%)',
-            padding: '5px',
-            borderRadius: '.6rem',
-            height: '4.5rem',
-            display: 'flex',
-            width: '14rem',
-            bgcolor: 'common.white',
-          }}
-        >
-          <BottomNavigation
-            showLabels
-            value={dialogType}
-            onChange={handleClickFooter}
-            sx={{
-              gap: '5px',
-              height: '100%',
-              width: '100%',
-              bgcolor: 'common.white',
-              '& .Mui-selected': { bgcolor: 'common.black' },
-              '& .MuiSvgIcon-root': { fontSize: 'body1.fontSize' },
-            }}
-          >
-            <StyledBottomNavigationAction label='菜單' value='' icon={<RestaurantMenuIcon />} />
-            <StyledBottomNavigationAction label='購物車' value={MobileDialog.CART} icon={<CartIcon />} amount={cartAmount} />
-            <StyledBottomNavigationAction label='訂單' value={MobileDialog.ORDER} icon={<StickyNote2Icon />} amount={unPaidOrderAmount} />
-          </BottomNavigation>
-        </Box>
-      )}
-    </>
+    <Box
+      sx={{
+        position: 'fixed',
+        bottom: '.5rem',
+        left: '50%',
+        transform: 'translateX(-50%)',
+        padding: '5px',
+        borderRadius: '.6rem',
+        height: '4.5rem',
+        display: 'flex',
+        width: '14rem',
+        bgcolor: 'common.white',
+      }}
+    >
+      <BottomNavigation
+        showLabels
+        value={dialogType}
+        onChange={handleClickFooter}
+        sx={{
+          gap: '5px',
+          height: '100%',
+          width: '100%',
+          bgcolor: 'common.white',
+          '& .Mui-selected': { bgcolor: 'common.black' },
+          '& .MuiSvgIcon-root': { fontSize: 'body1.fontSize' },
+        }}
+      >
+        <StyledBottomNavigationAction label='菜單' value='' icon={<RestaurantMenuIcon />} />
+        <StyledBottomNavigationAction label='購物車' value={MobileDialog.CART} icon={<CartIcon />} amount={cartAmount} />
+        <StyledBottomNavigationAction label='訂單' value={MobileDialog.ORDER} icon={<StickyNote2Icon />} amount={unPaidOrderAmount} />
+      </BottomNavigation>
+    </Box>
   );
 };

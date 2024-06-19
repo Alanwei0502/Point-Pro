@@ -4,7 +4,7 @@ import { BaseCheckbox, MobileDialogLayout, NumberInput, AppButton } from '~/comp
 import { calculateCartItemPrice } from '~/utils';
 import { useAppDispatch, useAppSelector } from '~/hooks';
 import { closeDialog, updateSpecialty, increaseMealAmount, decreaseMealAmount, createCartItem, updateCartItem } from '~/store/slices';
-import { MobileDialog, GetMenuResponseSpecialtiesWithItems, GetMenuResponseSpecialtyItem } from '~/types';
+import { MobileDialog, MenuSpecialtiesWithItems, MenuSpecialtyItem } from '~/types';
 
 interface ICustomizedSpecialtiesProps {}
 
@@ -19,7 +19,7 @@ const CustomizedSpecialties: FC<ICustomizedSpecialtiesProps> = () => {
     .map((s) => ({ ...s, specialtyItems: s.specialtyItems.filter((si) => mealSpecialtyItemIds.includes(si.id)) }))
     .filter((s) => s.specialtyItems.length > 0);
 
-  const handleClickItem = (selectedSpecialty: GetMenuResponseSpecialtiesWithItems, selectedItem: GetMenuResponseSpecialtyItem) => () => {
+  const handleClickItem = (selectedSpecialty: MenuSpecialtiesWithItems, selectedItem: MenuSpecialtyItem) => () => {
     dispatch(updateSpecialty({ selectedSpecialty, selectedItem }));
   };
 
@@ -59,7 +59,7 @@ const CustomizedSpecialties: FC<ICustomizedSpecialtiesProps> = () => {
             userSelect: 'none',
           }}
         >
-          此餐點無客製化選項
+          無客製化選項
         </Typography>
       )}
     </>
@@ -102,27 +102,19 @@ export const CustomizedDialog: FC<ICustomizedDialogProps> = () => {
       isOpen={dialogType === MobileDialog.CUSTOMIZED}
       actionButton={
         <>
-          <Box
-            sx={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              width: '100%',
-              userSelect: 'none',
-            }}
-          >
+          <Box display='flex' justifyContent='space-between' alignItems='center' width='100%' sx={{ userSelect: 'none' }}>
             <NumberInput value={customizedDialogData.amount} onAdd={handleAdd} onMinus={handleMinus} />
             <Typography variant='h5' fontWeight={900}>
-              {customizedDialogData.id ? calculateCartItemPrice(customizedDialogData) : 0}元
+              {calculateCartItemPrice(customizedDialogData)}元
             </Typography>
           </Box>
           <Box display='flex' alignItems='center' justifyContent='space-between' width='100%' gap={1}>
             <AppButton fullWidth onClick={handleClose}>
-              返回點餐
+              返回
             </AppButton>
             {isModifiedCartItem ? (
               <AppButton fullWidth onClick={handleUpdateCartItem}>
-                確認修改
+                確認
               </AppButton>
             ) : (
               <AppButton fullWidth onClick={handleAddToCart}>

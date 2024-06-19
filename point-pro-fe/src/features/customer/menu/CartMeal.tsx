@@ -1,5 +1,5 @@
 import { FC, SyntheticEvent } from 'react';
-import { Box, Divider, Grid, ListItemButton, Typography } from '@mui/material';
+import { Box, Grid, ListItemButton, Typography } from '@mui/material';
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { useAppDispatch } from '~/hooks';
@@ -34,46 +34,31 @@ export const CartMeal: FC<ICartMealProps> = (props) => {
   return (
     <>
       <ListItemButton onClick={handleCustomized(cartItem, idx)} sx={{ padding: 0.5, userSelect: 'none' }} disableRipple>
-        <Box sx={{ width: '100%' }}>
-          <Grid container sx={{ justifyContent: 'space-between', marginBottom: 1 }}>
-            <Grid item sx={{ position: 'relative' }} xs={3}>
-              <Box
-                component='img'
-                src={`${IMAGE_URL}${imageId}s.jpg`}
-                alt={`${title}-img`}
-                sx={{ width: '5rem', verticalAlign: 'middle', paddingRight: 0.5 }}
-              />
+        <Box width='100%'>
+          <Grid container justifyContent='space-between' flexWrap='nowrap' my={1}>
+            <Grid item position='relative'>
+              <Box component='img' src={`${IMAGE_URL}${imageId}s.jpg`} alt={title} sx={{ width: '5rem', verticalAlign: 'middle', paddingRight: 1 }} />
               {cartItem.isPopular && (
-                <Box
-                  sx={{
-                    position: 'absolute',
-                    left: 0,
-                    top: 0,
-                    bgcolor: 'primary.main',
-                    display: 'flex',
-                    padding: '.1rem',
-                  }}
-                >
+                <Box position='absolute' left={0} top={0} bgcolor='primary.main' display='flex' padding='.1rem'>
                   <ThumbUpIcon sx={{ width: '1rem', height: '1rem' }} />
                 </Box>
               )}
             </Grid>
-            <Grid item xs={8}>
-              <Typography fontWeight={700}>
-                {title} x {amount}
-              </Typography>
+            <Grid item flexGrow={1}>
+              <Typography fontWeight={700}>{title}</Typography>
               <Box sx={{ color: 'common.black_80', fontSize: 'small.fontSize' }}>{selectedSpecialtyItems.map((i) => i.title).join('、')}</Box>
             </Grid>
-            <Grid item xs={1}>
+            <Grid item>
               <DeleteIcon onClick={handleRemoveCartItem(idx)} color='action' />
             </Grid>
           </Grid>
           <Box display='flex' justifyContent='flex-end' alignItems='center' width='100%'>
-            <Typography fontWeight={900}>{totalPrice}元</Typography>
+            <Typography fontWeight={900}>
+              {amount} 份 {totalPrice} 元
+            </Typography>
           </Box>
         </Box>
       </ListItemButton>
-      <Divider light />
     </>
   );
 };

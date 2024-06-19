@@ -1,25 +1,17 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { MenuApi } from '~/api';
 import { createAppAsyncThunk } from '~/hooks';
-import {
-  GetMenuResponseCategory,
-  GetMenuResponseMeal,
-  GetMenuResponseSpecialtiesWithItems,
-  GetMenuResponseSpecialtyItem,
-  ICategory,
-  ISpecialty,
-  SelectionType,
-} from '~/types';
+import { MenuCategory, MenuMeal, MenuSpecialtiesWithItems, MenuSpecialtyItem, ICategory, ISpecialty, SelectionType } from '~/types';
 
 const name = 'takeOrder';
 
 export interface ITakeOrderSliceState {
   selectCategory: ICategory['id'];
-  selectMeal: (GetMenuResponseMeal & { amount: number }) | null;
-  selectSpecialtyItems: (GetMenuResponseSpecialtyItem & { specialtyId: ISpecialty['id'] })[];
-  categories: GetMenuResponseCategory[];
-  meals: GetMenuResponseMeal[];
-  specialtiesWithItems: GetMenuResponseSpecialtiesWithItems[];
+  selectMeal: (MenuMeal & { amount: number }) | null;
+  selectSpecialtyItems: (MenuSpecialtyItem & { specialtyId: ISpecialty['id'] })[];
+  categories: MenuCategory[];
+  meals: MenuMeal[];
+  specialtiesWithItems: MenuSpecialtiesWithItems[];
   editingCartItem: number;
   cart: (ITakeOrderSliceState['selectMeal'] & { selectSpecialtyItems: ITakeOrderSliceState['selectSpecialtyItems'] })[];
   totalPrice: number;

@@ -1,64 +1,18 @@
-import { GetMenuResponseMeal, GetMenuResponseSpecialtyItem } from './api.type';
+import { MenuMeal, MenuSpecialtyItem } from './api.type';
+import { Gender, OrderStatus, OrderType, PaymentGateway, PaymentStatus, ReservationType, Role, SelectionType } from './enum.type';
 
-export enum Gender {
-  MALE = 'MALE',
-  FEMALE = 'FEMALE',
-  OTHER = 'OTHER',
-}
-
-export enum LoginType {
-  LOGIN = 'LOGIN',
-  LOGOUT = 'LOGOUT',
-}
-
-export enum OrderStatus {
-  WORKING = 'WORKING',
-  FINISHED = 'FINISHED',
-  CANCEL = 'CANCEL',
-}
-
-export enum OrderType {
-  DINE_IN = 'DINE_IN',
-  TAKE_OUT = 'TAKE_OUT',
-}
-
-export enum PaymentGateway {
-  LINE_PAY = 'LINE_PAY',
-  CASH = 'CASH',
-  EC_PAY = 'EC_PAY',
-}
-
-export enum PaymentStatus {
-  UNPAID = 'UNPAID',
-  PAID = 'PAID',
-  CANCEL = 'CANCEL',
-}
-
-export enum ReservationType {
-  ONLINE = 'ONLINE',
-  PHONE = 'PHONE',
-}
-
-export enum Role {
-  STAFF = 'STAFF',
-  ADMIN = 'ADMIN',
-}
-
-export enum SelectionType {
-  SINGLE = 'SINGLE',
-  MULTIPLE = 'MULTIPLE',
-}
-
-export interface ICategory {
+export interface IBase {
   id: string;
-  title: string;
-  position: number;
   createdAt: Date;
   updatedAt: Date | null;
 }
 
-export interface IMeal {
-  id: string;
+export interface ICategory extends IBase {
+  title: string;
+  position: number;
+}
+
+export interface IMeal extends IBase {
   title: string;
   description: string;
   isPopular: boolean;
@@ -67,50 +21,35 @@ export interface IMeal {
   publishedAt: Date | null;
   imageId: string;
   imageDeleteHash: string | null;
-  createdAt: Date;
-  updatedAt: Date | null;
 }
 
-export interface ISpecialty {
-  id: string;
+export interface ISpecialty extends IBase {
   title: string;
   selectionType: SelectionType;
   position: number;
-  createdAt: Date;
-  updatedAt: Date | null;
 }
 
-export interface ISpecialtyItem {
-  id: string;
+export interface ISpecialtyItem extends IBase {
   title: string;
   price: number;
   position: number;
-  createdAt: Date;
-  updatedAt: Date | null;
 }
 
-export interface IUser {
-  id: string;
+export interface IUser extends IBase {
   username: string;
   phone: string;
   email: string | null;
   gender: Gender;
   password: string;
   role: Role;
-  createdAt: Date;
-  updatedAt: Date | null;
 }
 
-export interface IPeriod {
-  id: string;
+export interface IPeriod extends IBase {
   startTime: string; // Date
   endTime: string; // Date
-  createdAt: Date;
-  updatedAt: Date | null;
 }
 
-export interface IReservation {
-  id: string;
+export interface IReservation extends IBase {
   type: ReservationType;
   username: string;
   phone: string;
@@ -121,25 +60,17 @@ export interface IReservation {
   remark: string | null;
   startAt: Date | null;
   endAt: Date | null;
-  createdAt: Date;
-  updatedAt: Date | null;
 }
 
-export interface ISeat {
-  id: string;
+export interface ISeat extends IBase {
   seatNo: string;
   capacity: number;
-  createdAt: Date;
-  updatedAt: Date | null;
 }
 
-export interface IOrder {
-  id: string;
+export interface IOrder extends IBase {
   status: OrderStatus;
   type: OrderType;
   totalPrice: number;
-  createdAt: Date;
-  updatedAt: Date | null;
 }
 
 export interface IOrderMeal {
@@ -148,40 +79,14 @@ export interface IOrderMeal {
   servedAmount: number;
 }
 
-export interface IPayment {
-  id: string;
+export interface IPayment extends IBase {
   paymentNo: string;
   price: number;
   gateway: PaymentGateway;
   status: PaymentStatus;
-  createdAt: Date;
-  updatedAt: Date | null;
 }
 
-// extend types
-export interface UserInfo {
-  periodEndTime: string;
-  periodStartTime: string;
-  seatNo: string;
-  startTime: string;
-  reservationType: ReservationType;
-  reservationId: string;
-  iat: number;
-  exp: number;
-  role: 'USER';
-}
-
-export interface IMealWithCategoryAndSpecialtyItems extends IMeal {
-  categories: ICategory;
-  categoryId: ICategory['id'];
-  specialtyItems: (ISpecialtyItem & { specialtyId: ISpecialty['id'] })[];
-}
-
-export interface ISpecialtyWithSpecialtyItems extends ISpecialty {
-  specialtyItems: (ISpecialtyItem & { specialtyId: ISpecialty['id'] })[];
-}
-
-export interface ICartItem extends GetMenuResponseMeal {
+export interface ICartItem extends MenuMeal {
   amount: number;
-  selectedSpecialtyItems: GetMenuResponseSpecialtyItem[];
+  selectedSpecialtyItems: MenuSpecialtyItem[];
 }

@@ -56,47 +56,25 @@ export const OrdersDialog: FC<IOrdersDialogProps> = () => {
       actionButton={
         <>
           {mobileOrderStatusTab !== 2 && (
-            <Box
-              sx={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                width: '100%',
-                userSelect: 'none',
-              }}
-            >
-              <Typography variant='h6' fontWeight={900}>
-                總計
-              </Typography>
-              <Typography variant='h6' fontWeight={900}>
-                {totalPrice}元
-              </Typography>
+            <Box display='flex' justifyContent='space-between' alignItems='center' width='100%' sx={{ userSelect: 'none' }}>
+              <Typography fontWeight={700}>總計</Typography>
+              <Typography fontWeight={700}>{totalPrice}元</Typography>
             </Box>
           )}
-          <AppButton onClick={handleGoBackToMenu}>返回點餐</AppButton>
+          <AppButton size='small' onClick={handleGoBackToMenu}>
+            返回
+          </AppButton>
         </>
       }
     >
-      <Box
-        sx={{
-          position: 'fixed',
-          zIndex: 5,
-          bgcolor: 'background.paper',
-          width: '100%',
-          userSelect: 'none',
-        }}
-      >
+      <Box position='sticky' top={0} zIndex={5} bgcolor='background.paper' sx={{ userSelect: 'none' }}>
         {/* 訂單狀態分類 */}
         <Tabs
           value={mobileOrderStatusTab}
           onChange={(_, value) => handleClickOrderStatus(value)}
           sx={{
-            [`& .${tabsClasses.scrollButtons}`]: {
-              display: 'none',
-            },
-            '& .MuiTabs-indicator': {
-              display: 'none',
-            },
+            [`& .${tabsClasses.scrollButtons}`]: { display: 'none' },
+            '& .MuiTabs-indicator': { display: 'none' },
             marginBottom: '10px',
           }}
         >
@@ -105,16 +83,7 @@ export const OrdersDialog: FC<IOrdersDialogProps> = () => {
           ))}
         </Tabs>
       </Box>
-      <Box
-        sx={{
-          flexGrow: 1,
-          display: 'flex',
-          flexDirection: 'column',
-          paddingTop: '4rem',
-          paddingBottom: '10rem',
-          userSelect: 'none',
-        }}
-      >
+      <Box display='flex' flexDirection='column' flexGrow={1} pb='10rem' sx={{ userSelect: 'none' }}>
         {/* 訂單記錄 */}
         {showOrders.length > 0 ? (
           <List>
@@ -130,18 +99,11 @@ export const OrdersDialog: FC<IOrdersDialogProps> = () => {
                   marginBottom: '1rem',
                   border: '1px solid',
                   borderColor: 'common.black_40',
+                  cursor: 'pointer',
                 }}
                 onClick={handleToggleListItem(order.id)}
               >
-                <Box
-                  sx={{
-                    width: '100%',
-                    borderBottom: '1px solid common.black_60',
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                  }}
-                >
+                <Box width='100%' display='flex' justifyContent='space-between' alignItems='center' pb={2}>
                   {/* 訂單狀態 */}
                   <Typography color='common.black_80'>
                     狀態：
@@ -151,7 +113,6 @@ export const OrdersDialog: FC<IOrdersDialogProps> = () => {
                   {/* 訂單總金額 */}
                   {order.status !== OrderStatus.CANCEL && <Box fontWeight={700}>{order.totalPrice}元</Box>}
                 </Box>
-                <Divider sx={{ width: '100%', margin: '.5rem 0' }} />
                 <Box display={toggleList.includes(order.id) ? 'block' : 'none'} width='100%'>
                   {order.orderMeals.map((orderMeal) => (
                     <Grid container key={orderMeal.id}>
@@ -162,19 +123,19 @@ export const OrdersDialog: FC<IOrdersDialogProps> = () => {
                         )}
                       </Grid>
                       <Grid item xs={11}>
-                        <Grid container>
-                          <Grid item sx={{ flexGrow: 1 }} xs={7}>
+                        <Grid container flexWrap='nowrap'>
+                          <Grid item sx={{ flexGrow: 1 }} flexGrow={2}>
                             {/* 餐點名稱 */}
                             <Typography sx={{ paddingBottom: '.5rem' }} fontWeight={700}>
                               {orderMeal.meals.title}
                             </Typography>
                           </Grid>
                           {/* 數量 */}
-                          <Grid item xs={1}>
-                            <Box>x{orderMeal.amount}</Box>
+                          <Grid item minWidth={50}>
+                            <Box>{orderMeal.amount} 份</Box>
                           </Grid>
                           {/* 金額 */}
-                          <Grid item sx={{ textAlign: 'right' }} xs={3}>
+                          <Grid item textAlign='right' minWidth={80}>
                             {order.status !== OrderStatus.CANCEL && <Box>{calculateOrderPrice(orderMeal)}元</Box>}
                           </Grid>
                         </Grid>

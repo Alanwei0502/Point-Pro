@@ -1,4 +1,5 @@
 import { FC, Fragment, useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
 import { Box, Divider, List, Typography } from '@mui/material';
 import { CartMeal } from '~/features/customer/menu/CartMeal';
 import { AppButton, MobileDialogLayout } from '~/components';
@@ -6,7 +7,6 @@ import { calculateCartPrice } from '~/utils';
 import { useAppDispatch, useAppSelector } from '~/hooks';
 import { closeDialog, openModal, deleteCartItem, postOrder } from '~/store/slices';
 import { MobileModalType, MobileDialog } from '~/types';
-import { toast } from 'react-toastify';
 
 interface ICartDialogProps {}
 
@@ -21,6 +21,7 @@ export const CartDialog: FC<ICartDialogProps> = () => {
 
   const totalAmount = cart.reduce((acc, cur) => (acc += cur.amount), 0);
   const totaPrice = calculateCartPrice(cart);
+  const enableSubmit = totalAmount > 0 && !isSubmitLoading;
 
   const handleGoBackToMenu = () => {
     dispatch(closeDialog());
@@ -61,60 +62,34 @@ export const CartDialog: FC<ICartDialogProps> = () => {
       isOpen={dialogType === MobileDialog.CART}
       actionButton={
         <>
-          <Box
-            sx={{
-              display: 'flex',
-              flexDirection: 'column',
-              width: '100%',
-              userSelect: 'none',
-            }}
-          >
-            <Box
-              sx={{
-                display: 'flex',
-                justifyContent: 'space-between',
-              }}
-            >
-              <Typography variant='h6' fontWeight={900}>
-                數量
-              </Typography>
-              <Typography variant='h6' fontWeight={900}>
-                {totalAmount}
-              </Typography>
+          <Box display='flex' flexDirection='column' width='100%' sx={{ userSelect: 'none' }}>
+            <Box display='flex' justifyContent='space-between'>
+              <Typography fontWeight={700}>數量</Typography>
+              <Typography fontWeight={700}>共 {totalAmount} 份餐點</Typography>
             </Box>
-            <Box
-              sx={{
-                display: 'flex',
-                justifyContent: 'space-between',
-              }}
-            >
-              <Typography variant='h6' fontWeight={900}>
-                小計
-              </Typography>
-              <Typography variant='h6' fontWeight={900}>
-                {totaPrice}元
-              </Typography>
+            <Box display='flex' justifyContent='space-between'>
+              <Typography fontWeight={700}>小計</Typography>
+              <Typography fontWeight={700}>{totaPrice}元</Typography>
             </Box>
           </Box>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, width: '100%' }}>
+          <Box display='flex' alignItems='center' gap={2} width='100%'>
             <AppButton fullWidth onClick={handleGoBackToMenu}>
-              返回點餐
+              返回
             </AppButton>
-            <AppButton fullWidth onClick={handleSubmitOrders} disabled={cart.length === 0 || isSubmitLoading}>
-              送出訂單
-            </AppButton>
+            {enableSubmit && (
+              <AppButton fullWidth onClick={handleSubmitOrders}>
+                送出訂單
+              </AppButton>
+            )}
           </Box>
         </>
       }
     >
-      <Box sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column', userSelect: 'none' }}>
-        {cart.length > 0 ? (
+      <Box display='flex' flexDirection='column' flexGrow={1} sx={{ userSelect: 'none' }}>
+        {totalAmount > 0 ? (
           <List>
             {cart.map((cartItem, idx) => (
-              <Fragment key={`${cartItem.id}-${idx}`}>
-                <CartMeal cartItem={cartItem} idx={idx} />
-                <Divider />
-              </Fragment>
+              <CartMeal cartItem={cartItem} idx={idx} key={`${cartItem.id}-${idx}`} />
             ))}
           </List>
         ) : (

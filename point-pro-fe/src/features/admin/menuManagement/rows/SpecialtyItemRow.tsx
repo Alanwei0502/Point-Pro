@@ -9,12 +9,12 @@ import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { StyledTableCell, StyledTableRow, TextInput } from '~/components';
-import { ISpecialty, ISpecialtyItem, ISpecialtyWithSpecialtyItems } from '~/types';
+import { ISpecialty, ISpecialtyItem, SpecialtyWithSpecialtyItems } from '~/types';
 import { useAppDispatch, useAppSelector } from '~/hooks';
 import { getSpecialties, openDeleteSpecialtyItemConfirmModal, patchSpecialtyItem } from '~/store/slices';
 
 interface ISpecialtyItemRowProps {
-  specialtyItem: ISpecialtyWithSpecialtyItems['specialtyItems'][0];
+  specialtyItem: SpecialtyWithSpecialtyItems['specialtyItems'][0];
 }
 export const SpecialtyItemRow: FC<ISpecialtyItemRowProps> = (props) => {
   const { specialtyItem } = props;

@@ -5,7 +5,7 @@ import { IOrderMeal, OrderStatus, OrderType, OrdersResult, PaymentStatus } from 
 import RemoveIcon from '@mui/icons-material/Remove';
 import AddIcon from '@mui/icons-material/Add';
 import { AppButton, Column, Row } from '~/components';
-import { formatFullDateWithTime, ORDER_TYPE_TRANSLATE } from '~/utils';
+import { formatFullDateWithTime, ORDER_TYPE_TRANSLATE, PAYMENT_STATUS } from '~/utils';
 import { LinearProgressWithLabel } from './LinearProgressWithLabel';
 import { useAppDispatch, useAppSelector } from '~/hooks';
 import { OrderMealItem } from './OrderMealItem';
@@ -50,6 +50,8 @@ export const OrderItem: FC<IOrderItemProps> = (props) => {
   const progress = (servedMeals / totalMeals) * 100;
 
   const cancellable = order.status === OrderStatus.WORKING && progress === 0 && order.payments?.status !== PaymentStatus.PAID;
+
+  const isTakeOutUnpaid = order.type === OrderType.TAKE_OUT && order.payments?.status !== PaymentStatus.PAID;
 
   const handleExpand = (event: React.SyntheticEvent<Element, Event>, value: boolean) => {
     setExpanded((prev) => !prev);
@@ -123,12 +125,14 @@ export const OrderItem: FC<IOrderItemProps> = (props) => {
         <Row sx={{ width: '100%' }}>
           <Divider orientation='vertical' flexItem variant='middle' sx={{ margin: 2 }} />
           <Column sx={{ flex: '0 70%' }}>
-            <Typography fontWeight={700}>{ORDER_TYPE_TRANSLATE[order.type]}</Typography>
+            <Typography fontWeight={700}>
+              {ORDER_TYPE_TRANSLATE[order.type]} ({PAYMENT_STATUS[order.payments?.status ?? PaymentStatus.UNPAID]})
+            </Typography>
           </Column>
           <Divider orientation='vertical' flexItem variant='middle' sx={{ margin: 2 }} />
           <Column sx={{ flex: '0 70%' }}>
             <Typography>訂單編號</Typography>
-            <Typography>{order.id.slice(-5)}</Typography>
+            <Typography>{order.id.slice(-12)}</Typography>
           </Column>
           <Divider orientation='vertical' flexItem variant='middle' sx={{ margin: 2 }} />
           <Typography sx={{ flex: '0 50%' }}>{formatFullDateWithTime(order.createdAt)}</Typography>
@@ -156,13 +160,13 @@ export const OrderItem: FC<IOrderItemProps> = (props) => {
           ))}
         </List>
         <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 2, marginTop: 2 }}>
+          {isTakeOutUnpaid && (
+            <AppButton variant='outlined' loading={isUpdateServedAmountLoading} onClick={handlePayment}>
+              結帳
+            </AppButton>
+          )}
           {statusTab === OrderStatus.WORKING && (
             <>
-              {order.type === OrderType.TAKE_OUT && order?.payments && order.payments.status !== PaymentStatus.PAID && (
-                <AppButton variant='outlined' loading={isUpdateServedAmountLoading} onClick={handlePayment}>
-                  結帳
-                </AppButton>
-              )}
               {cancellable && (
                 <AppButton variant='outlined' color='error' onClick={handleCancelOrder} disabled={isUpdateServedAmountLoading}>
                   取消訂單

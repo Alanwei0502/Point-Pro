@@ -5,14 +5,14 @@ import AddIcon from '@mui/icons-material/Add';
 import { DndContext, DragEndEvent, KeyboardSensor, MouseSensor, TouchSensor, useSensor, useSensors } from '@dnd-kit/core';
 import { SortableContext, arrayMove, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { AppButton, StyledTableCell, StyledTableRow } from '~/components';
-import { ISpecialtyWithSpecialtyItems, PatchSpecialtyItemOrderPayload } from '~/types';
+import { SpecialtyWithSpecialtyItems, PatchSpecialtyItemOrderPayload } from '~/types';
 import { SpecialtyItemRow } from '../rows/SpecialtyItemRow';
 import { useAppDispatch } from '~/hooks';
 import { getSpecialties, openCreateSpecialtyItemModal, patchSpecialtyItemOrder, setSpecialtyItems } from '~/store/slices';
 
 interface ICollapseSpecialtyItemsTableProps {
   isOpen: boolean;
-  specialty: ISpecialtyWithSpecialtyItems;
+  specialty: SpecialtyWithSpecialtyItems;
 }
 
 export const CollapseSpecialtyItemsTable: FC<ICollapseSpecialtyItemsTableProps> = (props) => {

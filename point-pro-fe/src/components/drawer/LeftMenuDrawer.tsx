@@ -21,6 +21,13 @@ interface ISideBarItem {
 
 export const sideBarItemList: ISideBarItem[] = [
   {
+    id: ROUTE_PATH.takeOrder,
+    name: '點餐系統',
+    src: RestaurantMenuIcon,
+    path: `/${ROUTE_PATH.admin}/${ROUTE_PATH.takeOrder}`,
+    list: [],
+  },
+  {
     id: ROUTE_PATH.orderManagement,
     name: '訂單系統',
     src: StickyNote2Icon,
@@ -32,13 +39,6 @@ export const sideBarItemList: ISideBarItem[] = [
     name: '預約系統',
     src: EventSeatIcon,
     path: `/${ROUTE_PATH.admin}/${ROUTE_PATH.reservationMangement}`,
-    list: [],
-  },
-  {
-    id: ROUTE_PATH.takeOrder,
-    name: '點餐系統',
-    src: RestaurantMenuIcon,
-    path: `/${ROUTE_PATH.admin}/${ROUTE_PATH.takeOrder}`,
     list: [],
   },
   {
@@ -62,7 +62,7 @@ export const LeftMenuDrawer = (props: ILeftMenuDrawerProps) => {
   const navigate = useNavigate();
   const { pathname } = useLocation();
 
-  const [openList, setOpenList] = useState<{ [key: string]: boolean }>({});
+  const [openList, setOpenList] = useState<{ [key: PropertyKey]: boolean }>({});
 
   const handleClick = (item: ISideBarItem) => {
     if (item.path) {

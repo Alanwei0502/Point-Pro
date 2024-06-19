@@ -9,14 +9,14 @@ import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
 import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove';
 import { BaseSwitch, StyledTableCell, StyledTableRow, TextInput, TextareaInput, UploadButton } from '~/components';
-import { ICategory, IMeal, IMealWithCategoryAndSpecialtyItems, ISpecialtyItem } from '~/types';
+import { ICategory, IMeal, MealWithCategoryAndSpecialtyItems, ISpecialtyItem } from '~/types';
 import { useAppDispatch, useAppSelector } from '~/hooks';
 import { getMeals, openDeleteMealConfirmModal, patchMeal } from '~/store/slices';
 import { theme } from '~/theme';
 import { MEAL_IMAGE_FORMAT_REMINDER, MEAL_IMAGE_SIZE_LIMIT, MEAL_IMAGE_TYPES, IMAGE_URL } from '~/utils';
 
 interface IMealRowProps {
-  meal: IMealWithCategoryAndSpecialtyItems;
+  meal: MealWithCategoryAndSpecialtyItems;
 }
 
 export const MealRow: FC<IMealRowProps> = (props) => {

@@ -1,11 +1,12 @@
 import { FC } from 'react';
 import { useLocation } from 'react-router-dom';
 import { Breadcrumbs, Typography, Link, Box } from '@mui/material';
+import { ROUTE_PATH } from '~/utils';
 
 interface IMobileHeaderProps {}
 
 export const MobileHeader: FC<IMobileHeaderProps> = () => {
-  const { pathname } = useLocation();
+  const { pathname, ...rest } = useLocation();
 
   return (
     <Box>
@@ -13,20 +14,16 @@ export const MobileHeader: FC<IMobileHeaderProps> = () => {
         <Link href='/' underline='hover' color='inherit'>
           首頁
         </Link>
-        <Typography fontWeight={500} color='common.black'>
-          {pathname === '/menu' && '點餐'}
-          {pathname === '/booking' && '預約'}
+        <Typography fontWeight={500} color='common.black' sx={{ textDecoration: 'underline' }}>
+          {pathname.includes(ROUTE_PATH.menu) && '點餐'}
+          {pathname.includes(ROUTE_PATH.booking) && '預約'}
         </Typography>
       </Breadcrumbs>
       <Typography
-        variant='h2'
+        variant='h4'
         fontWeight={900}
         sx={{
-          padding: '.5rem 0 1rem',
-          position: 'sticky',
-          top: 0,
-          zIndex: 2,
-          bgcolor: 'background.paper',
+          padding: '.5rem 0',
           userSelect: 'none',
         }}
       >

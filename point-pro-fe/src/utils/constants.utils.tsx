@@ -8,7 +8,7 @@ import LocalPhoneIcon from '@mui/icons-material/LocalPhone';
 import AssignmentLateIcon from '@mui/icons-material/AssignmentLate';
 import MoreTimeIcon from '@mui/icons-material/MoreTime';
 import { theme } from '~/theme';
-import { OrderStatus, SelectionType, Gender, OrderType } from '~/types';
+import { OrderStatus, SelectionType, Gender, OrderType, PaymentStatus } from '~/types';
 
 export const ROUTE_PATH = {
   booking: 'booking',
@@ -50,8 +50,14 @@ export const ORDER_TYPE_TRANSLATE = {
   [OrderType.TAKE_OUT]: '外帶',
 };
 
+export const PAYMENT_STATUS = {
+  [PaymentStatus.PAID]: '已付款',
+  [PaymentStatus.UNPAID]: '未付款',
+  [PaymentStatus.CANCEL]: '付款已取消',
+};
+
 export const RESERVATION_STATUS: {
-  [key: string]: {
+  [key: PropertyKey]: {
     label: string;
     color: ChipTypeMap['props']['color'];
     icon: ReactElement;

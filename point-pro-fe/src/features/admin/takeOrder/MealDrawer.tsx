@@ -5,7 +5,7 @@ import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import { AppButton, CloseButton, NumberInput } from '~/components';
 import { useAppDispatch, useAppSelector } from '~/hooks';
 import { theme } from '~/theme';
-import { GetMenuResponseSpecialtyItem, ISpecialty, SelectionType } from '~/types';
+import { MenuSpecialtyItem, ISpecialty, SelectionType } from '~/types';
 import { takeOrderSliceActions } from '~/store/slices';
 
 interface IMealDrawerProps {}
@@ -35,7 +35,7 @@ export const MealDrawer: FC<IMealDrawerProps> = () => {
     [specialtiesWithItems, selectMealSpecialtyItemsId],
   );
 
-  const handleClickItem = (selectedSpecialtyId: ISpecialty['id'], selectionType: SelectionType, selectedItem: GetMenuResponseSpecialtyItem) => () => {
+  const handleClickItem = (selectedSpecialtyId: ISpecialty['id'], selectionType: SelectionType, selectedItem: MenuSpecialtyItem) => () => {
     dispatch(
       takeOrderSliceActions.setSelectSpecialtyItems({
         selectedSpecialtyId,

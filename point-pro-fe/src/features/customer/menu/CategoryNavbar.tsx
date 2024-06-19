@@ -43,7 +43,7 @@ export const CategoryNavbar: FC<ICategoryNavbarProps> = () => {
 
   return (
     <>
-      <Typography variant='h5' fontWeight={900} sx={{ userSelect: 'none', mt: 1 }}>
+      <Typography variant='h6' fontWeight={700} sx={{ userSelect: 'none', mt: 1 }}>
         菜單
       </Typography>
       <Box sx={{ bgcolor: 'background.paper', userSelect: 'none' }}>

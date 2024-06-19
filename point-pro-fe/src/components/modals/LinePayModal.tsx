@@ -4,12 +4,12 @@ import { useAppDispatch, useAppSelector } from '~/hooks';
 import { TabletModal } from './TabletModal';
 import { AppButton } from '../button/AppButton';
 import { paymentSliceActions } from '~/store/slices';
-import { LinePayResponse } from '~/types';
+import { PostLinePayResponse } from '~/types';
 
 const { openConfirmCloseLinePayModal } = paymentSliceActions;
 
 interface ILinePayIframeProps {
-  data: LinePayResponse | null;
+  data: PostLinePayResponse | null;
 }
 
 const LinePayIframe: FC<ILinePayIframeProps> = (props) => {

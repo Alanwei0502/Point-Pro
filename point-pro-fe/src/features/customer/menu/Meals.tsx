@@ -3,7 +3,7 @@ import { Box, Divider, Grid, List, ListItem, ListItemButton } from '@mui/materia
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import { useAppDispatch, useAppSelector } from '~/hooks';
 import { openDialog } from '~/store/slices';
-import { MobileDialog, GetMenuResponseMeal } from '~/types';
+import { MobileDialog, MenuMeal } from '~/types';
 import { IMAGE_URL } from '~/utils';
 
 interface IMealsProps {}
@@ -19,7 +19,7 @@ export const Meals: FC<IMealsProps> = () => {
 
   const getItemAmountInCart = (mealId: string) => cart.reduce((acc, cur) => (cur.id === mealId ? acc + cur.amount : acc), 0);
 
-  const handleSelectedMeal = (meal: GetMenuResponseMeal) => () => {
+  const handleSelectedMeal = (meal: MenuMeal) => () => {
     dispatch(openDialog({ type: MobileDialog.CUSTOMIZED, data: { ...meal, amount: 1, selectedSpecialtyItems: [] } }));
   };
 

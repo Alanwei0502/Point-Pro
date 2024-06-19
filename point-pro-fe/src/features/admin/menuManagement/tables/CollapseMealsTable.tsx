@@ -5,14 +5,14 @@ import { SortableContext, arrayMove, verticalListSortingStrategy } from '@dnd-ki
 import { Box, Collapse, Table, TableBody, TableCell, TableFooter, TableHead, TableRow } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import { useAppDispatch } from '~/hooks';
-import { ICategory, IMealWithCategoryAndSpecialtyItems, PatchMealOrderPayload } from '~/types';
+import { ICategory, MealWithCategoryAndSpecialtyItems, PatchMealSortingPayload } from '~/types';
 import { AppButton, StyledTableCell, StyledTableRow } from '~/components';
 import { getMeals, openCreateMealModal, patchMealOrder, setMeals } from '~/store/slices';
 import { MealRow } from '../rows/MealRow';
 
 interface ICollapseMealsTableProps {
   isOpen: boolean;
-  meals: IMealWithCategoryAndSpecialtyItems[];
+  meals: MealWithCategoryAndSpecialtyItems[];
   categoryId: ICategory['id'];
 }
 
@@ -32,7 +32,7 @@ export const CollapseMealsTable: FC<ICollapseMealsTableProps> = (props) => {
       const oldIndex = meals.findIndex((m) => m.id === active.id);
       const newIndex = meals.findIndex((m) => m.id === over.id);
       const movedMeals = arrayMove(meals, oldIndex, newIndex);
-      const payload: PatchMealOrderPayload = [];
+      const payload: PatchMealSortingPayload = [];
       const newFilterMealsOrder = movedMeals.map((m, idx) => {
         payload.push({ id: m.id, position: idx });
         return { ...m, position: idx };
