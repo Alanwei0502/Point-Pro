@@ -1,12 +1,13 @@
 import { FC, useEffect, useState } from 'react';
-import { Box, Checkbox, Divider, Grid, List, ListItem, Tabs, Typography, tabsClasses } from '@mui/material';
+import { Box, Checkbox, Grid, List, ListItem, Typography } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { ORDER_STATUS_TRANSLATE, calculateOrderPrice } from '~/utils';
 import { useAppDispatch, useAppSelector } from '~/hooks';
-import { setMobileOrderStatusTab, closeDialog, openModal } from '~/store/slices';
-import { MobileDialog, IOrder, OrderStatus, MobileModalType } from '~/types';
-import { MobileDialogLayout, AppButton } from '~/components';
-import { StyledTab } from '~/features/customer/menu/CategoryNavbar';
+import { closeDialog, orderSliceActions } from '~/store/slices';
+import { MobileDialog, IOrder, OrderStatus } from '~/types';
+import { MobileDialogLayout, AppButton, Loading } from '~/components';
+
+const { getOrders } = orderSliceActions;
 
 interface IOrdersDialogProps {}
 
@@ -15,17 +16,11 @@ export const OrdersDialog: FC<IOrdersDialogProps> = () => {
 
   const dialogType = useAppSelector((state) => state.menu.dialog.type);
   const orders = useAppSelector((state) => state.order.orders);
-  const mobileOrderStatusTab = useAppSelector((state) => state.order.mobileOrderStatusTab);
+  const isLoading = useAppSelector((state) => state.order.isLoading);
 
   const [toggleList, setToggleList] = useState<IOrder['id'][]>([]);
 
-  const showOrders = orders.filter(({ status }) => status === Object.keys(ORDER_STATUS_TRANSLATE)[mobileOrderStatusTab]);
-
-  const totalPrice = showOrders.reduce((acc, o) => acc + o.totalPrice, 0);
-
-  const handleClickOrderStatus = (orderStatus: number) => {
-    dispatch(setMobileOrderStatusTab(orderStatus));
-  };
+  const totalPrice = orders.filter((o) => o.status !== OrderStatus.CANCEL).reduce((acc, o) => acc + o.totalPrice, 0);
 
   const handleToggleListItem = (orderId: IOrder['id']) => () => {
     let newToggleList: IOrder['id'][];
@@ -48,6 +43,12 @@ export const OrdersDialog: FC<IOrdersDialogProps> = () => {
     }
   }, [orders]);
 
+  useEffect(() => {
+    if (dialogType === MobileDialog.ORDER) {
+      dispatch(getOrders());
+    }
+  }, [dialogType, dispatch]);
+
   return (
     <MobileDialogLayout
       title='點餐紀錄'
@@ -55,41 +56,24 @@ export const OrdersDialog: FC<IOrdersDialogProps> = () => {
       isOpen={dialogType === MobileDialog.ORDER}
       actionButton={
         <>
-          {mobileOrderStatusTab !== 2 && (
-            <Box display='flex' justifyContent='space-between' alignItems='center' width='100%' sx={{ userSelect: 'none' }}>
-              <Typography fontWeight={700}>總計</Typography>
-              <Typography fontWeight={700}>{totalPrice}元</Typography>
-            </Box>
-          )}
+          <Box display='flex' justifyContent='space-between' alignItems='center' width='100%' sx={{ userSelect: 'none' }}>
+            <Typography fontWeight={700}>總計</Typography>
+            <Typography fontWeight={700}>{totalPrice}元</Typography>
+          </Box>
           <AppButton size='small' onClick={handleGoBackToMenu}>
             返回
           </AppButton>
         </>
       }
     >
-      <Box position='sticky' top={0} zIndex={5} bgcolor='background.paper' sx={{ userSelect: 'none' }}>
-        {/* 訂單狀態分類 */}
-        <Tabs
-          value={mobileOrderStatusTab}
-          onChange={(_, value) => handleClickOrderStatus(value)}
-          sx={{
-            [`& .${tabsClasses.scrollButtons}`]: { display: 'none' },
-            '& .MuiTabs-indicator': { display: 'none' },
-            marginBottom: '10px',
-          }}
-        >
-          {Object.entries(ORDER_STATUS_TRANSLATE).map(([orderType, orderTitle], idx) => (
-            <StyledTab key={`${orderTitle}-${idx}`} value={idx} label={orderTitle} />
-          ))}
-        </Tabs>
-      </Box>
+      <Loading open={isLoading} />
       <Box display='flex' flexDirection='column' flexGrow={1} pb='10rem' sx={{ userSelect: 'none' }}>
         {/* 訂單記錄 */}
-        {showOrders.length > 0 ? (
+        {orders.length > 0 ? (
           <List>
-            {showOrders.map((order, idx) => (
+            {orders.map((order, idx) => (
               <ListItem
-                key={`${order.id}-${idx}`}
+                key={order.id}
                 sx={{
                   bgcolor: 'common.white',
                   display: 'flex',
@@ -111,7 +95,7 @@ export const OrdersDialog: FC<IOrdersDialogProps> = () => {
                   </Typography>
 
                   {/* 訂單總金額 */}
-                  {order.status !== OrderStatus.CANCEL && <Box fontWeight={700}>{order.totalPrice}元</Box>}
+                  <Box fontWeight={700}>{order.totalPrice}元</Box>
                 </Box>
                 <Box display={toggleList.includes(order.id) ? 'block' : 'none'} width='100%'>
                   {order.orderMeals.map((orderMeal) => (
@@ -147,16 +131,7 @@ export const OrdersDialog: FC<IOrdersDialogProps> = () => {
                     </Grid>
                   ))}
                 </Box>
-                <Box
-                  sx={{
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    fontSize: 'small.fontSize',
-                    fontWeight: 700,
-                    width: '100%',
-                  }}
-                >
+                <Box display='flex' justifyContent='center' alignItems='center' fontSize='small.fontSize' fontWeight={700} width='100%'>
                   {toggleList.includes(order.id) ? (
                     <>
                       <Box sx={{ cursor: 'pointer' }}>點擊收合</Box>

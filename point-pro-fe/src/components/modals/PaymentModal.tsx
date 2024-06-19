@@ -19,7 +19,7 @@ import { useAppDispatch, useAppSelector } from '~/hooks';
 import { orderManagementSliceActions, paymentSliceActions } from '~/store/slices';
 import { AppButton } from '~/components';
 import { theme } from '~/theme';
-import { OrderStatus, PaymentType } from '~/types';
+import { OrderStatus, OrderType, PaymentType } from '~/types';
 import { TabletModal } from './TabletModal';
 import { ROUTE_PATH } from '~/utils';
 
@@ -99,6 +99,7 @@ export const PaymentModal: FC<IPaymentModalProps> = () => {
 
   const [isLoading, setIsLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
+
   const { isOpen, data } = useAppSelector((state) => state.payment.paymentModal);
   const paymentType = useAppSelector((state) => state.payment.paymentType);
   const checkOutOrder = useAppSelector((state) => state.orderManagement.checkOutOrder);
@@ -143,7 +144,7 @@ export const PaymentModal: FC<IPaymentModalProps> = () => {
       case PaymentType.LINE_PAY: {
         toast.promise(
           async () => {
-            const res = await dispatch(requestLinePay()).unwrap();
+            await dispatch(requestLinePay()).unwrap();
           },
           {
             pending: '結帳中...',
@@ -182,7 +183,7 @@ export const PaymentModal: FC<IPaymentModalProps> = () => {
                 總金額：{totalPrice}元
               </Box>
             </Box>
-            {errorMsg && (
+            {data.type === OrderType.DINE_IN && errorMsg && (
               <Alert severity='error' sx={{ my: 1 }}>
                 {errorMsg}
               </Alert>

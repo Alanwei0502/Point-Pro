@@ -1,4 +1,4 @@
-export * from './order.slice';
+export * from './customer/order.slice';
 export * from './socket.slice';
 // customer
 export * from './customer/home.slice';

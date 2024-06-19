@@ -2,7 +2,7 @@ import { FC, useEffect } from 'react';
 import { Box, Typography } from '@mui/material';
 import { useAppSelector, useSocket } from '~/hooks';
 import { NameSpace } from '~/types';
-import { MobileLayout, MobileHeader } from '~/components';
+import { MobileLayout, MobileHeader, Loading } from '~/components';
 import { BookingSteps } from './BookingSteps';
 import { PeopleAndTime } from './PeopleAndTime';
 import { BookerInfo } from './BookerInfo';
@@ -18,6 +18,7 @@ export const Booking: FC<IBookingProps> = () => {
   useSocket({ ns: NameSpace.main });
 
   const step = useAppSelector(({ booking }) => booking.step);
+  const isLoading = useAppSelector(({ booking }) => booking.isLoading);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -25,8 +26,9 @@ export const Booking: FC<IBookingProps> = () => {
 
   return (
     <MobileLayout>
+      <Loading open={isLoading} />
       <MobileHeader />
-      <Typography variant='h4' fontWeight={900} sx={{ marginBottom: '1rem' }}>
+      <Typography variant='h6' fontWeight={700}>
         {stepTitle[step]}
       </Typography>
 

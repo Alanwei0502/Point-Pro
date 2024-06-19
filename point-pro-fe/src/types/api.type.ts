@@ -1,18 +1,4 @@
-import {
-  ICategory,
-  IMeal,
-  IOrder,
-  IOrderMeal,
-  IPayment,
-  IPeriod,
-  IReservation,
-  ISeat,
-  ISpecialty,
-  ISpecialtyItem,
-  IUser,
-  OrderStatus,
-  OrderType,
-} from '~/types';
+import { ICategory, IMeal, IOrder, IOrderMeal, IPayment, IPeriod, IReservation, ISeat, ISpecialty, ISpecialtyItem, IUser, OrderType } from '~/types';
 
 export interface ApiResponse<Result> {
   message: string;
@@ -152,22 +138,6 @@ export interface AvailablePeriod extends Pick<IPeriod, 'id' | 'startTime'> {
 export type GetPeriodsResponse = ApiResponse<AvailablePeriod[]>;
 
 // PAYMENT
-export type PaymentLogsResponse = Omit<IPayment, 'id'> & {
-  orderId: IOrder['id'];
-  order: {
-    id: string;
-    orderId: string;
-    mealId: string;
-    title: string;
-    price: number;
-    mealDetails: string;
-    amount: string;
-    servedAmount: string;
-    meal: IMeal;
-    orderMeals: IOrderMeal[];
-  };
-};
-
 export type PatchPaymentStatusPayload = Pick<IPayment, 'id' | 'status'>;
 
 export interface LinePayConfirmRedirectPayload {
@@ -195,70 +165,7 @@ export type PostLinePayResponse = ApiResponse<{
   };
 }>;
 
-interface Product {
-  id?: string;
-  name: string;
-  imageUrl?: string;
-  quantity: number;
-  price: number;
-  originalPrice?: number;
-}
-
-interface PayInfo {
-  method: string;
-  amount: number;
-  creditCardNickname?: string;
-  creditCardBrand?: string;
-  maskedCreditCardNumber?: string;
-}
-
-interface Package {
-  id: string;
-  name?: string;
-  amount: number;
-  userFeeAmount?: number;
-  products: Product[];
-}
-
-interface Shipping {
-  methodId: string;
-  feeAmount: number;
-  address: string;
-}
-
-export interface Info {
-  orderId: string;
-  transactionId: string;
-  authorizationExpireDate?: string;
-  regKey?: string;
-  payInfo: PayInfo[];
-  packages: Package[];
-  shipping?: Shipping;
-}
-
-export interface ILinePayConfirmPayload {
-  paymentLogs: PaymentLogsResponse[];
-  response: {
-    body: {
-      info: Info;
-      returnCode: string;
-      returnMessage: string;
-    };
-  };
-}
-export type LinePayConfirmResponse = ApiResponse<ILinePayConfirmPayload>;
-
 // Seat
-export interface SeatsPayload {
-  date?: string;
-  periodId?: string;
-}
-
-export interface SeatByIdPayload {
-  seatId: string;
-  date: string;
-}
-
 export type GetSeatResponse = ApiResponse<ISeat[]>;
 
 // Mailer

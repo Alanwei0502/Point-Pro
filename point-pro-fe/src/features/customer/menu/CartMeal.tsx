@@ -17,7 +17,7 @@ export const CartMeal: FC<ICartMealProps> = (props) => {
 
   const { cartItem, idx } = props;
 
-  const { id, title, imageId, price, amount, selectedSpecialtyItems } = cartItem;
+  const { title, imageId, price, amount, selectedSpecialtyItems } = cartItem;
 
   const sepcialtiesItemAdditionalPrice = selectedSpecialtyItems.reduce((acc, item) => (acc += item.price), 0);
   const totalPrice = (price + sepcialtiesItemAdditionalPrice) * amount;
@@ -26,39 +26,37 @@ export const CartMeal: FC<ICartMealProps> = (props) => {
     dispatch(viewCartItemCustomized({ cartItem, idx }));
   };
 
-  const handleRemoveCartItem = (idx: number) => (e: SyntheticEvent<Element, Event>) => {
+  const handleRemoveCartItem = (e: SyntheticEvent<Element, Event>) => {
     e.stopPropagation();
     dispatch(openModal({ type: MobileModalType.REMOVE_CART_CONFIRM, data: props }));
   };
 
   return (
-    <>
-      <ListItemButton onClick={handleCustomized(cartItem, idx)} sx={{ padding: 0.5, userSelect: 'none' }} disableRipple>
-        <Box width='100%'>
-          <Grid container justifyContent='space-between' flexWrap='nowrap' my={1}>
-            <Grid item position='relative'>
-              <Box component='img' src={`${IMAGE_URL}${imageId}s.jpg`} alt={title} sx={{ width: '5rem', verticalAlign: 'middle', paddingRight: 1 }} />
-              {cartItem.isPopular && (
-                <Box position='absolute' left={0} top={0} bgcolor='primary.main' display='flex' padding='.1rem'>
-                  <ThumbUpIcon sx={{ width: '1rem', height: '1rem' }} />
-                </Box>
-              )}
-            </Grid>
-            <Grid item flexGrow={1}>
-              <Typography fontWeight={700}>{title}</Typography>
-              <Box sx={{ color: 'common.black_80', fontSize: 'small.fontSize' }}>{selectedSpecialtyItems.map((i) => i.title).join('、')}</Box>
-            </Grid>
-            <Grid item>
-              <DeleteIcon onClick={handleRemoveCartItem(idx)} color='action' />
-            </Grid>
+    <ListItemButton onClick={handleCustomized(cartItem, idx)} sx={{ padding: 0.5, userSelect: 'none' }} disableRipple>
+      <Box width='100%'>
+        <Grid container justifyContent='space-between' flexWrap='nowrap' my={1}>
+          <Grid item position='relative'>
+            <Box component='img' src={`${IMAGE_URL}${imageId}s.jpg`} alt={title} width='5rem' sx={{ verticalAlign: 'middle', paddingRight: 1 }} />
+            {cartItem.isPopular && (
+              <Box position='absolute' left={0} top={0} bgcolor='primary.main' display='flex' padding='.1rem'>
+                <ThumbUpIcon sx={{ width: '1rem', height: '1rem' }} />
+              </Box>
+            )}
           </Grid>
-          <Box display='flex' justifyContent='flex-end' alignItems='center' width='100%'>
-            <Typography fontWeight={900}>
-              {amount} 份 {totalPrice} 元
-            </Typography>
-          </Box>
+          <Grid item flexGrow={1}>
+            <Typography fontWeight={700}>{title}</Typography>
+            <Box sx={{ color: 'common.black_80', fontSize: 'small.fontSize' }}>{selectedSpecialtyItems.map((i) => i.title).join('、')}</Box>
+          </Grid>
+          <Grid item>
+            <DeleteIcon onClick={handleRemoveCartItem} color='action' />
+          </Grid>
+        </Grid>
+        <Box display='flex' justifyContent='flex-end' alignItems='center' width='100%'>
+          <Typography fontWeight={900}>
+            {amount} 份 {totalPrice} 元
+          </Typography>
         </Box>
-      </ListItemButton>
-    </>
+      </Box>
+    </ListItemButton>
   );
 };

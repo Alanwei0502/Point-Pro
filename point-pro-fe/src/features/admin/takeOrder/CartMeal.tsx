@@ -28,7 +28,6 @@ export const CartMeal: FC<ICartMealProps> = ({ idx, cartItem }) => {
   const handleDeleteCartItem = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.stopPropagation();
     dispatch(deleteCartItem(idx));
-    // dispatch();
   };
 
   return (

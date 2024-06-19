@@ -53,7 +53,6 @@ export const BookingReminderDialog: FC<IBookingReminderProps> = () => {
   const dispatch = useAppDispatch();
 
   const dialog = useAppSelector(({ booking }) => booking.dialog);
-  const isLoading = useAppSelector(({ booking }) => booking.isLoading);
   const username = useAppSelector(({ booking }) => booking.username);
   const gender = useAppSelector(({ booking }) => booking.gender);
 
@@ -73,9 +72,7 @@ export const BookingReminderDialog: FC<IBookingReminderProps> = () => {
     window.open(googleMapsUrl, '_blank');
   };
 
-  return isLoading ? (
-    <Loading open={true} />
-  ) : (
+  return (
     <MobileDialogLayout
       title={
         <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>

@@ -27,12 +27,12 @@ export const Meals: FC<IMealsProps> = () => {
     <Box sx={{ padding: '0 .2rem 5rem', userSelect: 'none' }}>
       <List sx={{ width: '100%', zIndex: 0, '& ul': { padding: 0 } }} subheader={<li />} id='meal-list'>
         {showMeals &&
-          showMeals.map((meal, idx) => (
-            <Box key={`${meal.id}-${idx}`}>
+          showMeals.map((meal) => (
+            <Box key={meal.id}>
               <ListItem sx={{ padding: '.5rem' }}>
                 <ListItemButton sx={{ padding: '0' }} onClick={handleSelectedMeal(meal)}>
-                  <Grid container gap={1} sx={{ alignItems: 'center', justifyContent: 'space-between' }}>
-                    <Grid item sx={{ position: 'relative' }}>
+                  <Grid container gap={1} alignItems='center' justifyContent='space-between'>
+                    <Grid item position='relative'>
                       <Box
                         component='img'
                         src={`${IMAGE_URL}${meal.imageId}s.jpg`}
@@ -40,23 +40,14 @@ export const Meals: FC<IMealsProps> = () => {
                         sx={{ width: '5rem', verticalAlign: 'middle' }}
                       />
                       {meal.isPopular && (
-                        <Box
-                          sx={{
-                            position: 'absolute',
-                            left: 0,
-                            top: 0,
-                            bgcolor: 'primary.main',
-                            display: 'flex',
-                            padding: '.1rem',
-                          }}
-                        >
+                        <Box position='absolute' left={0} top={0} bgcolor='primary.main' display='flex' padding='.1rem'>
                           <ThumbUpIcon sx={{ width: '1rem', height: '1rem' }} />
                         </Box>
                       )}
                     </Grid>
 
                     <Grid item sx={{ flexGrow: 1 }}>
-                      <Box sx={{ fontWeight: '700' }}>{meal.title}</Box>
+                      <Box fontWeight={700}>{meal.title}</Box>
                       <Box>{meal.price}元</Box>
                     </Grid>
 
@@ -65,7 +56,7 @@ export const Meals: FC<IMealsProps> = () => {
                         display='flex'
                         alignItems='center'
                         justifyContent='center'
-                        bgcolor='common.black'
+                        bgcolor='common.black_80'
                         color='common.white'
                         borderRadius='50%'
                         width='1.5rem'

@@ -1,8 +1,8 @@
-import { FC, useEffect, useState } from 'react';
+import { FC, useEffect } from 'react';
 import { MobileLayout, MobileHeader, MobileMask, MobileLoading } from '~/components';
-import { getMenu, getOrders } from '~/store/slices';
-import { useSocket, useAppDispatch, useToken } from '~/hooks';
-import { OrderStatus, NameSpace } from '~/types';
+import { getMenu } from '~/store/slices';
+import { useSocket, useAppDispatch, useToken, useAppSelector } from '~/hooks';
+import { NameSpace } from '~/types';
 import { DineInInfo } from './DineInInfo';
 import { CategoryNavbar } from './CategoryNavbar';
 import { Meals } from './Meals';
@@ -11,7 +11,6 @@ import { CartDialog } from './dialogs/CartDialog';
 import { CustomizedDialog } from './dialogs/CustomizedDialog';
 import { OrdersDialog } from './dialogs/OrderDialog';
 import { RemoveCartItemConfirmModal } from './modals/RemoveCartItemConfirmModal';
-import { CounterReminderModal } from './modals/CounterReminderModal';
 import { CartItemIsOffReminderModal } from './modals/CartItemIsOffReminderModal';
 
 interface IMenuProps {}
@@ -19,20 +18,15 @@ interface IMenuProps {}
 export const Menu: FC<IMenuProps> = () => {
   const dispatch = useAppDispatch();
 
-  const [isLoading, setIsLoading] = useState(false);
+  const token = useToken();
+
+  const isLoading = useAppSelector((state) => state.menu.isLoading);
 
   // useSocket({ ns: NameSpace.user });
-  const token = useToken();
 
   useEffect(() => {
     if (!token) return;
-
-    setIsLoading(true);
-    (async () => {
-      Promise.all([dispatch(getMenu()), dispatch(getOrders())]).finally(() => {
-        setIsLoading(false);
-      });
-    })();
+    dispatch(getMenu());
   }, [token, dispatch]);
 
   if (!token) return <MobileMask />;
@@ -54,7 +48,6 @@ export const Menu: FC<IMenuProps> = () => {
 
       {/* 提示彈窗 */}
       <RemoveCartItemConfirmModal />
-      <CounterReminderModal />
       <CartItemIsOffReminderModal />
     </MobileLayout>
   );

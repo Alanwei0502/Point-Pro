@@ -16,7 +16,6 @@ export const ReservationManagement: FC<IReservationManagementProps> = () => {
       <DeleteReservationConfirmModal />
       <StartDiningConfirmModal />
       <StartDiningQRCodeModal />
-      <PaymentModal />
     </>
   );
 };

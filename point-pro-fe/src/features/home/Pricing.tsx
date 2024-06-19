@@ -160,7 +160,7 @@ export const Pricing: FC<IPricingProps> = () => {
           <Grid container spacing={2}>
             <GlobalStyles styles={globalStyles} />
             {cards.map((card, index) => (
-              <Grid item xs={4} md={4} key={`card-${card.id}`}>
+              <Grid item xs={4} md={4} key={card.id}>
                 <AnimatedCard className={animationClass[index]} onClick={() => handleCardClick(index)} data-id={card.id} index={index}>
                   <img style={{ height: 262, borderRadius: '2.5rem', objectFit: 'cover', width: '100%' }} src={card.imgUrl} title={card.title} />
                   <Box p={2} borderRadius={5} bgcolor='background.paper'>
@@ -173,8 +173,8 @@ export const Pricing: FC<IPricingProps> = () => {
                       </Typography>
                     </Row>
                     <List sx={{ marginBottom: 1 }}>
-                      {card.content.map((content, index) => (
-                        <ListItem key={`content-${index}`} sx={{ paddingTop: 0, gap: 1 }}>
+                      {card.content.map((content) => (
+                        <ListItem key={content} sx={{ paddingTop: 0, gap: 1 }}>
                           <CheckIcon color='primary' fontSize='small' />
                           <ListItemText primary={content} />
                         </ListItem>
@@ -208,8 +208,8 @@ export const Pricing: FC<IPricingProps> = () => {
                     </Typography>
                   </Row>
                   <List sx={{ marginBottom: 1 }}>
-                    {p.content.map((content, index) => (
-                      <ListItem key={`content-${index}`} sx={{ paddingTop: 0, gap: 1 }}>
+                    {p.content.map((content) => (
+                      <ListItem key={content} sx={{ paddingTop: 0, gap: 1 }}>
                         <CheckIcon color='primary' fontSize='small' />
                         <ListItemText primary={content} />
                       </ListItem>

@@ -3,8 +3,10 @@ import { useLocation } from 'react-router-dom';
 import io from 'socket.io-client';
 import { apiHost } from '~/api/http';
 import { useAppDispatch, useAppSelector, useToken } from '~/hooks';
-import { addNotification, resetSocket, setSocket, getOrders, closeDialog, getMenu } from '~/store/slices';
+import { addNotification, resetSocket, setSocket, closeDialog, getMenu, orderSliceActions } from '~/store/slices';
 import { NameSpace, SocketTopic } from '~/types';
+
+const { getOrders } = orderSliceActions;
 
 type useSocketProps = {
   ns: NameSpace;

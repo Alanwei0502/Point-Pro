@@ -105,8 +105,8 @@ export class ReservationController {
         });
       }
 
-      //temp
-      if (!['朱志豪', '林雅婷', '鄭志宇'].includes(reservation?.username ?? '')) {
+      //TODO: delete this temp
+      if (!['朱志豪', '林雅婷', '鄭志宇', '鄭慧君', '陳冠宇'].includes(reservation?.username ?? '')) {
         // Check if reservation is already started
         if (reservation?.startAt) {
           return res.status(StatusCodes.BAD_REQUEST).send({
@@ -128,10 +128,11 @@ export class ReservationController {
         if (appDayjs().isBefore(appDayjs(reservation?.periods.startTime).add(-10, 'minutes'))) {
           return res.status(StatusCodes.BAD_REQUEST).send({
             message: ReasonPhrases.BAD_REQUEST,
-            result: '此預約還未到用餐時間',
+            result: '此預約還未到用餐時間，最快可以提早10分鐘開始用餐',
           });
         }
 
+        // TODO
         // Check if reservation is in the past
         // Can start dining 10 minutes after reservation
         // TODO

@@ -62,7 +62,6 @@ export const NotificationDrawer: FC<INotificationDrawerProps> = ({ open, setOpen
   const handleReadAllNotifications = () => {
     dispatch(clearNotifications());
   };
-
   return (
     <BaseDraw title='即時通知' open={open} onClose={() => setOpen(false)} width='300px'>
       {notifications.length > 0 ? (
@@ -70,7 +69,7 @@ export const NotificationDrawer: FC<INotificationDrawerProps> = ({ open, setOpen
           <Box sx={{ flexGrow: 1, overflowY: 'scroll' }}>
             {notifications.map(({ message, result, notiType }, idx) => (
               <Card
-                key={`${message}-${idx}`}
+                key={message}
                 sx={{
                   boxShadow: 'rgba(0, 0, 0, 0.5) 0px 1px 4px',
                   margin: '.5rem',

@@ -32,7 +32,7 @@ export const ConfirmCloseLinePayModal: FC<IConfirmCloseLinePayModalProps> = () =
     <TabletModal
       open={isOpen}
       cardHeaderProps={{
-        title: '確認關閉 Line Pay 付款視窗',
+        title: '關閉 Line Pay 付款視窗',
       }}
       cardContentProps={{
         children: <Typography textAlign='center'>請再次確認已經完成付款才關閉視窗。</Typography>,

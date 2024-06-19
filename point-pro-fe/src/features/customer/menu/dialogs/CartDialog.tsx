@@ -1,12 +1,14 @@
-import { FC, Fragment, useEffect, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
-import { Box, Divider, List, Typography } from '@mui/material';
+import { Box, List, Typography } from '@mui/material';
 import { CartMeal } from '~/features/customer/menu/CartMeal';
 import { AppButton, MobileDialogLayout } from '~/components';
 import { calculateCartPrice } from '~/utils';
 import { useAppDispatch, useAppSelector } from '~/hooks';
-import { closeDialog, openModal, deleteCartItem, postOrder } from '~/store/slices';
+import { closeDialog, openModal, deleteCartItem, orderSliceActions } from '~/store/slices';
 import { MobileModalType, MobileDialog } from '~/types';
+
+const { postOrder } = orderSliceActions;
 
 interface ICartDialogProps {}
 
@@ -21,7 +23,8 @@ export const CartDialog: FC<ICartDialogProps> = () => {
 
   const totalAmount = cart.reduce((acc, cur) => (acc += cur.amount), 0);
   const totaPrice = calculateCartPrice(cart);
-  const enableSubmit = totalAmount > 0 && !isSubmitLoading;
+  const isCartEmpty = totalAmount <= 0;
+  const enableSubmit = !isCartEmpty && !isSubmitLoading;
 
   const handleGoBackToMenu = () => {
     dispatch(closeDialog());
@@ -76,24 +79,24 @@ export const CartDialog: FC<ICartDialogProps> = () => {
             <AppButton fullWidth onClick={handleGoBackToMenu}>
               返回
             </AppButton>
-            {enableSubmit && (
-              <AppButton fullWidth onClick={handleSubmitOrders}>
-                送出訂單
-              </AppButton>
-            )}
+            <AppButton fullWidth onClick={handleSubmitOrders} disabled={!enableSubmit}>
+              送出訂單
+            </AppButton>
           </Box>
         </>
       }
     >
       <Box display='flex' flexDirection='column' flexGrow={1} sx={{ userSelect: 'none' }}>
-        {totalAmount > 0 ? (
+        {isCartEmpty ? (
+          <Typography textAlign='center' m='auto' color='text.disabled' sx={{ userSelect: 'none' }}>
+            快去點餐囉！
+          </Typography>
+        ) : (
           <List>
             {cart.map((cartItem, idx) => (
               <CartMeal cartItem={cartItem} idx={idx} key={`${cartItem.id}-${idx}`} />
             ))}
           </List>
-        ) : (
-          <Typography sx={{ textAlign: 'center', margin: 'auto', color: 'text.disabled', userSelect: 'none' }}>快去點餐囉！</Typography>
         )}
       </Box>
     </MobileDialogLayout>

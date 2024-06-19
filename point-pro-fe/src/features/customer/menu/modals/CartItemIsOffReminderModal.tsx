@@ -7,11 +7,11 @@ import { MobileModal } from '~/components';
 interface ICartItemIsOffReminderModalProps {}
 
 export const CartItemIsOffReminderModal: FC<ICartItemIsOffReminderModalProps> = () => {
-  const { type: modalType, data } = useAppSelector((state) => state.menu.modal);
+  const { type, data } = useAppSelector((state) => state.menu.modal);
 
   return (
-    <MobileModal open={modalType === MobileModalType.CART_ITEM_IS_OFF}>
-      {data && modalType === MobileModalType.CART_ITEM_IS_OFF && (
+    <MobileModal open={type === MobileModalType.CART_ITEM_IS_OFF}>
+      {data && type === MobileModalType.CART_ITEM_IS_OFF && (
         <Typography variant='h6' fontWeight={700}>
           「{data.title}」已被下架
         </Typography>

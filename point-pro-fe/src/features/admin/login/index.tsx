@@ -45,7 +45,7 @@ export const Login: FC<ILoginProps> = () => {
 
   useEffect(() => {
     if (authToken) {
-      navigate(`/${ROUTE_PATH.admin}/${ROUTE_PATH.orderManagement}`);
+      navigate(`/${ROUTE_PATH.admin}/${ROUTE_PATH.takeOrder}`);
     }
   }, [authToken, navigate]);
 

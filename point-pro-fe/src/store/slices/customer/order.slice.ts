@@ -8,24 +8,16 @@ import { MobileDialog, OrdersResult, OrderStatus, SocketTopic, OrderType } from 
 const name = 'order';
 
 interface IOrderSliceState {
-  status: OrderStatus;
   orders: OrdersResult[];
-  currentOrder: any | null;
-  mobileOrderStatusTab: number;
-  cancelOrderId: string;
   isLoading: boolean;
 }
 
 const initialState: IOrderSliceState = {
-  status: OrderStatus.WORKING,
   orders: [],
-  currentOrder: null,
-  mobileOrderStatusTab: 0,
-  cancelOrderId: '',
   isLoading: false,
 };
 
-export const getOrders = createAppAsyncThunk(`${name}/getOrders`, async (payload: { status: OrderStatus } | undefined, thunkApi) => {
+const getOrders = createAppAsyncThunk(`${name}/getOrders`, async (payload: { status: OrderStatus } | undefined, thunkApi) => {
   try {
     const orderRes = await OrderApi.getOrders(payload ?? {});
     const { result = [] } = orderRes;
@@ -37,7 +29,7 @@ export const getOrders = createAppAsyncThunk(`${name}/getOrders`, async (payload
   }
 });
 
-export const postOrder = createAppAsyncThunk(`${name}/postOrder`, async (_, thunkApi) => {
+const postOrder = createAppAsyncThunk(`${name}/postOrder`, async (_, thunkApi) => {
   try {
     const cart = thunkApi.getState().menu.cart;
 
@@ -53,7 +45,6 @@ export const postOrder = createAppAsyncThunk(`${name}/postOrder`, async (_, thun
 
     const response = await OrderApi.postOrder(payload);
     thunkApi.dispatch(getOrders());
-    thunkApi.dispatch(setMobileOrderStatusTab(0));
     thunkApi.dispatch(openDialog({ type: MobileDialog.ORDER }));
     thunkApi.dispatch(clearCart());
     const socket = thunkApi.getState().socket.socket;
@@ -66,20 +57,9 @@ export const postOrder = createAppAsyncThunk(`${name}/postOrder`, async (_, thun
 export const orderSlice = createSlice({
   name,
   initialState,
-  reducers: {
-    setOrderStatus: (state, action) => {
-      state.status = action.payload;
-    },
-    setMobileOrderStatusTab: (state, action) => {
-      state.mobileOrderStatusTab = action.payload;
-    },
-    setCancelOrder: (state, action) => {
-      state.cancelOrderId = action.payload;
-    },
-  },
+  reducers: {},
   extraReducers: (builder) => {
     builder
-      // get order
       .addCase(getOrders.pending, (state) => {
         state.isLoading = true;
       })
@@ -95,4 +75,8 @@ export const orderSlice = createSlice({
   },
 });
 
-export const { setOrderStatus, setMobileOrderStatusTab, setCancelOrder } = orderSlice.actions;
+export const orderSliceActions = {
+  ...orderSlice.actions,
+  getOrders,
+  postOrder,
+};

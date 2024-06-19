@@ -7,7 +7,6 @@ export enum MobileDialog {
 }
 
 export enum MobileModalType {
-  COUNTER_REMINDER = 'COUNTER_REMINDER',
   REMOVE_CART_CONFIRM = 'REMOVE_CART_CONFIRM',
   CART_ITEM_IS_OFF = 'CART_ITEM_IS_OFF',
 }
@@ -28,7 +27,6 @@ export interface MobileModalPayload<T extends MobileModalType | '', D = undefine
 }
 
 export type MobileModalState =
-  | MobileModalPayload<MobileModalType.COUNTER_REMINDER>
   | MobileModalPayload<MobileModalType.REMOVE_CART_CONFIRM, { cartItem: ICartItem; idx: number }>
   | MobileModalPayload<MobileModalType.CART_ITEM_IS_OFF, ICartItem>
   | MobileModalPayload<''>;

@@ -1,5 +1,5 @@
 import { http } from './http';
-import { PostLinePayResponse, LinePayConfirmResponse, OrdersResult, IOrder, LinePayConfirmRedirectPayload, PatchPaymentStatusPayload } from '~/types';
+import { PostLinePayResponse, OrdersResult, IOrder, LinePayConfirmRedirectPayload, PatchPaymentStatusPayload } from '~/types';
 
 export class PaymentApi {
   static path = 'payment';
@@ -18,7 +18,7 @@ export class PaymentApi {
   };
 
   static getLinePayConfirm = (params: LinePayConfirmRedirectPayload) => {
-    return http.get<string, LinePayConfirmResponse>(`${PaymentApi.path}/${PaymentApi.linePay}/confirm`, { params });
+    return http.get(`${PaymentApi.path}/${PaymentApi.linePay}/confirm`, { params });
   };
 
   static getLinePayCancel = (params: { orderId: IOrder['id'] }) => {

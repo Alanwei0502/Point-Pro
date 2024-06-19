@@ -42,10 +42,8 @@ export const Footer: FC<IFooterProps> = () => {
   const orders = useAppSelector(({ order }) => order.orders);
 
   const cartAmount = useMemo(() => cart.reduce((acc, item) => (acc += item.amount), 0), [cart]);
-  const unPaidOrderAmount = useMemo(
-    () => orders.filter(({ status }) => status === OrderStatus.FINISHED || status === OrderStatus.WORKING).length,
-    [orders],
-  );
+
+  const orderAmount = useMemo(() => orders.filter((o) => o.status !== OrderStatus.CANCEL).length, [orders]);
 
   const handleClickFooter = (e: SyntheticEvent<Element, Event>, type: MobileDialog) => {
     if (type) dispatch(openDialog({ type }));
@@ -53,18 +51,16 @@ export const Footer: FC<IFooterProps> = () => {
 
   return (
     <Box
-      sx={{
-        position: 'fixed',
-        bottom: '.5rem',
-        left: '50%',
-        transform: 'translateX(-50%)',
-        padding: '5px',
-        borderRadius: '.6rem',
-        height: '4.5rem',
-        display: 'flex',
-        width: '14rem',
-        bgcolor: 'common.white',
-      }}
+      position='fixed'
+      bottom='.5rem'
+      left='50%'
+      p={0.5}
+      borderRadius={2}
+      height={70}
+      display='flex'
+      width='14rem'
+      bgcolor='common.white'
+      sx={{ transform: 'translateX(-50%)' }}
     >
       <BottomNavigation
         showLabels
@@ -81,7 +77,7 @@ export const Footer: FC<IFooterProps> = () => {
       >
         <StyledBottomNavigationAction label='菜單' value='' icon={<RestaurantMenuIcon />} />
         <StyledBottomNavigationAction label='購物車' value={MobileDialog.CART} icon={<CartIcon />} amount={cartAmount} />
-        <StyledBottomNavigationAction label='點餐紀錄' value={MobileDialog.ORDER} icon={<StickyNote2Icon />} amount={unPaidOrderAmount} />
+        <StyledBottomNavigationAction label='點餐紀錄' value={MobileDialog.ORDER} icon={<StickyNote2Icon />} amount={orderAmount} />
       </BottomNavigation>
     </Box>
   );

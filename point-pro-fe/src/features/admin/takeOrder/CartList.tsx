@@ -58,7 +58,7 @@ export const CartList: FC<ICartListProps> = () => {
           }}
         >
           {cart.map((cartItem, idx) => (
-            <ListItem key={`${cartItem.title}-${idx}`} sx={{ padding: 0, margin: '.5rem 0' }}>
+            <ListItem key={`${cartItem.id}-${idx}`} sx={{ padding: 0, margin: '.5rem 0' }}>
               <CartMeal idx={idx} cartItem={cartItem} />
             </ListItem>
           ))}
