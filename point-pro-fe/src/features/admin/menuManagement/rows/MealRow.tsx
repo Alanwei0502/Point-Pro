@@ -108,7 +108,7 @@ export const MealRow: FC<IMealRowProps> = (props) => {
   };
 
   const handleChangeIsPublished = () => {
-    setNewPublisedAt((prevPublishedAt) => (prevPublishedAt ? null : new Date()));
+    setNewPublisedAt((prevPublishedAt) => (prevPublishedAt ? null : new Date().toISOString()));
   };
 
   const handleEditMeal = () => {

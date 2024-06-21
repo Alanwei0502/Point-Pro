@@ -27,7 +27,7 @@ export const CreateMealModal: FC<ICreateMealModalProps> = () => {
   const [description, setDescription] = useState<IMeal['description']>('');
   const [specialtyItems, setSpecialtyItems] = useState<ISpecialtyItem['id'][]>([]);
   const [isPopular, setIsPopular] = useState<IMeal['isPopular']>(false);
-  const [publishedAt, setPublisedAt] = useState<IMeal['publishedAt']>(new Date());
+  const [publishedAt, setPublisedAt] = useState<IMeal['publishedAt']>(new Date().toISOString());
 
   const hasSameMealExist = meals.some((m) => m.title === title);
   const isIncompleteInfo = !title || !image;
@@ -72,7 +72,7 @@ export const CreateMealModal: FC<ICreateMealModalProps> = () => {
   };
 
   const handleChangePublishedAt = () => {
-    setPublisedAt((prevPublishedAt) => (prevPublishedAt ? null : new Date()));
+    setPublisedAt((prevPublishedAt) => (prevPublishedAt ? null : new Date().toISOString()));
   };
 
   const handleCancel = () => {
@@ -83,7 +83,7 @@ export const CreateMealModal: FC<ICreateMealModalProps> = () => {
     setDescription('');
     setSpecialtyItems([]);
     setIsPopular(false);
-    setPublisedAt(new Date());
+    setPublisedAt(new Date().toISOString());
     dispatch(closeCreateMealModal());
   };
 

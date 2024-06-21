@@ -82,9 +82,9 @@ export const NotificationDrawer: FC<INotificationDrawerProps> = ({ open, setOpen
                     <Box>
                       <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: '1rem' }}>
                         <Typography fontWeight={700}>菜單 ({menuTitle[message]})</Typography>
-                        <Typography variant='small'>{appDayjs(result?.updatedAt).format('HH:mm')}</Typography>
+                        {/* <Typography variant='small'>{appDayjs(result?.updatedAt).format('HH:mm')}</Typography> */}
                       </Box>
-                      <Box>{result?.title}</Box>
+                      {/* <Box>{result?.title}</Box> */}
                     </Box>
                   )}
 
@@ -95,23 +95,23 @@ export const NotificationDrawer: FC<INotificationDrawerProps> = ({ open, setOpen
                       <Box>
                         <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: '1rem' }}>
                           <Typography fontWeight={700}>內用訂單 ({orderTitle[message]})</Typography>
-                          <Typography variant='small'>{appDayjs(result.updatedAt).format('HH:mm')}</Typography>
+                          {/* <Typography variant='small'>{appDayjs(result.updatedAt).format('HH:mm')}</Typography> */}
                         </Box>
-                        <Typography variant='small'>
+                        {/* <Typography variant='small'>
                           桌號：
                           {message === OrderMessage.PAY_ORDER
                             ? result.seats?.join(', ')
                             : result?.reservationsLogs?.bookedSeats?.map(({ seat }) => `${seat.prefix}-${seat.no}`).join(',')}
-                        </Typography>
+                        </Typography> */}
                       </Box>
                     ) : (
                       // TAKE OUT
                       <Box>
                         <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: '1rem' }}>
                           <Typography fontWeight={700}>外帶訂單 ({orderTitle[message]})</Typography>
-                          <Typography variant='small'>{appDayjs(result.updatedAt).format('HH:mm')}</Typography>
+                          {/* <Typography variant='small'>{appDayjs(result.updatedAt).format('HH:mm')}</Typography> */}
                         </Box>
-                        <Typography variant='small'>訂單編號：{result.id.slice(-5)}</Typography>
+                        {/* <Typography variant='small'>訂單編號：{result.id.slice(-5)}</Typography> */}
                       </Box>
                     ))}
 
@@ -119,14 +119,14 @@ export const NotificationDrawer: FC<INotificationDrawerProps> = ({ open, setOpen
                   {notiType === SocketTopic.RESERVATION && (
                     <Box>
                       <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: '1rem' }}>
-                        <Typography fontWeight={700}>{`${reservationTitle1[message]} ${reservationTypeTitle[result.type] ?? ''}`}</Typography>
-                        <Typography variant='small'>{appDayjs(result.reservedAt).format('HH:mm')}</Typography>
+                        {/* <Typography fontWeight={700}>{`${reservationTitle1[message]} ${reservationTypeTitle[result.type] ?? ''}`}</Typography> */}
+                        {/* <Typography variant='small'>{appDayjs(result.reservedAt).format('HH:mm')}</Typography> */}
                       </Box>
-                      <Typography variant='small'>
+                      {/* <Typography variant='small'>
                         姓名：{result.options.name} {GENDER_TRANSLATE[result.options.gender]}
-                      </Typography>
-                      <Typography variant='small'>日期：{appDayjs(result.startTime).format('MM/DD HH:mm')}</Typography>
-                      <Typography variant='small'>人數：{result.options.adults}</Typography>
+                      </Typography> */}
+                      {/* <Typography variant='small'>日期：{appDayjs(result.startTime).format('MM/DD HH:mm')}</Typography> */}
+                      {/* <Typography variant='small'>人數：{result.options.adults}</Typography> */}
                     </Box>
                   )}
                 </CardActionArea>
