@@ -27,13 +27,12 @@ import {
   createReservationRequestSchema,
   getReservationsRequestSchema,
   updateReservationRequestSchema,
-  deleteReservationRequestSchema,
   verifyCustomerSchema,
   getOrdersToCheckoutRequestSchema,
   createPaymentRequestSchema,
   confirmLinePayRequestSchema,
 } from '../validators';
-import { Payment } from '@prisma/client';
+import { Payment, Reservation } from '@prisma/client';
 
 // LOGIN
 export enum SessionRole {
@@ -186,16 +185,16 @@ export interface IGetReservationsRequest extends AuthRequest {
 }
 
 export interface IUpdateReservationRequest extends AuthRequest {
-  params: z.infer<typeof updateReservationRequestSchema>;
-  body: z.infer<typeof createReservationRequestSchema>;
+  params: { reservationId: Reservation['id'] };
+  body: z.infer<typeof updateReservationRequestSchema>;
 }
 
 export interface IStartDiningReservationRequest extends AuthRequest {
-  params: z.infer<typeof updateReservationRequestSchema>;
+  params: { reservationId: Reservation['id'] };
 }
 
 export interface IDeleteReservationRequest extends AuthRequest {
-  params: z.infer<typeof deleteReservationRequestSchema>;
+  params: { reservationId: Reservation['id'] };
 }
 
 // PAYMENT
@@ -208,10 +207,6 @@ export interface IConfirmLinePayRequest extends Request {
 }
 
 export interface IUpdatePaymentStatusRequest extends AuthRequest {
-  params: {
-    id: Payment['id'];
-  };
-  body: {
-    status: Payment['status'];
-  };
+  params: { id: Payment['id'] };
+  body: { status: Payment['status'] };
 }

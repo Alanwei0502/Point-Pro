@@ -64,7 +64,7 @@ export const updateOrderMealServedAmountPayloadSchema = z.object({
 export const getOrdersToCheckoutRequestSchema = z.object({
   type: z.nativeEnum(OrderType),
   reservationId: z.string().optional(),
-  id: z.string().optional(),
+  orderId: z.string().optional(),
 });
 
 // TODO

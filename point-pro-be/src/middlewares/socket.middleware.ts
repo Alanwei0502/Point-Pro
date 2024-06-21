@@ -20,7 +20,6 @@ export const socketMiddleware = async (socket: Socket, next: (err?: ExtendedErro
     const schema = isAdmin ? verifyAdminAndStaffSchema : verifyCustomerSchema;
 
     const decoded = await jwt.verify<z.infer<typeof schema>>(token as string);
-    console.log({ decoded });
 
     if (!decoded) {
       return next(new Error('Authentication error'));

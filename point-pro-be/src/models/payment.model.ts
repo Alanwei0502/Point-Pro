@@ -26,6 +26,17 @@ export class PaymentModel {
       },
     });
 
+    if (body[0].reservationId) {
+      await prismaClient.reservation.update({
+        where: {
+          id: body[0].reservationId,
+        },
+        data: {
+          endAt: new Date().toISOString(),
+        },
+      });
+    }
+
     return payment;
   };
 

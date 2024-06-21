@@ -129,11 +129,11 @@ export class OrderModel {
   };
 
   static getOrdersToCheckout = async (params: z.infer<typeof getOrdersToCheckoutRequestSchema>) => {
-    const { id, reservationId, type } = params;
+    const { orderId, reservationId, type } = params;
 
     const orders = await prismaClient.order.findMany({
       where: {
-        id,
+        id: orderId,
         reservationId,
         type,
       },

@@ -17,7 +17,17 @@ export const createReservationRequestSchema = z.object({
 });
 
 export const updateReservationRequestSchema = z.object({
-  reservationId: z.string(),
+  type: z.nativeEnum(ReservationType).optional(),
+  username: z.string().optional(),
+  phone: z.string().optional(),
+  email: z.string().nullable().optional(),
+  gender: z.nativeEnum(Gender).optional(),
+  people: z.number().max(10).optional(),
+  remark: z.string().nullable().optional(),
+  periodId: z.string().optional(),
+  startAt: z.string().nullable().optional(),
+  endAt: z.string().nullable().optional(),
+  isCancelled: z.boolean().optional(),
 });
 
 export const deleteReservationRequestSchema = z.object({

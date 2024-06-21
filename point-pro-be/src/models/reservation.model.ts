@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { appDayjs, prismaClient } from '../helpers';
-import { createReservationRequestSchema, getReservationsRequestSchema } from '../validators';
+import { createReservationRequestSchema, getReservationsRequestSchema, updateReservationRequestSchema } from '../validators';
 import { Reservation } from '@prisma/client';
 
 export class ReservationModel {
@@ -41,9 +41,9 @@ export class ReservationModel {
     return reservations;
   };
 
-  static createReservation = async (params: z.infer<typeof createReservationRequestSchema>) => {
+  static createReservation = async (data: z.infer<typeof createReservationRequestSchema>) => {
     const reservation = await prismaClient.reservation.create({
-      data: params,
+      data,
       include: {
         periods: true,
       },
@@ -51,12 +51,14 @@ export class ReservationModel {
     return reservation;
   };
 
-  static updateReservation = async (id: Reservation['id'], params: z.infer<typeof createReservationRequestSchema>) => {
+  static updateReservation = async (id: Reservation['id'], data: z.infer<typeof updateReservationRequestSchema>) => {
+    if (!data) return;
+
     const reservation = await prismaClient.reservation.update({
       where: {
         id,
       },
-      data: params,
+      data,
       include: {
         periods: true,
       },

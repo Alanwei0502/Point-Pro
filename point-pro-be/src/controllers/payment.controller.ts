@@ -1,9 +1,9 @@
-import { NextFunction, Request } from 'express';
+import { NextFunction } from 'express';
 import { ReasonPhrases, StatusCodes } from 'http-status-codes';
-import { OrderStatus, OrderType, PaymentGateway, PaymentStatus } from '@prisma/client';
-import { ApiResponse, AuthRequest, IConfirmLinePayRequest, ICreatePaymentRequest, IUpdatePaymentStatusRequest } from '../types';
-import { OrderModel, PaymentModel } from '../models';
-import { LinePayClient, Logger, checkOrderStatusValidator } from '../helpers';
+import { PaymentGateway, PaymentStatus } from '@prisma/client';
+import { ApiResponse, IConfirmLinePayRequest, ICreatePaymentRequest, IUpdatePaymentStatusRequest } from '../types';
+import { PaymentModel } from '../models';
+import { LinePayClient, Logger } from '../helpers';
 
 export class PaymentController {
   static cashPaymentHandler = async (req: ICreatePaymentRequest, res: ApiResponse, next: NextFunction) => {

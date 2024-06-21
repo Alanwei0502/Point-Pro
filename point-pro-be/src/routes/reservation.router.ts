@@ -1,12 +1,7 @@
 import { Router } from 'express';
 import { ReservationController } from '../controllers';
 import { authMiddleware, validateMiddleware } from '../middlewares';
-import {
-  getReservationsRequestSchema,
-  createReservationRequestSchema,
-  updateReservationRequestSchema,
-  deleteReservationRequestSchema,
-} from '../validators';
+import { getReservationsRequestSchema, createReservationRequestSchema } from '../validators';
 
 const reservationRouter = Router();
 
@@ -15,20 +10,10 @@ reservationRouter.post('/', validateMiddleware(createReservationRequestSchema), 
 reservationRouter.patch(
   '/:reservationId',
   authMiddleware,
-  validateMiddleware(updateReservationRequestSchema, 'params'),
   validateMiddleware(createReservationRequestSchema),
   ReservationController.updateReservationHandler,
 );
-reservationRouter.patch(
-  '/:reservationId/start',
-  authMiddleware,
-  validateMiddleware(updateReservationRequestSchema, 'params'),
-  ReservationController.startDiningReservationHandler,
-);
-reservationRouter.delete(
-  '/:reservationId',
-  validateMiddleware(deleteReservationRequestSchema, 'params'),
-  ReservationController.deleteReservationHandler,
-);
+reservationRouter.patch('/:reservationId/start', authMiddleware, ReservationController.startDiningReservationHandler);
+reservationRouter.delete('/:reservationId', ReservationController.deleteReservationHandler);
 
 export default reservationRouter;
