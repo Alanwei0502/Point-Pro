@@ -1,17 +1,15 @@
-import { ReactNode, FC } from 'react';
-import { Button, IconButton, Stack, Typography, Drawer, DrawerProps } from '@mui/material';
+import { FC } from 'react';
+import { Button, IconButton, Stack, Typography, Drawer, DrawerProps, ButtonProps } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { headerHeight } from '~/components';
 
-interface IBaseDrawButton {
+interface IBaseDrawButton extends ButtonProps {
   label: string;
-  onClick: (data: string) => void;
-  disabled?: boolean;
+  onClickButton: (label: string) => void;
 }
 
 export interface IBaseDrawerProps extends DrawerProps {
   title?: string;
-  children: ReactNode;
   onClose: () => void;
   buttonList?: IBaseDrawButton[];
   width?: string;
@@ -20,7 +18,6 @@ export interface IBaseDrawerProps extends DrawerProps {
 
 export const BaseDraw: FC<IBaseDrawerProps> = ({
   title = '',
-  open,
   onClose,
   children,
   buttonList = [],
@@ -32,7 +29,6 @@ export const BaseDraw: FC<IBaseDrawerProps> = ({
   return (
     <Drawer
       anchor='right'
-      open={open}
       onClose={onClose}
       sx={{
         flexShrink: 0,
@@ -75,7 +71,7 @@ export const BaseDraw: FC<IBaseDrawerProps> = ({
               key={btn.label}
               fullWidth
               variant='contained'
-              onClick={() => btn.onClick(btn.label)}
+              onClick={() => btn.onClickButton(btn.label)}
               disabled={btn.disabled}
               sx={{ height: 80 }}
               color={key % 2 ? 'secondary' : 'primary'}

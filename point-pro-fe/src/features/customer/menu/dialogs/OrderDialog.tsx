@@ -16,7 +16,6 @@ export const OrdersDialog: FC<IOrdersDialogProps> = () => {
 
   const dialogType = useAppSelector((state) => state.menu.dialog.type);
   const orders = useAppSelector((state) => state.order.orders);
-  const isLoading = useAppSelector((state) => state.order.isLoading);
 
   const [toggleList, setToggleList] = useState<IOrder['id'][]>([]);
 
@@ -66,7 +65,6 @@ export const OrdersDialog: FC<IOrdersDialogProps> = () => {
         </>
       }
     >
-      <Loading open={isLoading} />
       <Box display='flex' flexDirection='column' flexGrow={1} pb='10rem' sx={{ userSelect: 'none' }}>
         {/* 訂單記錄 */}
         {orders.length > 0 ? (

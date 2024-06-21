@@ -1,12 +1,17 @@
 import { useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 import io from 'socket.io-client';
-import { apiHost } from '~/api/http';
-import { useAppDispatch, useAppSelector, useToken } from '~/hooks';
+import { API_HOST } from '~/api/http';
+import { useAppDispatch, useAppSelector } from '~/hooks';
 import { addNotification, resetSocket, setSocket, closeDialog, getMenu, orderSliceActions } from '~/store/slices';
-import { NameSpace, SocketTopic } from '~/types';
+import { SocketTopic } from '~/types';
+import { ROUTE_PATH } from '~/utils';
 
-const { getOrders } = orderSliceActions;
+enum NameSpace {
+  RESERVATION = '/',
+  CUSTOMER = '/customer',
+  ADMIN = '/admin',
+}
 
 type useSocketProps = {
   ns: NameSpace;
@@ -15,18 +20,19 @@ type useSocketProps = {
 export const useSocket = (props: useSocketProps) => {
   const { ns } = props;
 
-  const { pathname } = useLocation();
-  const token = useToken();
-
   const dispatch = useAppDispatch();
+
+  const { pathname } = useLocation();
+
+  const adminToken = useAppSelector((state) => state.auth.authToken);
+  const customerToken = useAppSelector((state) => state.dineInToken.token);
 
   // Socket Instance
   const { current: socket } = useRef(
-    io(`${apiHost}${ns}`, {
-      transports: ['polling', 'websocket'],
+    io(`${API_HOST}${ns}`, {
       autoConnect: false,
       auth: {
-        token,
+        token: pathname.includes(ROUTE_PATH.admin) ? adminToken : customerToken,
       },
     }),
   );
@@ -66,14 +72,14 @@ export const useSocket = (props: useSocketProps) => {
   // MENU listener
   useEffect(() => {
     socket.on(SocketTopic.MENU, (data) => {
-      if (ns === NameSpace.user) {
+      if (ns === NameSpace.CUSTOMER) {
         dispatch(getMenu());
         dispatch(closeDialog());
       }
 
-      if (ns === NameSpace.admin) {
+      if (ns === NameSpace.ADMIN) {
         dispatch(addNotification({ ...data, notiType: SocketTopic.MENU }));
-        if (pathname.includes('/admin/menu')) {
+        if (pathname.includes(`${ROUTE_PATH.admin}/${ROUTE_PATH.menu}`)) {
           dispatch(getMenu());
           dispatch(closeDialog());
         }
@@ -90,12 +96,14 @@ export const useSocket = (props: useSocketProps) => {
 
   // ORDER listener
   useEffect(() => {
+    const { getOrders } = orderSliceActions;
+
     socket.on(SocketTopic.ORDER, (data) => {
-      if (ns === NameSpace.user) {
+      if (ns === NameSpace.CUSTOMER) {
         dispatch(getOrders());
       }
 
-      if (ns === NameSpace.admin) {
+      if (ns === NameSpace.ADMIN) {
         dispatch(addNotification({ ...data, notiType: SocketTopic.ORDER }));
 
         if (pathname.includes('/admin/orders')) {
@@ -112,7 +120,7 @@ export const useSocket = (props: useSocketProps) => {
   // RESERVATION listener
   useEffect(() => {
     socket.on(SocketTopic.RESERVATION, (data) => {
-      if (ns === NameSpace.admin) {
+      if (ns === NameSpace.ADMIN) {
         dispatch(addNotification({ ...data, notiType: SocketTopic.RESERVATION }));
       }
     });

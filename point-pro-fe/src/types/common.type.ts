@@ -3,8 +3,8 @@ import { Gender, OrderStatus, OrderType, PaymentGateway, PaymentStatus, Reservat
 
 export interface IBase {
   id: string;
-  createdAt: Date;
-  updatedAt: Date | null;
+  createdAt: string;
+  updatedAt: string | null;
 }
 
 export interface ICategory extends IBase {
@@ -18,7 +18,7 @@ export interface IMeal extends IBase {
   isPopular: boolean;
   price: number;
   position: number;
-  publishedAt: Date | null;
+  publishedAt: string | null;
   imageId: string;
   imageDeleteHash: string | null;
 }
@@ -45,8 +45,8 @@ export interface IUser extends IBase {
 }
 
 export interface IPeriod extends IBase {
-  startTime: string; // Date
-  endTime: string; // Date
+  startTime: string;
+  endTime: string;
 }
 
 export interface IReservation extends IBase {
@@ -58,8 +58,8 @@ export interface IReservation extends IBase {
   isCancelled: boolean;
   people: number;
   remark: string | null;
-  startAt: Date | null;
-  endAt: Date | null;
+  startAt: string | null;
+  endAt: string | null;
 }
 
 export interface ISeat extends IBase {

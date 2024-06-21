@@ -15,6 +15,7 @@ import {
   RESERVATION_STATUS,
   getReservationStatusLabel,
   RESERVATION_STATUS_OPTIONS,
+  appDayjs,
 } from '~/utils';
 import { headerHeight } from '~/components';
 import { OrderType, ReservationInfo, ReservationModalType } from '~/types';
@@ -108,7 +109,7 @@ export const ReservationTable: FC<IReservationListProps> = () => {
     dispatch(getReservations(dateFilter));
   }, [dispatch, dateFilter]);
 
-  // // [TODO] Socket
+  // // TODO: Socket
   // const notifications = useAppSelector(({ socket }) => socket.notifications);
   // useEffect(() => {
   //   if (notifications.length > 0 && notifications[0].message === ReservationMessage.CREATE_RESERVATION) {
@@ -129,11 +130,7 @@ export const ReservationTable: FC<IReservationListProps> = () => {
   // };
 
   return (
-    <Box
-      sx={{
-        height: `calc(100vh - ${headerHeight})`,
-      }}
-    >
+    <Box height={`calc(100vh - ${headerHeight})`}>
       <DataGrid
         loading={loading}
         rows={reservations}

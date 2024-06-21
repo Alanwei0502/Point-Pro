@@ -37,8 +37,8 @@ export const ReservationToolbar: FC<GridToolbarProps> = (props) => {
   };
 
   return (
-    <Box sx={{ display: 'flex', alignItems: 'center', p: 1 }}>
-      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+    <Box display='flex' alignItems='center' p={1}>
+      <Box display='flex' alignItems='center' p={1} gap={1}>
         <AppButton onClick={() => handleChangeDateFilter(appDayjs())}>今天</AppButton>
 
         <LocalizationProvider dateAdapter={AdapterDayjs}>

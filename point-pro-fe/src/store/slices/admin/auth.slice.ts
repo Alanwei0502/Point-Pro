@@ -3,28 +3,27 @@ import { AuthApi } from '~/api';
 import { createAppAsyncThunk } from '~/hooks';
 import { LoginPayload, LoginResponse } from '~/types';
 
-const name = 'auth';
+const sliceName = 'auth';
 
 interface IAuthState {
   isLoading: boolean;
-  authToken: string | null;
+  authToken: string;
 }
 
 const initialState: IAuthState = {
   isLoading: false,
-  authToken: null,
+  authToken: '',
 };
 
-const login = createAppAsyncThunk<LoginResponse, LoginPayload>(`${name}/login`, async (payload, thunkApi) => {
+const login = createAppAsyncThunk<LoginResponse, LoginPayload>(`${sliceName}/login`, async (payload, thunkApi) => {
   try {
-    const response = await AuthApi.login(payload);
-    return response;
+    return await AuthApi.login(payload);
   } catch (error) {
     return thunkApi.rejectWithValue(error);
   }
 });
 
-const logout = createAppAsyncThunk(`${name}/logout`, async (_, thunkApi) => {
+const logout = createAppAsyncThunk(`${sliceName}/logout`, async (_, thunkApi) => {
   try {
     await AuthApi.logout();
   } catch (error) {
@@ -33,9 +32,14 @@ const logout = createAppAsyncThunk(`${name}/logout`, async (_, thunkApi) => {
 });
 
 export const authSlice = createSlice({
-  name,
+  name: sliceName,
   initialState,
-  reducers: {},
+  reducers: {
+    setAdminToken(state) {
+      const token = sessionStorage.getItem('token') ?? '';
+      state.authToken = token;
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(login.pending, (state) => {

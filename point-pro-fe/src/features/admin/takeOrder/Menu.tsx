@@ -10,13 +10,15 @@ interface IMenuProps {}
 export const Menu: FC<IMenuProps> = () => {
   const dispatch = useAppDispatch();
 
+  const { setSelectCategory } = takeOrderSliceActions;
+
   const categories = useAppSelector((state) => state.takeOrder.categories);
   const selectCategory = useAppSelector((state) => state.takeOrder.selectCategory);
   const meals = useAppSelector((state) => state.takeOrder.meals);
   const showCategories = useMemo(() => categories.filter((category) => meals.some((meal) => meal.categoryId === category.id)), [categories, meals]);
 
   const handleSelectCategory = (e: React.SyntheticEvent, categoryId: string) => {
-    dispatch(takeOrderSliceActions.setSelectCategory(categoryId));
+    dispatch(setSelectCategory(categoryId));
   };
 
   return (

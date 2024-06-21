@@ -2,15 +2,15 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { ReservationApi, PeriodApi } from '~/api';
 import { appDayjs } from '~/utils';
 import { createAppAsyncThunk } from '~/hooks';
-import { ReservationType, MobileBookingDialog, Gender, SocketTopic, IReservation, AvailablePeriod } from '~/types';
+import { ReservationType, MobileBookingDialog, Gender, IReservation, AvailablePeriod } from '~/types';
 
-const name = 'booking';
+const sliceName = 'booking';
 
 interface ICustomerBookingSliceState {
   isLoading: boolean;
   step: number;
   availableTime: AvailablePeriod[];
-  selectedDate: appDayjs.Dayjs;
+  selectedDate: string;
   selectedPeriod: Pick<AvailablePeriod, 'id' | 'startTime'> | null;
   type: ReservationType;
   people: IReservation['people'];
@@ -29,7 +29,7 @@ const initialState: ICustomerBookingSliceState = {
   isLoading: false,
   step: 0,
   availableTime: [],
-  selectedDate: appDayjs(),
+  selectedDate: appDayjs().toISOString(),
   selectedPeriod: null,
   type: ReservationType.ONLINE,
   people: 0,
@@ -44,7 +44,7 @@ const initialState: ICustomerBookingSliceState = {
   token: '',
 };
 
-export const getAvailablePeriods = createAppAsyncThunk(`${name}/getAvailablePeriods`, async (_, thunkApi) => {
+export const getAvailablePeriods = createAppAsyncThunk(`${sliceName}/getAvailablePeriods`, async (_, thunkApi) => {
   try {
     const result = await PeriodApi.getAvailablePeriods();
     return result?.result ?? [];
@@ -53,7 +53,7 @@ export const getAvailablePeriods = createAppAsyncThunk(`${name}/getAvailablePeri
   }
 });
 
-export const postReservation = createAppAsyncThunk(`${name}/postReservation`, async (_, { getState, rejectWithValue }) => {
+export const postReservation = createAppAsyncThunk(`${sliceName}/postReservation`, async (_, { getState, rejectWithValue }) => {
   try {
     const { username, gender, phone, email, remark, people, selectedPeriod, type } = getState().booking;
     const periodId = selectedPeriod?.id;
@@ -71,9 +71,6 @@ export const postReservation = createAppAsyncThunk(`${name}/postReservation`, as
       type,
     });
 
-    const socket = getState().socket.socket;
-    socket && socket.emit(SocketTopic.RESERVATION, response.result);
-
     return response.result;
   } catch (error) {
     return rejectWithValue(error);
@@ -81,7 +78,7 @@ export const postReservation = createAppAsyncThunk(`${name}/postReservation`, as
 });
 
 export const bookingSlice = createSlice({
-  name,
+  name: sliceName,
   initialState,
   reducers: {
     setStep: (state, action: PayloadAction<ICustomerBookingSliceState['step']>) => {

@@ -4,12 +4,12 @@ import { MenuNotification, OrderNotification, ReservationNotification } from '~/
 
 const name = 'socket';
 
-interface SocketSliceState {
+interface ISocketSliceState {
   socket: Socket | undefined;
   notifications: (OrderNotification | MenuNotification | ReservationNotification)[];
 }
 
-const initialState: SocketSliceState = {
+const initialState: ISocketSliceState = {
   socket: undefined,
   notifications: JSON.parse(sessionStorage.getItem('notifications') ?? '[]'),
 };

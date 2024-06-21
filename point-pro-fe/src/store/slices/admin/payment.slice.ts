@@ -3,7 +3,7 @@ import { PaymentApi } from '~/api';
 import { createAppAsyncThunk } from '~/hooks';
 import { PostLinePayResponse, LinePayConfirmRedirectPayload, OrderType, PatchPaymentStatusPayload, PaymentType } from '~/types';
 
-const name = 'payment';
+const sliceName = 'payment';
 
 interface IPaymentSliceState {
   paymentType: PaymentType;
@@ -35,7 +35,7 @@ const initialState: IPaymentSliceState = {
   },
 };
 
-const requestCashPayment = createAppAsyncThunk(`${name}/cashPaymentRequest`, async (_, thunkApi) => {
+const requestCashPayment = createAppAsyncThunk(`${sliceName}/cashPaymentRequest`, async (_, thunkApi) => {
   try {
     const payload = thunkApi.getState().orderManagement.checkOutOrder;
     const response = await PaymentApi.postCashPayment(payload);
@@ -45,7 +45,7 @@ const requestCashPayment = createAppAsyncThunk(`${name}/cashPaymentRequest`, asy
   }
 });
 
-const requestLinePay = createAppAsyncThunk(`${name}/requestLinePay`, async (_, thunkApi) => {
+const requestLinePay = createAppAsyncThunk(`${sliceName}/requestLinePay`, async (_, thunkApi) => {
   try {
     const payload = thunkApi.getState().orderManagement.checkOutOrder;
     const response = await PaymentApi.postLinePayPayment(payload);
@@ -55,7 +55,7 @@ const requestLinePay = createAppAsyncThunk(`${name}/requestLinePay`, async (_, t
   }
 });
 
-const confirmLinePay = createAppAsyncThunk(`${name}/confirmLinePay`, async (payload: LinePayConfirmRedirectPayload, thunkApi) => {
+const confirmLinePay = createAppAsyncThunk(`${sliceName}/confirmLinePay`, async (payload: LinePayConfirmRedirectPayload, thunkApi) => {
   try {
     const response = await PaymentApi.getLinePayConfirm(payload);
     return response;
@@ -64,7 +64,8 @@ const confirmLinePay = createAppAsyncThunk(`${name}/confirmLinePay`, async (payl
   }
 });
 
-const cancelLinePay = createAppAsyncThunk(`${name}/cancelLinePay`, async (orderId: string, thunkApi) => {
+// TODO
+const cancelLinePay = createAppAsyncThunk(`${sliceName}/cancelLinePay`, async (orderId: string, thunkApi) => {
   try {
     const response = await PaymentApi.getLinePayCancel({ orderId });
     return response;
@@ -73,7 +74,7 @@ const cancelLinePay = createAppAsyncThunk(`${name}/cancelLinePay`, async (orderI
   }
 });
 
-const patchPaymentStatus = createAppAsyncThunk(`${name}/patchPaymentStatus`, async (payload: PatchPaymentStatusPayload, thunkApi) => {
+const patchPaymentStatus = createAppAsyncThunk(`${sliceName}/patchPaymentStatus`, async (payload: PatchPaymentStatusPayload, thunkApi) => {
   try {
     const response = await PaymentApi.patchPaymentStatus(payload);
     return response;
@@ -83,7 +84,7 @@ const patchPaymentStatus = createAppAsyncThunk(`${name}/patchPaymentStatus`, asy
 });
 
 export const paymentSlice = createSlice({
-  name,
+  name: sliceName,
   initialState,
   reducers: {
     setPaymentType(state, action: PayloadAction<IPaymentSliceState['paymentType']>) {

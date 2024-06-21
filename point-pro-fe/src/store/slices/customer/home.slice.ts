@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-const name = 'home';
+const sliceName = 'home';
 
 interface IHomeState {
   callToActionModal: {
@@ -15,7 +15,7 @@ const initialState: IHomeState = {
 };
 
 export const homeSlice = createSlice({
-  name,
+  name: sliceName,
   initialState,
   reducers: {
     openCallToActionModal: (state) => {

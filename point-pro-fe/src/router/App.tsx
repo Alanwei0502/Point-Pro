@@ -1,16 +1,17 @@
+import { Suspense, lazy } from 'react';
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
-import { Home } from '~/features/home';
-import { Login } from '~/features/admin/login';
-import { ProtectedRoute } from './ProtectedRoute';
-import { OrderManagement } from '~/features/admin/orderManagement';
-import { TakeOrder } from '~/features/admin/takeOrder';
-import { MenuManagement } from '~/features/admin/menuManagement';
-import { ReservationManagement } from '~/features/admin/reservationManagement';
-import { Booking } from '~/features/customer/booking';
-import { Menu } from '~/features/customer/menu';
 import { Box } from '@mui/material';
+import Home from '~/features/home';
 import { ROUTE_PATH } from '~/utils';
-import { LinePayCancel, LinePayConfirm } from '~/components';
+import { LinePayCancel, LinePayConfirm, LoadingMask } from '~/components';
+import ProtectedRoute from './ProtectedRoute';
+
+const Booking = lazy(() => import('~/features/customer/booking'));
+const Menu = lazy(() => import('~/features/customer/menu'));
+const TakeOrder = lazy(() => import('~/features/admin/takeOrder'));
+const OrderManagement = lazy(() => import('~/features/admin/orderManagement'));
+const MenuManagement = lazy(() => import('~/features/admin/menuManagement'));
+const ReservationManagement = lazy(() => import('~/features/admin/reservationManagement'));
 
 const router = createBrowserRouter(
   [
@@ -21,40 +22,53 @@ const router = createBrowserRouter(
       children: [
         {
           path: ROUTE_PATH.booking,
-          element: <Booking />,
+
+          element: (
+            <Suspense fallback={<LoadingMask />}>
+              <Booking />
+            </Suspense>
+          ),
         },
         {
           path: ROUTE_PATH.menu,
-          element: <Menu />,
+          element: (
+            <Suspense fallback={<LoadingMask />}>
+              <Menu />
+            </Suspense>
+          ),
         },
         {
           path: ROUTE_PATH.linepay,
           children: [
             {
               path: ROUTE_PATH.confirm,
-              element: <LinePayConfirm />,
+              element: (
+                <Suspense fallback={<LoadingMask />}>
+                  <LinePayConfirm />
+                </Suspense>
+              ),
             },
             {
               path: ROUTE_PATH.cancel,
-              element: <LinePayCancel />,
+              element: (
+                <Suspense fallback={<LoadingMask />}>
+                  <LinePayCancel />
+                </Suspense>
+              ),
             },
           ],
-        },
-        {
-          path: ROUTE_PATH.admin,
-          element: <Login />,
         },
         {
           path: ROUTE_PATH.admin,
           element: <ProtectedRoute />,
           children: [
             {
-              path: ROUTE_PATH.orderManagement,
-              element: <OrderManagement />,
-            },
-            {
               path: ROUTE_PATH.takeOrder,
               element: <TakeOrder />,
+            },
+            {
+              path: ROUTE_PATH.orderManagement,
+              element: <OrderManagement />,
             },
             {
               path: ROUTE_PATH.reservationMangement,

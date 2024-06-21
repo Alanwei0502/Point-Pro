@@ -1,4 +1,12 @@
-import { IOrderMeal, OrderStatus, OrderType, ReservationType, Gender, IReservation } from '~/types';
+export enum SocketEvent {
+  // Main events
+  Connect = 'connect',
+  Disconnect = 'disconnect',
+  Error = 'error',
+  // Emit events
+  JoinRoom = 'join-room',
+  LeaveRoom = 'leave-room',
+}
 
 export enum SocketTopic {
   MENU = 'MENU',
@@ -6,10 +14,9 @@ export enum SocketTopic {
   RESERVATION = 'RESERVATION',
 }
 
-export enum NameSpace {
-  main = '/',
-  user = '/user',
-  admin = '/admin',
+export enum SocketRoom {
+  ADMIN = 'admin',
+  BOOKING = 'booking',
 }
 
 export enum OrderMessage {
@@ -30,73 +37,22 @@ export enum ReservationMessage {
   UPDATE_RESERVATION = 'UPDATE_RESERVATION',
 }
 
-export interface INotification<NotiType extends SocketTopic, Message, Result> {
-  notiType: NotiType;
-  message: Message;
-  result: Result;
+export interface INotification<N extends SocketTopic, M, R> {
+  notiType: N;
+  message: M;
+  result: R;
 }
 
 export interface IOrderResult {
-  id: string;
-  type: OrderType;
-  status: OrderStatus;
-  parentOrderId: string | null;
-  reservationId: string | null;
-  createAt: string | null;
-  updatedAt: string | null;
-  orderMeals: IOrderMeal[];
-  paymentLogs: [];
-  seats?: string[];
-  reservationsLogs: {
-    id: string;
-    options: Omit<IReservation, 'id' | 'startAt'>;
-    bookedSeats: {
-      seat: {
-        prefix: string;
-        no: number;
-      };
-    }[];
-  } | null;
+  [k: PropertyKey]: unknown;
 }
 
 export interface IMenuResult {
-  id: string;
-  title: string;
-  imageId: string;
-  imageDeleteHash: string;
-  description: string;
-  price: number;
-  position: number;
-  isPopular: boolean;
-  publishedAt: string | null;
-  createdAt: string | null;
-  updatedAt: string | null;
-  categories: any[];
-  specialties: any[];
+  [k: PropertyKey]: unknown;
 }
 
 export interface IReservationResult {
-  id: string;
-  reservedAt: string;
-  type: ReservationType;
-  options: {
-    name: string;
-    gender: Gender;
-    type: ReservationType;
-    phone: string;
-    email: string;
-    remark: string;
-    adults: number;
-    children?: number;
-  };
-  startTime: string;
-  endTime: string;
-  seats: {
-    id: string;
-    seatNo: string;
-    amount: number;
-  }[];
-  token?: string;
+  [k: PropertyKey]: unknown;
 }
 
 export type OrderNotification = INotification<SocketTopic.ORDER, OrderMessage, IOrderResult>;

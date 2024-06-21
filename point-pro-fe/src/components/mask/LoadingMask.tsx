@@ -1,11 +1,11 @@
 import { FC } from 'react';
-import { Box, Typography } from '@mui/material';
+import { Box } from '@mui/material';
 import { theme } from '~/theme';
 import HeaderLogo from '~/assets/images/header-logo.svg';
 
-interface IMobileLoadingProps {}
+interface ILoadingMaskProps {}
 
-export const MobileLoading: FC<IMobileLoadingProps> = () => {
+export const LoadingMask: FC<ILoadingMaskProps> = () => {
   return (
     <Box
       sx={{

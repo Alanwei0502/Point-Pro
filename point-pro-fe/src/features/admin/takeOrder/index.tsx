@@ -14,7 +14,7 @@ const { getAdminMenu, resetTakeOrderState } = takeOrderSliceActions;
 
 interface ITakeOrderProps {}
 
-export const TakeOrder: FC<ITakeOrderProps> = () => {
+const TakeOrder: FC<ITakeOrderProps> = () => {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
@@ -41,3 +41,5 @@ export const TakeOrder: FC<ITakeOrderProps> = () => {
     </>
   );
 };
+
+export default TakeOrder;

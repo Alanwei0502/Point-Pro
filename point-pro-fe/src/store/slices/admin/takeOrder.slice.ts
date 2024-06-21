@@ -3,7 +3,7 @@ import { MenuApi } from '~/api';
 import { createAppAsyncThunk } from '~/hooks';
 import { MenuCategory, MenuMeal, MenuSpecialtiesWithItems, MenuSpecialtyItem, ICategory, ISpecialty, SelectionType } from '~/types';
 
-const name = 'takeOrder';
+const sliceName = 'takeOrder';
 
 export interface ITakeOrderSliceState {
   selectCategory: ICategory['id'];
@@ -41,17 +41,17 @@ const initialState: ITakeOrderSliceState = {
   },
 };
 
-const getAdminMenu = createAppAsyncThunk(`${name}/getAdminMenu`, async (_, { rejectWithValue }) => {
+const getAdminMenu = createAppAsyncThunk(`${sliceName}/getAdminMenu`, async (_, thunkApi) => {
   try {
     const menuRes = await MenuApi.getMenu();
     return menuRes.result;
   } catch (error) {
-    return rejectWithValue(error);
+    return thunkApi.rejectWithValue(error);
   }
 });
 
 export const takeOrderSlice = createSlice({
-  name,
+  name: sliceName,
   initialState,
   reducers: {
     setSelectCategory: (state, action: PayloadAction<ITakeOrderSliceState['selectCategory']>) => {

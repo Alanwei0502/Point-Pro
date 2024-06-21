@@ -1,8 +1,7 @@
 import { FC, useEffect } from 'react';
-import { MobileLayout, MobileHeader, MobileMask, MobileLoading } from '~/components';
-import { getMenu } from '~/store/slices';
-import { useSocket, useAppDispatch, useToken, useAppSelector } from '~/hooks';
-import { NameSpace } from '~/types';
+import { MobileLayout, MobileHeader, MobileMask } from '~/components';
+import { getMenu, newSocketSliceActions, orderSliceActions } from '~/store/slices';
+import { useAppDispatch, useToken, useAppSelector } from '~/hooks';
 import { DineInInfo } from './DineInInfo';
 import { CategoryNavbar } from './CategoryNavbar';
 import { Meals } from './Meals';
@@ -15,23 +14,32 @@ import { CartItemIsOffReminderModal } from './modals/CartItemIsOffReminderModal'
 
 interface IMenuProps {}
 
-export const Menu: FC<IMenuProps> = () => {
+const Menu: FC<IMenuProps> = () => {
   const dispatch = useAppDispatch();
 
-  const token = useToken();
+  const { dineInToken } = useToken();
 
-  const isLoading = useAppSelector((state) => state.menu.isLoading);
-
-  // useSocket({ ns: NameSpace.user });
+  const isConnected = useAppSelector((state) => state.newSocket.isConnected);
+  const reservationId = useAppSelector((state) => state.dineInToken.reservationId);
 
   useEffect(() => {
-    if (!token) return;
+    if (!dineInToken) return;
+
+    const { initSocket } = newSocketSliceActions;
+    const { getOrders } = orderSliceActions;
     dispatch(getMenu());
-  }, [token, dispatch]);
+    dispatch(getOrders());
+    dispatch(initSocket());
+  }, [dineInToken, dispatch]);
 
-  if (!token) return <MobileMask />;
+  useEffect(() => {
+    if (!isConnected) return;
 
-  if (isLoading) return <MobileLoading />;
+    const { joinRoom } = newSocketSliceActions;
+    dispatch(joinRoom(reservationId));
+  }, [isConnected, reservationId, dispatch]);
+
+  if (!dineInToken) return <MobileMask />;
 
   return (
     <MobileLayout>
@@ -52,3 +60,5 @@ export const Menu: FC<IMenuProps> = () => {
     </MobileLayout>
   );
 };
+
+export default Menu;

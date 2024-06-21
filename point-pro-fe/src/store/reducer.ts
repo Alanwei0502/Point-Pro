@@ -13,15 +13,19 @@ import {
   reservationManagementSlice,
   seatManagementSlice,
   homeSlice,
+  dineInTokenSlice,
+  newSocketSlice,
 } from './slices';
 
 const reducer = combineReducers({
   // customer
   [homeSlice.name]: homeSlice.reducer,
+  [dineInTokenSlice.name]: dineInTokenSlice.reducer,
   [menuSlice.name]: menuSlice.reducer,
   [bookingSlice.name]: bookingSlice.reducer,
   [orderSlice.name]: orderSlice.reducer,
   [socketSlice.name]: socketSlice.reducer,
+  [newSocketSlice.name]: newSocketSlice.reducer,
   // admin
   [adminUISlice.name]: adminUISlice.reducer,
   [authSlice.name]: authSlice.reducer,

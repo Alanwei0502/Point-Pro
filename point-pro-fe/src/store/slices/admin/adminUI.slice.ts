@@ -1,7 +1,7 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { appDayjs, dateForm } from '~/utils';
 
-const name = 'adminUI';
+const sliceName = 'adminUI';
 
 export interface IadminUISliceState {
   clock: string;
@@ -28,7 +28,7 @@ const initialState: IadminUISliceState = {
 };
 
 export const adminUISlice = createSlice({
-  name,
+  name: sliceName,
   initialState,
   reducers: {
     setClock(state) {

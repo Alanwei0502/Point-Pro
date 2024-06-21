@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, Suspense } from 'react';
 import { HeaderNavBar } from './HeaderNavBar';
 import { Banner } from './Banner';
 import { Feature } from './Feature';
@@ -17,7 +17,7 @@ import { Outlet, useLocation } from 'react-router-dom';
 
 interface IHomeProps {}
 
-export const Home: FC<IHomeProps> = () => {
+const Home: FC<IHomeProps> = () => {
   const location = useLocation();
 
   if (location.pathname !== '/') return <Outlet />;
@@ -41,3 +41,5 @@ export const Home: FC<IHomeProps> = () => {
     </>
   );
 };
+
+export default Home;

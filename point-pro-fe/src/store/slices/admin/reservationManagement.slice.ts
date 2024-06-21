@@ -1,10 +1,10 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { PeriodApi, ReservationApi } from '~/api';
 import { createAppAsyncThunk } from '~/hooks';
-import { AvailablePeriod, Gender, IReservation, ReservationInfo, ReservationModalType, ReservationType, SocketTopic } from '~/types';
+import { AvailablePeriod, Gender, IReservation, ReservationInfo, ReservationModalType, ReservationType } from '~/types';
 import { appDayjs } from '~/utils';
 
-const name = 'reservationManagement';
+const sliceName = 'reservationManagement';
 
 export interface IReservationModalData extends Pick<IReservation, 'type' | 'username' | 'phone' | 'email' | 'gender' | 'people' | 'remark'> {
   id: IReservation['id'] | null;
@@ -14,14 +14,14 @@ export interface IReservationModalData extends Pick<IReservation, 'type' | 'user
 export interface IReservationManagementSliceState {
   // TABLE
   loading: boolean;
-  dateFilter: Date;
+  dateFilter: string;
   reservations: ReservationInfo[];
   // MODAL
   availableTime: AvailablePeriod[];
   reservationModal: {
     modalType: ReservationModalType | null;
     isOpen: boolean;
-    modalSelectedDate: Date;
+    modalSelectedDate: string;
     data: IReservationModalData;
   };
   deleteReservationConfirmModal: {
@@ -37,14 +37,14 @@ export interface IReservationManagementSliceState {
 const initialState: IReservationManagementSliceState = {
   // TABLE
   loading: false,
-  dateFilter: appDayjs().toDate(),
+  dateFilter: appDayjs().toDate().toDateString(),
   reservations: [],
   // MODAL
   availableTime: [],
   reservationModal: {
     modalType: null,
     isOpen: false,
-    modalSelectedDate: appDayjs().toDate(),
+    modalSelectedDate: appDayjs().toDate().toDateString(),
     data: {
       id: null,
       type: ReservationType.PHONE,
@@ -67,16 +67,16 @@ const initialState: IReservationManagementSliceState = {
   },
 };
 
-const getReservations = createAppAsyncThunk(`${name}/getReservations`, async (payload: Date, thunkApi) => {
+const getReservations = createAppAsyncThunk(`${sliceName}/getReservations`, async (payload: string | Date, thunkApi) => {
   try {
-    const res = await ReservationApi.getReservations(payload);
+    const res = await ReservationApi.getReservations(new Date(payload));
     return res;
   } catch (error) {
     return thunkApi.rejectWithValue(error);
   }
 });
 
-const getAvailablePeriods = createAppAsyncThunk(`${name}/getAvailablePeriods`, async (_, thunkApi) => {
+const getAvailablePeriods = createAppAsyncThunk(`${sliceName}/getAvailablePeriods`, async (_, thunkApi) => {
   try {
     const result = await PeriodApi.getAvailablePeriods();
     return result?.result ?? [];
@@ -85,48 +85,40 @@ const getAvailablePeriods = createAppAsyncThunk(`${name}/getAvailablePeriods`, a
   }
 });
 
-const postReservation = createAppAsyncThunk(`${name}/postReservation`, async (payload: IReservationModalData, thunkApi) => {
+const postReservation = createAppAsyncThunk(`${sliceName}/postReservation`, async (payload: IReservationModalData, thunkApi) => {
   try {
     const { id, selectedPeriod, ...restPayload } = payload;
     const response = await ReservationApi.postReservation({ ...restPayload, periodId: selectedPeriod?.id as string });
-    const socket = thunkApi.getState().socket.socket;
-    socket && socket.emit(SocketTopic.RESERVATION, response);
     return response;
   } catch (error) {
     return thunkApi.rejectWithValue(error);
   }
 });
 
-const patchReservation = createAppAsyncThunk(`${name}/patchReservation`, async (payload: IReservationModalData, thunkApi) => {
+const patchReservation = createAppAsyncThunk(`${sliceName}/patchReservation`, async (payload: IReservationModalData, thunkApi) => {
   try {
     const { id, selectedPeriod, ...restPayload } = payload;
     const response = await ReservationApi.patchReservation({ ...restPayload, periodId: selectedPeriod?.id as string, id: id as string });
-    const socket = thunkApi.getState().socket.socket;
-    socket && socket.emit(SocketTopic.RESERVATION, response);
     return response;
   } catch (error) {
     return thunkApi.rejectWithValue(error);
   }
 });
 
-const startDiningReservation = createAppAsyncThunk(`${name}/startDiningReservation`, async (_, thunkApi) => {
+const startDiningReservation = createAppAsyncThunk(`${sliceName}/startDiningReservation`, async (_, thunkApi) => {
   try {
     const data = thunkApi.getState().reservationManagement.startDiningConfirmModal.data;
     const id = data?.id as string;
     const response = await ReservationApi.startDiningReservation(id);
-    const socket = thunkApi.getState().socket.socket;
-    socket && socket.emit(SocketTopic.RESERVATION, response);
     return response;
   } catch (error) {
     return thunkApi.rejectWithValue(error);
   }
 });
 
-const deleteReservation = createAppAsyncThunk(`${name}/deleteReservation`, async (id: IReservation['id'], thunkApi) => {
+const deleteReservation = createAppAsyncThunk(`${sliceName}/deleteReservation`, async (id: IReservation['id'], thunkApi) => {
   try {
     const response = await ReservationApi.deleteReservation(id);
-    const socket = thunkApi.getState().socket.socket;
-    socket && socket.emit(SocketTopic.RESERVATION, response);
     return response;
   } catch (error) {
     return thunkApi.rejectWithValue(error);
@@ -134,7 +126,7 @@ const deleteReservation = createAppAsyncThunk(`${name}/deleteReservation`, async
 });
 
 export const reservationManagementSlice = createSlice({
-  name,
+  name: sliceName,
   initialState,
   reducers: {
     setDateFilter: (state, action) => {

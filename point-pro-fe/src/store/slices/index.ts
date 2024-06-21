@@ -1,8 +1,10 @@
-export * from './customer/order.slice';
 export * from './socket.slice';
+export * from './newSocket.slice';
 // customer
 export * from './customer/home.slice';
+export * from './customer/dineInToken.slice';
 export * from './customer/booking.slice';
+export * from './customer/order.slice';
 export * from './customer/menu.slice';
 // admin
 export * from './admin/auth.slice';

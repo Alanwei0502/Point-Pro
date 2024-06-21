@@ -1,5 +1,4 @@
 import { FC, useEffect, useState } from 'react';
-import { toast } from 'react-toastify';
 import { Box } from '@mui/material';
 import { useAppDispatch } from '~/hooks';
 import { paymentSliceActions } from '~/store/slices';

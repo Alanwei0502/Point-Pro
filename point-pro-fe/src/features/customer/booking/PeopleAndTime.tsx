@@ -47,7 +47,7 @@ export const PeopleAndTime: FC<IPeopleAndTimeProps> = () => {
 
   const handleSelectedDate = (value: appDayjs.Dayjs | null) => {
     if (!value) return;
-    dispatch(setSelectedDate(value));
+    dispatch(setSelectedDate(value.toISOString()));
   };
 
   const handleSelectedPeriod = (e: SelectChangeEvent<string>) => {
@@ -62,8 +62,8 @@ export const PeopleAndTime: FC<IPeopleAndTimeProps> = () => {
       <FormControl margin='none' fullWidth required>
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <DateCalendar
-            defaultValue={selectedDate}
-            value={selectedDate}
+            defaultValue={appDayjs(selectedDate)}
+            value={appDayjs(selectedDate)}
             views={['day']}
             onChange={handleSelectedDate}
             disablePast

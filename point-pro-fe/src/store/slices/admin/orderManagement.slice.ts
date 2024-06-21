@@ -9,10 +9,9 @@ import {
   OrdersResult,
   PatchOrderMealServedAmountPayload,
   PostOrderPayload,
-  SocketTopic,
 } from '~/types';
 
-const name = 'orderManagement';
+const sliceName = 'orderManagement';
 
 export interface IOrderManagementSliceState {
   statusTab: OrderStatus;
@@ -40,7 +39,7 @@ const initialState: IOrderManagementSliceState = {
   },
 };
 
-const getAllOrders = createAppAsyncThunk(`${name}/getAllOrders`, async (_, thunkApi) => {
+const getAllOrders = createAppAsyncThunk(`${sliceName}/getAllOrders`, async (_, thunkApi) => {
   try {
     const orders = await OrderApi.getOrders({});
     return orders.result;
@@ -49,7 +48,7 @@ const getAllOrders = createAppAsyncThunk(`${name}/getAllOrders`, async (_, thunk
   }
 });
 
-const getOrders = createAppAsyncThunk(`${name}/getOrders`, async (payload: GetOrderPayload, thunkApi) => {
+const getOrders = createAppAsyncThunk(`${sliceName}/getOrders`, async (payload: GetOrderPayload, thunkApi) => {
   try {
     const orders = await OrderApi.getOrders(payload);
     return orders.result;
@@ -58,41 +57,35 @@ const getOrders = createAppAsyncThunk(`${name}/getOrders`, async (payload: GetOr
   }
 });
 
-const postOrder = createAppAsyncThunk(`${name}/postTakeOutOrder`, async (payload: PostOrderPayload, thunkApi) => {
+const postOrder = createAppAsyncThunk(`${sliceName}/postTakeOutOrder`, async (payload: PostOrderPayload, thunkApi) => {
   try {
     const createOrder = await OrderApi.postOrder(payload);
-    const socket = thunkApi.getState().socket.socket;
-    socket && socket.emit(SocketTopic.ORDER, createOrder);
     return createOrder;
   } catch (error) {
     return thunkApi.rejectWithValue(error);
   }
 });
 
-const cancelOrder = createAppAsyncThunk(`${name}/cancelOrder`, async (payload: CancelOrderPayload, thunkApi) => {
+const cancelOrder = createAppAsyncThunk(`${sliceName}/cancelOrder`, async (payload: CancelOrderPayload, thunkApi) => {
   try {
     const cancelOrder = await OrderApi.cancelOrder(payload);
-    const socket = thunkApi.getState().socket.socket;
-    socket && socket.emit(SocketTopic.ORDER, cancelOrder);
   } catch (error) {
     return thunkApi.rejectWithValue(error);
   }
 });
 
 const patchOrderMealServedAmount = createAppAsyncThunk(
-  `${name}/patchOrderMealServedAmount`,
+  `${sliceName}/patchOrderMealServedAmount`,
   async (payload: PatchOrderMealServedAmountPayload, thunkApi) => {
     try {
       const patchOrder = await OrderApi.patchOrderMealServedAmount(payload);
-      const socket = thunkApi.getState().socket.socket;
-      socket && socket.emit(SocketTopic.ORDER, patchOrder);
     } catch (error) {
       return thunkApi.rejectWithValue(error);
     }
   },
 );
 
-const getOrdersToCheckout = createAppAsyncThunk(`${name}/getOrdersToCheckout`, async (_, thunkApi) => {
+const getOrdersToCheckout = createAppAsyncThunk(`${sliceName}/getOrdersToCheckout`, async (_, thunkApi) => {
   try {
     const payload = thunkApi.getState().payment.paymentModal.data;
     if (!payload) throw new Error('payload is empty');
@@ -104,7 +97,7 @@ const getOrdersToCheckout = createAppAsyncThunk(`${name}/getOrdersToCheckout`, a
 });
 
 export const orderManagementSlice = createSlice({
-  name,
+  name: sliceName,
   initialState,
   reducers: {
     setTypeTab: (state, action: PayloadAction<IOrderManagementSliceState['typeTab']>) => {

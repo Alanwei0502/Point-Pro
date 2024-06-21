@@ -1,24 +1,31 @@
 import { FC, useEffect } from 'react';
 import { Box, Typography } from '@mui/material';
-import { useAppSelector, useSocket } from '~/hooks';
-import { NameSpace } from '~/types';
+import { useAppDispatch, useAppSelector } from '~/hooks';
 import { MobileLayout, MobileHeader, Loading } from '~/components';
+import { newSocketSliceActions } from '~/store/slices';
 import { BookingSteps } from './BookingSteps';
 import { PeopleAndTime } from './PeopleAndTime';
 import { BookerInfo } from './BookerInfo';
 import { ConfirmBookingInfo } from './ConfirmBookingInfo';
 import { PrivacyPolicyDialog } from './PrivacyPolicyDialog';
 import { BookingReminderDialog } from './BookingReminderDialog';
+import { SocketRoom } from '~/types';
 
 const stepTitle = ['訂位時間', '訂位資訊', '請確認訂位資訊'];
 
 interface IBookingProps {}
 
-export const Booking: FC<IBookingProps> = () => {
-  useSocket({ ns: NameSpace.main });
+const Booking: FC<IBookingProps> = () => {
+  const dispatch = useAppDispatch();
 
   const step = useAppSelector(({ booking }) => booking.step);
   const isLoading = useAppSelector(({ booking }) => booking.isLoading);
+
+  useEffect(() => {
+    const { initSocket, joinRoom } = newSocketSliceActions;
+    dispatch(initSocket());
+    dispatch(joinRoom(SocketRoom.BOOKING));
+  }, [dispatch]);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -47,3 +54,5 @@ export const Booking: FC<IBookingProps> = () => {
     </MobileLayout>
   );
 };
+
+export default Booking;

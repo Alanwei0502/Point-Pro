@@ -67,7 +67,7 @@ export const ReservationModal: FC<IReservationModalProps> = () => {
 
   const handleChangeDate = (date: appDayjs.Dayjs | null) => {
     if (date) {
-      dispatch(setModalSelectedDate(date.toDate()));
+      dispatch(setModalSelectedDate(date.toDate().toDateString()));
     }
   };
 

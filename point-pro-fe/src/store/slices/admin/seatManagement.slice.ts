@@ -3,7 +3,7 @@ import { SeatApi } from '~/api';
 import { createAppAsyncThunk } from '~/hooks';
 import { ISeat } from '~/types';
 
-const name = 'seatManagement';
+const sliceName = 'seatManagement';
 
 interface ISeatManagementSliceState {
   loading: boolean;
@@ -17,7 +17,7 @@ const initialState: ISeatManagementSliceState = {
   seats: [],
 };
 
-const getSeats = createAppAsyncThunk(`${name}/getSeats`, async (_, thunkApi) => {
+const getSeats = createAppAsyncThunk(`${sliceName}/getSeats`, async (_, thunkApi) => {
   try {
     const res = await SeatApi.getSeats();
     return res;
@@ -27,7 +27,7 @@ const getSeats = createAppAsyncThunk(`${name}/getSeats`, async (_, thunkApi) => 
 });
 
 export const seatManagementSlice = createSlice({
-  name,
+  name: sliceName,
   initialState,
   reducers: {},
   extraReducers: (builder) => {

@@ -6,7 +6,7 @@ import { CancelOrderConfirmModal } from './modals/CancelOrderConfirmModal';
 
 interface IOrderManagementProps {}
 
-export const OrderManagement: FC<IOrderManagementProps> = () => {
+const OrderManagement: FC<IOrderManagementProps> = () => {
   return (
     <>
       <Box bgcolor={'background.paper'}>
@@ -17,3 +17,5 @@ export const OrderManagement: FC<IOrderManagementProps> = () => {
     </>
   );
 };
+
+export default OrderManagement;

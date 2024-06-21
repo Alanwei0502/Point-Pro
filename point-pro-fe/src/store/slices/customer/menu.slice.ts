@@ -16,7 +16,7 @@ import {
   MobileDialogState,
 } from '~/types';
 
-const name = 'menu';
+const sliceName = 'menu';
 
 type menuSliceState = {
   currentCategory: ICategory['id'];
@@ -51,17 +51,17 @@ const initialState: menuSliceState = {
   isLoading: false,
 };
 
-export const getMenu = createAppAsyncThunk(`${name}/getMenu`, async (_, { rejectWithValue }) => {
+export const getMenu = createAppAsyncThunk(`${sliceName}/getMenu`, async (_, thunkApi) => {
   try {
     const menuRes = await MenuApi.getMenu();
     return menuRes.result;
   } catch (error) {
-    return rejectWithValue(error);
+    return thunkApi.rejectWithValue(error);
   }
 });
 
 export const menuSlice = createSlice({
-  name,
+  name: sliceName,
   initialState,
   reducers: {
     // Category Tab Focus

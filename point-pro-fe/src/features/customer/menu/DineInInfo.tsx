@@ -1,17 +1,24 @@
 import { FC, useEffect, useState } from 'react';
 import { Box, Grid, Typography } from '@mui/material';
 import { appDayjs, formatTimeLeft, formatTimeOnly } from '~/utils';
+import { useAppDispatch, useAppSelector } from '~/hooks';
+import { dineInTokenSliceActions } from '~/store/slices';
+
+const { removeDineInToken } = dineInTokenSliceActions;
 
 interface IRemainTimeProps {}
 export const RemainTime: FC<IRemainTimeProps> = () => {
-  const startAt = sessionStorage.getItem('startAt');
+  const dispatch = useAppDispatch();
+
+  const startAt = useAppSelector((state) => state.dineInToken.startAt);
+
   const endAt = appDayjs(startAt).add(2, 'hour');
 
   const [remainTime, setRemainTime] = useState(endAt.diff());
 
   useEffect(() => {
     if (remainTime <= 0) {
-      sessionStorage.clear();
+      dispatch(removeDineInToken());
       window.location.replace('/menu');
       return;
     }
@@ -21,7 +28,7 @@ export const RemainTime: FC<IRemainTimeProps> = () => {
     }, 1000);
 
     return () => clearTimeout(timer);
-  }, [remainTime, endAt]);
+  }, [remainTime, dispatch, endAt]);
 
   return (
     <Box color='common.black' fontWeight={700}>
@@ -32,8 +39,8 @@ export const RemainTime: FC<IRemainTimeProps> = () => {
 
 interface IDineInInfoProps {}
 export const DineInInfo: FC<IDineInInfoProps> = () => {
-  const people = sessionStorage.getItem('people');
-  const startAt = sessionStorage.getItem('startAt');
+  const startAt = useAppSelector((state) => state.dineInToken.startAt);
+  const people = useAppSelector((state) => state.dineInToken.people);
 
   return (
     <Box sx={{ userSelect: 'none' }}>

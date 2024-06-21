@@ -1,11 +1,11 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { OrderApi } from '~/api';
 import { createAppAsyncThunk } from '~/hooks';
-import { clearCart, openDialog } from '~/store/slices/customer/menu.slice';
+import { clearCart, openDialog } from '~/store/slices';
 import { appDayjs, calculateCartItemPrice } from '~/utils';
-import { MobileDialog, OrdersResult, OrderStatus, SocketTopic, OrderType } from '~/types';
+import { MobileDialog, OrdersResult, OrderStatus, OrderType } from '~/types';
 
-const name = 'order';
+const sliceName = 'order';
 
 interface IOrderSliceState {
   orders: OrdersResult[];
@@ -17,19 +17,18 @@ const initialState: IOrderSliceState = {
   isLoading: false,
 };
 
-const getOrders = createAppAsyncThunk(`${name}/getOrders`, async (payload: { status: OrderStatus } | undefined, thunkApi) => {
+const getOrders = createAppAsyncThunk(`${sliceName}/getOrders`, async (payload: { status: OrderStatus } | undefined, thunkApi) => {
   try {
     const orderRes = await OrderApi.getOrders(payload ?? {});
     const { result = [] } = orderRes;
     const orders = result?.sort((a: OrdersResult, b: OrdersResult) => appDayjs(b.createdAt).valueOf() - appDayjs(a.createdAt).valueOf());
-
     return { orders };
   } catch (error) {
     return thunkApi.rejectWithValue(error);
   }
 });
 
-const postOrder = createAppAsyncThunk(`${name}/postOrder`, async (_, thunkApi) => {
+const postOrder = createAppAsyncThunk(`${sliceName}/postOrder`, async (_, thunkApi) => {
   try {
     const cart = thunkApi.getState().menu.cart;
 
@@ -43,19 +42,17 @@ const postOrder = createAppAsyncThunk(`${name}/postOrder`, async (_, thunkApi) =
       })),
     };
 
-    const response = await OrderApi.postOrder(payload);
+    await OrderApi.postOrder(payload);
     thunkApi.dispatch(getOrders());
     thunkApi.dispatch(openDialog({ type: MobileDialog.ORDER }));
     thunkApi.dispatch(clearCart());
-    const socket = thunkApi.getState().socket.socket;
-    socket && socket.emit(SocketTopic.ORDER, response);
   } catch (error) {
     return thunkApi.rejectWithValue(error);
   }
 });
 
 export const orderSlice = createSlice({
-  name,
+  name: sliceName,
   initialState,
   reducers: {},
   extraReducers: (builder) => {

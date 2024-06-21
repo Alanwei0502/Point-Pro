@@ -1,16 +1,22 @@
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import { dineInTokenSliceActions } from '~/store/slices';
+import { store } from '~/store/store';
 import { ROUTE_PATH } from '~/utils';
 
-export const apiHost = import.meta.env.VITE_API_HOST;
+const { removeDineInToken } = dineInTokenSliceActions;
 
-export const http = axios.create({ baseURL: `${apiHost}/api` });
+export const API_HOST = import.meta.env.VITE_API_HOST;
+
+export const http = axios.create({ baseURL: `${API_HOST}/api` });
 
 http.interceptors.request.use(
   (configs) => {
-    const token = sessionStorage.getItem('token') || '';
-    configs.headers['isAdmin'] = window.location.href.includes('admin');
-    configs.headers['Authorization'] = `Bearer ${token}`;
+    const adminToken = sessionStorage.getItem('token') || '';
+    const customerToken = store.getState().dineInToken.token;
+    const isAdmin = window.location.href.includes('admin');
+    configs.headers['isAdmin'] = isAdmin;
+    configs.headers['Authorization'] = `Bearer ${isAdmin ? adminToken : customerToken}`;
     return configs;
   },
   (error) => {
@@ -33,23 +39,24 @@ const errorCodeCheck = (status: number) => {
   switch (status) {
     case 401:
     case 403: {
-      sessionStorage.removeItem('token');
-      const isInAdminLoginPage = location.pathname === `/${ROUTE_PATH.admin}`;
-      const isInCMS = location.pathname.includes('admin');
+      const isInMenuPage = location.pathname === `/${ROUTE_PATH.menu}`;
+      const isInCMS = /admin\/.+/.test(location.pathname);
 
-      if (isInCMS && !isInAdminLoginPage) {
-        // 後台
+      // 後台
+      if (isInCMS) {
         toast.error('登入逾時，請重新登入');
+        sessionStorage.removeItem('token');
         setTimeout(() => {
-          location.replace(`${location.origin}/admin`);
+          location.replace(`${location.origin}/${ROUTE_PATH.admin}`);
         }, 1000);
-      } else if (!isInCMS) {
-        // 前台
-        sessionStorage.removeItem('people');
-        sessionStorage.removeItem('startAt');
+      }
+
+      // 前台
+      if (isInMenuPage) {
         toast.error('登入逾時，請重新登入');
+        store.dispatch(removeDineInToken());
         setTimeout(() => {
-          location.replace(`${location.origin}/menu`);
+          location.replace(`${location.origin}/${ROUTE_PATH.menu}`);
         }, 1000);
       }
       break;

@@ -23,13 +23,3 @@ export const updateReservationRequestSchema = z.object({
 export const deleteReservationRequestSchema = z.object({
   reservationId: z.string(),
 });
-
-// TODO: refactor
-export const verifyReservationSchema = z.object({
-  reservationId: z.string(),
-  reservationType: z.string().optional(),
-  startTime: z.date(),
-  seatNo: z.string(),
-  periodStartTime: z.date().optional(),
-  periodEndTime: z.date().optional(),
-});

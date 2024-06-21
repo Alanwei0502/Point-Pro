@@ -63,7 +63,7 @@ export const BookerInfo: FC<IBookerInfoProps> = () => {
   };
 
   return (
-    <Box sx={{ pb: '10rem' }}>
+    <Box pb='10rem'>
       <FormControl margin='normal' required fullWidth>
         <FormLabel sx={{ fontWeight: 700, color: 'common.black' }}>姓名</FormLabel>
         <TextField

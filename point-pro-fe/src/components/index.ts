@@ -35,9 +35,8 @@ export * from './layout/Layout';
 export * from './layout/MobileLayout';
 // Loading
 export * from './loading/Loading';
-export * from './loading/MobileLoading';
-export * from './loading/AdminLoginLoading';
 // Mask
+export * from './mask/LoadingMask';
 export * from './mask/MobileMask';
 // Modal
 export * from './modals/ConfirmCloseLinePayModal';

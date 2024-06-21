@@ -16,7 +16,7 @@ import { DeleteMealConfirmModal } from './modals/DeleteMealConfirmModal';
 
 interface IMenuManagementProps {}
 
-export const MenuManagement: FC<IMenuManagementProps> = () => {
+const MenuManagement: FC<IMenuManagementProps> = () => {
   const dispatch = useAppDispatch();
 
   const handleOpenSpecialtyItemsSettingModal = () => {
@@ -52,3 +52,5 @@ export const MenuManagement: FC<IMenuManagementProps> = () => {
     </>
   );
 };
+
+export default MenuManagement;

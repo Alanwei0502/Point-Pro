@@ -4,7 +4,7 @@ import { toast } from 'react-toastify';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { Box, Typography, InputAdornment, IconButton, OutlinedInput, FormControl, InputLabel } from '@mui/material';
-import { useAppDispatch, useAppSelector } from '~/hooks';
+import { useAppDispatch, useToken } from '~/hooks';
 import { authSliceActions } from '~/store/slices';
 import HeaderLogo from '~/assets/images/header-logo.svg';
 import { AppButton } from '~/components';
@@ -14,13 +14,14 @@ const { login } = authSliceActions;
 
 interface ILoginProps {}
 
-export const Login: FC<ILoginProps> = () => {
+const Login: FC<ILoginProps> = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
+
   const usernameRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
+
   const [showPassword, setShowPassword] = useState(false);
-  const authToken = useAppSelector((state) => state.auth.authToken);
 
   const handleShowPassword = () => {
     setShowPassword((show) => !show);
@@ -34,6 +35,7 @@ export const Login: FC<ILoginProps> = () => {
         }
 
         await dispatch(login({ username: usernameRef.current.value, password: passwordRef.current.value })).unwrap();
+        navigate(`/${ROUTE_PATH.admin}/${ROUTE_PATH.takeOrder}`);
       },
       {
         pending: '登入中...',
@@ -42,12 +44,6 @@ export const Login: FC<ILoginProps> = () => {
       },
     );
   };
-
-  useEffect(() => {
-    if (authToken) {
-      navigate(`/${ROUTE_PATH.admin}/${ROUTE_PATH.takeOrder}`);
-    }
-  }, [authToken, navigate]);
 
   return (
     <Box
@@ -103,3 +99,5 @@ export const Login: FC<ILoginProps> = () => {
     </Box>
   );
 };
+
+export default Login;

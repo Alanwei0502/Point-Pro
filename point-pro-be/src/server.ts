@@ -2,10 +2,9 @@ import 'dotenv/config';
 import http from 'http';
 import express, { json, urlencoded } from 'express';
 import cookieParser from 'cookie-parser';
-import morgan from 'morgan';
-import { Logger, createWsServer } from './helpers';
+import { Logger, startSocketServer } from './helpers';
 import apiRouter from './routes';
-import { corsMiddleware, errorMiddleware, sessionMiddleware, rateLimiterMiddleware } from './middlewares';
+import { corsMiddleware, errorMiddleware, sessionMiddleware, rateLimiterMiddleware, morganMiddleware } from './middlewares';
 
 const app = express();
 const server = http.createServer(app);
@@ -32,7 +31,7 @@ const setUpMiddleware = () => {
   app
     // Middlewares
     .use(rateLimiterMiddleware)
-    .use(morgan(':remote-addr :date[iso] :status :method :url :response-time ms - :res[content-length]'))
+    .use(morganMiddleware)
     .use(corsMiddleware)
     .use(cookieParser())
     .use(sessionMiddleware)
@@ -62,8 +61,6 @@ const startServer = () => {
       Logger.error(`Server ${error}`);
     })
     .listen(port, host, async () => {
-      createWsServer(server);
-
       const addr = server.address();
       if (!addr) {
         return Logger.error('cannot get the address from server');
@@ -75,3 +72,4 @@ const startServer = () => {
 
 setUpMiddleware();
 startServer();
+startSocketServer(server);

@@ -84,7 +84,7 @@ export const NotificationDrawer: FC<INotificationDrawerProps> = ({ open, setOpen
                         <Typography fontWeight={700}>菜單 ({menuTitle[message]})</Typography>
                         <Typography variant='small'>{appDayjs(result?.updatedAt).format('HH:mm')}</Typography>
                       </Box>
-                      <Box>{result.title}</Box>
+                      <Box>{result?.title}</Box>
                     </Box>
                   )}
 

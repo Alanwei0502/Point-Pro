@@ -1,44 +1,42 @@
 import { useState, useEffect, FC } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { Box, Button, Badge, AppBar, Toolbar, IconButton, Typography } from '@mui/material';
+import { Box, Button, Badge, AppBar, Toolbar, IconButton, Typography, Divider } from '@mui/material';
 import { DoubleArrow, NotificationsNone, PowerSettingsNew } from '@mui/icons-material';
 import HeaderLogo from '~/assets/images/header-logo.svg';
-import { useAppDispatch, useAppSelector } from '~/hooks';
+import { useAppDispatch, useAppSelector, useInititalize } from '~/hooks';
 import { theme } from '~/theme';
 import { LeftMenuDrawer, NotificationDrawer, PaymentModal, sideBarItemList, LinePayModal, ConfirmCloseLinePayModal } from '~/components';
 import { adminUISliceActions, authSliceActions } from '~/store/slices';
 import { ROUTE_PATH } from '~/utils';
 
-const { logout } = authSliceActions;
-const { setClock } = adminUISliceActions;
-
 const drawerExpandWidth = '250px';
 const drawerCollapseWidth = '100px';
 export const headerHeight = '60px';
 
-interface IHeaderProps {}
+interface INotificationButtonProps {}
+const NotificationButton: FC<INotificationButtonProps> = () => {
+  const [isNotificationOpen, setIsNotificationOpen] = useState(false);
+  const notifications = useAppSelector(({ socket }) => socket.notifications);
+  return (
+    <IconButton color='inherit' onClick={() => setIsNotificationOpen(true)}>
+      <Badge badgeContent={notifications.length} color='error'>
+        <NotificationsNone sx={{ width: 30, height: 30 }} />
+      </Badge>
+    </IconButton>
+  );
+};
 
-export const Header: FC<IHeaderProps> = () => {
-  const location = useLocation();
+interface ILogoutButtonProps {}
+const LogoutButton: FC<ILogoutButtonProps> = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-
-  const [isLeftMenuOpen, setIsLeftMenuOpen] = useState(false);
-  const [isNotificationOpen, setIsNotificationOpen] = useState(false);
-
-  const notifications = useAppSelector(({ socket }) => socket.notifications);
-  const clock = useAppSelector((state) => state.adminUI.clock);
-
-  const flatSideBarItemList = sideBarItemList.flatMap((item) => (item.list.length ? item.list : item));
-
-  const routerInfo = flatSideBarItemList.find((item) => item.path === location.pathname);
-
   const handleLogout = () => {
+    const { logout } = authSliceActions;
     toast.promise(
       async () => {
         await dispatch(logout()).unwrap();
-        navigate(ROUTE_PATH.admin, { replace: true });
+        navigate(`../${ROUTE_PATH.admin}`);
       },
       {
         pending: '登出中...',
@@ -47,14 +45,38 @@ export const Header: FC<IHeaderProps> = () => {
       },
     );
   };
+  return (
+    <IconButton onClick={handleLogout} color='inherit' edge='end'>
+      <PowerSettingsNew sx={{ width: 30, height: 30 }} />
+    </IconButton>
+  );
+};
 
-  // show time
+interface IClockTimeProps {}
+const ClockTime: FC<IClockTimeProps> = () => {
+  const dispatch = useAppDispatch();
+  const clock = useAppSelector((state) => state.adminUI.clock);
   useEffect(() => {
+    const { setClock } = adminUISliceActions;
     const interval = setInterval(() => {
       dispatch(setClock());
     }, 1000);
     return () => clearInterval(interval);
   }, [dispatch]);
+  return <Typography sx={{ pr: 2 }}>{clock}</Typography>;
+};
+
+interface IHeaderProps {}
+export const Header: FC<IHeaderProps> = () => {
+  const location = useLocation();
+
+  useInititalize();
+
+  const [isLeftMenuOpen, setIsLeftMenuOpen] = useState(false);
+
+  const flatSideBarItemList = sideBarItemList.flatMap((item) => (item.list.length ? item.list : item));
+
+  const routerInfo = flatSideBarItemList.find((item) => item.path === location.pathname);
 
   return (
     <>
@@ -96,7 +118,7 @@ export const Header: FC<IHeaderProps> = () => {
               },
             }}
           >
-            <Box component='img' src={HeaderLogo} sx={{ width: '45px', height: '45px' }} />
+            <Box component='img' src={HeaderLogo} width='45px' height='45px' />
             <Box
               sx={{
                 textAlign: 'left',
@@ -126,33 +148,22 @@ export const Header: FC<IHeaderProps> = () => {
           <Typography variant='h3' sx={{ flexGrow: 1, pl: 2 }}>
             {routerInfo?.name ?? '未知頁面'}
           </Typography>
-          <Typography sx={{ pr: 2 }}>{clock}</Typography>
+          <ClockTime />
+
+          <Divider orientation='vertical' />
 
           {/* action icon */}
-          <Box
-            sx={{
-              px: 2,
-              display: 'flex',
-              alignItems: 'center',
-              gap: 2,
-              borderLeft: (theme) => `1px solid ${theme.palette.divider}`,
-            }}
-          >
-            <IconButton color='inherit' onClick={() => setIsNotificationOpen(true)}>
-              <Badge badgeContent={notifications.length} color='error'>
-                <NotificationsNone sx={{ width: 30, height: 30 }} />
-              </Badge>
-            </IconButton>
-            <IconButton onClick={handleLogout} color='inherit' edge='end'>
-              <PowerSettingsNew sx={{ width: 30, height: 30 }} />
-            </IconButton>
+          <Box px={2} display='flex' alignItems='center' gap={2}>
+            <NotificationButton />
+            <LogoutButton />
           </Box>
         </Toolbar>
       </AppBar>
 
       {/* drawers */}
       <LeftMenuDrawer drawerExpandWidth={drawerExpandWidth} open={isLeftMenuOpen} setOpen={setIsLeftMenuOpen} />
-      <NotificationDrawer open={isNotificationOpen} setOpen={setIsNotificationOpen} />
+      {/* <NotificationDrawer open={isNotificationOpen} setOpen={setIsNotificationOpen} /> */}
+
       {/* Modal */}
       <PaymentModal />
       <LinePayModal />

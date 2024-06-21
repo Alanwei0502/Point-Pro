@@ -6,7 +6,7 @@ import { ROUTE_PATH } from '~/utils';
 interface IMobileHeaderProps {}
 
 export const MobileHeader: FC<IMobileHeaderProps> = () => {
-  const { pathname, ...rest } = useLocation();
+  const { pathname } = useLocation();
 
   return (
     <Box>

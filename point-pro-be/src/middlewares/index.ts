@@ -6,3 +6,5 @@ export * from './validate.middleware';
 export * from './multer.middleware';
 export * from './transformFormData.middleware';
 export * from './rateLimiter.middleware';
+export * from './socket.middleware';
+export * from './morgan.middleware';
