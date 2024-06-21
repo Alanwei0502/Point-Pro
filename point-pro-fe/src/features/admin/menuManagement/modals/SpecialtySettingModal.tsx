@@ -22,7 +22,7 @@ export const SpecialtySettingModal: FC<ISpecialtyItemsSettingModalProps> = () =>
         title: '客製化設定',
       }}
       cardContentProps={{
-        sx: { padding: 0, minWidth: '60cqw', maxHeight: 500, overflow: 'scroll' },
+        sx: { padding: 0, minWidth: '60cqw', maxHeight: 600, overflow: 'scroll' },
         children: <SpecialtySettingTable />,
       }}
       cardActionsProps={{

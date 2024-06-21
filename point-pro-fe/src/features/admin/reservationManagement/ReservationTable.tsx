@@ -108,10 +108,6 @@ export const ReservationTable: FC<IReservationListProps> = () => {
     );
   };
 
-  useEffect(() => {
-    dispatch(getReservations(dateFilter));
-  }, [dispatch, dateFilter]);
-
   return (
     <Box height={`calc(100vh - ${headerHeight})`}>
       <DataGrid

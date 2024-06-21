@@ -11,7 +11,7 @@ import { useAppDispatch, useAppSelector } from '~/hooks';
 import { reservationManagementSliceActions } from '~/store/slices';
 import { ReservationModalType } from '~/types';
 
-const { setDateFilter, openModal } = reservationManagementSliceActions;
+const { setDateFilter, openModal, getReservations } = reservationManagementSliceActions;
 
 export const ReservationToolbar: FC<GridToolbarProps> = (props) => {
   const dispatch = useAppDispatch();
@@ -19,7 +19,9 @@ export const ReservationToolbar: FC<GridToolbarProps> = (props) => {
   const debouncedChangeDateFilter = useRef(
     debounce(
       (date: appDayjs.Dayjs | null) => {
-        dispatch(setDateFilter(date));
+        const dateFilter = date?.toDate().toDateString() ?? '';
+        dispatch(setDateFilter(dateFilter));
+        dispatch(getReservations(dateFilter));
       },
       500,
       { leading: true, trailing: false },
