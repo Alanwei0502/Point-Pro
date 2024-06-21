@@ -20,7 +20,7 @@ import {
 import { headerHeight } from '~/components';
 import { OrderType, ReservationInfo, ReservationModalType } from '~/types';
 import { useAppDispatch, useAppSelector } from '~/hooks';
-import { paymentSliceActions, reservationManagementSliceActions } from '~/store/slices';
+import { IPaymentSliceState, paymentSliceActions, reservationManagementSliceActions } from '~/store/slices';
 import { theme } from '~/theme';
 import { ReservationToolbar } from './ReservationToolbar';
 import { ReservationTablePagination } from './ReservationPagination';
@@ -64,11 +64,14 @@ export const ReservationTable: FC<IReservationListProps> = () => {
     );
   };
 
-  const handleClickCheckout = (params: ReservationInfo) => {
+  const handleClickCheckout = (params: ReservationInfo, modalType: IPaymentSliceState['paymentModal']['modalType']) => {
     dispatch(
       openPaymentModal({
-        type: OrderType.DINE_IN,
-        reservationId: params.id,
+        modalType,
+        data: {
+          type: OrderType.DINE_IN,
+          reservationId: params.id,
+        },
       }),
     );
   };
@@ -108,26 +111,6 @@ export const ReservationTable: FC<IReservationListProps> = () => {
   useEffect(() => {
     dispatch(getReservations(dateFilter));
   }, [dispatch, dateFilter]);
-
-  // // TODO: Socket
-  // const notifications = useAppSelector(({ socket }) => socket.notifications);
-  // useEffect(() => {
-  //   if (notifications.length > 0 && notifications[0].message === ReservationMessage.CREATE_RESERVATION) {
-  //     dispatchGetReservation();
-  //   }
-  // }, [notifications]);
-
-  // const dispatchGetReservation = async () => {
-  //   const { result } = await dispatch(getReservations(dateFilter)).unwrap();
-  //   const list = result?.map((e: ReservationInfo) => ({
-  //     ...e,
-  //     ...e.options,
-  //     seatNo: e.seats.map((seat) => seat.seatNo).join(', '),
-  //     people: e.options,
-  //   })) as GridRowsProp;
-
-  //   setReservations(list);
-  // };
 
   return (
     <Box height={`calc(100vh - ${headerHeight})`}>
@@ -216,12 +199,12 @@ export const ReservationTable: FC<IReservationListProps> = () => {
                     </IconButton>
                   )}
                   {['用餐', '超時'].includes(getReservationStatusLabel({ params: params.row, clock })) && (
-                    <IconButton size='small' aria-label='結帳' onClick={() => handleClickCheckout(params.row)}>
+                    <IconButton size='small' aria-label='結帳' onClick={() => handleClickCheckout(params.row, 'EDIT')}>
                       <PointOfSaleIcon />
                     </IconButton>
                   )}
                   {['結束'].includes(getReservationStatusLabel({ params: params.row, clock })) && (
-                    <IconButton size='small' aria-label='訂單記錄' onClick={() => handleClickCheckout(params.row)}>
+                    <IconButton size='small' aria-label='訂單記錄' onClick={() => handleClickCheckout(params.row, 'VIEW')}>
                       <ReceiptIcon />
                     </IconButton>
                   )}

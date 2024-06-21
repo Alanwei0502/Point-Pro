@@ -1,15 +1,16 @@
-import { FC } from "react";
-import { Backdrop, CircularProgress } from "@mui/material";
+import { FC } from 'react';
+import { Box, BoxProps, CircularProgress, CircularProgressProps } from '@mui/material';
 
 interface ILoadingProps {
-  open: boolean;
+  boxProps?: BoxProps;
+  circularProgressProps?: CircularProgressProps;
 }
 
 export const Loading: FC<ILoadingProps> = (props) => {
-  const { open } = props;
+  const { boxProps, circularProgressProps } = props;
   return (
-    <Backdrop sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.modal + 1 }} open={open}>
-      <CircularProgress color="inherit" />
-    </Backdrop>
+    <Box display='flex' alignItems='center' justifyContent='center' height='100%' {...boxProps}>
+      <CircularProgress {...circularProgressProps} />
+    </Box>
   );
 };

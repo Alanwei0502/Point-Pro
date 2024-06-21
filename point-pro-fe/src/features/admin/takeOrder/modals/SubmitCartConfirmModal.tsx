@@ -41,7 +41,12 @@ export const SubmitCartConfirmModal: FC<ISubmitCartConfirmModalProps> = () => {
           dispatch(setUnselectMeal());
           dispatch(clearCart());
           if (res.result?.id) {
-            dispatch(openPaymentModal({ type: OrderType.TAKE_OUT, id: res.result.id }));
+            dispatch(
+              openPaymentModal({
+                modalType: 'EDIT',
+                data: { type: OrderType.TAKE_OUT, orderId: res.result.id },
+              }),
+            );
           }
         },
         {

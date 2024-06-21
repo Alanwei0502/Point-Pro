@@ -1,6 +1,6 @@
 import { FC, useEffect, useState } from 'react';
 import { Box, Grid, Typography } from '@mui/material';
-import { appDayjs, formatTimeLeft, formatTimeOnly } from '~/utils';
+import { ROUTE_PATH, appDayjs, formatTimeLeft, formatTimeOnly } from '~/utils';
 import { useAppDispatch, useAppSelector } from '~/hooks';
 import { dineInTokenSliceActions } from '~/store/slices';
 
@@ -19,7 +19,7 @@ export const RemainTime: FC<IRemainTimeProps> = () => {
   useEffect(() => {
     if (remainTime <= 0) {
       dispatch(removeDineInToken());
-      window.location.replace('/menu');
+      window.location.replace(`/${ROUTE_PATH.menu}`);
       return;
     }
 

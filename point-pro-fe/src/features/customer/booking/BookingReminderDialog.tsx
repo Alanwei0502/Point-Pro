@@ -7,7 +7,7 @@ import {
   LocalPhone as LocalPhoneIcon,
   MapSharp as MapSharpIcon,
 } from '@mui/icons-material';
-import { MobileDialogLayout, Loading, AppButton } from '~/components';
+import { MobileDialogLayout, AppButton } from '~/components';
 import { MobileBookingDialog } from '~/types';
 import { appDayjs, GENDER_TRANSLATE } from '~/utils';
 import { useAppDispatch, useAppSelector } from '~/hooks';

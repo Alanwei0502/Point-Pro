@@ -1,7 +1,7 @@
 import { FC, useEffect } from 'react';
 import { Box, Typography } from '@mui/material';
 import { useAppDispatch, useAppSelector } from '~/hooks';
-import { MobileLayout, MobileHeader, Loading } from '~/components';
+import { MobileLayout, MobileHeader } from '~/components';
 import { newSocketSliceActions } from '~/store/slices';
 import { BookingSteps } from './BookingSteps';
 import { PeopleAndTime } from './PeopleAndTime';
@@ -19,7 +19,6 @@ const Booking: FC<IBookingProps> = () => {
   const dispatch = useAppDispatch();
 
   const step = useAppSelector(({ booking }) => booking.step);
-  const isLoading = useAppSelector(({ booking }) => booking.isLoading);
 
   useEffect(() => {
     const { initSocket, joinRoom } = newSocketSliceActions;
@@ -33,7 +32,6 @@ const Booking: FC<IBookingProps> = () => {
 
   return (
     <MobileLayout>
-      <Loading open={isLoading} />
       <MobileHeader />
       <Typography variant='h6' fontWeight={700}>
         {stepTitle[step]}

@@ -1,6 +1,6 @@
-import { FC, useEffect } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { Box } from '@mui/material';
-import { AppButton } from '~/components';
+import { AppButton, Loading } from '~/components';
 import { useAppDispatch } from '~/hooks';
 import { getCategories, getMeals, getSpecialties, openSpecialtySettingModal } from '~/store/slices';
 import { MenuManagementTable } from './tables/MenuManagementTable';
@@ -19,14 +19,17 @@ interface IMenuManagementProps {}
 const MenuManagement: FC<IMenuManagementProps> = () => {
   const dispatch = useAppDispatch();
 
+  const [isLoading, setIsLoading] = useState(false);
+
   const handleOpenSpecialtyItemsSettingModal = () => {
     dispatch(openSpecialtySettingModal());
   };
 
   useEffect(() => {
-    dispatch(getCategories());
-    dispatch(getMeals());
-    dispatch(getSpecialties());
+    setIsLoading(true);
+    Promise.all([dispatch(getCategories()).unwrap(), dispatch(getMeals()).unwrap(), dispatch(getSpecialties()).unwrap()]).finally(() => {
+      setIsLoading(false);
+    });
   }, [dispatch]);
 
   return (
@@ -34,6 +37,7 @@ const MenuManagement: FC<IMenuManagementProps> = () => {
       <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 2, padding: 1 }}>
         <AppButton onClick={handleOpenSpecialtyItemsSettingModal}>客製化設定</AppButton>
       </Box>
+      {isLoading && <Loading boxProps={{ position: 'fixed', left: '50%' }} />}
 
       <MenuManagementTable />
       {/* CATEGORY */}

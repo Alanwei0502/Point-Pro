@@ -1,9 +1,8 @@
 import { FC, useEffect, useMemo } from 'react';
-import { Box, CircularProgress, FormControl, FormLabel, MenuItem, Select, SelectChangeEvent, SxProps, Theme } from '@mui/material';
+import { Box, FormControl, FormLabel, MenuItem, Select, SelectChangeEvent, SxProps, Theme } from '@mui/material';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DateCalendar } from '@mui/x-date-pickers';
-import { Loading } from '~/components';
 import { appDayjs, formatTimeOnly, formatDateOnly, RESERVATION_PEOPLE_OPTIONS } from '~/utils';
 import { useAppDispatch, useAppSelector } from '~/hooks';
 import { setPeople, setSelectedDate, setSelectedPeriod, getAvailablePeriods } from '~/store/slices';

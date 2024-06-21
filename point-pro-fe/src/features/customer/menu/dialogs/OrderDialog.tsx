@@ -5,7 +5,7 @@ import { ORDER_STATUS_TRANSLATE, calculateOrderPrice } from '~/utils';
 import { useAppDispatch, useAppSelector } from '~/hooks';
 import { closeDialog, orderSliceActions } from '~/store/slices';
 import { MobileDialog, IOrder, OrderStatus } from '~/types';
-import { MobileDialogLayout, AppButton, Loading } from '~/components';
+import { MobileDialogLayout, AppButton } from '~/components';
 
 const { getOrders } = orderSliceActions;
 

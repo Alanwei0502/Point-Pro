@@ -148,7 +148,7 @@ export interface LinePayConfirmRedirectPayload {
 export interface GetOrderToCheckOutPayload {
   type: OrderType;
   reservationId?: IReservation['id'];
-  id?: IOrder['id'];
+  orderId?: IOrder['id'];
 }
 
 export type PostLinePayResponse = ApiResponse<{

@@ -5,11 +5,12 @@ import { PostLinePayResponse, LinePayConfirmRedirectPayload, OrderType, PatchPay
 
 const sliceName = 'payment';
 
-interface IPaymentSliceState {
+export interface IPaymentSliceState {
   paymentType: PaymentType;
   paymentModal: {
     isOpen: boolean;
-    data: { type: OrderType; reservationId?: string; id?: string } | null;
+    modalType: 'VIEW' | 'EDIT';
+    data: { type: OrderType; reservationId?: string; orderId?: string } | null;
   };
   linePayModal: {
     isOpen: boolean;
@@ -24,6 +25,7 @@ const initialState: IPaymentSliceState = {
   paymentType: PaymentType.CASH,
   paymentModal: {
     isOpen: false,
+    modalType: 'VIEW',
     data: null,
   },
   linePayModal: {
@@ -90,9 +92,13 @@ export const paymentSlice = createSlice({
     setPaymentType(state, action: PayloadAction<IPaymentSliceState['paymentType']>) {
       state.paymentType = action.payload;
     },
-    openPaymentModal(state, action: PayloadAction<IPaymentSliceState['paymentModal']['data']>) {
+    openPaymentModal(
+      state,
+      action: PayloadAction<{ modalType: IPaymentSliceState['paymentModal']['modalType']; data: IPaymentSliceState['paymentModal']['data'] }>,
+    ) {
       state.paymentModal.isOpen = true;
-      state.paymentModal.data = action.payload;
+      state.paymentModal.modalType = action.payload.modalType;
+      state.paymentModal.data = action.payload.data;
     },
     closePaymentModal(state) {
       state.paymentType = initialState.paymentType;

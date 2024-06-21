@@ -3,7 +3,7 @@ import { Typography, Box, TablePagination } from '@mui/material';
 import { useAppDispatch, useAppSelector } from '~/hooks';
 import { orderManagementSliceActions } from '~/store/slices';
 import { OrderStatus } from '~/types';
-import { headerHeight, Column } from '~/components';
+import { headerHeight, Column, Loading } from '~/components';
 import { OrderItem } from './OrderItem';
 
 const { getOrders } = orderManagementSliceActions;
@@ -23,9 +23,15 @@ export const OrderList: FC<IOrderList> = () => {
 
   const [page, setPage] = useState(defaultPage);
   const [rowsPerPage, setRowsPerPage] = useState(defaultRowsPerPage);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    dispatch(getOrders({ status: statusTab, type: typeTab }));
+    setIsLoading(true);
+    dispatch(getOrders({ status: statusTab, type: typeTab }))
+      .unwrap()
+      .finally(() => {
+        setIsLoading(false);
+      });
     setPage(defaultPage);
     setRowsPerPage(defaultRowsPerPage);
   }, [dispatch, statusTab, typeTab]);
@@ -51,37 +57,6 @@ export const OrderList: FC<IOrderList> = () => {
     setRowsPerPage(parseInt(e.target.value, 10));
   };
 
-  // const gatherOrders = () => {
-  //   const showNewOrders: GatherOrder[] = [];
-
-  //   orders.forEach((order) => {
-  //     const { id, status, type, seats = [], paymentLogs, reservationId } = order;
-  //     const gatherOrder: GatherOrder = { id, status, type, seats, paymentLogs, orders: [order], reservationId };
-
-  //     if (reservationId) {
-  //       // 內用單
-  //       const sameGroupOrderIndex = showNewOrders.findIndex((item) => item.reservationId === reservationId);
-
-  //       if (sameGroupOrderIndex === -1 && !showNewOrders[sameGroupOrderIndex]) {
-  //         showNewOrders.push(gatherOrder);
-  //       } else {
-  //         (showNewOrders[sameGroupOrderIndex] as GatherOrder).orders.push(order);
-  //       }
-  //     } else {
-  //       // 外帶單
-  //       showNewOrders.push(gatherOrder);
-  //     }
-  //   });
-  //   return showNewOrders;
-  // };
-
-  // const isPendingOrCancelOrder = statusTab === OrderStatus.WORKING || statusTab === OrderStatus.CANCEL;
-  // const isEmpty = (isPendingOrCancelOrder ? orders.length : gatherOrders().length) > 0;
-
-  // useEffect(() => {
-  //   dispatch(getOrders({ status: statusTab }));
-  // }, [dispatch, statusTab]);
-
   if (isEmpty) {
     return (
       <Column justifyContent='center' bgcolor='background.paper' height={`calc(100vh - ${headerHeight} - 54px)`} sx={{ userSelect: 'none' }}>
@@ -102,15 +77,10 @@ export const OrderList: FC<IOrderList> = () => {
           overflow: 'scroll',
         }}
       >
+        {isLoading && <Loading boxProps={{ position: 'fixed', left: '50%' }} />}
         {showList.map((o) => (
           <OrderItem key={o.id} order={o} />
         ))}
-        {/* {
-            isPendingOrCancelOrder && // 準備中、已取消
-              showList.map((order) => <PendingAndCancelOrderItem key={order.id} order={order} />)
-             : // 未付款、已付款
-             gatherOrders().map((order) => <UnpaidAndSuccessOrderItem key={order.id} gatherOrder={order} />)
-          } */}
       </Box>
       <TablePagination
         component='div'

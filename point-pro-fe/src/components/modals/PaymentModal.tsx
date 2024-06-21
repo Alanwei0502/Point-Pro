@@ -1,23 +1,10 @@
 import { FC, useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import {
-  Alert,
-  Box,
-  Checkbox,
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
-  MenuItem,
-  Select,
-  SelectChangeEvent,
-  Typography,
-  CircularProgress,
-} from '@mui/material';
+import { Alert, Box, Checkbox, List, ListItem, ListItemIcon, ListItemText, MenuItem, Select, SelectChangeEvent, Typography } from '@mui/material';
 import { useAppDispatch, useAppSelector } from '~/hooks';
-import { orderManagementSliceActions, paymentSliceActions } from '~/store/slices';
-import { AppButton } from '~/components';
+import { orderManagementSliceActions, paymentSliceActions, reservationManagementSliceActions } from '~/store/slices';
+import { AppButton, Loading } from '~/components';
 import { theme } from '~/theme';
 import { OrderStatus, OrderType, PaymentType } from '~/types';
 import { TabletModal } from './TabletModal';
@@ -33,6 +20,7 @@ const CheckoutOrderList: FC<ICheckoutOrderListProps> = (props) => {
   const { isLoading, setIsLoading, setErrorMsg } = props;
 
   const dispatch = useAppDispatch();
+  const modalType = useAppSelector((state) => state.payment.paymentModal.modalType);
   const checkOutOrder = useAppSelector((state) => state.orderManagement.checkOutOrder);
 
   useEffect(() => {
@@ -50,18 +38,18 @@ const CheckoutOrderList: FC<ICheckoutOrderListProps> = (props) => {
   return (
     <Box overflow='scroll' height='60vh'>
       {isLoading ? (
-        <Box display='flex' alignItems='center' justifyContent='center' height='100%'>
-          <CircularProgress />
-        </Box>
+        <Loading />
       ) : (
         <List>
           {checkOutOrder
             .filter((co) => co.status !== OrderStatus.CANCEL)
             .map((co) => (
               <ListItem key={co.id} sx={{ display: 'flex', alignItems: 'flex-start', backgroundColor: theme.palette.common.black_20, mb: 1 }}>
-                <ListItemIcon sx={{ minWidth: 'inherit' }}>
-                  <Checkbox checked={co.status === OrderStatus.FINISHED} size='small' sx={{ padding: 0 }} />
-                </ListItemIcon>
+                {modalType === 'EDIT' && (
+                  <ListItemIcon sx={{ minWidth: 'inherit' }}>
+                    <Checkbox checked={co.status === OrderStatus.FINISHED} size='small' sx={{ padding: 0 }} />
+                  </ListItemIcon>
+                )}
 
                 <List disablePadding sx={{ width: '100%' }}>
                   {co.orderMeals.map((om) => (
@@ -89,6 +77,7 @@ const CheckoutOrderList: FC<ICheckoutOrderListProps> = (props) => {
 const { setPaymentType, closePaymentModal, requestCashPayment, requestLinePay } = paymentSliceActions;
 const { getOrdersToCheckout, clearCheckoutOrder } = orderManagementSliceActions;
 const { getOrders } = orderManagementSliceActions;
+const { getReservations } = reservationManagementSliceActions;
 
 interface IPaymentModalProps {}
 
@@ -100,11 +89,12 @@ export const PaymentModal: FC<IPaymentModalProps> = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
 
-  const { isOpen, data } = useAppSelector((state) => state.payment.paymentModal);
+  const { isOpen, modalType, data } = useAppSelector((state) => state.payment.paymentModal);
   const paymentType = useAppSelector((state) => state.payment.paymentType);
   const checkOutOrder = useAppSelector((state) => state.orderManagement.checkOutOrder);
   const typeTab = useAppSelector((state) => state.orderManagement.typeTab);
   const statusTab = useAppSelector((state) => state.orderManagement.statusTab);
+  const dateFilter = useAppSelector((state) => state.reservationManagement.dateFilter);
 
   const totalPrice = checkOutOrder.filter((co) => co.status !== OrderStatus.CANCEL).reduce((acc, co) => acc + co.totalPrice, 0);
 
@@ -128,9 +118,6 @@ export const PaymentModal: FC<IPaymentModalProps> = () => {
           async () => {
             await dispatch(requestCashPayment()).unwrap();
             handleClose();
-            if (location.pathname.includes(ROUTE_PATH.orderManagement)) {
-              dispatch(getOrders({ status: statusTab, type: typeTab }));
-            }
           },
           {
             pending: '結帳中...',
@@ -159,6 +146,17 @@ export const PaymentModal: FC<IPaymentModalProps> = () => {
     }
   };
 
+  useEffect(() => {
+    if (!isOpen) {
+      if (location.pathname.includes(ROUTE_PATH.orderManagement)) {
+        dispatch(getOrders({ status: statusTab, type: typeTab }));
+      }
+      if (location.pathname.includes(ROUTE_PATH.reservationMangement)) {
+        dispatch(getReservations(dateFilter));
+      }
+    }
+  }, [dateFilter, dispatch, isOpen, location.pathname, statusTab, typeTab]);
+
   if (!data) return null;
 
   return (
@@ -169,21 +167,23 @@ export const PaymentModal: FC<IPaymentModalProps> = () => {
         children: (
           <Box display='flex' flexDirection='column' justifyContent='center'>
             <Box display='flex' alignItems='center' justifyContent='space-between' gap={2}>
-              <Select value={paymentType} onChange={handleSelectPaymentType} size='small' sx={{ flexGrow: 1, height: 50 }}>
-                <MenuItem value={PaymentType.CASH}>
-                  <Typography fontSize={20} textAlign='center'>
-                    現金付款
-                  </Typography>
-                </MenuItem>
-                <MenuItem value={PaymentType.LINE_PAY}>
-                  <Typography fontSize={20}>Line Pay</Typography>
-                </MenuItem>
-              </Select>
+              {modalType === 'EDIT' && (
+                <Select value={paymentType} onChange={handleSelectPaymentType} size='small' sx={{ flexGrow: 1, height: 50 }}>
+                  <MenuItem value={PaymentType.CASH}>
+                    <Typography fontSize={20} textAlign='center'>
+                      現金付款
+                    </Typography>
+                  </MenuItem>
+                  <MenuItem value={PaymentType.LINE_PAY}>
+                    <Typography fontSize={20}>Line Pay</Typography>
+                  </MenuItem>
+                </Select>
+              )}
               <Box flexGrow={1} fontSize={theme.typography.h6.fontSize} textAlign='right'>
                 總金額：{totalPrice}元
               </Box>
             </Box>
-            {data.type === OrderType.DINE_IN && errorMsg && (
+            {modalType === 'EDIT' && data.type === OrderType.DINE_IN && errorMsg && (
               <Alert severity='error' sx={{ my: 1 }}>
                 {errorMsg}
               </Alert>
@@ -195,14 +195,14 @@ export const PaymentModal: FC<IPaymentModalProps> = () => {
       cardActionsProps={{
         children: (
           <>
-            {!location.pathname.includes(ROUTE_PATH.takeOrder) && (
-              <AppButton variant='outlined' color='inherit' fullWidth onClick={handleClose} disabled={isLoading}>
-                取消
+            <AppButton variant='outlined' color='inherit' fullWidth onClick={handleClose} disabled={isLoading}>
+              取消
+            </AppButton>
+            {modalType === 'EDIT' && (
+              <AppButton fullWidth onClick={handleConfirm} disabled={isLoading || Boolean(errorMsg)}>
+                確定
               </AppButton>
             )}
-            <AppButton fullWidth onClick={handleConfirm} disabled={isLoading || Boolean(errorMsg)}>
-              確定
-            </AppButton>
           </>
         ),
       }}

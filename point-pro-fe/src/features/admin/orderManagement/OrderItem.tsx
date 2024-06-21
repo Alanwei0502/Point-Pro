@@ -68,7 +68,7 @@ export const OrderItem: FC<IOrderItemProps> = (props) => {
   };
 
   const handlePayment = () => {
-    dispatch(openPaymentModal({ type: OrderType.TAKE_OUT, id: order.id }));
+    dispatch(openPaymentModal({ modalType: 'EDIT', data: { type: OrderType.TAKE_OUT, orderId: order.id } }));
   };
 
   const handleCancelOrder = () => {

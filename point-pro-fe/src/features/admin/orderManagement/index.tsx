@@ -9,7 +9,7 @@ interface IOrderManagementProps {}
 const OrderManagement: FC<IOrderManagementProps> = () => {
   return (
     <>
-      <Box bgcolor={'background.paper'}>
+      <Box bgcolor='background.paper'>
         <OrderTabs />
         <OrderList />
       </Box>

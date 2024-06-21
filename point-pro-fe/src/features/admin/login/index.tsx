@@ -1,16 +1,14 @@
-import { FC, useEffect, useRef, useState } from 'react';
+import { FC, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { Box, Typography, InputAdornment, IconButton, OutlinedInput, FormControl, InputLabel } from '@mui/material';
-import { useAppDispatch, useToken } from '~/hooks';
+import { useAppDispatch } from '~/hooks';
 import { authSliceActions } from '~/store/slices';
 import HeaderLogo from '~/assets/images/header-logo.svg';
 import { AppButton } from '~/components';
 import { ROUTE_PATH } from '~/utils';
-
-const { login } = authSliceActions;
 
 interface ILoginProps {}
 
@@ -28,6 +26,8 @@ const Login: FC<ILoginProps> = () => {
   };
 
   const handleLogin = () => {
+    const { login } = authSliceActions;
+
     toast.promise(
       async () => {
         if (!usernameRef.current || !passwordRef.current) {
@@ -46,25 +46,8 @@ const Login: FC<ILoginProps> = () => {
   };
 
   return (
-    <Box
-      sx={{
-        width: '100vw',
-        height: '100vh',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-      }}
-    >
-      <Box
-        sx={{
-          width: '100%',
-          maxWidth: '400px',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}
-      >
+    <Box width='100vw' height='100vh' display='flex' alignItems='center' justifyContent='center'>
+      <Box width='100%' maxWidth='400px' display='flex' flexDirection='column' alignItems='center' justifyContent='center'>
         <Box component='img' src={HeaderLogo} sx={{ width: '200px', height: '200px' }} />
         <Typography variant='h2' component='div' sx={{ my: 3 }}>
           後台登入
