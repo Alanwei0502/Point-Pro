@@ -178,12 +178,12 @@ export const socketMiddleware: Middleware = (store: MiddlewareAPI<AppDispatch, A
 
       // [EMIT ORDER ACTION]
       const adiminUpdateOrderActions = [
+        orderManagementSliceActions.postOrder.fulfilled,
         orderManagementSliceActions.cancelOrder.fulfilled,
         orderManagementSliceActions.patchOrderMealServedAmount.fulfilled,
       ];
       if (adiminUpdateOrderActions.some((a) => a.match(action))) {
         const reservationId = store.getState().orderManagement.socketPayload?.reservationId;
-        if (!reservationId) return;
         s.socket.emit(SocketTopic.ORDER, reservationId);
         store.dispatch(orderManagementSliceActions.setSocketOrderPayload(null));
       }

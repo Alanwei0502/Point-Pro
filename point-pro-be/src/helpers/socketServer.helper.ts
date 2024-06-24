@@ -2,7 +2,6 @@ import { Socket, Server as SocketIOServer } from 'socket.io';
 import { Server as HttpServer } from 'http';
 import { Logger } from '.';
 import { socketMiddleware } from '../middlewares';
-import { Reservation } from '@prisma/client';
 
 enum SocketRoom {
   ADMIN = 'admin',
