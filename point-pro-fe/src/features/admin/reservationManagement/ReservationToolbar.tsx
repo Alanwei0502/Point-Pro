@@ -19,7 +19,7 @@ export const ReservationToolbar: FC<GridToolbarProps> = (props) => {
   const debouncedChangeDateFilter = useRef(
     debounce(
       (date: appDayjs.Dayjs | null) => {
-        const dateFilter = date?.toDate().toDateString() ?? '';
+        const dateFilter = date?.toISOString() ?? '';
         dispatch(setDateFilter(dateFilter));
         dispatch(getReservations(dateFilter));
       },
