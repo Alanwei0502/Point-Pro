@@ -18,6 +18,11 @@ export class ReservationModel {
   };
 
   static getReservations = async (params: z.infer<typeof getReservationsRequestSchema>) => {
+    console.log({
+      gte: appDayjs(params.date).startOf('day').toDate(),
+      lte: appDayjs(params.date).endOf('day').toDate(),
+    });
+
     const reservations = await prismaClient.reservation.findMany({
       where: {
         periods: {
