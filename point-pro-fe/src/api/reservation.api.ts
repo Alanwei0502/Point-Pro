@@ -6,7 +6,6 @@ import {
   PostReservationResponse,
   GetReservationResponse,
   DeleteReservationResponse,
-  IReservation,
   StartDiningReservationPayload,
   StartDiningReservationResponse,
   DeleteReservationPayload,
@@ -15,7 +14,7 @@ import {
 export class ReservationApi {
   public static path = 'reservation';
 
-  static getReservations(date: Date) {
+  static getReservations(date: string) {
     return http.get<string, GetReservationResponse>(`${ReservationApi.path}`, { params: { date } });
   }
 
