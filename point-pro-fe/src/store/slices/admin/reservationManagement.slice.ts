@@ -37,14 +37,14 @@ export interface IReservationManagementSliceState {
 const initialState: IReservationManagementSliceState = {
   // TABLE
   loading: false,
-  dateFilter: appDayjs().toDate().toDateString(),
+  dateFilter: appDayjs().toISOString(),
   reservations: [],
   // MODAL
   availableTime: [],
   reservationModal: {
     modalType: null,
     isOpen: false,
-    modalSelectedDate: appDayjs().toDate().toDateString(),
+    modalSelectedDate: appDayjs().toISOString(),
     data: {
       id: null,
       type: ReservationType.PHONE,
@@ -69,9 +69,6 @@ const initialState: IReservationManagementSliceState = {
 
 const getReservations = createAppAsyncThunk(`${sliceName}/getReservations`, async (payload: string | Date, thunkApi) => {
   try {
-    const param = appDayjs(payload).toISOString();
-    console.log({ param });
-
     const res = await ReservationApi.getReservations(appDayjs(payload).toISOString());
     return res;
   } catch (error) {

@@ -32,7 +32,7 @@ const logMessageColor: { [key in keyof typeof LogType]: chalk.Chalk } = {
 
 export class Logger {
   static log(type: LogType, message: LoggerMessage) {
-    const now = appDayjs().tz('Asia/Taipei').format();
+    const now = appDayjs().format();
     message = message instanceof Error ? `${message.name} ${message.message} ${message.stack}` : message;
     console.log(`[${logTypeColor[type](type)}] ${logMessageColor[type](`${message} [${now}]`)}`);
   }
