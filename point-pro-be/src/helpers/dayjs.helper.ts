@@ -24,5 +24,6 @@ appDayjs.extend(isToday);
 appDayjs.extend(isTomorrow);
 appDayjs.extend(relativeTime);
 appDayjs.locale('zh-tw');
+appDayjs.tz.setDefault('Asia/Taipei');
 
 export { appDayjs };
