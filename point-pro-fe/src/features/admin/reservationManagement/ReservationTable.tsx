@@ -27,7 +27,7 @@ import { ReservationTablePagination } from './ReservationPagination';
 
 const defaultPage = 0;
 const defaultRowsPerPage = 20;
-const { getReservations, openModal, openDeleteReservationConfirmModal, openStartDiningConfirmModal } = reservationManagementSliceActions;
+const {  openModal, openDeleteReservationConfirmModal, openStartDiningConfirmModal } = reservationManagementSliceActions;
 const { openPaymentModal } = paymentSliceActions;
 
 const allReservationStatus = Object.values(RESERVATION_STATUS);
@@ -38,7 +38,6 @@ export const ReservationTable: FC<IReservationListProps> = () => {
   const dispatch = useAppDispatch();
 
   const loading = useAppSelector((state) => state.reservationManagement.loading);
-  const dateFilter = useAppSelector((state) => state.reservationManagement.dateFilter);
   const reservations = useAppSelector((state) => state.reservationManagement.reservations);
   const clock = useAppSelector((state) => state.adminUI.clock);
 

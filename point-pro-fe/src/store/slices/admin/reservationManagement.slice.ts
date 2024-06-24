@@ -69,6 +69,9 @@ const initialState: IReservationManagementSliceState = {
 
 const getReservations = createAppAsyncThunk(`${sliceName}/getReservations`, async (payload: string | Date, thunkApi) => {
   try {
+    const param = appDayjs(payload).toISOString();
+    console.log({ param });
+
     const res = await ReservationApi.getReservations(appDayjs(payload).toISOString());
     return res;
   } catch (error) {

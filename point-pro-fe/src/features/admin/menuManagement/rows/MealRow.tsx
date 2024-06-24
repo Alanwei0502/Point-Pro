@@ -13,7 +13,7 @@ import { ICategory, IMeal, MealWithCategoryAndSpecialtyItems, ISpecialtyItem } f
 import { useAppDispatch, useAppSelector } from '~/hooks';
 import { getMeals, openDeleteMealConfirmModal, patchMeal } from '~/store/slices';
 import { theme } from '~/theme';
-import { MEAL_IMAGE_FORMAT_REMINDER, MEAL_IMAGE_SIZE_LIMIT, MEAL_IMAGE_TYPES, IMAGE_URL } from '~/utils';
+import { MEAL_IMAGE_FORMAT_REMINDER, MEAL_IMAGE_SIZE_LIMIT, MEAL_IMAGE_TYPES, IMAGE_URL, appDayjs } from '~/utils';
 
 interface IMealRowProps {
   meal: MealWithCategoryAndSpecialtyItems;
@@ -108,7 +108,7 @@ export const MealRow: FC<IMealRowProps> = (props) => {
   };
 
   const handleChangeIsPublished = () => {
-    setNewPublisedAt((prevPublishedAt) => (prevPublishedAt ? null : new Date().toISOString()));
+    setNewPublisedAt((prevPublishedAt) => (prevPublishedAt ? null : appDayjs().toISOString()));
   };
 
   const handleEditMeal = () => {

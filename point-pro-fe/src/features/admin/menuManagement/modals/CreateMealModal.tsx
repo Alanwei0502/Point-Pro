@@ -6,7 +6,7 @@ import { useAppDispatch, useAppSelector } from '~/hooks';
 import { closeCreateMealModal, getMeals, postMeal } from '~/store/slices';
 import { theme } from '~/theme';
 import { IMeal, ISpecialtyItem } from '~/types';
-import { MEAL_IMAGE_FORMAT_REMINDER, MEAL_IMAGE_SIZE_LIMIT, MEAL_IMAGE_TYPES } from '~/utils';
+import { MEAL_IMAGE_FORMAT_REMINDER, MEAL_IMAGE_SIZE_LIMIT, MEAL_IMAGE_TYPES, appDayjs } from '~/utils';
 
 interface ICreateMealModalProps {}
 
@@ -27,7 +27,7 @@ export const CreateMealModal: FC<ICreateMealModalProps> = () => {
   const [description, setDescription] = useState<IMeal['description']>('');
   const [specialtyItems, setSpecialtyItems] = useState<ISpecialtyItem['id'][]>([]);
   const [isPopular, setIsPopular] = useState<IMeal['isPopular']>(false);
-  const [publishedAt, setPublisedAt] = useState<IMeal['publishedAt']>(new Date().toISOString());
+  const [publishedAt, setPublisedAt] = useState<IMeal['publishedAt']>(appDayjs().toISOString());
 
   const hasSameMealExist = meals.some((m) => m.title === title);
   const isIncompleteInfo = !title || !image;
@@ -72,7 +72,7 @@ export const CreateMealModal: FC<ICreateMealModalProps> = () => {
   };
 
   const handleChangePublishedAt = () => {
-    setPublisedAt((prevPublishedAt) => (prevPublishedAt ? null : new Date().toISOString()));
+    setPublisedAt((prevPublishedAt) => (prevPublishedAt ? null : appDayjs().toISOString()));
   };
 
   const handleCancel = () => {
@@ -83,7 +83,7 @@ export const CreateMealModal: FC<ICreateMealModalProps> = () => {
     setDescription('');
     setSpecialtyItems([]);
     setIsPopular(false);
-    setPublisedAt(new Date().toISOString());
+    setPublisedAt(appDayjs().toISOString());
     dispatch(closeCreateMealModal());
   };
 
