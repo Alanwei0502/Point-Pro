@@ -2,6 +2,7 @@ import { Socket, Server as SocketIOServer } from 'socket.io';
 import { Server as HttpServer } from 'http';
 import { Logger } from '.';
 import { socketMiddleware } from '../middlewares';
+import { Reservation } from '@prisma/client';
 
 enum SocketRoom {
   ADMIN = 'admin',
@@ -26,66 +27,52 @@ enum SocketEvent {
 }
 
 // Socket Server
-export const startSocketServer = (httpServer: HttpServer) => {
+export const startSocketServer = (httpServer: HttpServer): void => {
   const io = new SocketIOServer(httpServer, { cors: { origin: '*' } });
 
   io.use(socketMiddleware).on(SocketEvent.Connect, async (socket: Socket) => {
     Logger.info(`Socket Connected: ${socket.id}`);
 
-    socket.on(SocketEvent.JoinRoom, async (roomName) => {
+    socket.on(SocketEvent.JoinRoom, async (myRoom) => {
       // Join Room
-      socket.join(roomName);
-      Logger.info(`Socket Join: ${socket.id} join ${roomName}`);
+      socket.join(myRoom);
+      Logger.info(`Socket Join: ${socket.id} join ${myRoom}`);
 
-      // Admin Room
-      if (roomName === SocketRoom.ADMIN) {
+      // [ADMIN]
+      if (myRoom === SocketRoom.ADMIN) {
         socket.on(SocketTopic.RESERVATION, () => {
-          console.log('ADMIN', socket.id);
-
-          // send to booking users when reservation is created
-          socket.to(SocketRoom.BOOKING).emit(SocketTopic.RESERVATION);
+          socket.to([myRoom, SocketRoom.BOOKING]).emit(SocketTopic.RESERVATION);
         });
 
         socket.on(SocketTopic.MENU, () => {
-          // send to all dine-in users when menu is updated
           socket.broadcast.except(SocketRoom.BOOKING).emit(SocketTopic.MENU);
         });
 
-        socket.on(SocketTopic.ORDER, (reservationId) => {
-          console.log('ADMIN', socket.id);
-          // send to kitchen when order is updated
-          socket.emit(SocketTopic.ORDER);
-          // send to specific dine-in user when order is updated
-          socket.to(reservationId).emit(SocketTopic.ORDER);
+        socket.on(SocketTopic.ORDER, (room) => {
+          socket.to([myRoom, room]).emit(SocketTopic.ORDER);
         });
         return;
       }
 
-      // Booking Customer Room
-      if (roomName === SocketRoom.BOOKING) {
-        socket.on(SocketTopic.RESERVATION, (reservation) => {
-          // send to admin when reservation is created
-          // socket.to(SocketRoom.ADMIN).emit(SocketTopic.RESERVATION, reservation);
-          // send to all booking users when reservation is created to update the available time
-          console.log('BOOKING', socket.id);
-
-          socket.emit(SocketTopic.RESERVATION);
+      // [BOOKING]
+      if (myRoom === SocketRoom.BOOKING) {
+        socket.on(SocketTopic.RESERVATION, () => {
+          socket.to([myRoom, SocketRoom.ADMIN]).emit(SocketTopic.RESERVATION);
         });
         return;
       }
 
-      // Dine-in Customer Room
-      socket.on(SocketTopic.ORDER, (order) => {
-        // send to admin when order is created
-        socket.to(SocketRoom.ADMIN).emit(SocketTopic.ORDER, order);
-        // send to other dine-in users when order is created (other people in the same group)
-        socket.emit(SocketTopic.ORDER);
-      });
+      // [CUSTOMER]
+      if (myRoom !== SocketRoom.ADMIN && myRoom !== SocketRoom.BOOKING) {
+        socket.on(SocketTopic.ORDER, () => {
+          socket.to([myRoom, SocketRoom.ADMIN]).emit(SocketTopic.ORDER);
+        });
+      }
     });
 
-    socket.on(SocketEvent.LeaveRoom, (roomName) => {
-      socket.leave(roomName);
-      Logger.info(`Socket Leave: ${socket.id} leave ${roomName}`);
+    socket.on(SocketEvent.LeaveRoom, (myRoom) => {
+      socket.leave(myRoom);
+      Logger.info(`Socket Leave: ${socket.id} leave ${myRoom}`);
     });
 
     socket.on(SocketEvent.Disconnect, (socket) => {
@@ -94,13 +81,6 @@ export const startSocketServer = (httpServer: HttpServer) => {
 
     socket.on(SocketEvent.Error, (error) => {
       Logger.error(`Socket Error: ${error}`);
-    });
-
-    socket.on(SocketTopic.ORDER, (order) => {
-      // send to admin when order is created
-      socket.to(SocketRoom.ADMIN).emit(SocketTopic.ORDER, order);
-      // send to other dine-in users when order is created (other people in the same group)
-      socket.emit(SocketTopic.ORDER);
     });
   });
 };

@@ -38,11 +38,11 @@ export const MealItem: FC<MealItemProps> = (props) => {
       }}
       onClick={clickMealHandler}
     >
-      <Typography textAlign='center' sx={{ textOverflow: 'ellipsis', whiteSpace: 'nowrap', overflow: 'hidden', padding: '.3rem' }}>
+      <Typography textAlign='center' whiteSpace='nowrap' textOverflow='ellipsis' overflow='hidden' p='.3rem'>
         {meal.title}
       </Typography>
-      <Box height='6rem' sx={{ bgcolor: theme.palette.common.black, textAlign: 'center' }}>
-        <Box component='img' src={`${IMAGE_URL}${meal.imageId}b.jpg`} alt={meal.title} sx={{ objectFit: 'fill', height: '100%', maxWidth: '100%' }} />
+      <Box height='6rem' bgcolor={theme.palette.common.black} textAlign='center'>
+        <Box component='img' src={`${IMAGE_URL}${meal.imageId}b.jpg`} alt={meal.title} height='100%' maxWidth='100%' />
       </Box>
       <Typography textAlign='center'>{meal.price}元</Typography>
       <Row justifyContent='space-between' alignItems='center'></Row>

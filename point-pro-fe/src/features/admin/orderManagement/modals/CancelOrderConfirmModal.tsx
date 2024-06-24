@@ -5,7 +5,7 @@ import { useAppDispatch, useAppSelector } from '~/hooks';
 import { orderManagementSliceActions } from '~/store/slices';
 import { toast } from 'react-toastify';
 
-const { closeCancelOrderConfirmModal, cancelOrder, getOrders } = orderManagementSliceActions;
+const { closeCancelOrderConfirmModal, cancelOrder, getOrders, setSocketOrderPayload } = orderManagementSliceActions;
 
 interface ICancelOrderConfirmModalProps {}
 
@@ -25,7 +25,8 @@ export const CancelOrderConfirmModal: FC<ICancelOrderConfirmModalProps> = () => 
     toast
       .promise(
         async () => {
-          await dispatch(cancelOrder(data.id)).unwrap();
+          dispatch(setSocketOrderPayload(data));
+          await dispatch(cancelOrder(data)).unwrap();
           await dispatch(getOrders({ status: statusTab, type: typeTab }));
         },
         {

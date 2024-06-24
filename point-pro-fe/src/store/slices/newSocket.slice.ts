@@ -4,12 +4,14 @@ const sliceName = 'newSocket';
 
 interface INewSocketState {
   isConnected: boolean;
-  rooms: string[]; // reservationId or admin
+  rooms: string[];
+  adminNotification: { id: number; title: string }[];
 }
 
 const initialState: INewSocketState = {
   isConnected: false,
   rooms: [],
+  adminNotification: [],
 };
 
 export const newSocketSlice = createSlice({
@@ -30,6 +32,15 @@ export const newSocketSlice = createSlice({
     },
     leaveRoom: (state, action: PayloadAction<INewSocketState['rooms'][0]>) => {
       state.rooms = state.rooms.filter((room) => !action.payload.includes(room));
+    },
+    setAdminNotification: (state, action: PayloadAction<INewSocketState['adminNotification'][0]>) => {
+      state.adminNotification = state.adminNotification.concat(action.payload);
+    },
+    removeAdminNotification: (state, action: PayloadAction<INewSocketState['adminNotification'][0]['id']>) => {
+      state.adminNotification = state.adminNotification.filter((notification) => notification.id !== action.payload);
+    },
+    removeAllAdminNotification: (state) => {
+      state.adminNotification = initialState.adminNotification;
     },
   },
 });

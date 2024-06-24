@@ -77,7 +77,7 @@ export const theme = createTheme({
   },
   typography: {
     fontSize: 16,
-    fontFamily: ['Noto Sans TC', 'Inter', ' system-ui', 'Avenir', 'Helvetica', 'Arial', 'sans-serif'].join(','),
+    fontFamily: ['Inter', 'system-ui', 'Avenir', 'Helvetica', 'Arial', 'sans-serif'].join(','),
     display1: { fontSize: '10rem' },
     display2: { fontSize: '7.5rem' },
     display3: { fontSize: '5rem' },

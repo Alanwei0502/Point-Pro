@@ -17,13 +17,16 @@ export const headerHeight = '60px';
 interface INotificationButtonProps {}
 const NotificationButton: FC<INotificationButtonProps> = () => {
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
-  const notifications = useAppSelector(({ socket }) => socket.notifications);
+  const notifications = useAppSelector((state) => state.newSocket.adminNotification);
   return (
-    <IconButton color='inherit' onClick={() => setIsNotificationOpen(true)}>
-      <Badge badgeContent={notifications.length} color='error'>
-        <NotificationsNone sx={{ width: 30, height: 30 }} />
-      </Badge>
-    </IconButton>
+    <>
+      <IconButton color='inherit' onClick={() => setIsNotificationOpen((prev) => !prev)}>
+        <Badge badgeContent={notifications.length} color='error'>
+          <NotificationsNone sx={{ width: 30, height: 30 }} />
+        </Badge>
+      </IconButton>
+      <NotificationDrawer open={isNotificationOpen} setOpen={setIsNotificationOpen} />
+    </>
   );
 };
 
@@ -148,6 +151,7 @@ export const Header: FC<IHeaderProps> = () => {
           <Typography variant='h3' sx={{ flexGrow: 1, pl: 2 }}>
             {routerInfo?.name ?? '未知頁面'}
           </Typography>
+
           <ClockTime />
 
           <Divider orientation='vertical' />
@@ -162,7 +166,6 @@ export const Header: FC<IHeaderProps> = () => {
 
       {/* drawers */}
       <LeftMenuDrawer drawerExpandWidth={drawerExpandWidth} open={isLeftMenuOpen} setOpen={setIsLeftMenuOpen} />
-      {/* <NotificationDrawer open={isNotificationOpen} setOpen={setIsNotificationOpen} /> */}
 
       {/* Modal */}
       <PaymentModal />

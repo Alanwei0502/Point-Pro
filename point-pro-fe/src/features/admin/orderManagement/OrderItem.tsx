@@ -12,7 +12,7 @@ import { OrderMealItem } from './OrderMealItem';
 import { orderManagementSliceActions, paymentSliceActions } from '~/store/slices';
 import { toast } from 'react-toastify';
 
-const { openCancelOrderConfirmModal, patchOrderMealServedAmount, getOrders } = orderManagementSliceActions;
+const { openCancelOrderConfirmModal, patchOrderMealServedAmount, getOrders, setSocketOrderPayload } = orderManagementSliceActions;
 const { openPaymentModal } = paymentSliceActions;
 
 interface IOrderItemProps {
@@ -46,6 +46,8 @@ export const OrderItem: FC<IOrderItemProps> = (props) => {
       ),
     [order.orderMeals],
   );
+
+  const isEdited = tempServedAmountCompare !== servedAmountCompare;
 
   const progress = (servedMeals / totalMeals) * 100;
 
@@ -81,16 +83,8 @@ export const OrderItem: FC<IOrderItemProps> = (props) => {
     toast
       .promise(
         async () => {
-          await dispatch(
-            patchOrderMealServedAmount({
-              id: tempOrder.id,
-              orderMeals: tempOrder.orderMeals.map((om) => ({
-                id: om.id,
-                amount: om.amount,
-                servedAmount: om.servedAmount,
-              })),
-            }),
-          ).unwrap();
+          dispatch(setSocketOrderPayload(tempOrder));
+          await dispatch(patchOrderMealServedAmount(tempOrder)).unwrap();
           await dispatch(getOrders({ status: statusTab, type: typeTab }));
         },
         {
@@ -172,11 +166,7 @@ export const OrderItem: FC<IOrderItemProps> = (props) => {
                   取消訂單
                 </AppButton>
               )}
-              <AppButton
-                disabled={tempServedAmountCompare === servedAmountCompare}
-                loading={isUpdateServedAmountLoading}
-                onClick={handleUpdateServedAmount}
-              >
+              <AppButton disabled={!isEdited} loading={isUpdateServedAmountLoading} onClick={handleUpdateServedAmount}>
                 更新出餐
               </AppButton>
             </>

@@ -24,6 +24,7 @@ export interface IOrderManagementSliceState {
     isOpen: boolean;
     data: OrdersResult | null;
   };
+  socketPayload: OrdersResult | null;
 }
 
 const initialState: IOrderManagementSliceState = {
@@ -37,6 +38,7 @@ const initialState: IOrderManagementSliceState = {
     isOpen: false,
     data: null,
   },
+  socketPayload: null,
 };
 
 const getAllOrders = createAppAsyncThunk(`${sliceName}/getAllOrders`, async (_, thunkApi) => {
@@ -66,24 +68,28 @@ const postOrder = createAppAsyncThunk(`${sliceName}/postTakeOutOrder`, async (pa
   }
 });
 
-const cancelOrder = createAppAsyncThunk(`${sliceName}/cancelOrder`, async (payload: CancelOrderPayload, thunkApi) => {
+const cancelOrder = createAppAsyncThunk(`${sliceName}/cancelOrder`, async (payload: OrdersResult, thunkApi) => {
   try {
-    const cancelOrder = await OrderApi.cancelOrder(payload);
+    await OrderApi.cancelOrder(payload.id);
   } catch (error) {
     return thunkApi.rejectWithValue(error);
   }
 });
 
-const patchOrderMealServedAmount = createAppAsyncThunk(
-  `${sliceName}/patchOrderMealServedAmount`,
-  async (payload: PatchOrderMealServedAmountPayload, thunkApi) => {
-    try {
-      const patchOrder = await OrderApi.patchOrderMealServedAmount(payload);
-    } catch (error) {
-      return thunkApi.rejectWithValue(error);
-    }
-  },
-);
+const patchOrderMealServedAmount = createAppAsyncThunk(`${sliceName}/patchOrderMealServedAmount`, async (payload: OrdersResult, thunkApi) => {
+  try {
+    await OrderApi.patchOrderMealServedAmount({
+      id: payload.id,
+      orderMeals: payload.orderMeals.map((om) => ({
+        id: om.id,
+        amount: om.amount,
+        servedAmount: om.servedAmount,
+      })),
+    });
+  } catch (error) {
+    return thunkApi.rejectWithValue(error);
+  }
+});
 
 const getOrdersToCheckout = createAppAsyncThunk(`${sliceName}/getOrdersToCheckout`, async (_, thunkApi) => {
   try {
@@ -115,6 +121,9 @@ export const orderManagementSlice = createSlice({
     },
     clearCheckoutOrder: (state) => {
       state.checkOutOrder = initialState.checkOutOrder;
+    },
+    setSocketOrderPayload: (state, action: PayloadAction<OrdersResult | null>) => {
+      state.socketPayload = action.payload;
     },
   },
   extraReducers: (builder) => {

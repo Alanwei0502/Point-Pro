@@ -49,6 +49,9 @@ export class MenuModel {
           lte: new Date(),
         },
       },
+      orderBy: {
+        position: 'asc',
+      },
     });
 
     return meals;

@@ -1,3 +1,4 @@
+import { takeOrderSliceActions } from './../slices/admin/takeOrder.slice';
 import type { Middleware, MiddlewareAPI } from '@reduxjs/toolkit';
 import { ROUTE_PATH, SocketInterface, SocketFactory } from '~/utils';
 import {
@@ -6,7 +7,10 @@ import {
   deleteSpecialty,
   deleteSpecialtyItem,
   getAvailablePeriods,
+  getCategories,
+  getMeals,
   getMenu,
+  getSpecialties,
   newSocketSliceActions,
   orderManagementSliceActions,
   orderSliceActions,
@@ -24,10 +28,10 @@ import {
   postSpecialtyItem,
   reservationManagementSliceActions,
 } from '../slices';
-import { SocketEvent, SocketRoom, SocketTopic } from '~/types';
+import { SocketEvent, SocketTopic } from '~/types';
 import type { AppDispatch, AppState } from '../store';
 
-const { initSocket, connectionEstablished, connectionLost, joinRoom, leaveRoom } = newSocketSliceActions;
+const { initSocket, connectionEstablished, connectionLost, joinRoom, leaveRoom, setAdminNotification } = newSocketSliceActions;
 
 export const socketMiddleware: Middleware = (store: MiddlewareAPI<AppDispatch, AppState>) => {
   let s: SocketInterface;
@@ -39,9 +43,7 @@ export const socketMiddleware: Middleware = (store: MiddlewareAPI<AppDispatch, A
     const customerToken = store.getState().dineInToken.token;
     const adminToken = store.getState().auth.authToken;
 
-    if (initSocket.match(action) && !s && typeof window !== 'undefined') {
-      console.log('SocketMiddleware: Socket initialized');
-
+    if (!s && initSocket.match(action) && typeof window !== 'undefined') {
       s = SocketFactory.create({
         extraHeaders: {
           isbooking: isBooking.toString(),
@@ -66,37 +68,70 @@ export const socketMiddleware: Middleware = (store: MiddlewareAPI<AppDispatch, A
 
       // handle the menu event
       s.socket.on(SocketTopic.MENU, () => {
-        store.dispatch(getMenu());
+        if (isCustomer) {
+          store.dispatch(getMenu());
+        }
+
+        if (isAdmin) {
+          store.dispatch(
+            setAdminNotification({
+              id: Date.now(),
+              title: '菜單更新',
+            }),
+          );
+          const isInTakeOrderPage = window.location.href.includes(ROUTE_PATH.takeOrder);
+          const isInMenuManagementPage = window.location.href.includes(ROUTE_PATH.menuManagement);
+          if (isInTakeOrderPage) {
+            store.dispatch(takeOrderSliceActions.getAdminMenu());
+          }
+          if (isInMenuManagementPage) {
+            store.dispatch(getCategories());
+            store.dispatch(getMeals());
+            store.dispatch(getSpecialties());
+          }
+        }
       });
 
       // handle the order event
       s.socket.on(SocketTopic.ORDER, () => {
         if (isCustomer) {
           store.dispatch(orderSliceActions.getOrders());
-          return;
         }
 
-        const isInOrderManagementPage = window.location.href.includes(ROUTE_PATH.orderManagement);
-        if (isInOrderManagementPage) {
-          const { typeTab: type, statusTab: status } = store.getState().orderManagement;
-          store.dispatch(orderManagementSliceActions.getOrders({ type, status }));
+        if (isAdmin) {
+          store.dispatch(
+            setAdminNotification({
+              id: Date.now(),
+              title: '訂單更新',
+            }),
+          );
+          const isInOrderManagementPage = window.location.href.includes(ROUTE_PATH.orderManagement);
+          if (isInOrderManagementPage) {
+            const { typeTab: type, statusTab: status } = store.getState().orderManagement;
+            store.dispatch(orderManagementSliceActions.getOrders({ type, status }));
+          }
         }
       });
 
       // handle the reservation event
       s.socket.on(SocketTopic.RESERVATION, () => {
         if (isCustomer) {
-          console.log('SocketMiddleware: Customer Receive RESERVATION');
           store.dispatch(getAvailablePeriods());
-          return;
         }
 
-        const isInReservationManagementPage = window.location.href.includes(ROUTE_PATH.reservationMangement);
-        if (isInReservationManagementPage) {
-          console.log('SocketMiddleware: Admin Receive RESERVATION');
-          const dateFilter = store.getState().reservationManagement.dateFilter;
-          store.dispatch(reservationManagementSliceActions.getAvailablePeriods());
-          store.dispatch(reservationManagementSliceActions.getReservations(dateFilter));
+        if (isAdmin) {
+          store.dispatch(
+            setAdminNotification({
+              id: Date.now(),
+              title: '預約更新',
+            }),
+          );
+          const isInReservationManagementPage = window.location.href.includes(ROUTE_PATH.reservationMangement);
+          if (isInReservationManagementPage) {
+            const dateFilter = store.getState().reservationManagement.dateFilter;
+            store.dispatch(reservationManagementSliceActions.getAvailablePeriods());
+            store.dispatch(reservationManagementSliceActions.getReservations(dateFilter));
+          }
         }
       });
     }
@@ -106,72 +141,75 @@ export const socketMiddleware: Middleware = (store: MiddlewareAPI<AppDispatch, A
     // emit the joinRoom action
     if (joinRoom.match(action)) {
       const room = action.payload;
-      console.log('SocketMiddleware: Joining room:', room);
+      console.log('Joining room:', room);
       s.socket.emit(SocketEvent.JoinRoom, room);
     }
 
     // emit leaveRoom action
     if (leaveRoom.match(action)) {
       const room = action.payload;
-      console.log('SocketMiddleware: Leaving room:', room);
+      console.log('Leaving room:', room);
       s.socket.emit(SocketEvent.LeaveRoom, room);
     }
 
-    // emit the menu action
-    const adminUpdateMenuActions = [
-      postCategory.fulfilled,
-      patchCategory.fulfilled,
-      patchCategoryOrder.fulfilled,
-      deleteCategory.fulfilled,
-      postMeal.fulfilled,
-      patchMeal.fulfilled,
-      patchMealOrder.fulfilled,
-      deleteMeal.fulfilled,
-      postSpecialty.fulfilled,
-      patchSpecialty.fulfilled,
-      patchSpecialtyOrder.fulfilled,
-      deleteSpecialty.fulfilled,
-      postSpecialtyItem.fulfilled,
-      patchSpecialtyItem.fulfilled,
-      patchSpecialtyItem.fulfilled,
-      deleteSpecialtyItem.fulfilled,
-    ];
-    if (isAdmin && adminUpdateMenuActions.some((tp) => tp.match(action))) {
-      console.log('SocketMiddleware: Emitting MENU');
-      s.socket.emit(SocketTopic.MENU);
+    if (isAdmin) {
+      // [EMIT MENU ACTION]
+      const adminUpdateMenuActions = [
+        postCategory.fulfilled,
+        patchCategory.fulfilled,
+        patchCategoryOrder.fulfilled,
+        deleteCategory.fulfilled,
+        postMeal.fulfilled,
+        patchMeal.fulfilled,
+        patchMealOrder.fulfilled,
+        deleteMeal.fulfilled,
+        postSpecialty.fulfilled,
+        patchSpecialty.fulfilled,
+        patchSpecialtyOrder.fulfilled,
+        deleteSpecialty.fulfilled,
+        postSpecialtyItem.fulfilled,
+        patchSpecialtyItem.fulfilled,
+        patchSpecialtyItem.fulfilled,
+        deleteSpecialtyItem.fulfilled,
+      ];
+      if (adminUpdateMenuActions.some((a) => a.match(action))) {
+        s.socket.emit(SocketTopic.MENU);
+      }
+
+      // [EMIT ORDER ACTION]
+      const adiminUpdateOrderActions = [
+        orderManagementSliceActions.cancelOrder.fulfilled,
+        orderManagementSliceActions.patchOrderMealServedAmount.fulfilled,
+      ];
+      if (adiminUpdateOrderActions.some((a) => a.match(action))) {
+        const reservationId = store.getState().orderManagement.socketPayload?.reservationId;
+        if (!reservationId) return;
+        s.socket.emit(SocketTopic.ORDER, reservationId);
+        store.dispatch(orderManagementSliceActions.setSocketOrderPayload(null));
+      }
+
+      // [EMIT RESERVATION ACTION]
+      const allUpdateReservationActions = [
+        reservationManagementSliceActions.postReservation.fulfilled,
+        reservationManagementSliceActions.patchReservation.fulfilled,
+        reservationManagementSliceActions.deleteReservation.fulfilled,
+      ];
+      if (allUpdateReservationActions.some((a) => a.match(action))) {
+        s.socket.emit(SocketTopic.RESERVATION);
+      }
     }
 
-    // emit the order action
-    const adiminUpdateOrderActions = [
-      orderManagementSliceActions.postOrder.fulfilled,
-      orderManagementSliceActions.cancelOrder.fulfilled,
-      orderManagementSliceActions.patchOrderMealServedAmount.fulfilled,
-    ];
+    if (isCustomer) {
+      // [EMIT ORDER ACTION]
+      const customerUpdateOrderActions = [orderSliceActions.postOrder.fulfilled];
+      if (customerUpdateOrderActions.some((a) => a.match(action))) {
+        s.socket.emit(SocketTopic.ORDER);
+      }
 
-    if (isAdmin && adiminUpdateOrderActions.some((tp) => tp.match(action))) {
-      console.log('SocketMiddleware: Emitting ORDER');
-      s.socket.emit(SocketTopic.ORDER);
-    }
-    if (isCustomer && orderSliceActions.postOrder.fulfilled.match(action)) {
-      console.log('SocketMiddleware: Emitting ORDER');
-      s.socket.emit(SocketTopic.ORDER); // TODO: with reservationId
-    }
-
-    // emit the reservation action
-    const allUpdateReservationActions = [
-      reservationManagementSliceActions.postReservation.fulfilled,
-      reservationManagementSliceActions.patchReservation.fulfilled,
-      reservationManagementSliceActions.deleteReservation.fulfilled,
-    ];
-
-    if (isAdmin && allUpdateReservationActions.some((tp) => tp.match(action))) {
-      console.log('SocketMiddleware: Emitting RESERVATION');
-      s.socket.emit(SocketTopic.RESERVATION);
-    }
-
-    if (isCustomer && postReservation.fulfilled.match(action)) {
-      console.log('SocketMiddleware: Emitting RESERVATION');
-      s.socket.emit(SocketTopic.RESERVATION);
+      // [EMIT RESERVATION ACTION]
+      if (postReservation.fulfilled.match(action)) {
+        s.socket.emit(SocketTopic.RESERVATION);
+      }
     }
 
     next(action);
