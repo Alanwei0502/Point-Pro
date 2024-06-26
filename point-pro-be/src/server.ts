@@ -2,12 +2,15 @@ import 'dotenv/config';
 import http from 'http';
 import express, { json, urlencoded } from 'express';
 import cookieParser from 'cookie-parser';
+import path from 'path';
 import { Logger, startSocketServer } from './helpers';
 import apiRouter from './routes';
 import { corsMiddleware, errorMiddleware, sessionMiddleware, rateLimiterMiddleware, morganMiddleware } from './middlewares';
 
 const app = express();
 const server = http.createServer(app);
+
+app.set('view engine', 'ejs');
 
 // Global Error Handler
 process

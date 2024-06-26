@@ -8,7 +8,7 @@
     "update-reservations": "ts-node-dev --files prisma/updateReservations.ts",
     "update-periods": "ts-node-dev --files prisma/updatePeriods.ts",
     "build": "tsc -p .",
-    "build:prod": "prisma migrate deploy && prisma generate && tsc -p .",
+    "build:prod": "prisma migrate deploy && prisma generate && tsc -p . && mkdir dist/templates && cp src/templates/*.ejs dist/templates/",
     "start": "node dist/server.js",
     "testquery": "ts-node-dev prisma/script.ts"
   },
