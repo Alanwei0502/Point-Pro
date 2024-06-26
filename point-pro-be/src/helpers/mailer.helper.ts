@@ -35,7 +35,7 @@ type EmailType = keyof IEmail;
 
 export class MailService {
   static transporter = nodemailer.createTransport({
-    host: 'smtp.gmail.com',
+    service: 'gmail',
     auth: {
       user: process.env.GMAIL_USER,
       pass: process.env.GMAIL_PASS,
