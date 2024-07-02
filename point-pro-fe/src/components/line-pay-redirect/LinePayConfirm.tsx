@@ -1,5 +1,5 @@
 import { FC, useEffect, useState } from 'react';
-import { Box } from '@mui/material';
+import Box from '@mui/material/Box';
 import { useAppDispatch } from '~/hooks';
 import { paymentSliceActions } from '~/store/slices';
 

@@ -1,6 +1,7 @@
-import { Button, ButtonTypeMap, Input, InputProps } from '@mui/material';
-import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { FC } from 'react';
+import Button, { ButtonTypeMap } from '@mui/material/Button';
+import Input, { InputProps } from '@mui/material/Input';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 
 interface IUploadButtonProps {
   btn?: ButtonTypeMap['props'];

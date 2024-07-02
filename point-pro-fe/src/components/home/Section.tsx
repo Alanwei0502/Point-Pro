@@ -1,5 +1,6 @@
 import { FC } from 'react';
-import { Box, BoxProps, Container } from '@mui/material';
+import Box, { BoxProps } from '@mui/material/Box';
+import Container from '@mui/material/Container';
 import { Column } from '../layout/Layout';
 
 interface ISectionProps extends BoxProps {

@@ -1,10 +1,10 @@
 import { FC } from 'react';
-import { Box } from '@mui/material';
+import Box from '@mui/material/Box';
 import { useAppDispatch, useAppSelector } from '~/hooks';
-import { TabletModal } from './TabletModal';
-import { AppButton } from '../button/AppButton';
 import { paymentSliceActions } from '~/store/slices';
 import { PostLinePayResponse } from '~/types';
+import { TabletModal } from './TabletModal';
+import { AppButton } from '../button/AppButton';
 
 const { openConfirmCloseLinePayModal } = paymentSliceActions;
 

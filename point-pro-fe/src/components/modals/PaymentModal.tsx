@@ -1,14 +1,23 @@
 import { FC, useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { Alert, Box, Checkbox, List, ListItem, ListItemIcon, ListItemText, MenuItem, Select, SelectChangeEvent, Typography } from '@mui/material';
+import Alert from '@mui/material/Alert';
+import Box from '@mui/material/Box';
+import Checkbox from '@mui/material/Checkbox';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
+import Typography from '@mui/material/Typography';
+import MenuItem from '@mui/material/MenuItem';
 import { useAppDispatch, useAppSelector } from '~/hooks';
 import { orderManagementSliceActions, paymentSliceActions, reservationManagementSliceActions } from '~/store/slices';
 import { AppButton, Loading } from '~/components';
 import { theme } from '~/theme';
 import { OrderStatus, OrderType, PaymentType } from '~/types';
-import { TabletModal } from './TabletModal';
 import { ROUTE_PATH } from '~/utils';
+import { TabletModal } from './TabletModal';
 
 interface ICheckoutOrderListProps {
   isLoading: boolean;

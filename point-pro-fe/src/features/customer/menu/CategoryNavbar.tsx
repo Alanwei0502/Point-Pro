@@ -1,9 +1,14 @@
 import { FC, useMemo } from 'react';
-import { Box, Tab, Tabs, Typography, styled, tabsClasses } from '@mui/material';
+import styled from '@emotion/styled';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import Tab from '@mui/material/Tab';
+import Tabs, { tabsClasses } from '@mui/material/Tabs';
 import { useAppDispatch, useAppSelector } from '~/hooks';
 import { setCurrentCategory } from '~/store/slices';
+import { theme } from '~/theme';
 
-export const StyledTab = styled(Tab)(({ theme }) => ({
+export const StyledTab = styled(Tab)(() => ({
   backgroundColor: theme.palette.common.black_20,
   borderRadius: '5rem',
   margin: '.2rem',

@@ -1,6 +1,11 @@
 import React, { FC } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Box, List, ListItem, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
+import Box from '@mui/material/Box';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemButton from '@mui/material/ListItemButton';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
 import RestaurantMenuIcon from '@mui/icons-material/RestaurantMenu';
 import StickyNote2Icon from '@mui/icons-material/StickyNote2';
 import MenuBookIcon from '@mui/icons-material/MenuBook';

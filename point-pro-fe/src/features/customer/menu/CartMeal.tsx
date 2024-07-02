@@ -1,5 +1,8 @@
 import { FC, SyntheticEvent } from 'react';
-import { Box, Grid, ListItemButton, Typography } from '@mui/material';
+import Box from '@mui/material/Box';
+import Grid from '@mui/material/Grid';
+import ListItemButton from '@mui/material/ListItemButton';
+import Typography from '@mui/material/Typography';
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { useAppDispatch } from '~/hooks';

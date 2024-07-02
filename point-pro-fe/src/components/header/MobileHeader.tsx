@@ -1,6 +1,9 @@
 import { FC } from 'react';
 import { useLocation } from 'react-router-dom';
-import { Breadcrumbs, Typography, Link, Box } from '@mui/material';
+import Breadcrumbs from '@mui/material/Breadcrumbs';
+import Typography from '@mui/material/Typography';
+import Link from '@mui/material/Link';
+import Box from '@mui/material/Box';
 import { ROUTE_PATH } from '~/utils';
 
 interface IMobileHeaderProps {}

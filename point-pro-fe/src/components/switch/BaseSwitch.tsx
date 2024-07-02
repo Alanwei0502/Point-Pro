@@ -1,6 +1,8 @@
-import { Switch, styled } from '@mui/material';
+import styled from '@emotion/styled';
+import Switch from '@mui/material/Switch';
+import { theme } from '~/theme';
 
-export const BaseSwitch = styled(Switch)(({ theme }) => ({
+export const BaseSwitch = styled(Switch)(() => ({
   width: 42,
   height: 26,
   padding: 0,

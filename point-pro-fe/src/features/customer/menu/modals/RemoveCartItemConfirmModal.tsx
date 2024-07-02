@@ -1,5 +1,6 @@
 import { FC } from 'react';
-import { Box, Typography } from '@mui/material';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
 import { AppButton, MobileModal } from '~/components';
 import { useAppDispatch, useAppSelector } from '~/hooks';
 import { closeModal, deleteCartItem } from '~/store/slices';

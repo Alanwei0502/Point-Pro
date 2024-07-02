@@ -1,8 +1,9 @@
 import { FC } from 'react';
-import { styled } from '@mui/material';
+import styled from '@emotion/styled';
 import Button, { ButtonProps } from '@mui/material/Button';
+import { theme } from '~/theme';
 
-const BaseButton = styled(Button)<ButtonProps>(({ theme, size }) => ({
+const BaseButton = styled(Button)<ButtonProps>(({ size }) => ({
   fontSize: size || 14,
   display: 'flex',
   flexDirection: 'row',

@@ -1,6 +1,12 @@
 import { FC, Fragment } from 'react';
-import { Box, Divider, List, ListItemButton, ListSubheader, Typography } from '@mui/material';
-import { BaseCheckbox, MobileDialogLayout, NumberInput, AppButton } from '~/components';
+import Box from '@mui/material/Box';
+import Checkbox from '@mui/material/Checkbox';
+import Divider from '@mui/material/Divider';
+import List from '@mui/material/List';
+import ListItemButton from '@mui/material/ListItemButton';
+import ListSubheader from '@mui/material/ListSubheader';
+import Typography from '@mui/material/Typography';
+import { MobileDialogLayout, NumberInput, AppButton } from '~/components';
 import { calculateCartItemPrice } from '~/utils';
 import { useAppDispatch, useAppSelector } from '~/hooks';
 import { closeDialog, updateSpecialty, increaseMealAmount, decreaseMealAmount, createCartItem, updateCartItem } from '~/store/slices';
@@ -40,7 +46,7 @@ const CustomizedSpecialties: FC<ICustomizedSpecialtiesProps> = () => {
                     <ListItemButton onClick={handleClickItem(specialty, item)}>
                       <Box display='flex' justifyContent='space-between' width='100%' py={1}>
                         <Typography>{item.title}</Typography>
-                        <BaseCheckbox checked={!!customizedDialogData?.selectedSpecialtyItems.find(({ id }) => id === item.id)} />
+                        <Checkbox sx={{ padding: 0 }} checked={!!customizedDialogData?.selectedSpecialtyItems.find(({ id }) => id === item.id)} />
                       </Box>
                     </ListItemButton>
                     <Divider light />

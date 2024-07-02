@@ -1,5 +1,10 @@
 import { FC, useEffect, useState } from 'react';
-import { Box, Checkbox, Grid, List, ListItem, Typography } from '@mui/material';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import Checkbox from '@mui/material/Checkbox';
+import Grid from '@mui/material/Grid';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { ORDER_STATUS_TRANSLATE, calculateOrderPrice } from '~/utils';
 import { useAppDispatch, useAppSelector } from '~/hooks';

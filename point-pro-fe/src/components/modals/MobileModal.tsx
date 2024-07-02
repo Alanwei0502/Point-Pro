@@ -1,5 +1,6 @@
 import { FC, ReactNode } from 'react';
-import { Box, BoxProps, Modal, ModalProps } from '@mui/material';
+import Box, { BoxProps } from '@mui/material/Box';
+import Modal, { ModalProps } from '@mui/material/Modal';
 import { useAppDispatch } from '~/hooks';
 import { closeModal } from '~/store/slices';
 

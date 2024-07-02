@@ -1,5 +1,6 @@
 import { FC } from 'react';
-import { Box, Typography } from '@mui/material';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
 import EventIcon from '@mui/icons-material/Event';
 import LocalPhoneIcon from '@mui/icons-material/LocalPhone';
 import MapSharpIcon from '@mui/icons-material/MapSharp';

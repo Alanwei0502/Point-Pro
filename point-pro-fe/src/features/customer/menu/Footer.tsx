@@ -1,5 +1,9 @@
 import { FC, SyntheticEvent, useMemo } from 'react';
-import { BottomNavigation, BottomNavigationAction, BottomNavigationActionProps, Box, styled } from '@mui/material';
+import BottomNavigation from '@mui/material/BottomNavigation';
+import BottomNavigationAction, { BottomNavigationActionProps } from '@mui/material/BottomNavigationAction';
+import Box from '@mui/material/Box';
+import styled from '@emotion/styled';
+import { theme } from '~/theme';
 import RestaurantMenuIcon from '@mui/icons-material/RestaurantMenu';
 import CartIcon from '@mui/icons-material/ShoppingCart';
 import StickyNote2Icon from '@mui/icons-material/StickyNote2';
@@ -7,7 +11,7 @@ import { useAppDispatch, useAppSelector } from '~/hooks';
 import { openDialog } from '~/store/slices';
 import { OrderStatus, MobileDialog } from '~/types';
 
-const StyledBottomNavigationAction = styled(BottomNavigationAction)<BottomNavigationActionProps & { amount?: number }>(({ theme, amount }) => ({
+const StyledBottomNavigationAction = styled(BottomNavigationAction)<BottomNavigationActionProps & { amount?: number }>(({ amount }) => ({
   borderRadius: '.6rem',
   minWidth: 'auto',
   padding: '0',

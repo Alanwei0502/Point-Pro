@@ -1,5 +1,5 @@
-import { FC } from "react";
-import { styled } from "@mui/material";
+import { FC } from 'react';
+import styled from '@emotion/styled';
 
 interface IGridProps {
   children: React.ReactNode;
@@ -12,19 +12,19 @@ interface IGridProps {
   onClick?: React.MouseEventHandler<HTMLLIElement> | undefined;
 }
 
-const StyledGrid = styled("ul")<IGridProps>`
+const StyledGrid = styled('ul')<IGridProps>`
   margin: 0;
   padding: 0;
   display: grid;
   list-style: none;
-  grid-template-columns: ${({ columns }) => `repeat(${columns}, minmax(0, 1fr))` || "repeat(3, 1fr)"};
-  grid-template-rows: ${({ rows }) => `repeat(${rows}, minmax(0, 1fr))` || "auto"};
-  gap: ${({ gap }) => gap || "0"};
+  grid-template-columns: ${({ columns }) => `repeat(${columns}, minmax(0, 1fr))` || 'repeat(3, 1fr)'};
+  grid-template-rows: ${({ rows }) => `repeat(${rows}, minmax(0, 1fr))` || 'auto'};
+  gap: ${({ gap }) => gap || '0'};
 `;
 
-const StyledGridItem = styled("li")<IGridProps>`
-  grid-column: ${({ column }) => `span ${column} / span ${column}` || "auto"};
-  grid-row: ${({ row }) => `span ${row} / span ${row}` || "auto"};
+const StyledGridItem = styled('li')<IGridProps>`
+  grid-column: ${({ column }) => `span ${column} / span ${column}` || 'auto'};
+  grid-row: ${({ row }) => `span ${row} / span ${row}` || 'auto'};
 `;
 
 export const BaseGrid: FC<IGridProps> = ({ children, columns, rows, gap, sx }) => {

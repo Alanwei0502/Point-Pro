@@ -1,6 +1,8 @@
 import { FC, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
-import { Box, List, Typography } from '@mui/material';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import List from '@mui/material/List';
 import { CartMeal } from '~/features/customer/menu/CartMeal';
 import { AppButton, MobileDialogLayout } from '~/components';
 import { calculateCartPrice } from '~/utils';

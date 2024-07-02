@@ -1,5 +1,10 @@
 import { FC } from 'react';
-import { Box, Divider, Grid, List, ListItem, ListItemButton } from '@mui/material';
+import Box from '@mui/material/Box';
+import Divider from '@mui/material/Divider';
+import Grid from '@mui/material/Grid';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemButton from '@mui/material/ListItemButton';
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import { useAppDispatch, useAppSelector } from '~/hooks';
 import { openDialog } from '~/store/slices';

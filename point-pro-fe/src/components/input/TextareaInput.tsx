@@ -1,7 +1,8 @@
-import { styled } from '@mui/material/styles';
-import { TextareaAutosize } from '@mui/base';
+import styled from '@emotion/styled';
+import TextareaAutosize from '@mui/material/TextareaAutosize';
+import { theme } from '~/theme';
 
-export const TextareaInput = styled(TextareaAutosize)(({ theme }) => ({
+export const TextareaInput = styled(TextareaAutosize)(() => ({
   // your custom styles go here
   position: 'relative',
   borderRadius: '4px',

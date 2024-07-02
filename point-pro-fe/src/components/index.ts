@@ -5,18 +5,12 @@ export * from './button/CloseButton';
 export * from './button/UploadButton';
 export * from './button/BackToTopButton';
 export * from './button/CallToActionButton';
-// Checkbox
-export * from './checkbox/BaseCheckbox';
-// Date Picker
-export * from './date-picker/BaseDatePicker';
 // Dialog
 export * from './dialog/MobileDialog';
 // Draw
 export * from './drawer/BaseDrawer';
 export * from './drawer/LeftMenuDrawer';
 export * from './drawer/NotificationDrawer';
-// File
-export * from './file/File';
 // Footer
 export * from './footer/Footer';
 // Grid
@@ -25,8 +19,6 @@ export * from './grid/Grid';
 export * from './header/Header';
 export * from './header/MobileHeader';
 // Input
-export * from './input/DateInput';
-export * from './input/FileInput';
 export * from './input/TextInput';
 export * from './input/TextareaInput';
 export * from './input/NumberInput';
@@ -45,11 +37,7 @@ export * from './modals/LinePayModal';
 export * from './modals/PaymentModal';
 export * from './modals/TabletModal';
 export * from './modals/StartDiningQRCodeModal';
-// Radio
-export * from './radio/BaseRadio';
-export * from './radio/GroupRadio';
 // Select
-export * from './select/LabelSelect';
 export * from './select/MySelect';
 // Switch
 export * from './switch/BaseSwitch';

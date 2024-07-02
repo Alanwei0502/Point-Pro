@@ -1,5 +1,8 @@
 import { FC, useState } from 'react';
-import { Box, Typography, Button, Icon, ButtonProps } from '@mui/material';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import Button, { ButtonProps } from '@mui/material/Button';
+import Icon from '@mui/material/Icon';
 import FingerprintIcon from '@mui/icons-material/Fingerprint';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 

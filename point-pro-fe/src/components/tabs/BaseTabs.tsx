@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { Tabs, TabsProps, tabsClasses } from '@mui/material';
+import Tabs, { TabsProps, tabsClasses } from '@mui/material/Tabs';
 import { theme } from '~/theme';
 
 export const BaseTabs: FC<TabsProps> = (props) => {

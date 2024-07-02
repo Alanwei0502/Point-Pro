@@ -1,5 +1,6 @@
 import { FC, useEffect } from 'react';
-import { Box, Typography } from '@mui/material';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
 import { useAppDispatch, useAppSelector } from '~/hooks';
 import { MobileLayout, MobileHeader } from '~/components';
 import { newSocketSliceActions } from '~/store/slices';

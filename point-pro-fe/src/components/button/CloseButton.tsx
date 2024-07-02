@@ -1,13 +1,15 @@
 import { CSSProperties, FC } from 'react';
-import { Button, styled } from '@mui/material';
+import styled from '@emotion/styled';
+import Button from '@mui/material/Button';
 import CloseIcon from '@mui/icons-material/Close';
+import { theme } from '~/theme';
 
 interface ICloseButtonProps {
   onClick?: React.MouseEventHandler<HTMLButtonElement> | undefined;
   sx?: CSSProperties;
 }
 
-export const StyledCloseButton = styled(Button)(({ theme }) => ({
+export const StyledCloseButton = styled(Button)(() => ({
   padding: theme.spacing(2),
   backgroundColor: theme.palette.common.black,
   color: 'white',

@@ -1,41 +1,44 @@
 import { FC, Dispatch, SetStateAction } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Box, Button, Card, CardActionArea, Typography } from '@mui/material';
+import Box from '@mui/material/Box';
+import Card from '@mui/material/Card';
+import CardActionArea from '@mui/material/CardActionArea';
+import Typography from '@mui/material/Typography';
+import Button from '@mui/material/Button';
 import { useAppDispatch, useAppSelector } from '~/hooks';
-import { clearNotifications, newSocketSliceActions, removeNotification } from '~/store/slices';
-import { ReservationType, OrderType, SocketTopic, MenuMessage, OrderMessage, ReservationMessage } from '~/types';
-import { appDayjs, GENDER_TRANSLATE, ROUTE_PATH } from '~/utils';
+import { newSocketSliceActions } from '~/store/slices';
+import { ROUTE_PATH } from '~/utils';
 import { BaseDraw } from '~/components';
+
+// const menuTitle = {
+//   [MenuMessage.CREATE_MEAL]: '新增',
+//   [MenuMessage.UPDATE_MEAL]: '更新',
+//   [MenuMessage.DELETE_MEAL]: '刪除',
+// };
+
+// const orderTitle = {
+//   [OrderMessage.CREATE_ORDER]: '新單',
+//   [OrderMessage.UPDATE_ORDER]: '出餐',
+//   [OrderMessage.CANCEL_ORDER]: '取消',
+//   [OrderMessage.PAY_ORDER]: '結帳',
+// };
+
+// const reservationTitle1 = {
+//   [ReservationMessage.CREATE_RESERVATION]: '新的預約',
+//   [ReservationMessage.UPDATE_RESERVATION]: '更新預約資訊',
+// };
+
+// const reservationTypeTitle = {
+//   [ReservationType.ONLINE]: '線上訂位',
+//   [ReservationType.PHONE]: '電話訂位',
+// };
+
+const { removeAdminNotification, removeAllAdminNotification } = newSocketSliceActions;
 
 interface INotificationDrawerProps {
   open: boolean;
   setOpen: Dispatch<SetStateAction<boolean>>;
 }
-
-const menuTitle = {
-  [MenuMessage.CREATE_MEAL]: '新增',
-  [MenuMessage.UPDATE_MEAL]: '更新',
-  [MenuMessage.DELETE_MEAL]: '刪除',
-};
-
-const orderTitle = {
-  [OrderMessage.CREATE_ORDER]: '新單',
-  [OrderMessage.UPDATE_ORDER]: '出餐',
-  [OrderMessage.CANCEL_ORDER]: '取消',
-  [OrderMessage.PAY_ORDER]: '結帳',
-};
-
-const reservationTitle1 = {
-  [ReservationMessage.CREATE_RESERVATION]: '新的預約',
-  [ReservationMessage.UPDATE_RESERVATION]: '更新預約資訊',
-};
-
-const reservationTypeTitle = {
-  [ReservationType.ONLINE]: '線上訂位',
-  [ReservationType.PHONE]: '電話訂位',
-};
-
-const { removeAdminNotification, removeAllAdminNotification } = newSocketSliceActions;
 
 export const NotificationDrawer: FC<INotificationDrawerProps> = ({ open, setOpen }) => {
   const navigate = useNavigate();

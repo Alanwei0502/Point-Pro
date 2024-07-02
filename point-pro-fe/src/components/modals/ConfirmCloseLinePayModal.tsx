@@ -1,10 +1,10 @@
 import { FC } from 'react';
-import { TabletModal } from './TabletModal';
-import { Typography } from '@mui/material';
-import { AppButton } from '../button/AppButton';
+import Typography from '@mui/material/Typography';
 import { useAppDispatch, useAppSelector } from '~/hooks';
 import { paymentSliceActions } from '~/store/slices';
 import { PaymentStatus } from '~/types';
+import { TabletModal } from './TabletModal';
+import { AppButton } from '../button/AppButton';
 
 const { closePaymentModal, patchPaymentStatus, closeLinePayModal, closeConfirmCloseLinePayModal } = paymentSliceActions;
 

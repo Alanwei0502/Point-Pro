@@ -1,6 +1,13 @@
 import { FC, useState } from 'react';
-import { Box, ButtonBase, FormControl, FormControlLabel, FormLabel, Radio, RadioGroup, TextField } from '@mui/material';
-import { BaseCheckbox } from '~/components';
+import Box from '@mui/material/Box';
+import ButtonBase from '@mui/material/ButtonBase';
+import Checkbox from '@mui/material/Checkbox';
+import FormControl from '@mui/material/FormControl';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import FormLabel from '@mui/material/FormLabel';
+import Radio from '@mui/material/Radio';
+import RadioGroup from '@mui/material/RadioGroup';
+import TextField from '@mui/material/TextField';
 import { MobileBookingDialog, Gender } from '~/types';
 import { emailRegex, GENDER_TRANSLATE, phoneRegex } from '~/utils';
 import { useAppDispatch, useAppSelector } from '~/hooks';
@@ -119,7 +126,7 @@ export const BookerInfo: FC<IBookerInfoProps> = () => {
 
       <Box sx={{ padding: '0 .1rem', margin: '1rem 0' }}>
         <FormControlLabel
-          control={<BaseCheckbox checked={isAgreedPrivacyPolicy} onChange={handleAgreedPolicy} />}
+          control={<Checkbox sx={{ padding: 0 }} checked={isAgreedPrivacyPolicy} onChange={handleAgreedPolicy} />}
           label='確認我已閱讀並同意'
           sx={{ margin: 0 }}
         />

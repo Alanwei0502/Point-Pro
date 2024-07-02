@@ -1,18 +1,14 @@
 import { FC } from 'react';
-import {
-  Box,
-  Typography,
-  Dialog,
-  DialogActions,
-  DialogActionsProps,
-  DialogContent,
-  DialogContentProps,
-  DialogProps,
-  DialogTitle,
-  DialogTitleProps,
-} from '@mui/material';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import Dialog, { DialogProps } from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogTitle from '@mui/material/DialogTitle';
+import { DialogActionsProps } from '@mui/material/DialogActions';
+import { DialogContentProps } from '@mui/material/DialogContent';
+import { DialogTitleProps } from '@mui/material/DialogTitle';
 import { Variant } from '@mui/material/styles/createTypography';
-import CancelIcon from '@mui/icons-material/Cancel';
 
 interface IMobileDialogLayoutProps {
   title?: React.ReactNode;

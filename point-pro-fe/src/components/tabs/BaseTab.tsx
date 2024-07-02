@@ -1,6 +1,5 @@
 import { FC } from 'react';
-import { Tab, TabProps } from '@mui/material';
-import { theme } from '~/theme';
+import Tab, { TabProps } from '@mui/material/Tab';
 
 export const BaseTab: FC<TabProps> = (props) => {
   const { children, ...restProps } = props;

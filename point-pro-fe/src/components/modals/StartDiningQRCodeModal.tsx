@@ -1,6 +1,7 @@
 import { FC } from 'react';
 import { QRCodeSVG } from 'qrcode.react';
-import { Box, Typography } from '@mui/material';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
 import { useAppDispatch, useAppSelector } from '~/hooks';
 import { adminUISliceActions } from '~/store/slices';
 import { AppButton } from '~/components';

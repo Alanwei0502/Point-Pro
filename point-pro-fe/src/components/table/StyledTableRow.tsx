@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { TableRow } from '@mui/material';
+import TableRow from '@mui/material/TableRow';
 import { theme } from '~/theme';
 
 export const StyledTableRow = styled(TableRow)(() => ({

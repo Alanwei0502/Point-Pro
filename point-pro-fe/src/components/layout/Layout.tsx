@@ -1,4 +1,5 @@
-import { styled, Box } from '@mui/material';
+import styled from '@emotion/styled';
+import Box from '@mui/material/Box';
 
 interface IRowProps {
   length?: number;

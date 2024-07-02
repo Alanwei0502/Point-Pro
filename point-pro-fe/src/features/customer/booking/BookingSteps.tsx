@@ -1,10 +1,10 @@
 import { FC } from 'react';
-import { MobileStepper } from '@mui/material';
+import { toast } from 'react-toastify';
+import MobileStepper from '@mui/material/MobileStepper';
 import { AppButton } from '~/components';
 import { MobileBookingDialog } from '~/types';
 import { useAppDispatch, useAppSelector } from '~/hooks';
 import { setStep, setDialog, postReservation } from '~/store/slices';
-import { toast } from 'react-toastify';
 import { emailRegex, phoneRegex } from '~/utils';
 
 interface IBookingStepsProps {

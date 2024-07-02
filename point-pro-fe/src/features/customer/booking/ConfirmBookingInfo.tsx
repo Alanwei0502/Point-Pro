@@ -1,11 +1,12 @@
 import { FC } from 'react';
-import { Box, Grid, InputAdornment, TextField, TextFieldProps } from '@mui/material';
-import {
-  Accessibility as AccessibilityIcon,
-  PhoneIphone as PhoneIphoneIcon,
-  Email as EmailIcon,
-  StickyNote2 as StickyNote2Icon,
-} from '@mui/icons-material';
+import Box from '@mui/material/Box';
+import Grid from '@mui/material/Grid';
+import InputAdornment from '@mui/material/InputAdornment';
+import TextField, { TextFieldProps } from '@mui/material/TextField';
+import AccessibilityIcon from '@mui/icons-material/Accessibility';
+import PhoneIphoneIcon from '@mui/icons-material/PhoneIphone';
+import EmailIcon from '@mui/icons-material/Email';
+import StickyNote2Icon from '@mui/icons-material/StickyNote2';
 import { formatFullDate, formatTimeOnly, GENDER_TRANSLATE } from '~/utils';
 import { useAppSelector } from '~/hooks';
 
