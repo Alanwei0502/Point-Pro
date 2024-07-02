@@ -2,7 +2,6 @@ import 'dotenv/config';
 import http from 'http';
 import express, { json, urlencoded } from 'express';
 import cookieParser from 'cookie-parser';
-import path from 'path';
 import { Logger, startSocketServer } from './helpers';
 import apiRouter from './routes';
 import { corsMiddleware, errorMiddleware, sessionMiddleware, rateLimiterMiddleware, morganMiddleware } from './middlewares';

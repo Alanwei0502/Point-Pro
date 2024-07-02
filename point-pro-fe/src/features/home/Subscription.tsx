@@ -1,13 +1,18 @@
 import { ChangeEvent, FC, useState } from 'react';
-import { Box, FormControl, Grid, Modal, TextField, Typography } from '@mui/material';
+import { toast } from 'react-toastify';
+import { AxiosError } from 'axios';
+import Box from '@mui/material/Box';
+import Grid from '@mui/material/Grid';
+import Typography from '@mui/material/Typography';
+import TextField from '@mui/material/TextField';
+import FormControl from '@mui/material/FormControl';
+import Modal from '@mui/material/Modal';
 import SendIcon from '@mui/icons-material/Send';
 import { Section, AppButton } from '~/components';
 import { useResponsiveStyles } from '~/hooks';
 import { theme } from '~/theme';
 import { emailRegex } from '~/utils';
 import { NewsletterApi } from '~/api';
-import { toast } from 'react-toastify';
-import { AxiosError } from 'axios';
 
 interface ISubscriptionProps {}
 

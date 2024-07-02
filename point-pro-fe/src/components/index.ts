@@ -68,4 +68,3 @@ export * from './home/Section';
 export * from './home/NavLink';
 // line-pay-redirect
 export * from './line-pay-redirect/LinePayConfirm';
-export * from './line-pay-redirect/LinePayCancel';

@@ -1,12 +1,10 @@
 import { FC } from 'react';
 import { Box, Typography } from '@mui/material';
-import {
-  Event as EventIcon,
-  Directions as DirectionsIcon,
-  Info as InfoIcon,
-  LocalPhone as LocalPhoneIcon,
-  MapSharp as MapSharpIcon,
-} from '@mui/icons-material';
+import EventIcon from '@mui/icons-material/Event';
+import LocalPhoneIcon from '@mui/icons-material/LocalPhone';
+import MapSharpIcon from '@mui/icons-material/MapSharp';
+import InfoIcon from '@mui/icons-material/Info';
+import DirectionsIcon from '@mui/icons-material/Directions';
 import { MobileDialogLayout, AppButton } from '~/components';
 import { MobileBookingDialog } from '~/types';
 import { appDayjs, GENDER_TRANSLATE } from '~/utils';

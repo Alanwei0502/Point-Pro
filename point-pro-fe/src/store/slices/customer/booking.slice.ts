@@ -46,8 +46,8 @@ const initialState: ICustomerBookingSliceState = {
 
 export const getAvailablePeriods = createAppAsyncThunk(`${sliceName}/getAvailablePeriods`, async (_, thunkApi) => {
   try {
-    const result = await PeriodApi.getAvailablePeriods();
-    return result?.result ?? [];
+    const res = await PeriodApi.getAvailablePeriods();
+    return res?.result ?? [];
   } catch (error) {
     return thunkApi.rejectWithValue(error);
   }

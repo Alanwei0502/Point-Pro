@@ -72,6 +72,7 @@ export const Testimonial: FC<ITestimonialProps> = () => {
               <img
                 src={t.imgUrl}
                 alt={t.name}
+                loading='lazy'
                 style={{
                   borderRadius: '2.5rem',
                   width: '100%',

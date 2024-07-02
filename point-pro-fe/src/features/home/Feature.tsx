@@ -1,5 +1,7 @@
 import { FC } from 'react';
-import { Box, Grid, Typography } from '@mui/material';
+import Box from '@mui/material/Box';
+import Grid from '@mui/material/Grid';
+import Typography from '@mui/material/Typography';
 import { Assignment, MoreTime, MenuBook, Inventory } from '@mui/icons-material';
 import { Column, Section, Title } from '~/components';
 import { useResponsiveStyles } from '~/hooks';
@@ -101,7 +103,9 @@ export const FeatureCards: FC<IFeatureCardsProps> = ({ isTablet, isDesktop }) =>
       {features.map((f) => (
         <Grid item xs={isDesktop ? 12 : 6} md={3} padding={1} key={f.title} display='flex' flexDirection='column' alignItems='center'>
           <img
+            alt={f.title}
             src={f.imgUrl}
+            loading='lazy'
             style={{
               borderRadius: '2.5rem',
               width: '100%',

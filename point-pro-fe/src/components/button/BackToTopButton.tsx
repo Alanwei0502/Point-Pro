@@ -1,5 +1,5 @@
 import { FC, useEffect, useState } from 'react';
-import { IconButton } from '@mui/material';
+import IconButton from '@mui/material/IconButton';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import { theme } from '~/theme';
 

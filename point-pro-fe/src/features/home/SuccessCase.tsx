@@ -1,6 +1,6 @@
 import { FC } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Box } from '@mui/material';
+import Box from '@mui/material/Box';
 import InsertInvitationIcon from '@mui/icons-material/InsertInvitation';
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import { AppButton, Section, Title } from '~/components';

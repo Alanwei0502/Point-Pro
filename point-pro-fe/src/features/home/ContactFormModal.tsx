@@ -1,28 +1,22 @@
 import { ReactElement, FC, Ref, forwardRef, useState, SyntheticEvent } from 'react';
 import { toast } from 'react-toastify';
-import {
-  Button,
-  Checkbox,
-  Dialog,
-  DialogContent,
-  DialogTitle,
-  FormControl,
-  FormControlLabel,
-  FormGroup,
-  FormLabel,
-  MenuItem,
-  Radio,
-  RadioGroup,
-  TextField,
-} from '@mui/material';
+import Button from '@mui/material/Button';
+import Checkbox from '@mui/material/Checkbox';
+import Dialog from '@mui/material/Dialog';
+import DialogContent from '@mui/material/DialogContent';
+import DialogTitle from '@mui/material/DialogTitle';
+import FormControl from '@mui/material/FormControl';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import FormGroup from '@mui/material/FormGroup';
+import FormLabel from '@mui/material/FormLabel';
+import MenuItem from '@mui/material/MenuItem';
+import Radio from '@mui/material/Radio';
+import RadioGroup from '@mui/material/RadioGroup';
+import TextField from '@mui/material/TextField';
 import Slide from '@mui/material/Slide';
 import { TransitionProps } from '@mui/material/transitions';
 import { CITY_LIST, CONTACT_TIME_LIST } from '~/utils';
 import { Row } from '~/components';
-import { homeSliceActions } from '~/store/slices';
-import { useAppDispatch, useAppSelector } from '~/hooks';
-
-const { closeCallToActionModal } = homeSliceActions;
 
 const Transition = forwardRef(function Transition(
   props: TransitionProps & {
@@ -32,51 +26,32 @@ const Transition = forwardRef(function Transition(
 ) {
   return <Slide direction='up' ref={ref} {...props} />;
 });
-interface IContactFormModalProps {}
+interface IContactFormModalProps {
+  isOpenCallToActionModal: boolean;
+  setIsOpenCallToActionModal: React.Dispatch<React.SetStateAction<boolean>>;
+}
 
 interface InquiryContent {
   [key: PropertyKey]: boolean | { [key: PropertyKey]: boolean } | string[];
 }
 
-export const ContactFormModal: FC<IContactFormModalProps> = () => {
-  const dispatch = useAppDispatch();
+export const ContactFormModal: FC<IContactFormModalProps> = (props) => {
+  const { isOpenCallToActionModal, setIsOpenCallToActionModal } = props;
 
-  const isOpen = useAppSelector((state) => state.home.callToActionModal.isOpen);
+  const isOpen = isOpenCallToActionModal;
 
   const [formData, setFormData] = useState<InquiryContent>({
     quest: [],
   });
 
   const handleCloseCallToActionModal = () => {
-    dispatch(closeCallToActionModal());
+    setIsOpenCallToActionModal(false);
   };
 
-  // TODO
   const handleSubmit = (e: SyntheticEvent) => {
     e.preventDefault();
-    // 驗證和提交表單
-    // const corsUrl = 'https://cors-proxy.fringe.zone/';
-    // const googleUrl = 'https://docs.google.com/forms/u/0/d/e/1FAIpQLSeS2HdhAsUft11Yee4OF5LCWutl2MDY7ilUSHWuEqWsfeTPDQ/formResponse';
-
-    // const data = new FormData();
-    // data.set('entry.1962534612', JSON.stringify(formData.vendorName)); // 商家名稱
-    // data.set('entry.1920691995_sentinel', JSON.stringify(formData.businessStatus));
-    // data.set('entry.1802353228', JSON.stringify(formData.contactPerson));
-    // data.set('entry.122567838', JSON.stringify(formData.phoneNumber));
-    // data.set('entry.87711208', JSON.stringify(formData.city));
-    // data.set('entry.1701296742', JSON.stringify(formData.contactTime));
-    // data.set('entry.1937030945', JSON.stringify(formData.requirement));
-    // data.set('entry.1711160904_sentinel', JSON.stringify(formData.quest));
-    // axios
-    //   .post(`${corsUrl + googleUrl}`, data)
-    //   .then((res) => {
-    //     // onClose();
-    //   })
-    //   .catch((err) => {
-    //     console.log(err);
-    //   });
-
-    dispatch(closeCallToActionModal());
+    // TODO: 驗證和提交表單
+    handleCloseCallToActionModal();
     toast.success('表單已送出，我們將盡快與您聯繫');
     setFormData({ quest: [] });
   };
@@ -111,7 +86,6 @@ export const ContactFormModal: FC<IContactFormModalProps> = () => {
           <Row>
             <TextField
               required
-              // name="entry.1962534612"
               name='vendorName'
               label='商家姓名'
               fullWidth
@@ -123,13 +97,7 @@ export const ContactFormModal: FC<IContactFormModalProps> = () => {
             />
             <FormControl component='fieldset' sx={{ m: 1, width: '50ch' }} margin='dense'>
               <FormLabel component='legend'>營業狀態</FormLabel>
-              <RadioGroup
-                row
-                // name="entry.1920691995_sentinel"
-                name='businessStatus'
-                value={getData('businessStatus')}
-                onChange={(e) => setData('businessStatus', e.target.value)}
-              >
+              <RadioGroup row name='businessStatus' value={getData('businessStatus')} onChange={(e) => setData('businessStatus', e.target.value)}>
                 <FormControlLabel value='已開業' control={<Radio />} label='已開業' />
                 <FormControlLabel value='籌備中' control={<Radio />} label='籌備中' />
               </RadioGroup>
@@ -138,7 +106,6 @@ export const ContactFormModal: FC<IContactFormModalProps> = () => {
           <Row>
             <TextField
               required
-              // name="entry.1802353228"
               name='contactPerson'
               label='聯絡人'
               margin='dense'
@@ -149,7 +116,6 @@ export const ContactFormModal: FC<IContactFormModalProps> = () => {
             />
             <TextField
               required
-              // name="entry.122567838"
               name='phoneNumber'
               label='連絡電話'
               margin='dense'
@@ -165,7 +131,6 @@ export const ContactFormModal: FC<IContactFormModalProps> = () => {
               label='所在城市'
               required
               select
-              // name="entry.87711208"
               name='city'
               variant='standard'
               sx={{ m: 1, width: '50ch' }}
@@ -182,7 +147,6 @@ export const ContactFormModal: FC<IContactFormModalProps> = () => {
               label='希望聯絡時間'
               required
               select
-              // name="entry.1701296742"
               name='contactTime'
               variant='standard'
               sx={{ m: 1, width: '50ch' }}
@@ -228,7 +192,6 @@ export const ContactFormModal: FC<IContactFormModalProps> = () => {
           </FormControl>
           <TextField
             label='需求說明'
-            // name="entry.1937030945"
             name='requirement'
             fullWidth
             multiline

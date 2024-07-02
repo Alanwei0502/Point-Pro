@@ -1,6 +1,8 @@
 import { FC } from 'react';
-import { Box, SxProps, Typography } from '@mui/material';
-import { Circle } from '@mui/icons-material';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import { SxProps, Theme } from '@mui/material';
+import Circle from '@mui/icons-material/Circle';
 import { theme } from '~/theme';
 import { useResponsiveStyles } from '~/hooks';
 
@@ -8,7 +10,7 @@ interface Title {
   title: string;
   subtitle: string;
   bigTitle?: string;
-  sx?: SxProps;
+  sx?: SxProps<Theme>;
 }
 
 export const Title: FC<Title> = ({ title, subtitle, bigTitle = '', sx }) => {

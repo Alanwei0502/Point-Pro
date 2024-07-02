@@ -1,4 +1,5 @@
-import { Link, styled } from '@mui/material';
+import Link from '@mui/material/Link';
+import { styled } from '@mui/material';
 
 export const NavLink = styled(Link)({
   position: 'relative',

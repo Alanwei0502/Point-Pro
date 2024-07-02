@@ -1,4 +1,4 @@
-import { FC, Suspense } from 'react';
+import { useState } from 'react';
 import { HeaderNavBar } from './HeaderNavBar';
 import { Banner } from './Banner';
 import { Feature } from './Feature';
@@ -13,21 +13,17 @@ import { ContactFormModal } from './ContactFormModal';
 import { BackToTopButton, Footer } from '~/components';
 import 'swiper/css';
 import 'swiper/css/pagination';
-import { Outlet, useLocation } from 'react-router-dom';
 
 interface IHomeProps {}
 
-const Home: FC<IHomeProps> = () => {
-  const location = useLocation();
-
-  if (location.pathname !== '/') return <Outlet />;
-
+const Home: React.FC<IHomeProps> = () => {
+  const [isOpenCallToActionModal, setIsOpenCallToActionModal] = useState(false);
   return (
     <>
       <HeaderNavBar />
-      <Banner />
+      <Banner setIsOpenCallToActionModal={setIsOpenCallToActionModal} />
       <Feature />
-      <Pricing />
+      <Pricing setIsOpenCallToActionModal={setIsOpenCallToActionModal} />
       <Testimonial />
       <SuccessCase />
       <Subscription />
@@ -36,8 +32,7 @@ const Home: FC<IHomeProps> = () => {
       <SiteMap />
       <Footer />
       <BackToTopButton />
-      {/* Modal */}
-      <ContactFormModal />
+      <ContactFormModal isOpenCallToActionModal={isOpenCallToActionModal} setIsOpenCallToActionModal={setIsOpenCallToActionModal} />
     </>
   );
 };

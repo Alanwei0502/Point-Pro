@@ -1,11 +1,11 @@
 import { FC, useEffect, useRef, useState } from 'react';
-import { Container, Box, Typography, useTheme } from '@mui/material';
+import useTheme from '@mui/material/styles/useTheme';
+import Container from '@mui/material/Container';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
 import { IMAGE_URL } from '~/utils';
-import { useAppDispatch, useResponsiveStyles } from '~/hooks';
+import { useResponsiveStyles } from '~/hooks';
 import { CallToActionButton } from '~/components';
-import { homeSliceActions } from '~/store/slices';
-
-const { openCallToActionModal } = homeSliceActions;
 
 const getCurvePath = (width: number, height: number, borderRadius: number): string => {
   const startX = 0;
@@ -18,17 +18,19 @@ const getCurvePath = (width: number, height: number, borderRadius: number): stri
   return `M ${startX} ${startY} Q ${controlX} ${controlY} ${endX} ${endY}`;
 };
 
-interface IBannerProps {}
+interface IBannerProps {
+  setIsOpenCallToActionModal: React.Dispatch<React.SetStateAction<boolean>>;
+}
 
-export const Banner: FC<IBannerProps> = () => {
-  const dispatch = useAppDispatch();
+export const Banner: FC<IBannerProps> = (props) => {
+  const { setIsOpenCallToActionModal } = props;
   const bannerRef = useRef<HTMLDivElement | null>(null);
   const [curvePath, setCurvePath] = useState('');
   const theme = useTheme();
   const { isTablet } = useResponsiveStyles();
 
   const handleOpenCallToActionModal = () => {
-    dispatch(openCallToActionModal());
+    setIsOpenCallToActionModal(true);
   };
 
   useEffect(() => {

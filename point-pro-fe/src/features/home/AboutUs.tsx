@@ -1,5 +1,10 @@
 import { FC } from 'react';
-import { Box, Typography, Grid, Card, CardContent, CardMedia } from '@mui/material';
+import Box from '@mui/material/Box';
+import Grid from '@mui/material/Grid';
+import Typography from '@mui/material/Typography';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import CardMedia from '@mui/material/CardMedia';
 import { Title, Section } from '~/components';
 import { useResponsiveStyles } from '~/hooks';
 import { IMAGE_URL } from '~/utils';
@@ -24,7 +29,6 @@ const aboutUsData = [
     imgUrl: `${IMAGE_URL}pDr5trFm.png`,
     description: '後端開發專家，保障系統穩定性。',
   },
-
   {
     name: 'LinYee',
     title: 'DEVELOPER',
@@ -72,7 +76,7 @@ export const TeamMembers: FC<ITeamMembersProps> = () => {
                 <Typography>{m.description}</Typography>
               </CardContent>
             </Box>
-            <CardMedia component='img' sx={{ width: 140 }} image={m.imgUrl} alt={m.name} />
+            <CardMedia component='img' sx={{ width: 140 }} image={m.imgUrl} alt={m.name} loading='lazy' />
           </Card>
         </Grid>
       ))}
@@ -90,6 +94,8 @@ export const AboutUs: FC<IAboutUsProps> = () => {
       <Box position='relative' textAlign='center' mb={isTablet ? 16 : 3}>
         <img
           src={`${IMAGE_URL}xqbTOKeh.jpeg`}
+          alt='about us'
+          loading='lazy'
           style={{
             width: '80%',
             borderRadius: 20,

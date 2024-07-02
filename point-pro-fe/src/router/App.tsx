@@ -1,9 +1,11 @@
 import { Suspense, lazy } from 'react';
-import { RouterProvider, createBrowserRouter } from 'react-router-dom';
-import { Box } from '@mui/material';
+import { Outlet, RouterProvider, createBrowserRouter } from 'react-router-dom';
+import { Provider } from 'react-redux';
+import Box from '@mui/material/Box';
 import Home from '~/features/home';
 import { ROUTE_PATH } from '~/utils';
-import { LinePayCancel, LinePayConfirm, LoadingMask } from '~/components';
+import { store } from '~/store/store';
+import { LinePayConfirm, LoadingMask } from '~/components';
 import ProtectedRoute from './ProtectedRoute';
 
 const Booking = lazy(() => import('~/features/customer/booking'));
@@ -15,14 +17,19 @@ const ReservationManagement = lazy(() => import('~/features/admin/reservationMan
 
 const router = createBrowserRouter(
   [
-    // User
     {
       path: '/',
       element: <Home />,
+    },
+    {
+      element: (
+        <Provider store={store}>
+          <Outlet />
+        </Provider>
+      ),
       children: [
         {
           path: ROUTE_PATH.booking,
-
           element: (
             <Suspense fallback={<LoadingMask />}>
               <Booking />
@@ -42,19 +49,7 @@ const router = createBrowserRouter(
           children: [
             {
               path: ROUTE_PATH.confirm,
-              element: (
-                <Suspense fallback={<LoadingMask />}>
-                  <LinePayConfirm />
-                </Suspense>
-              ),
-            },
-            {
-              path: ROUTE_PATH.cancel,
-              element: (
-                <Suspense fallback={<LoadingMask />}>
-                  <LinePayCancel />
-                </Suspense>
-              ),
+              element: <LinePayConfirm />,
             },
           ],
         },

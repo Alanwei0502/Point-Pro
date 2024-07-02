@@ -1,5 +1,6 @@
 import { FC } from 'react';
-import { Button, ButtonProps, styled } from '@mui/material';
+import { styled } from '@mui/material';
+import Button, { ButtonProps } from '@mui/material/Button';
 
 const BaseButton = styled(Button)<ButtonProps>(({ theme, size }) => ({
   fontSize: size || 14,

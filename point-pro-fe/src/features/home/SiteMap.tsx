@@ -1,5 +1,11 @@
 import { FC } from 'react';
-import { Box, Container, Grid, List, ListItem, Typography, Link } from '@mui/material';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import Container from '@mui/material/Container';
+import Grid from '@mui/material/Grid';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import Link from '@mui/material/Link';
 import { ReactComponent as LogoText } from '~/assets/images/Logo_text.svg';
 import { useResponsiveStyles } from '~/hooks';
 import { theme } from '~/theme';

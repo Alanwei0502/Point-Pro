@@ -5,9 +5,8 @@ import { Grid, Typography, List, ListItem, ListItemText, Box, styled } from '@mu
 import { GlobalStyles, css } from '@mui/system';
 import CheckIcon from '@mui/icons-material/Check';
 import { Row, Column, CallToActionButton, Title, Section } from '~/components';
-import { useAppDispatch, useResponsiveStyles } from '~/hooks';
+import { useResponsiveStyles } from '~/hooks';
 import { IMAGE_URL } from '~/utils';
-import { homeSliceActions } from '~/store/slices';
 import { theme } from '~/theme';
 
 type AnimatedCardProps = {
@@ -94,11 +93,12 @@ const globalStyles = css`
   }
 `;
 
-const { openCallToActionModal } = homeSliceActions;
+interface IPricingProps {
+  setIsOpenCallToActionModal: React.Dispatch<React.SetStateAction<boolean>>;
+}
 
-interface IPricingProps {}
-export const Pricing: FC<IPricingProps> = () => {
-  const dispatch = useAppDispatch();
+export const Pricing: FC<IPricingProps> = (props) => {
+  const { setIsOpenCallToActionModal } = props;
 
   const [cards, setCards] = useState(pricingData);
   const [animationClass, setAnimationClass] = useState<{ [key: number]: string }>({
@@ -110,7 +110,7 @@ export const Pricing: FC<IPricingProps> = () => {
   const { isDesktop } = useResponsiveStyles();
 
   const handleOpenCallToActionModal = () => {
-    dispatch(openCallToActionModal());
+    setIsOpenCallToActionModal(true);
   };
 
   const handleCardClick = (clickedCardIndex: number) => {
@@ -162,7 +162,12 @@ export const Pricing: FC<IPricingProps> = () => {
             {cards.map((card, index) => (
               <Grid item xs={4} md={4} key={card.id}>
                 <AnimatedCard className={animationClass[index]} onClick={() => handleCardClick(index)} data-id={card.id} index={index}>
-                  <img style={{ height: 262, borderRadius: '2.5rem', objectFit: 'cover', width: '100%' }} src={card.imgUrl} title={card.title} />
+                  <img
+                    style={{ height: 262, borderRadius: '2.5rem', objectFit: 'cover', width: '100%' }}
+                    src={card.imgUrl}
+                    alt={card.title}
+                    loading='lazy'
+                  />
                   <Box p={2} borderRadius={5} bgcolor='background.paper'>
                     <Row sx={{ justifyContent: 'space-between' }} my={1}>
                       <Typography fontSize={theme.typography.h6.fontSize} fontWeight={900}>
@@ -198,7 +203,12 @@ export const Pricing: FC<IPricingProps> = () => {
             {pricingData.map((p) => (
               <SwiperSlide key={p.id}>
                 <Box p={1} borderRadius={5} bgcolor='background.paper'>
-                  <img style={{ height: 200, borderRadius: '2.5rem', objectFit: 'cover', width: '100%' }} src={p.imgUrl} title={p.title} />
+                  <img
+                    style={{ height: 200, borderRadius: '2.5rem', objectFit: 'cover', width: '100%' }}
+                    src={p.imgUrl}
+                    alt={p.title}
+                    loading='lazy'
+                  />
                   <Row sx={{ justifyContent: 'space-between' }} my={1}>
                     <Typography fontSize={theme.typography.h6.fontSize} fontWeight={900}>
                       {p.title}
