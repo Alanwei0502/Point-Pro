@@ -178,7 +178,7 @@ export const MealRow: FC<IMealRowProps> = (props) => {
       <StyledTableCell width={120}>
         {isEdit ? (
           <Box>
-            <TextareaInput value={newTitle} sx={{ width: '100%' }} onChange={handleChangeTitle} />
+            <TextareaInput value={newTitle} onChange={handleChangeTitle} />
             <Select size='small' value={newCategoryId} onChange={handleChangeCategory}>
               {categories.map((c) => (
                 <MenuItem
@@ -215,7 +215,7 @@ export const MealRow: FC<IMealRowProps> = (props) => {
         {isEdit ? <TextInput type='number' size='small' value={newPrice.toString()} onChange={handleChangePrice} /> : newPrice}
       </StyledTableCell>
       <StyledTableCell width={200}>
-        {isEdit ? <TextareaInput value={newDescription} sx={{ width: '100%' }} onChange={handleChangeDescription} /> : newDescription}
+        {isEdit ? <TextareaInput value={newDescription} onChange={handleChangeDescription} /> : newDescription}
       </StyledTableCell>
       <StyledTableCell width={250}>
         <Box>

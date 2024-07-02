@@ -9,6 +9,7 @@ export const TextareaInput = styled(TextareaAutosize)(() => ({
   borderColor: 'rgba(0, 0, 0, 0.23)',
   boxSizing: 'border-box',
   minHeight: '100px',
+  width: '100%',
   fontFamily: theme.typography.fontFamily,
   fontSize: theme.typography.body1.fontSize,
   '&:focus-visible': {
