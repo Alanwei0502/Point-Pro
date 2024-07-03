@@ -82,6 +82,8 @@ const MobileMenu: FC<IMobileMenuProps> = () => {
   return (
     <Box display='flex' justifyContent='flex-end' pt={1} pb={1}>
       <Button
+        role='button'
+        aria-label='menu'
         sx={{
           backgroundColor: 'primary.main',
           color: 'common.black',
@@ -103,6 +105,8 @@ const MobileMenu: FC<IMobileMenuProps> = () => {
           <Box display='flex' justifyContent='flex-end' pt={1} pb={1}>
             <Button
               onClick={() => toggleMenu(false)}
+              role='button'
+              aria-label='close'
               sx={{
                 backgroundColor: 'common.black',
                 color: 'white',
@@ -199,7 +203,7 @@ export const HeaderNavBar: FC<IHeaderNavBarProps> = () => {
       >
         <Container maxWidth='lg'>
           <Row justifyContent='space-between' alignItems='center'>
-            <Link href='/' key='Home'>
+            <Link href='/' key='Home' aria-label='Click Point Pro Logo to go to home page'>
               <Logo style={{ height: isTablet ? 64 : 40, aspectRatio: 1 }} />
             </Link>
 

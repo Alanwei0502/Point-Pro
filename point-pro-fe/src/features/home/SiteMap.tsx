@@ -75,7 +75,7 @@ export const SiteMap: FC<ISiteMapProps> = () => {
           <Link href='/' onClick={(e) => handleClick(e, 'hero-section')}>
             <LogoText width={100} />
           </Link>
-          <Typography variant={isTablet ? 'h2' : 'h5'} fontWeight={900} mb={5}>
+          <Typography fontSize={isTablet ? theme.typography.h2.fontSize : theme.typography.h5.fontSize} fontWeight={900} mb={5}>
             無論新創或連鎖餐廳，選擇 PointPro，助您業務飛躍！
           </Typography>
         </Box>

@@ -76,7 +76,7 @@ export const TeamMembers: FC<ITeamMembersProps> = () => {
                 <Typography>{m.description}</Typography>
               </CardContent>
             </Box>
-            <CardMedia component='img' sx={{ width: 140 }} image={m.imgUrl} alt={m.name} loading='lazy' />
+            <CardMedia component='img' sx={{ width: 140, height: 'auto' }} image={m.imgUrl} alt={m.name} loading='lazy' />
           </Card>
         </Grid>
       ))}
@@ -92,13 +92,15 @@ export const AboutUs: FC<IAboutUsProps> = () => {
   return (
     <Section id='about' isBgGray>
       <Box position='relative' textAlign='center' mb={isTablet ? 16 : 3}>
-        <img
+        <Box
+          component='img'
           src={`${IMAGE_URL}xqbTOKeh.jpeg`}
           alt='about us'
           loading='lazy'
-          style={{
+          sx={{
             width: '80%',
-            borderRadius: 20,
+            height: 'auto',
+            borderRadius: 5,
             objectFit: 'cover',
             boxShadow: '0 0 10px 5px rgba(0, 0, 0, 0.3)',
           }}

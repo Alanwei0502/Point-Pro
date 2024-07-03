@@ -1,9 +1,8 @@
-import { FC, useEffect, useRef, useState } from 'react';
+import { FC, lazy, useEffect, useRef, useState } from 'react';
 import useTheme from '@mui/material/styles/useTheme';
 import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
-import { IMAGE_URL } from '~/utils';
 import { useResponsiveStyles } from '~/hooks';
 import { CallToActionButton } from '~/components';
 
@@ -17,6 +16,8 @@ const getCurvePath = (width: number, height: number, borderRadius: number): stri
 
   return `M ${startX} ${startY} Q ${controlX} ${controlY} ${endX} ${endY}`;
 };
+
+const LazyVideo = lazy(() => import('~/components/home/Video'));
 
 interface IBannerProps {
   setIsOpenCallToActionModal: React.Dispatch<React.SetStateAction<boolean>>;
@@ -64,28 +65,13 @@ export const Banner: FC<IBannerProps> = (props) => {
           minHeight: '100vh',
         }}
       >
-        <video
-          style={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            width: '100%',
-            height: '100vh',
-            objectFit: 'cover',
-            objectPosition: '50% 50%',
-          }}
-          src={`${IMAGE_URL}KOH3og1.mp4`}
-          autoPlay={true}
-          muted={true}
-          loop={true}
-        />
+        <LazyVideo />
         <Container sx={{ zIndex: 10, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
           <Typography
             variant={isTablet ? 'display3' : 'h2'}
             lineHeight={1.2}
             color='white'
             component='h1'
-            // mb={5}
             sx={{ textShadow: '2px 2px 4px rgba(0, 0, 0, 0.5)' }}
           >
             客製化服務， <br />
