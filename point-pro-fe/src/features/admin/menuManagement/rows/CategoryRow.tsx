@@ -3,7 +3,10 @@ import { toast } from 'react-toastify';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import styled from '@emotion/styled';
-import { Box, IconButton, TableRow, Typography } from '@mui/material';
+import Box from '@mui/material/Box';
+import IconButton from '@mui/material/IconButton';
+import TableRow from '@mui/material/TableRow';
+import Typography from '@mui/material/Typography';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import ReorderIcon from '@mui/icons-material/Reorder';
@@ -14,9 +17,9 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { ICategory } from '~/types';
 import { StyledTableCell, TextInput } from '~/components';
 import { theme } from '~/theme';
-import { CollapseMealsTable } from '../tables/CollapseMealsTable';
 import { useAppDispatch, useAppSelector } from '~/hooks';
 import { getCategories, openDeleteCategoryConfirmModal, patchCategory } from '~/store/slices';
+import { CollapseMealsTable } from '../tables/CollapseMealsTable';
 
 const StyledCategoryRow = styled(TableRow)(() => ({
   '&.MuiTableRow-root': {

@@ -1,5 +1,5 @@
 import { FC, useMemo } from 'react';
-import { Box } from '@mui/material';
+import Box from '@mui/material/Box';
 import { useAppDispatch, useAppSelector } from '~/hooks';
 import { BaseGrid, BaseGridItem, BaseTab, BaseTabs, TabPanel, headerHeight } from '~/components';
 import { takeOrderSliceActions } from '~/store/slices';

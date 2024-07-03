@@ -1,5 +1,9 @@
 import { FC } from 'react';
-import { Box, Chip, IconButton, List, Typography } from '@mui/material';
+import Box from '@mui/material/Box';
+import Chip from '@mui/material/Chip';
+import Typography from '@mui/material/Typography';
+import List from '@mui/material/List';
+import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { Column, Row } from '~/components';
 import { useAppDispatch } from '~/hooks';

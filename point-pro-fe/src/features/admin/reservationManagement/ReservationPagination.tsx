@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { TablePagination, TablePaginationProps } from '@mui/material';
+import TablePagination, { TablePaginationProps } from '@mui/material/TablePagination';
 
 export const ReservationTablePagination: FC<TablePaginationProps> = (props) => {
   return (

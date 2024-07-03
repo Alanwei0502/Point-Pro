@@ -1,6 +1,10 @@
 import { ChangeEvent, FC, useState } from 'react';
 import { toast } from 'react-toastify';
-import { FormControl, FormLabel, MenuItem, Select, SelectChangeEvent, TextField } from '@mui/material';
+import FormControl from '@mui/material/FormControl';
+import FormLabel from '@mui/material/FormLabel';
+import TextField from '@mui/material/TextField';
+import MenuItem from '@mui/material/MenuItem';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
 import { AppButton, TabletModal } from '~/components';
 import { useAppDispatch, useAppSelector } from '~/hooks';
 import { closeCreateSpecialtyModal, getSpecialties, postSpecialty } from '~/store/slices';

@@ -1,6 +1,6 @@
 import { FC, Suspense } from 'react';
 import { Outlet } from 'react-router-dom';
-import { Box } from '@mui/material';
+import Box from '@mui/material/Box';
 import { Header, headerHeight } from '~/components';
 import { useToken } from '~/hooks';
 import Login from '~/features/admin/login';

@@ -1,5 +1,5 @@
 import { FC, useEffect, useState } from 'react';
-import { Box } from '@mui/material';
+import Box from '@mui/material/Box';
 import { AppButton, Loading } from '~/components';
 import { useAppDispatch } from '~/hooks';
 import { getCategories, getMeals, getSpecialties, openSpecialtySettingModal } from '~/store/slices';

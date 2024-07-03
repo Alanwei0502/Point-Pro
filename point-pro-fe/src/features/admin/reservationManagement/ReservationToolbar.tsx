@@ -1,6 +1,6 @@
 import { FC, useRef } from 'react';
 import { debounce } from 'lodash';
-import { Box } from '@mui/material';
+import Box from '@mui/material/Box';
 import { GridToolbar, GridToolbarProps } from '@mui/x-data-grid';
 import AddIcon from '@mui/icons-material/Add';
 import { DesktopDatePicker, LocalizationProvider } from '@mui/x-date-pickers';

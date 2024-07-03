@@ -1,5 +1,8 @@
 import { FC, useMemo } from 'react';
-import { Box, List, ListItem, Typography } from '@mui/material';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
 import { AppButton, headerHeight, Column, Row } from '~/components';
 import { useAppDispatch, useAppSelector } from '~/hooks';
 import { theme } from '~/theme';

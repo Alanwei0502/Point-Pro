@@ -1,6 +1,14 @@
-import React, { ChangeEvent, FC, useEffect, useState } from 'react';
+import { ChangeEvent, FC, useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
+import { useSortable } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 import styled from '@emotion/styled';
-import { Box, IconButton, MenuItem, SelectChangeEvent, TableRow, Typography } from '@mui/material';
+import Box from '@mui/material/Box';
+import IconButton from '@mui/material/IconButton';
+import MenuItem from '@mui/material/MenuItem';
+import TableRow from '@mui/material/TableRow';
+import Typography from '@mui/material/Typography';
+import { SelectChangeEvent } from '@mui/material/Select';
 import ReorderIcon from '@mui/icons-material/Reorder';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -8,8 +16,6 @@ import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
-import { useSortable } from '@dnd-kit/sortable';
-import { CSS } from '@dnd-kit/utilities';
 import { MySelect, StyledTableCell, TextInput } from '~/components';
 import { useAppDispatch, useAppSelector } from '~/hooks';
 import { SpecialtyWithSpecialtyItems, SelectionType } from '~/types';
@@ -17,7 +23,6 @@ import { theme } from '~/theme';
 import { CollapseSpecialtyItemsTable } from '../tables/CollapseSpecialtyItemsTable';
 import { SELECTION_TYPE_TRANSLATE } from '~/utils';
 import { getSpecialties, openDeleteSpecialtyConfirmModal, patchSpecialty } from '~/store/slices';
-import { toast } from 'react-toastify';
 
 const StyledSpecialtyRow = styled(TableRow)(() => ({
   '&.MuiTableRow-root': {

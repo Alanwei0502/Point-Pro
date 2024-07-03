@@ -1,6 +1,8 @@
 import { ChangeEvent, FC, useState } from 'react';
 import { toast } from 'react-toastify';
-import { FormControl, FormLabel, TextField } from '@mui/material';
+import FormControl from '@mui/material/FormControl';
+import FormLabel from '@mui/material/FormLabel';
+import TextField from '@mui/material/TextField';
 import { AppButton, TabletModal } from '~/components';
 import { useAppDispatch, useAppSelector } from '~/hooks';
 import { closeCreateCategoryModal, getCategories, postCategory } from '~/store/slices';

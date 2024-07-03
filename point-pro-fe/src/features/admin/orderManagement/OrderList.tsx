@@ -1,5 +1,7 @@
 import { ChangeEvent, FC, useEffect, useState } from 'react';
-import { Typography, Box, TablePagination } from '@mui/material';
+import Typography from '@mui/material/Typography';
+import Box from '@mui/material/Box';
+import TablePagination from '@mui/material/TablePagination';
 import { useAppDispatch, useAppSelector } from '~/hooks';
 import { orderManagementSliceActions } from '~/store/slices';
 import { OrderStatus } from '~/types';

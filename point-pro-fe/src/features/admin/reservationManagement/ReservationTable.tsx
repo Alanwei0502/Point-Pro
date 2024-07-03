@@ -1,5 +1,7 @@
 import { FC, useState, ChangeEvent } from 'react';
-import { Box, Chip, IconButton } from '@mui/material';
+import Box from '@mui/material/Box';
+import Chip from '@mui/material/Chip';
+import IconButton from '@mui/material/IconButton';
 import { DataGrid, GridLocaleText, GridRenderCellParams, GridValueFormatterParams, GridValueGetterParams } from '@mui/x-data-grid';
 import DinnerDiningIcon from '@mui/icons-material/DinnerDining';
 import PointOfSaleIcon from '@mui/icons-material/PointOfSale';

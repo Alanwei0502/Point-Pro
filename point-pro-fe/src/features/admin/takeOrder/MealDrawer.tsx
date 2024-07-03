@@ -1,5 +1,7 @@
 import { FC, useMemo } from 'react';
-import { Box, Chip, Typography } from '@mui/material';
+import Box from '@mui/material/Box';
+import Chip from '@mui/material/Chip';
+import Typography from '@mui/material/Typography';
 import DoneIcon from '@mui/icons-material/Done';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import { AppButton, CloseButton, NumberInput } from '~/components';

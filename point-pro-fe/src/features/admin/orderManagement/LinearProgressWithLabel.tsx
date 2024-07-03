@@ -1,5 +1,7 @@
 import { FC } from 'react';
-import { Typography, Box, LinearProgressProps, LinearProgress, linearProgressClasses } from '@mui/material';
+import Typography from '@mui/material/Typography';
+import Box from '@mui/material/Box';
+import LinearProgress, { LinearProgressProps, linearProgressClasses } from '@mui/material/LinearProgress';
 import { theme } from '~/theme';
 
 export const LinearProgressWithLabel: FC<LinearProgressProps & { value: number }> = (props) => {

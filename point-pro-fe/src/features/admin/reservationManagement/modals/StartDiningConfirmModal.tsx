@@ -1,5 +1,5 @@
 import { FC, useState } from 'react';
-import { Typography } from '@mui/material';
+import Typography from '@mui/material/Typography';
 import { AppButton, TabletModal } from '~/components';
 import { GENDER_TRANSLATE } from '~/utils';
 import { useAppDispatch, useAppSelector } from '~/hooks';

@@ -1,6 +1,13 @@
 import { ChangeEvent, FC, useMemo, useState } from 'react';
 import { toast } from 'react-toastify';
-import { Box, Chip, FormControl, FormLabel, MenuItem, Select, SelectChangeEvent, TextField, Typography } from '@mui/material';
+import Box from '@mui/material/Box';
+import Chip from '@mui/material/Chip';
+import FormControl from '@mui/material/FormControl';
+import FormLabel from '@mui/material/FormLabel';
+import MenuItem from '@mui/material/MenuItem';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
+import TextField from '@mui/material/TextField';
+import Typography from '@mui/material/Typography';
 import { AppButton, BaseSwitch, TabletModal, UploadButton } from '~/components';
 import { useAppDispatch, useAppSelector } from '~/hooks';
 import { closeCreateMealModal, getMeals, postMeal } from '~/store/slices';

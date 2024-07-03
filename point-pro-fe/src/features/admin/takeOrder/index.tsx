@@ -1,5 +1,5 @@
 import { FC, useEffect } from 'react';
-import { Grid } from '@mui/material';
+import Grid from '@mui/material/Grid';
 import { useAppDispatch } from '~/hooks';
 import { takeOrderSliceActions } from '~/store/slices';
 import { theme } from '~/theme';

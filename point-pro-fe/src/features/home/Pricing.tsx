@@ -1,7 +1,13 @@
 import { FC, useState } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination } from 'swiper';
-import { Grid, Typography, List, ListItem, ListItemText, Box, styled } from '@mui/material';
+import Grid from '@mui/material/Grid';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemText from '@mui/material/ListItemText';
+import styled from '@emotion/styled';
 import { GlobalStyles, css } from '@mui/system';
 import CheckIcon from '@mui/icons-material/Check';
 import { Row, Column, CallToActionButton, Title, Section } from '~/components';
@@ -13,7 +19,7 @@ type AnimatedCardProps = {
   index: number;
 };
 
-export const AnimatedCard = styled(Column)<AnimatedCardProps>(({ theme, index }) => ({
+export const AnimatedCard = styled(Column)<AnimatedCardProps>(({ index }) => ({
   userSelect: 'none',
   position: 'relative',
   cursor: 'pointer',

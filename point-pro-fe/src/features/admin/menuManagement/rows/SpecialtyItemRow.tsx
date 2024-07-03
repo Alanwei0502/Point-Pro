@@ -1,6 +1,8 @@
 import { ChangeEvent, FC, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
-import { Box, IconButton, Typography } from '@mui/material';
+import Box from '@mui/material/Box';
+import IconButton from '@mui/material/IconButton';
+import Typography from '@mui/material/Typography';
 import ReorderIcon from '@mui/icons-material/Reorder';
 import EditIcon from '@mui/icons-material/Edit';
 import CheckIcon from '@mui/icons-material/Check';

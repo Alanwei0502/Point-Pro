@@ -1,5 +1,5 @@
 import { ReactElement } from 'react';
-import { ChipTypeMap } from '@mui/material';
+import { ChipTypeMap } from '@mui/material/Chip';
 import AirlineSeatReclineNormalIcon from '@mui/icons-material/AirlineSeatReclineNormal';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import HourglassTopIcon from '@mui/icons-material/HourglassTop';

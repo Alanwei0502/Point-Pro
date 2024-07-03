@@ -1,5 +1,11 @@
-import { Accordion, AccordionDetails, AccordionSummary, Box, Divider, List, Typography } from '@mui/material';
 import { FC, useMemo, useState } from 'react';
+import Accordion from '@mui/material/Accordion';
+import AccordionDetails from '@mui/material/AccordionDetails';
+import AccordionSummary from '@mui/material/AccordionSummary';
+import Box from '@mui/material/Box';
+import Divider from '@mui/material/Divider';
+import List from '@mui/material/List';
+import Typography from '@mui/material/Typography';
 import { theme } from '~/theme';
 import { IOrderMeal, OrderStatus, OrderType, OrdersResult, PaymentStatus } from '~/types';
 import RemoveIcon from '@mui/icons-material/Remove';

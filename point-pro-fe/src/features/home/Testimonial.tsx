@@ -1,7 +1,10 @@
 import { FC } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay } from 'swiper';
-import { Typography, Rating, Grid, Box } from '@mui/material';
+import Typography from '@mui/material/Typography';
+import Box from '@mui/material/Box';
+import Grid from '@mui/material/Grid';
+import Rating from '@mui/material/Rating';
 import { Section, Title } from '~/components';
 import { useResponsiveStyles } from '~/hooks';
 import { IMAGE_URL } from '~/utils';

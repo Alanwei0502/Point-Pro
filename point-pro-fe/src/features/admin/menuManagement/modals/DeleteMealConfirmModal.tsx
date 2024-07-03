@@ -1,6 +1,6 @@
 import { FC, useState } from 'react';
 import { toast } from 'react-toastify';
-import { Typography } from '@mui/material';
+import Typography from '@mui/material/Typography';
 import { AppButton, TabletModal } from '~/components';
 import { useAppDispatch, useAppSelector } from '~/hooks';
 import { closeDeleteMealConfirmModal, deleteMeal, getMeals } from '~/store/slices';

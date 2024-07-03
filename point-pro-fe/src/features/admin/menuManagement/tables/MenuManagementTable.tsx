@@ -1,7 +1,12 @@
 import { FC, useState } from 'react';
 import { DndContext, DragEndEvent, KeyboardSensor, MouseSensor, TouchSensor, useSensor, useSensors } from '@dnd-kit/core';
 import { SortableContext, arrayMove, verticalListSortingStrategy } from '@dnd-kit/sortable';
-import { Table, TableBody, TableCell, TableFooter, TableHead, TableRow } from '@mui/material';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableFooter from '@mui/material/TableFooter';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import TableCell from '@mui/material/TableCell';
 import AddIcon from '@mui/icons-material/Add';
 import { toast } from 'react-toastify';
 import { useAppDispatch, useAppSelector } from '~/hooks';
