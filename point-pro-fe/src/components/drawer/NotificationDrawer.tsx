@@ -6,7 +6,7 @@ import CardActionArea from '@mui/material/CardActionArea';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import { useAppDispatch, useAppSelector } from '~/hooks';
-import { newSocketSliceActions } from '~/store/slices';
+import { socketSliceActions } from '~/store/slices/socket.slice';
 import { ROUTE_PATH } from '~/constants';
 import { BaseDraw } from '~/components';
 
@@ -33,7 +33,7 @@ import { BaseDraw } from '~/components';
 //   [ReservationType.PHONE]: '電話訂位',
 // };
 
-const { removeAdminNotification, removeAllAdminNotification } = newSocketSliceActions;
+const { removeAdminNotification, removeAllAdminNotification } = socketSliceActions;
 
 interface INotificationDrawerProps {
   open: boolean;
@@ -45,7 +45,7 @@ export const NotificationDrawer: FC<INotificationDrawerProps> = ({ open, setOpen
 
   const dispatch = useAppDispatch();
 
-  const notifications = useAppSelector((state) => state.newSocket.adminNotification);
+  const notifications = useAppSelector((state) => state.socket.adminNotification);
 
   const handleClickNotification = (id: number, title: string) => {
     switch (title) {

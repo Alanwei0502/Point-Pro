@@ -1,4 +1,4 @@
-import { PayloadAction, createSlice } from '@reduxjs/toolkit';
+import { type PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { appDayjs, dateForm } from '~/utils';
 
 const sliceName = 'adminUI';
@@ -27,7 +27,7 @@ const initialState: IadminUISliceState = {
   },
 };
 
-export const adminUISlice = createSlice({
+const adminUISlice = createSlice({
   name: sliceName,
   initialState,
   reducers: {
@@ -53,3 +53,5 @@ export const adminUISlice = createSlice({
 export const adminUISliceActions = {
   ...adminUISlice.actions,
 };
+
+export default adminUISlice;

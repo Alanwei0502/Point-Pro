@@ -8,7 +8,7 @@ import TableRow from '@mui/material/TableRow';
 import Typography from '@mui/material/Typography';
 import Chip from '@mui/material/Chip';
 import MenuItem from '@mui/material/MenuItem';
-import Select, { SelectChangeEvent } from '@mui/material/Select';
+import Select, { type SelectChangeEvent } from '@mui/material/Select';
 import ReorderIcon from '@mui/icons-material/Reorder';
 import EditIcon from '@mui/icons-material/Edit';
 import CheckIcon from '@mui/icons-material/Check';
@@ -17,10 +17,12 @@ import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove';
 import { BaseSwitch, StyledTableCell, StyledTableRow, TextInput, TextareaInput, UploadButton } from '~/components';
 import { ICategory, IMeal, MealWithCategoryAndSpecialtyItems, ISpecialtyItem } from '~/types';
 import { useAppDispatch, useAppSelector } from '~/hooks';
-import { getMeals, openDeleteMealConfirmModal, patchMeal } from '~/store/slices';
 import { theme } from '~/theme';
 import { MEAL_IMAGE_FORMAT_REMINDER, MEAL_IMAGE_SIZE_LIMIT, MEAL_IMAGE_TYPES, IMAGE_URL } from '~/constants';
 import { appDayjs } from '~/utils';
+import { menuManagementSliceActions } from '~/store/slices/admin/menuManagement.slice';
+
+const { getMeals, openDeleteMealConfirmModal, patchMeal } = menuManagementSliceActions;
 
 interface IMealRowProps {
   meal: MealWithCategoryAndSpecialtyItems;

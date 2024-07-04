@@ -5,8 +5,10 @@ import Typography from '@mui/material/Typography';
 import Tab from '@mui/material/Tab';
 import Tabs, { tabsClasses } from '@mui/material/Tabs';
 import { useAppDispatch, useAppSelector } from '~/hooks';
-import { setCurrentCategory } from '~/store/slices';
 import { theme } from '~/theme';
+import { menuSliceActions } from '~/store/slices/customer/menu.slice';
+
+const { setCurrentCategory } = menuSliceActions;
 
 export const StyledTab = styled(Tab)(() => ({
   backgroundColor: theme.palette.common.black_20,

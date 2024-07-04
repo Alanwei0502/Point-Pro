@@ -3,7 +3,7 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import { useAppDispatch, useAppSelector } from '~/hooks';
 import { MobileLayout, MobileHeader } from '~/components';
-import { newSocketSliceActions } from '~/store/slices';
+import { socketSliceActions } from '~/store/slices/socket.slice';
 import { BookingSteps } from './BookingSteps';
 import { PeopleAndTime } from './PeopleAndTime';
 import { BookerInfo } from './BookerInfo';
@@ -22,7 +22,7 @@ const Booking: FC<IBookingProps> = () => {
   const step = useAppSelector(({ booking }) => booking.step);
 
   useEffect(() => {
-    const { initSocket, joinRoom } = newSocketSliceActions;
+    const { initSocket, joinRoom } = socketSliceActions;
     dispatch(initSocket());
     dispatch(joinRoom(SocketRoom.BOOKING));
   }, [dispatch]);

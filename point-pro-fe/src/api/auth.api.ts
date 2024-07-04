@@ -1,6 +1,5 @@
-import { LoginResponse } from '~/types';
 import { http } from './http';
-import { LoginPayload } from '~/types';
+import { LoginPayload, LoginResponse } from '~/types';
 
 export class AuthApi {
   static path = 'auth';

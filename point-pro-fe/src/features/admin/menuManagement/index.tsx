@@ -2,7 +2,7 @@ import { FC, useEffect, useState } from 'react';
 import Box from '@mui/material/Box';
 import { AppButton, Loading } from '~/components';
 import { useAppDispatch } from '~/hooks';
-import { getCategories, getMeals, getSpecialties, openSpecialtySettingModal } from '~/store/slices';
+import { menuManagementSliceActions } from '~/store/slices/admin/menuManagement.slice';
 import { MenuManagementTable } from './tables/MenuManagementTable';
 import { SpecialtySettingModal } from './modals/SpecialtySettingModal';
 import { CreateCategoryModal } from './modals/CreateCategoryModal';
@@ -13,6 +13,8 @@ import { DeleteSpecialtyItemConfirmModal } from './modals/DeleteSpecialtyItemCon
 import { CreateSpecialtyItemModal } from './modals/CreateSpecialtyItemModal';
 import { CreateMealModal } from './modals/CreateMealModal';
 import { DeleteMealConfirmModal } from './modals/DeleteMealConfirmModal';
+
+const { getCategories, getMeals, getSpecialties, openSpecialtySettingModal } = menuManagementSliceActions;
 
 interface IMenuManagementProps {}
 

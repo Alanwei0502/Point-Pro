@@ -5,16 +5,18 @@ import Chip from '@mui/material/Chip';
 import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
 import MenuItem from '@mui/material/MenuItem';
-import Select, { SelectChangeEvent } from '@mui/material/Select';
+import Select, { type SelectChangeEvent } from '@mui/material/Select';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import { AppButton, BaseSwitch, TabletModal, UploadButton } from '~/components';
 import { useAppDispatch, useAppSelector } from '~/hooks';
-import { closeCreateMealModal, getMeals, postMeal } from '~/store/slices';
 import { theme } from '~/theme';
 import { IMeal, ISpecialtyItem } from '~/types';
 import { MEAL_IMAGE_FORMAT_REMINDER, MEAL_IMAGE_SIZE_LIMIT, MEAL_IMAGE_TYPES } from '~/constants';
 import { appDayjs } from '~/utils';
+import { menuManagementSliceActions } from '~/store/slices/admin/menuManagement.slice';
+
+const { closeCreateMealModal, getMeals, postMeal } = menuManagementSliceActions;
 
 interface ICreateMealModalProps {}
 

@@ -5,8 +5,10 @@ import FormLabel from '@mui/material/FormLabel';
 import TextField from '@mui/material/TextField';
 import { AppButton, TabletModal } from '~/components';
 import { useAppDispatch, useAppSelector } from '~/hooks';
-import { closeCreateCategoryModal, getCategories, postCategory } from '~/store/slices';
 import { ICategory } from '~/types';
+import { menuManagementSliceActions } from '~/store/slices/admin/menuManagement.slice';
+
+const { closeCreateCategoryModal, getCategories, postCategory } = menuManagementSliceActions;
 
 interface ICreateCategoryModalProps {}
 

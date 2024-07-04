@@ -1,4 +1,4 @@
-import { PayloadAction, createSlice } from '@reduxjs/toolkit';
+import { type PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { MenuApi } from '~/api';
 import { createAppAsyncThunk } from '~/hooks';
 import {
@@ -115,7 +115,7 @@ const initialState: IMenuManagementSliceState = {
 };
 
 // CATEGORY
-export const getCategories = createAppAsyncThunk(`${sliceName}/getCategories`, async (_, thunkApi) => {
+const getCategories = createAppAsyncThunk(`${sliceName}/getCategories`, async (_, thunkApi) => {
   try {
     return await MenuApi.getCategories();
   } catch (error) {
@@ -123,7 +123,7 @@ export const getCategories = createAppAsyncThunk(`${sliceName}/getCategories`, a
   }
 });
 
-export const postCategory = createAppAsyncThunk(`${sliceName}/postCategory`, async (payload: PostCategoryPayload, thunkApi) => {
+const postCategory = createAppAsyncThunk(`${sliceName}/postCategory`, async (payload: PostCategoryPayload, thunkApi) => {
   try {
     await MenuApi.postCategory(payload);
   } catch (error) {
@@ -131,7 +131,7 @@ export const postCategory = createAppAsyncThunk(`${sliceName}/postCategory`, asy
   }
 });
 
-export const patchCategory = createAppAsyncThunk(`${sliceName}/patchCategory`, async (payload: PatchCategoryPayload, thunkApi) => {
+const patchCategory = createAppAsyncThunk(`${sliceName}/patchCategory`, async (payload: PatchCategoryPayload, thunkApi) => {
   try {
     await MenuApi.patchCategory(payload);
   } catch (error) {
@@ -139,7 +139,7 @@ export const patchCategory = createAppAsyncThunk(`${sliceName}/patchCategory`, a
   }
 });
 
-export const patchCategoryOrder = createAppAsyncThunk(`${sliceName}/patchCategoryOrder`, async (payload: PatchCategoryOrderPayload, thunkApi) => {
+const patchCategoryOrder = createAppAsyncThunk(`${sliceName}/patchCategoryOrder`, async (payload: PatchCategoryOrderPayload, thunkApi) => {
   try {
     await MenuApi.patchCategoryOrder(payload);
   } catch (error) {
@@ -147,7 +147,7 @@ export const patchCategoryOrder = createAppAsyncThunk(`${sliceName}/patchCategor
   }
 });
 
-export const deleteCategory = createAppAsyncThunk(`${sliceName}/deleteCategory`, async (payload: DeleteCategoryPayload, thunkApi) => {
+const deleteCategory = createAppAsyncThunk(`${sliceName}/deleteCategory`, async (payload: DeleteCategoryPayload, thunkApi) => {
   try {
     await MenuApi.deleteCategory(payload);
   } catch (error) {
@@ -156,7 +156,7 @@ export const deleteCategory = createAppAsyncThunk(`${sliceName}/deleteCategory`,
 });
 
 // MEAL
-export const getMeals = createAppAsyncThunk(`${sliceName}/getMeals`, async (_, thunkApi) => {
+const getMeals = createAppAsyncThunk(`${sliceName}/getMeals`, async (_, thunkApi) => {
   try {
     return await MenuApi.getMeals();
   } catch (error) {
@@ -164,7 +164,7 @@ export const getMeals = createAppAsyncThunk(`${sliceName}/getMeals`, async (_, t
   }
 });
 
-export const postMeal = createAppAsyncThunk(`${sliceName}/postMeal`, async (payload: PostMealPayload, thunkApi) => {
+const postMeal = createAppAsyncThunk(`${sliceName}/postMeal`, async (payload: PostMealPayload, thunkApi) => {
   try {
     await MenuApi.postMeal(payload);
   } catch (error) {
@@ -172,7 +172,7 @@ export const postMeal = createAppAsyncThunk(`${sliceName}/postMeal`, async (payl
   }
 });
 
-export const patchMeal = createAppAsyncThunk(`${sliceName}/patchMeal`, async (payload: PatchMealPayload, thunkApi) => {
+const patchMeal = createAppAsyncThunk(`${sliceName}/patchMeal`, async (payload: PatchMealPayload, thunkApi) => {
   try {
     await MenuApi.patchMeal(payload);
   } catch (error) {
@@ -180,7 +180,7 @@ export const patchMeal = createAppAsyncThunk(`${sliceName}/patchMeal`, async (pa
   }
 });
 
-export const patchMealOrder = createAppAsyncThunk(`${sliceName}/patchMealOrder`, async (payload: PatchMealSortingPayload, thunkApi) => {
+const patchMealOrder = createAppAsyncThunk(`${sliceName}/patchMealOrder`, async (payload: PatchMealSortingPayload, thunkApi) => {
   try {
     await MenuApi.patchMealOrder(payload);
   } catch (error) {
@@ -188,7 +188,7 @@ export const patchMealOrder = createAppAsyncThunk(`${sliceName}/patchMealOrder`,
   }
 });
 
-export const deleteMeal = createAppAsyncThunk(`${sliceName}/deleteMeal`, async (payload: DeleteMealPaylaod, thunkApi) => {
+const deleteMeal = createAppAsyncThunk(`${sliceName}/deleteMeal`, async (payload: DeleteMealPaylaod, thunkApi) => {
   try {
     await MenuApi.deleteMeal(payload);
   } catch (error) {
@@ -197,7 +197,7 @@ export const deleteMeal = createAppAsyncThunk(`${sliceName}/deleteMeal`, async (
 });
 
 // SPECIALTY
-export const getSpecialties = createAppAsyncThunk(`${sliceName}/getSpecialties`, async (_, thunkApi) => {
+const getSpecialties = createAppAsyncThunk(`${sliceName}/getSpecialties`, async (_, thunkApi) => {
   try {
     return await MenuApi.getSpecialties();
   } catch (error) {
@@ -205,7 +205,7 @@ export const getSpecialties = createAppAsyncThunk(`${sliceName}/getSpecialties`,
   }
 });
 
-export const postSpecialty = createAppAsyncThunk(`${sliceName}/postSpecialty`, async (payload: PostSpecialtyPayload, thunkApi) => {
+const postSpecialty = createAppAsyncThunk(`${sliceName}/postSpecialty`, async (payload: PostSpecialtyPayload, thunkApi) => {
   try {
     await MenuApi.postSpecialty(payload);
   } catch (error) {
@@ -213,7 +213,7 @@ export const postSpecialty = createAppAsyncThunk(`${sliceName}/postSpecialty`, a
   }
 });
 
-export const patchSpecialty = createAppAsyncThunk(`${sliceName}/patchSpecialty`, async (payload: PatchSpecialtyPayload, thunkApi) => {
+const patchSpecialty = createAppAsyncThunk(`${sliceName}/patchSpecialty`, async (payload: PatchSpecialtyPayload, thunkApi) => {
   try {
     await MenuApi.patchSpecialty(payload);
   } catch (error) {
@@ -221,7 +221,7 @@ export const patchSpecialty = createAppAsyncThunk(`${sliceName}/patchSpecialty`,
   }
 });
 
-export const patchSpecialtyOrder = createAppAsyncThunk(`${sliceName}/patchSpecialtyOrder`, async (payload: PatchSpecialtyOrderPayload, thunkApi) => {
+const patchSpecialtyOrder = createAppAsyncThunk(`${sliceName}/patchSpecialtyOrder`, async (payload: PatchSpecialtyOrderPayload, thunkApi) => {
   try {
     await MenuApi.patchSpecialtyOrder(payload);
   } catch (error) {
@@ -229,7 +229,7 @@ export const patchSpecialtyOrder = createAppAsyncThunk(`${sliceName}/patchSpecia
   }
 });
 
-export const deleteSpecialty = createAppAsyncThunk(`${sliceName}/deleteSpecialty`, async (payload: DeleteSpecialtyPayload, thunkApi) => {
+const deleteSpecialty = createAppAsyncThunk(`${sliceName}/deleteSpecialty`, async (payload: DeleteSpecialtyPayload, thunkApi) => {
   try {
     await MenuApi.deleteSpecialty(payload);
   } catch (error) {
@@ -238,7 +238,7 @@ export const deleteSpecialty = createAppAsyncThunk(`${sliceName}/deleteSpecialty
 });
 
 // SPECIALTY ITEM
-export const postSpecialtyItem = createAppAsyncThunk(`${sliceName}/postSpecialtyItem`, async (payload: PostSpecialtyItemPayload, thunkApi) => {
+const postSpecialtyItem = createAppAsyncThunk(`${sliceName}/postSpecialtyItem`, async (payload: PostSpecialtyItemPayload, thunkApi) => {
   try {
     await MenuApi.postSpecialtyItem(payload);
   } catch (error) {
@@ -246,7 +246,7 @@ export const postSpecialtyItem = createAppAsyncThunk(`${sliceName}/postSpecialty
   }
 });
 
-export const patchSpecialtyItem = createAppAsyncThunk(`${sliceName}/patchSpecialtyItem`, async (payload: PatchSpecialtyItemPayload, thunkApi) => {
+const patchSpecialtyItem = createAppAsyncThunk(`${sliceName}/patchSpecialtyItem`, async (payload: PatchSpecialtyItemPayload, thunkApi) => {
   try {
     await MenuApi.patchSpecialtyItem(payload);
   } catch (error) {
@@ -254,7 +254,7 @@ export const patchSpecialtyItem = createAppAsyncThunk(`${sliceName}/patchSpecial
   }
 });
 
-export const patchSpecialtyItemOrder = createAppAsyncThunk(
+const patchSpecialtyItemOrder = createAppAsyncThunk(
   `${sliceName}/patchSpecialtyItemOrder`,
   async (payload: PatchSpecialtyItemOrderPayload, thunkApi) => {
     try {
@@ -265,7 +265,7 @@ export const patchSpecialtyItemOrder = createAppAsyncThunk(
   },
 );
 
-export const deleteSpecialtyItem = createAppAsyncThunk(`${sliceName}/deleteSpecialtyItem`, async (payload: DeleteSpecialtyItemPayload, thunkApi) => {
+const deleteSpecialtyItem = createAppAsyncThunk(`${sliceName}/deleteSpecialtyItem`, async (payload: DeleteSpecialtyItemPayload, thunkApi) => {
   try {
     await MenuApi.deleteSpecialtyItem(payload);
   } catch (error) {
@@ -273,7 +273,7 @@ export const deleteSpecialtyItem = createAppAsyncThunk(`${sliceName}/deleteSpeci
   }
 });
 
-export const menuManagementSlice = createSlice({
+const menuManagementSlice = createSlice({
   name: sliceName,
   initialState,
   reducers: {
@@ -377,32 +377,31 @@ export const menuManagementSlice = createSlice({
   },
 });
 
-export const {
+export const menuManagementSliceActions = {
+  ...menuManagementSlice.actions,
   // CATEGORY
-  setCategories,
-  openCreateCategoryModal,
-  closeCreateCategoryModal,
-  openDeleteCategoryConfirmModal,
-  closeDeleteCategoryConfirmModal,
+  getCategories,
+  postCategory,
+  patchCategory,
+  patchCategoryOrder,
+  deleteCategory,
   // MEAL
-  setMeals,
-  openCreateMealModal,
-  closeCreateMealModal,
-  openDeleteMealConfirmModal,
-  closeDeleteMealConfirmModal,
+  getMeals,
+  postMeal,
+  patchMeal,
+  patchMealOrder,
+  deleteMeal,
   // SPECIALTY
-  setSpecialties,
-  setSpecialtySettingModalData,
-  openSpecialtySettingModal,
-  closeSpecialtySettingModal,
-  openCreateSpecialtyModal,
-  closeCreateSpecialtyModal,
-  openDeleteSpecialtyConfirmModal,
-  closeDeleteSpecialtyConfirmModal,
+  getSpecialties,
+  postSpecialty,
+  patchSpecialty,
+  patchSpecialtyOrder,
+  deleteSpecialty,
   // SPECIALTY ITEM
-  setSpecialtyItems,
-  openCreateSpecialtyItemModal,
-  closeCreateSpecialtyItemModal,
-  openDeleteSpecialtyItemConfirmModal,
-  closeDeleteSpecialtyItemConfirmModal,
-} = menuManagementSlice.actions;
+  postSpecialtyItem,
+  patchSpecialtyItem,
+  patchSpecialtyItemOrder,
+  deleteSpecialtyItem,
+};
+
+export default menuManagementSlice;

@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 import { PaymentApi } from '~/api';
 import { createAppAsyncThunk } from '~/hooks';
 import { PostLinePayResponse, LinePayConfirmRedirectPayload, OrderType, PatchPaymentStatusPayload, PaymentType } from '~/types';
@@ -85,7 +85,7 @@ const patchPaymentStatus = createAppAsyncThunk(`${sliceName}/patchPaymentStatus`
   }
 });
 
-export const paymentSlice = createSlice({
+const paymentSlice = createSlice({
   name: sliceName,
   initialState,
   reducers: {
@@ -130,3 +130,5 @@ export const paymentSliceActions = {
   cancelLinePay,
   patchPaymentStatus,
 };
+
+export default paymentSlice;

@@ -1,3 +1,11 @@
+import { AppStore } from '~/types';
+
+export let store: AppStore;
+
+export const injectStore = (_store: AppStore) => {
+  store = _store;
+};
+
 type DebouncedFunction<T extends (...args: any[]) => void> = (...args: Parameters<T>) => void;
 
 type DebounceOptions = {

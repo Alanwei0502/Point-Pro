@@ -1,14 +1,14 @@
 import { ChangeEvent, FC, useState } from 'react';
 import { toast } from 'react-toastify';
-import CardActions from '@mui/material/CardActions';
-import CardContent from '@mui/material/CardContent';
 import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
 import TextField from '@mui/material/TextField';
 import { AppButton, TabletModal } from '~/components';
 import { useAppDispatch, useAppSelector } from '~/hooks';
-import { closeCreateSpecialtyItemModal, getSpecialties, postSpecialtyItem } from '~/store/slices';
 import { ISpecialtyItem } from '~/types';
+import { menuManagementSliceActions } from '~/store/slices/admin/menuManagement.slice';
+
+const { closeCreateSpecialtyItemModal, getSpecialties, postSpecialtyItem } = menuManagementSliceActions;
 
 interface ICreateSpecialtyItemModalProps {}
 

@@ -4,12 +4,14 @@ import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
 import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
-import Select, { SelectChangeEvent } from '@mui/material/Select';
+import Select, { type SelectChangeEvent } from '@mui/material/Select';
 import { AppButton, TabletModal } from '~/components';
 import { useAppDispatch, useAppSelector } from '~/hooks';
-import { closeCreateSpecialtyModal, getSpecialties, postSpecialty } from '~/store/slices';
 import { ISpecialty, SelectionType } from '~/types';
 import { SELECTION_TYPE_TRANSLATE } from '~/constants';
+import { menuManagementSliceActions } from '~/store/slices/admin/menuManagement.slice';
+
+const { closeCreateSpecialtyModal, getSpecialties, postSpecialty } = menuManagementSliceActions;
 
 interface ICreateSpecialtyModalProps {}
 

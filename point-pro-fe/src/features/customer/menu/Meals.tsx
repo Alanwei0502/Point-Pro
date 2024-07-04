@@ -7,9 +7,11 @@ import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import { useAppDispatch, useAppSelector } from '~/hooks';
-import { openDialog } from '~/store/slices';
 import { MobileDialog, MenuMeal } from '~/types';
 import { IMAGE_URL } from '~/constants';
+import { menuSliceActions } from '~/store/slices/customer/menu.slice';
+
+const { openDialog } = menuSliceActions;
 
 interface IMealsProps {}
 

@@ -1,9 +1,9 @@
 import { FC } from 'react';
-import Button, { ButtonProps } from '@mui/material/Button';
+import Button, { type ButtonProps } from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import Drawer, { DrawerProps } from '@mui/material/Drawer';
+import Drawer, { type DrawerProps } from '@mui/material/Drawer';
 import CloseIcon from '@mui/icons-material/Close';
 import { headerHeight } from '~/components';
 

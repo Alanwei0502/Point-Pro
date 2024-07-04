@@ -1,38 +1,39 @@
 import type { Middleware, MiddlewareAPI } from '@reduxjs/toolkit';
 import { ROUTE_PATH } from '~/constants';
 import { SocketInterface, SocketFactory } from '~/utils';
-import { SocketEvent, SocketTopic } from '~/types';
-import {
-  deleteCategory,
-  deleteMeal,
-  deleteSpecialty,
-  deleteSpecialtyItem,
-  getAvailablePeriods,
+import { AppDispatch, AppState, SocketEvent, SocketTopic } from '~/types';
+import { socketSliceActions } from '../slices/socket.slice';
+import { reservationManagementSliceActions } from '../slices/admin/reservationManagement.slice';
+import { takeOrderSliceActions } from '../slices/admin/takeOrder.slice';
+import { orderSliceActions } from '../slices/customer/order.slice';
+import { orderManagementSliceActions } from '../slices/admin/orderManagement.slice';
+import { menuSliceActions } from '../slices/customer/menu.slice';
+import { menuManagementSliceActions } from '../slices/admin/menuManagement.slice';
+
+const { initSocket, connectionEstablished, connectionLost, joinRoom, leaveRoom, setAdminNotification } = socketSliceActions;
+const { postReservation, getAvailablePeriods } = reservationManagementSliceActions;
+const { getMenu } = menuSliceActions;
+const { getAdminMenu } = takeOrderSliceActions;
+const {
   getCategories,
   getMeals,
-  getMenu,
   getSpecialties,
-  newSocketSliceActions,
-  orderManagementSliceActions,
-  orderSliceActions,
+  postCategory,
   patchCategory,
   patchCategoryOrder,
+  deleteCategory,
+  postMeal,
   patchMeal,
   patchMealOrder,
-  patchSpecialty,
-  patchSpecialtyItem,
-  patchSpecialtyOrder,
-  postCategory,
-  postMeal,
-  postReservation,
+  deleteMeal,
   postSpecialty,
+  patchSpecialty,
+  patchSpecialtyOrder,
+  deleteSpecialty,
   postSpecialtyItem,
-  reservationManagementSliceActions,
-  takeOrderSliceActions,
-} from '../slices';
-import type { AppDispatch, AppState } from '../store';
-
-const { initSocket, connectionEstablished, connectionLost, joinRoom, leaveRoom, setAdminNotification } = newSocketSliceActions;
+  patchSpecialtyItem,
+  deleteSpecialtyItem,
+} = menuManagementSliceActions;
 
 export const socketMiddleware: Middleware = (store: MiddlewareAPI<AppDispatch, AppState>) => {
   let s: SocketInterface;
@@ -83,7 +84,7 @@ export const socketMiddleware: Middleware = (store: MiddlewareAPI<AppDispatch, A
           const isInTakeOrderPage = window.location.href.includes(ROUTE_PATH.takeOrder);
           const isInMenuManagementPage = window.location.href.includes(ROUTE_PATH.menuManagement);
           if (isInTakeOrderPage) {
-            store.dispatch(takeOrderSliceActions.getAdminMenu());
+            store.dispatch(getAdminMenu());
           }
           if (isInMenuManagementPage) {
             store.dispatch(getCategories());
@@ -169,7 +170,6 @@ export const socketMiddleware: Middleware = (store: MiddlewareAPI<AppDispatch, A
         patchSpecialtyOrder.fulfilled,
         deleteSpecialty.fulfilled,
         postSpecialtyItem.fulfilled,
-        patchSpecialtyItem.fulfilled,
         patchSpecialtyItem.fulfilled,
         deleteSpecialtyItem.fulfilled,
       ];

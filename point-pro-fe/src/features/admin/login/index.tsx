@@ -11,7 +11,7 @@ import InputAdornment from '@mui/material/InputAdornment';
 import IconButton from '@mui/material/IconButton';
 import FormControl from '@mui/material/FormControl';
 import { useAppDispatch } from '~/hooks';
-import { authSliceActions } from '~/store/slices';
+import { authSliceActions } from '~/store/slices/admin/auth.slice';
 import HeaderLogo from '~/assets/images/header-logo.svg';
 import { AppButton } from '~/components';
 import { ROUTE_PATH } from '~/constants';

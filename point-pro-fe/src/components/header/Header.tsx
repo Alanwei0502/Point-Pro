@@ -16,7 +16,8 @@ import HeaderLogo from '~/assets/images/header-logo.svg';
 import { useAppDispatch, useAppSelector, useInititalize } from '~/hooks';
 import { theme } from '~/theme';
 import { LeftMenuDrawer, NotificationDrawer, PaymentModal, sideBarItemList, LinePayModal, ConfirmCloseLinePayModal } from '~/components';
-import { adminUISliceActions, authSliceActions } from '~/store/slices';
+import { authSliceActions } from '~/store/slices/admin/auth.slice';
+import { adminUISliceActions } from '~/store/slices/admin/adminUI.slice';
 import { ROUTE_PATH } from '~/constants';
 
 const drawerExpandWidth = '250px';
@@ -26,7 +27,7 @@ export const headerHeight = '60px';
 interface INotificationButtonProps {}
 const NotificationButton: FC<INotificationButtonProps> = () => {
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
-  const notifications = useAppSelector((state) => state.newSocket.adminNotification);
+  const notifications = useAppSelector((state) => state.socket.adminNotification);
   return (
     <>
       <IconButton color='inherit' onClick={() => setIsNotificationOpen((prev) => !prev)}>

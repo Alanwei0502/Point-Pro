@@ -1,5 +1,5 @@
 import { FC, useState } from 'react';
-import { DndContext, DragEndEvent, KeyboardSensor, MouseSensor, TouchSensor, useSensor, useSensors } from '@dnd-kit/core';
+import { DndContext, type DragEndEvent, KeyboardSensor, MouseSensor, TouchSensor, useSensor, useSensors } from '@dnd-kit/core';
 import { SortableContext, arrayMove, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -11,9 +11,11 @@ import AddIcon from '@mui/icons-material/Add';
 import { toast } from 'react-toastify';
 import { useAppDispatch, useAppSelector } from '~/hooks';
 import { AppButton, StyledTableCell, StyledTableRow } from '~/components';
-import { getCategories, openCreateCategoryModal, patchCategoryOrder, setCategories } from '~/store/slices';
 import { CategoryRow } from '../rows/CategoryRow';
 import { PatchCategoryOrderPayload } from '~/types';
+import { menuManagementSliceActions } from '~/store/slices/admin/menuManagement.slice';
+
+const { getCategories, openCreateCategoryModal, patchCategoryOrder, setCategories } = menuManagementSliceActions;
 
 interface IMenuManagementTableProps {}
 

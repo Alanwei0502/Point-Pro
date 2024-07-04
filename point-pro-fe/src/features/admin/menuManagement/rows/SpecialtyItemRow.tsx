@@ -13,7 +13,9 @@ import { CSS } from '@dnd-kit/utilities';
 import { StyledTableCell, StyledTableRow, TextInput } from '~/components';
 import { ISpecialty, ISpecialtyItem, SpecialtyWithSpecialtyItems } from '~/types';
 import { useAppDispatch, useAppSelector } from '~/hooks';
-import { getSpecialties, openDeleteSpecialtyItemConfirmModal, patchSpecialtyItem } from '~/store/slices';
+import { menuManagementSliceActions } from '~/store/slices/admin/menuManagement.slice';
+
+const { getSpecialties, openDeleteSpecialtyItemConfirmModal, patchSpecialtyItem } = menuManagementSliceActions;
 
 interface ISpecialtyItemRowProps {
   specialtyItem: SpecialtyWithSpecialtyItems['specialtyItems'][0];

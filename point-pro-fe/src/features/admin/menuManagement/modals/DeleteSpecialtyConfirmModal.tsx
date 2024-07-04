@@ -3,7 +3,9 @@ import { toast } from 'react-toastify';
 import Typography from '@mui/material/Typography';
 import { AppButton, TabletModal } from '~/components';
 import { useAppDispatch, useAppSelector } from '~/hooks';
-import { closeDeleteSpecialtyConfirmModal, deleteSpecialty, getSpecialties } from '~/store/slices';
+import { menuManagementSliceActions } from '~/store/slices/admin/menuManagement.slice';
+
+const { closeDeleteSpecialtyConfirmModal, deleteSpecialty, getSpecialties } = menuManagementSliceActions;
 
 interface IDeleteSpecialtyConfirmModalProps {}
 

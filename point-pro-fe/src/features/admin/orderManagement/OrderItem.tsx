@@ -16,7 +16,8 @@ import { formatFullDateWithTime } from '~/utils';
 import { ORDER_TYPE_TRANSLATE, PAYMENT_STATUS } from '~/constants';
 import { LinearProgressWithLabel } from './LinearProgressWithLabel';
 import { useAppDispatch, useAppSelector } from '~/hooks';
-import { orderManagementSliceActions, paymentSliceActions } from '~/store/slices';
+import { orderManagementSliceActions } from '~/store/slices/admin/orderManagement.slice';
+import { paymentSliceActions } from '~/store/slices/admin/payment.slice';
 import { OrderMealItem } from './OrderMealItem';
 
 const { openCancelOrderConfirmModal, patchOrderMealServedAmount, getOrders, setSocketOrderPayload } = orderManagementSliceActions;

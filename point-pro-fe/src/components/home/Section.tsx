@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import Box, { BoxProps } from '@mui/material/Box';
+import Box, { type BoxProps } from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import { Column } from '../layout/Layout';
 

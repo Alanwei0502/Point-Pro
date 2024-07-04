@@ -3,8 +3,10 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import { AppButton, MobileModal } from '~/components';
 import { useAppDispatch, useAppSelector } from '~/hooks';
-import { closeModal, deleteCartItem } from '~/store/slices';
 import { MobileModalType } from '~/types';
+import { menuSliceActions } from '~/store/slices/customer/menu.slice';
+
+const { closeModal, deleteCartItem } = menuSliceActions;
 
 interface IRemoveCartItemConfirmModalProps {}
 

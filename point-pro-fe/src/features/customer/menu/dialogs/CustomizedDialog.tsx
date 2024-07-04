@@ -9,8 +9,10 @@ import Typography from '@mui/material/Typography';
 import { MobileDialogLayout, NumberInput, AppButton } from '~/components';
 import { calculateCartItemPrice } from '~/utils';
 import { useAppDispatch, useAppSelector } from '~/hooks';
-import { closeDialog, updateSpecialty, increaseMealAmount, decreaseMealAmount, createCartItem, updateCartItem } from '~/store/slices';
 import { MobileDialog, MenuSpecialtiesWithItems, MenuSpecialtyItem } from '~/types';
+import { menuSliceActions } from '~/store/slices/customer/menu.slice';
+
+const { closeDialog, updateSpecialty, increaseMealAmount, decreaseMealAmount, createCartItem, updateCartItem } = menuSliceActions;
 
 interface ICustomizedSpecialtiesProps {}
 

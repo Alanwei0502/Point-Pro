@@ -6,14 +6,16 @@ import TableFooter from '@mui/material/TableFooter';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import AddIcon from '@mui/icons-material/Add';
-import { DndContext, DragEndEvent, KeyboardSensor, MouseSensor, TouchSensor, useSensor, useSensors } from '@dnd-kit/core';
+import { DndContext, type DragEndEvent, KeyboardSensor, MouseSensor, TouchSensor, useSensor, useSensors } from '@dnd-kit/core';
 import { SortableContext, arrayMove, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { AppButton, StyledTableCell, StyledTableRow } from '~/components';
 import { useAppDispatch, useAppSelector } from '~/hooks';
 import { SpecialtyRow } from '../rows/SpecialtyRow';
-import { getSpecialties, openCreateSpecialtyModal, patchSpecialtyOrder, setSpecialties } from '~/store/slices';
 import { PatchSpecialtyOrderPayload } from '~/types';
 import { toast } from 'react-toastify';
+import { menuManagementSliceActions } from '~/store/slices/admin/menuManagement.slice';
+
+const { getSpecialties, openCreateSpecialtyModal, patchSpecialtyOrder, setSpecialties } = menuManagementSliceActions;
 
 interface ISpecialtySettingTableProps {}
 

@@ -7,13 +7,16 @@
     "plugin:react-hooks/recommended",
     "plugin:react/jsx-runtime"
   ],
-  "plugins": ["react", "@typescript-eslint", "react-hooks"],
+  "plugins": ["react", "@typescript-eslint", "react-hooks", "import"],
   "rules": {
     "react-hooks/rules-of-hooks": "error",
     "react-hooks/exhaustive-deps": "warn",
     "@typescript-eslint/no-unused-vars": "off",
     "no-empty-pattern": "off",
-    "@typescript-eslint/no-explicit-any": "off"
+    "@typescript-eslint/no-explicit-any": "off",
+    "import/no-cycle": "error",
+    "import/namespace": "error",
+    "import/named": "error"
   },
   "settings": {
     "react": {

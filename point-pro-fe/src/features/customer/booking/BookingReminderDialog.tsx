@@ -11,8 +11,10 @@ import { MobileBookingDialog } from '~/types';
 import { appDayjs } from '~/utils';
 import { GENDER_TRANSLATE } from '~/constants';
 import { useAppDispatch, useAppSelector } from '~/hooks';
-import { finishBooking } from '~/store/slices';
 import { ConfirmBookingInfo, ConfirmBookingTextField } from './ConfirmBookingInfo';
+import { bookingSliceActions } from '~/store/slices/customer/booking.slice';
+
+const { finishBooking } = bookingSliceActions;
 
 interface IActionIconProps {
   icon: React.ReactNode;

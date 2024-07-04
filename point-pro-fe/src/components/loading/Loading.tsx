@@ -1,6 +1,6 @@
 import { FC } from 'react';
-import Box, { BoxProps } from '@mui/material/Box';
-import CircularProgress, { CircularProgressProps } from '@mui/material/CircularProgress';
+import Box, { type BoxProps } from '@mui/material/Box';
+import CircularProgress, { type CircularProgressProps } from '@mui/material/CircularProgress';
 
 interface ILoadingProps {
   boxProps?: BoxProps;

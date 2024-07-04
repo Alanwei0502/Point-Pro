@@ -3,7 +3,7 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import { Row } from '~/components';
 import { useAppDispatch, useAppSelector } from '~/hooks';
-import { takeOrderSliceActions } from '~/store/slices';
+import { takeOrderSliceActions } from '~/store/slices/admin/takeOrder.slice';
 import { theme } from '~/theme';
 import { MenuMeal } from '~/types';
 import { IMAGE_URL } from '~/constants';

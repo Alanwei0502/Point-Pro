@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import Box from '@mui/material/Box';
 import { useAppDispatch, useAppSelector } from '~/hooks';
-import { IOrderManagementSliceState, orderManagementSliceActions } from '~/store/slices';
+import { IOrderManagementSliceState, orderManagementSliceActions } from '~/store/slices/admin/orderManagement.slice';
 import { ORDER_STATUS_TRANSLATE, ORDER_TYPE_TRANSLATE } from '~/constants';
 import { BaseTab, BaseTabs } from '~/components';
 

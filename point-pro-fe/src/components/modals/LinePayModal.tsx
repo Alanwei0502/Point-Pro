@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import Box from '@mui/material/Box';
 import { useAppDispatch, useAppSelector } from '~/hooks';
-import { paymentSliceActions } from '~/store/slices';
+import { paymentSliceActions } from '~/store/slices/admin/payment.slice';
 import { PostLinePayResponse } from '~/types';
 import { TabletModal } from './TabletModal';
 import { AppButton } from '../button/AppButton';

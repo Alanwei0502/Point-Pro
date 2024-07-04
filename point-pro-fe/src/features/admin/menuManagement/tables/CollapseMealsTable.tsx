@@ -1,6 +1,6 @@
 import { FC, useState } from 'react';
 import { toast } from 'react-toastify';
-import { DndContext, DragEndEvent, KeyboardSensor, MouseSensor, TouchSensor, useSensor, useSensors } from '@dnd-kit/core';
+import { DndContext, type DragEndEvent, KeyboardSensor, MouseSensor, TouchSensor, useSensor, useSensors } from '@dnd-kit/core';
 import { SortableContext, arrayMove, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import Collapse from '@mui/material/Collapse';
 import TableCell from '@mui/material/TableCell';
@@ -13,8 +13,10 @@ import AddIcon from '@mui/icons-material/Add';
 import { useAppDispatch } from '~/hooks';
 import { ICategory, MealWithCategoryAndSpecialtyItems, PatchMealSortingPayload } from '~/types';
 import { AppButton, StyledTableCell, StyledTableRow } from '~/components';
-import { getMeals, openCreateMealModal, patchMealOrder, setMeals } from '~/store/slices';
 import { MealRow } from '../rows/MealRow';
+import { menuManagementSliceActions } from '~/store/slices/admin/menuManagement.slice';
+
+const { getMeals, openCreateMealModal, patchMealOrder, setMeals } = menuManagementSliceActions;
 
 interface ICollapseMealsTableProps {
   isOpen: boolean;

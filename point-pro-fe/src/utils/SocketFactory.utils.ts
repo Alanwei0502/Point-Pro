@@ -1,4 +1,4 @@
-import { ManagerOptions, Socket, SocketOptions, io } from 'socket.io-client';
+import { type ManagerOptions, Socket, type SocketOptions, io } from 'socket.io-client';
 import { API_HOST } from '~/api/http';
 
 export interface SocketInterface {

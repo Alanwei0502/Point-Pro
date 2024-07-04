@@ -17,16 +17,11 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks: {
-          muiStyle: ['@mui/material/styles', '@mui/material/CssBaseline'],
           mui: ['@mui/material'],
           xDate: ['@mui/x-date-pickers'],
           xGrid: ['@mui/x-data-grid'],
           icon: ['@mui/icons-material'],
-          react: ['react', 'react-dom', 'react-router-dom'],
-          store: ['@reduxjs/toolkit', 'react-redux'],
-          dayjs: ['dayjs'],
-          qrcode: ['qrcode.react'],
-          toast: ['react-toastify'],
+          threeParty: ['dayjs', 'react-toastify', 'qrcode.react'],
           dnd: ['@dnd-kit/core', '@dnd-kit/modifiers', '@dnd-kit/sortable', '@dnd-kit/utilities'],
         },
       },

@@ -14,7 +14,7 @@ import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import TextField from '@mui/material/TextField';
 import Slide from '@mui/material/Slide';
-import { TransitionProps } from '@mui/material/transitions';
+import { type TransitionProps } from '@mui/material/transitions';
 import { CITY_LIST, CONTACT_TIME_LIST } from '~/constants';
 import { Row } from '~/components';
 

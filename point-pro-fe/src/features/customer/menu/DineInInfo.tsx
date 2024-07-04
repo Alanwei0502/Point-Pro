@@ -5,7 +5,7 @@ import Grid from '@mui/material/Grid';
 import { appDayjs, formatTimeLeft, formatTimeOnly } from '~/utils';
 import { ROUTE_PATH } from '~/constants';
 import { useAppDispatch, useAppSelector } from '~/hooks';
-import { dineInTokenSliceActions } from '~/store/slices';
+import { dineInTokenSliceActions } from '~/store/slices/customer/dineInToken.slice';
 
 const { removeDineInToken } = dineInTokenSliceActions;
 

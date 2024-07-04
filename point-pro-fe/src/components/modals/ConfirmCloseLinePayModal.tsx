@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import Typography from '@mui/material/Typography';
 import { useAppDispatch, useAppSelector } from '~/hooks';
-import { paymentSliceActions } from '~/store/slices';
+import { paymentSliceActions } from '~/store/slices/admin/payment.slice';
 import { PaymentStatus } from '~/types';
 import { TabletModal } from './TabletModal';
 import { AppButton } from '../button/AppButton';

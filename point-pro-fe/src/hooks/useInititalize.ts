@@ -1,27 +1,24 @@
 import { useEffect } from 'react';
 import { toast } from 'react-toastify';
 import { useAppDispatch, useAppSelector } from '~/hooks';
-import {
-  adminUISliceActions,
-  getCategories,
-  getMeals,
-  getSpecialties,
-  newSocketSliceActions,
-  orderManagementSliceActions,
-  takeOrderSliceActions,
-} from '~/store/slices';
+import { adminUISliceActions } from '~/store/slices/admin/adminUI.slice';
+import { menuManagementSliceActions } from '~/store/slices/admin/menuManagement.slice';
+import { orderManagementSliceActions } from '~/store/slices/admin/orderManagement.slice';
+import { takeOrderSliceActions } from '~/store/slices/admin/takeOrder.slice';
+import { socketSliceActions } from '~/store/slices/socket.slice';
 import { SocketRoom } from '~/types';
 
 export const useInititalize = () => {
   const dispatch = useAppDispatch();
 
-  const isConnected = useAppSelector((state) => state.newSocket.isConnected);
+  const isConnected = useAppSelector((state) => state.socket.isConnected);
 
   // fetch all data
   useEffect(() => {
     const { getAdminMenu } = takeOrderSliceActions;
     const { getAllOrders } = orderManagementSliceActions;
     const { openAdminLoginLoading, closeAdminLoginLoading } = adminUISliceActions;
+    const { getCategories, getMeals, getSpecialties } = menuManagementSliceActions;
     dispatch(openAdminLoginLoading());
     Promise.allSettled([
       dispatch(getAdminMenu()).unwrap(),
@@ -40,13 +37,13 @@ export const useInititalize = () => {
 
   // connect socket
   useEffect(() => {
-    const { initSocket } = newSocketSliceActions;
+    const { initSocket } = socketSliceActions;
     dispatch(initSocket());
   }, [dispatch]);
 
   useEffect(() => {
     if (isConnected) {
-      const { joinRoom } = newSocketSliceActions;
+      const { joinRoom } = socketSliceActions;
       dispatch(joinRoom(SocketRoom.ADMIN));
     }
   }, [isConnected, dispatch]);

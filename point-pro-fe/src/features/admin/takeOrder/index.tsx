@@ -1,7 +1,7 @@
 import { FC, useEffect } from 'react';
 import Grid from '@mui/material/Grid';
 import { useAppDispatch } from '~/hooks';
-import { takeOrderSliceActions } from '~/store/slices';
+import { takeOrderSliceActions } from '~/store/slices/admin/takeOrder.slice';
 import { theme } from '~/theme';
 import { headerHeight } from '~/components';
 import { Menu } from './Menu';

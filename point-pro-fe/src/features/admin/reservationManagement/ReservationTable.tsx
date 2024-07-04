@@ -2,7 +2,13 @@ import { FC, useState, ChangeEvent } from 'react';
 import Box from '@mui/material/Box';
 import Chip from '@mui/material/Chip';
 import IconButton from '@mui/material/IconButton';
-import { DataGrid, GridLocaleText, GridRenderCellParams, GridValueFormatterParams, GridValueGetterParams } from '@mui/x-data-grid';
+import {
+  DataGrid,
+  type GridLocaleText,
+  type GridRenderCellParams,
+  type GridValueFormatterParams,
+  type GridValueGetterParams,
+} from '@mui/x-data-grid';
 import DinnerDiningIcon from '@mui/icons-material/DinnerDining';
 import PointOfSaleIcon from '@mui/icons-material/PointOfSale';
 import EditIcon from '@mui/icons-material/Edit';
@@ -13,7 +19,8 @@ import { formatTimeOnly, getReservationStatusLabel } from '~/utils';
 import { headerHeight } from '~/components';
 import { OrderType, ReservationInfo, ReservationModalType } from '~/types';
 import { useAppDispatch, useAppSelector } from '~/hooks';
-import { IPaymentSliceState, paymentSliceActions, reservationManagementSliceActions } from '~/store/slices';
+import { IPaymentSliceState, paymentSliceActions } from '~/store/slices/admin/payment.slice';
+import { reservationManagementSliceActions } from '~/store/slices/admin/reservationManagement.slice';
 import { theme } from '~/theme';
 import { ReservationToolbar } from './ReservationToolbar';
 import { ReservationTablePagination } from './ReservationPagination';

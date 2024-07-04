@@ -1,15 +1,7 @@
-import { PayloadAction, createSlice } from '@reduxjs/toolkit';
+import { type PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { OrderApi } from '~/api';
 import { createAppAsyncThunk } from '~/hooks';
-import {
-  CancelOrderPayload,
-  GetOrderPayload,
-  OrderStatus,
-  OrderType,
-  OrdersResult,
-  PatchOrderMealServedAmountPayload,
-  PostOrderPayload,
-} from '~/types';
+import { GetOrderPayload, OrderStatus, OrderType, OrdersResult, PostOrderPayload } from '~/types';
 
 const sliceName = 'orderManagement';
 
@@ -102,7 +94,7 @@ const getOrdersToCheckout = createAppAsyncThunk(`${sliceName}/getOrdersToCheckou
   }
 });
 
-export const orderManagementSlice = createSlice({
+const orderManagementSlice = createSlice({
   name: sliceName,
   initialState,
   reducers: {
@@ -192,3 +184,5 @@ export const orderManagementSliceActions = {
   patchOrderMealServedAmount,
   getOrdersToCheckout,
 };
+
+export default orderManagementSlice;

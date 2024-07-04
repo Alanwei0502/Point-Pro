@@ -7,7 +7,7 @@ import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { Column, Row } from '~/components';
 import { useAppDispatch } from '~/hooks';
-import { ITakeOrderSliceState, takeOrderSliceActions } from '~/store/slices';
+import { ITakeOrderSliceState, takeOrderSliceActions } from '~/store/slices/admin/takeOrder.slice';
 import { theme } from '~/theme';
 
 const { editCartItem, deleteCartItem } = takeOrderSliceActions;

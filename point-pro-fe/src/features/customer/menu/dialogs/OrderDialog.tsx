@@ -9,11 +9,13 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { calculateOrderPrice } from '~/utils';
 import { ORDER_STATUS_TRANSLATE } from '~/constants';
 import { useAppDispatch, useAppSelector } from '~/hooks';
-import { closeDialog, orderSliceActions } from '~/store/slices';
+import { orderSliceActions } from '~/store/slices/customer/order.slice';
+import { menuSliceActions } from '~/store/slices/customer/menu.slice';
 import { MobileDialog, IOrder, OrderStatus } from '~/types';
 import { MobileDialogLayout, AppButton } from '~/components';
 
 const { getOrders } = orderSliceActions;
+const { closeDialog } = menuSliceActions;
 
 interface IOrdersDialogProps {}
 

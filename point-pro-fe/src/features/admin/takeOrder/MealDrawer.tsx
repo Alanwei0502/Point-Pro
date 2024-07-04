@@ -8,7 +8,7 @@ import { AppButton, CloseButton, NumberInput } from '~/components';
 import { useAppDispatch, useAppSelector } from '~/hooks';
 import { theme } from '~/theme';
 import { MenuSpecialtyItem, ISpecialty, SelectionType } from '~/types';
-import { takeOrderSliceActions } from '~/store/slices';
+import { takeOrderSliceActions } from '~/store/slices/admin/takeOrder.slice';
 
 interface IMealDrawerProps {}
 

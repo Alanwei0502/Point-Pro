@@ -4,7 +4,9 @@ import Typography from '@mui/material/Typography';
 import { AppButton, MobileDialogLayout } from '~/components';
 import { MobileBookingDialog } from '~/types';
 import { useAppDispatch, useAppSelector } from '~/hooks';
-import { confirmPrivacyPolicyDialog } from '~/store/slices';
+import { bookingSliceActions } from '~/store/slices/customer/booking.slice';
+
+const { confirmPrivacyPolicyDialog } = bookingSliceActions;
 
 interface IPrivacyPolicyDialogProps {}
 

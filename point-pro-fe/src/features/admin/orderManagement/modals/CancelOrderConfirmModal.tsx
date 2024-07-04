@@ -2,7 +2,7 @@ import { FC, useState } from 'react';
 import Typography from '@mui/material/Typography';
 import { AppButton, TabletModal } from '~/components';
 import { useAppDispatch, useAppSelector } from '~/hooks';
-import { orderManagementSliceActions } from '~/store/slices';
+import { orderManagementSliceActions } from '~/store/slices/admin/orderManagement.slice';
 import { toast } from 'react-toastify';
 
 const { closeCancelOrderConfirmModal, cancelOrder, getOrders, setSocketOrderPayload } = orderManagementSliceActions;

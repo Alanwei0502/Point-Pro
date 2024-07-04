@@ -4,7 +4,7 @@ import Typography from '@mui/material/Typography';
 import { AppButton, TabletModal } from '~/components';
 import { GENDER_TRANSLATE } from '~/constants';
 import { useAppDispatch, useAppSelector } from '~/hooks';
-import { reservationManagementSliceActions } from '~/store/slices';
+import { reservationManagementSliceActions } from '~/store/slices/admin/reservationManagement.slice';
 
 const { closeDeleteReservationConfirmModal, getReservations, deleteReservation, getAvailablePeriods } = reservationManagementSliceActions;
 

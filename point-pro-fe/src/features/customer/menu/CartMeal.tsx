@@ -6,9 +6,11 @@ import Typography from '@mui/material/Typography';
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { useAppDispatch } from '~/hooks';
-import { viewCartItemCustomized, openModal } from '~/store/slices';
 import { ICartItem, MobileModalType } from '~/types';
 import { IMAGE_URL } from '~/constants';
+import { menuSliceActions } from '~/store/slices/customer/menu.slice';
+
+const { viewCartItemCustomized, openModal } = menuSliceActions;
 
 interface ICartMealProps {
   cartItem: ICartItem;

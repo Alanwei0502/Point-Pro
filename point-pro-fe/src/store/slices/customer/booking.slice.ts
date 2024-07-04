@@ -1,8 +1,8 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 import { ReservationApi, PeriodApi } from '~/api';
 import { appDayjs } from '~/utils';
 import { createAppAsyncThunk } from '~/hooks';
-import { ReservationType, MobileBookingDialog, Gender, IReservation, AvailablePeriod } from '~/types';
+import { MobileBookingDialog, Gender, IReservation, AvailablePeriod, PostReservationPayload } from '~/types';
 
 const sliceName = 'booking';
 
@@ -12,7 +12,6 @@ interface ICustomerBookingSliceState {
   availableTime: AvailablePeriod[];
   selectedDate: string;
   selectedPeriod: Pick<AvailablePeriod, 'id' | 'startTime'> | null;
-  type: ReservationType;
   people: IReservation['people'];
   username: IReservation['username'];
   phone: IReservation['phone'];
@@ -21,7 +20,6 @@ interface ICustomerBookingSliceState {
   remark: IReservation['remark'];
   isAgreedPrivacyPolicy: boolean;
   dialog: MobileBookingDialog | null;
-
   token?: string;
 }
 
@@ -31,7 +29,6 @@ const initialState: ICustomerBookingSliceState = {
   availableTime: [],
   selectedDate: appDayjs().toISOString(),
   selectedPeriod: null,
-  type: ReservationType.ONLINE,
   people: 0,
   username: '',
   phone: '',
@@ -44,7 +41,7 @@ const initialState: ICustomerBookingSliceState = {
   token: '',
 };
 
-export const getAvailablePeriods = createAppAsyncThunk(`${sliceName}/getAvailablePeriods`, async (_, thunkApi) => {
+const getAvailablePeriods = createAppAsyncThunk(`${sliceName}/getAvailablePeriods`, async (_, thunkApi) => {
   try {
     const res = await PeriodApi.getAvailablePeriods();
     return res?.result ?? [];
@@ -53,31 +50,17 @@ export const getAvailablePeriods = createAppAsyncThunk(`${sliceName}/getAvailabl
   }
 });
 
-export const postReservation = createAppAsyncThunk(`${sliceName}/postReservation`, async (_, { getState, rejectWithValue }) => {
+const postReservation = createAppAsyncThunk(`${sliceName}/postReservation`, async (payload: PostReservationPayload, thunkApi) => {
   try {
-    const { username, gender, phone, email, remark, people, selectedPeriod, type } = getState().booking;
-    const periodId = selectedPeriod?.id;
-
-    if (!periodId) return;
-
-    const response = await ReservationApi.postReservation({
-      username,
-      gender,
-      phone,
-      email,
-      remark,
-      people,
-      periodId,
-      type,
-    });
+    const response = await ReservationApi.postReservation(payload);
 
     return response.result;
   } catch (error) {
-    return rejectWithValue(error);
+    return thunkApi.rejectWithValue(error);
   }
 });
 
-export const bookingSlice = createSlice({
+const bookingSlice = createSlice({
   name: sliceName,
   initialState,
   reducers: {
@@ -124,10 +107,6 @@ export const bookingSlice = createSlice({
       state.dialog = initialState.dialog;
       state.isAgreedPrivacyPolicy = true;
     },
-    closeBookingRecordQueryDialog: (state) => {
-      state.phone = initialState.phone;
-      state.dialog = initialState.dialog;
-    },
     finishBooking: () => {
       return initialState;
     },
@@ -158,19 +137,10 @@ export const bookingSlice = createSlice({
   },
 });
 
-export const {
-  setStep,
-  setSelectedDate,
-  setSelectedPeriod,
-  setName,
-  setGender,
-  setPhone,
-  setEmail,
-  setRemark,
-  setPeople,
-  setDialog,
-  setAgreedPolicy,
-  closeBookingRecordQueryDialog,
-  confirmPrivacyPolicyDialog,
-  finishBooking,
-} = bookingSlice.actions;
+export const bookingSliceActions = {
+  ...bookingSlice.actions,
+  getAvailablePeriods,
+  postReservation,
+};
+
+export default bookingSlice;

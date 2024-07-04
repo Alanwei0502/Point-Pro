@@ -1,42 +1,52 @@
-import { Socket } from 'socket.io-client';
-import { createSlice } from '@reduxjs/toolkit';
-import { MenuNotification, OrderNotification, ReservationNotification } from '~/types';
+import { type PayloadAction, createSlice } from '@reduxjs/toolkit';
 
-const name = 'socket';
+const sliceName = 'socket';
 
-interface ISocketSliceState {
-  socket: Socket | undefined;
-  notifications: (OrderNotification | MenuNotification | ReservationNotification)[];
+interface ISocketState {
+  isConnected: boolean;
+  rooms: string[];
+  adminNotification: { id: number; title: string }[];
 }
 
-const initialState: ISocketSliceState = {
-  socket: undefined,
-  notifications: JSON.parse(sessionStorage.getItem('notifications') ?? '[]'),
+const initialState: ISocketState = {
+  isConnected: false,
+  rooms: [],
+  adminNotification: [],
 };
 
-export const socketSlice = createSlice({
-  name,
+const socketSlice = createSlice({
+  name: sliceName,
   initialState,
   reducers: {
-    setSocket: (state, action) => {
-      state.socket = action.payload;
+    initSocket: () => {
+      return;
     },
-    resetSocket: () => {
-      return initialState;
+    connectionEstablished: (state) => {
+      state.isConnected = true;
     },
-    addNotification: (state, action) => {
-      state.notifications.unshift(action.payload);
-      sessionStorage.setItem('notifications', JSON.stringify(state.notifications));
+    connectionLost: (state) => {
+      state.isConnected = false;
     },
-    removeNotification: (state, action) => {
-      state.notifications.splice(action.payload, 1);
-      sessionStorage.setItem('notifications', JSON.stringify(state.notifications));
+    joinRoom: (state, action: PayloadAction<ISocketState['rooms'][0]>) => {
+      state.rooms = state.rooms.concat(action.payload);
     },
-    clearNotifications: (state) => {
-      state.notifications = [];
-      sessionStorage.setItem('notifications', JSON.stringify(state.notifications));
+    leaveRoom: (state, action: PayloadAction<ISocketState['rooms'][0]>) => {
+      state.rooms = state.rooms.filter((room) => !action.payload.includes(room));
+    },
+    setAdminNotification: (state, action: PayloadAction<ISocketState['adminNotification'][0]>) => {
+      state.adminNotification = state.adminNotification.concat(action.payload);
+    },
+    removeAdminNotification: (state, action: PayloadAction<ISocketState['adminNotification'][0]['id']>) => {
+      state.adminNotification = state.adminNotification.filter((notification) => notification.id !== action.payload);
+    },
+    removeAllAdminNotification: (state) => {
+      state.adminNotification = initialState.adminNotification;
     },
   },
 });
 
-export const { setSocket, resetSocket, addNotification, removeNotification, clearNotifications } = socketSlice.actions;
+export const socketSliceActions = {
+  ...socketSlice.actions,
+};
+
+export default socketSlice;

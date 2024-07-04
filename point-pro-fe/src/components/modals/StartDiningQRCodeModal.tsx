@@ -3,7 +3,7 @@ import { QRCodeSVG } from 'qrcode.react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import { useAppDispatch, useAppSelector } from '~/hooks';
-import { adminUISliceActions } from '~/store/slices';
+import { adminUISliceActions } from '~/store/slices/admin/adminUI.slice';
 import { AppButton } from '~/components';
 import logo from '~/assets/images/logo.svg';
 import { TabletModal } from './TabletModal';

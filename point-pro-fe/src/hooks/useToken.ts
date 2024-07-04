@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from './useRedux';
-import { authSliceActions, dineInTokenSliceActions } from '~/store/slices';
+import { authSliceActions } from '~/store/slices/admin/auth.slice';
+import { dineInTokenSliceActions } from '~/store/slices/customer/dineInToken.slice';
 import { useLocation } from 'react-router-dom';
 
 export const useToken = () => {

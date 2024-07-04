@@ -5,7 +5,8 @@ import Typography from '@mui/material/Typography';
 import { AppButton, TabletModal } from '~/components';
 import { GENDER_TRANSLATE } from '~/constants';
 import { useAppDispatch, useAppSelector } from '~/hooks';
-import { adminUISliceActions, reservationManagementSliceActions } from '~/store/slices';
+import { adminUISliceActions } from '~/store/slices/admin/adminUI.slice';
+import { reservationManagementSliceActions } from '~/store/slices/admin/reservationManagement.slice';
 
 const { closeStartDiningConfirmModal, getReservations, startDiningReservation, getAvailablePeriods } = reservationManagementSliceActions;
 const { openStartDiningQRCodeModal } = adminUISliceActions;

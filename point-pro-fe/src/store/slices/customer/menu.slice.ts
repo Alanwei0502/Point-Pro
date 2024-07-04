@@ -1,19 +1,19 @@
 // Libs
-import { PayloadAction, createSlice } from '@reduxjs/toolkit';
+import { type PayloadAction, createSlice } from '@reduxjs/toolkit';
 // Others
 import { MenuApi } from '~/api';
 import { createAppAsyncThunk } from '~/hooks';
 import {
-  MobileDialog,
   ICategory,
   SelectionType,
   MenuCategory,
   MenuMeal,
   MenuSpecialtiesWithItems,
   MenuSpecialtyItem,
-  ICartItem,
   MobileModalState,
   MobileDialogState,
+  ICartItem,
+  MobileDialog,
 } from '~/types';
 
 const sliceName = 'menu';
@@ -51,7 +51,7 @@ const initialState: menuSliceState = {
   isLoading: false,
 };
 
-export const getMenu = createAppAsyncThunk(`${sliceName}/getMenu`, async (_, thunkApi) => {
+const getMenu = createAppAsyncThunk(`${sliceName}/getMenu`, async (_, thunkApi) => {
   try {
     const menuRes = await MenuApi.getMenu();
     return menuRes.result;
@@ -60,7 +60,7 @@ export const getMenu = createAppAsyncThunk(`${sliceName}/getMenu`, async (_, thu
   }
 });
 
-export const menuSlice = createSlice({
+const menuSlice = createSlice({
   name: sliceName,
   initialState,
   reducers: {
@@ -178,19 +178,9 @@ export const menuSlice = createSlice({
   },
 });
 
-export const {
-  openDialog,
-  closeDialog,
-  openModal,
-  closeModal,
-  setCurrentCategory,
-  updateSpecialty,
-  increaseMealAmount,
-  decreaseMealAmount,
-  setNotModifiedCartItem,
-  viewCartItemCustomized,
-  createCartItem,
-  updateCartItem,
-  deleteCartItem,
-  clearCart,
-} = menuSlice.actions;
+export const menuSliceActions = {
+  ...menuSlice.actions,
+  getMenu,
+};
+
+export default menuSlice;

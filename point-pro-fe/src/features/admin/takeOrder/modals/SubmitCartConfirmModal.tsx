@@ -3,8 +3,10 @@ import { toast } from 'react-toastify';
 import Typography from '@mui/material/Typography';
 import { AppButton, TabletModal } from '~/components';
 import { useAppDispatch, useAppSelector } from '~/hooks';
-import { takeOrderSliceActions, orderManagementSliceActions, paymentSliceActions } from '~/store/slices';
 import { OrderType } from '~/types';
+import { orderManagementSliceActions } from '~/store/slices/admin/orderManagement.slice';
+import { takeOrderSliceActions } from '~/store/slices/admin/takeOrder.slice';
+import { paymentSliceActions } from '~/store/slices/admin/payment.slice';
 
 const { postOrder } = orderManagementSliceActions;
 const { clearCart, setUnselectMeal } = takeOrderSliceActions;

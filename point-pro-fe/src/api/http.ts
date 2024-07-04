@@ -1,8 +1,8 @@
 import axios from 'axios';
 import { toast } from 'react-toastify';
-import { dineInTokenSliceActions } from '~/store/slices';
-import { store } from '~/store/store';
+import { dineInTokenSliceActions } from '~/store/slices/customer/dineInToken.slice';
 import { ROUTE_PATH } from '~/constants';
+import { store } from '~/utils';
 
 const { removeDineInToken } = dineInTokenSliceActions;
 

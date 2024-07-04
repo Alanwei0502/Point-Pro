@@ -31,7 +31,7 @@ const logout = createAppAsyncThunk(`${sliceName}/logout`, async (_, thunkApi) =>
   }
 });
 
-export const authSlice = createSlice({
+const authSlice = createSlice({
   name: sliceName,
   initialState,
   reducers: {
@@ -74,3 +74,5 @@ export const authSliceActions = {
   login,
   logout,
 };
+
+export default authSlice;

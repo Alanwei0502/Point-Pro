@@ -1,12 +1,12 @@
 import { FC, useRef } from 'react';
 import Box from '@mui/material/Box';
-import { GridToolbar, GridToolbarProps } from '@mui/x-data-grid';
+import { GridToolbar, type GridToolbarProps } from '@mui/x-data-grid';
 import AddIcon from '@mui/icons-material/Add';
 import { DesktopDatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AppButton } from '~/components';
 import { appDayjs, debounce } from '~/utils';
 import { useAppDispatch, useAppSelector } from '~/hooks';
-import { reservationManagementSliceActions } from '~/store/slices';
+import { reservationManagementSliceActions } from '~/store/slices/admin/reservationManagement.slice';
 import { ReservationModalType } from '~/types';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 

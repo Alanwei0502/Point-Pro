@@ -3,15 +3,17 @@ import Box from '@mui/material/Box';
 import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
 import MenuItem from '@mui/material/MenuItem';
-import Select, { SelectChangeEvent } from '@mui/material/Select';
-import { SxProps, Theme } from '@mui/system';
+import Select, { type SelectChangeEvent } from '@mui/material/Select';
+import { type SxProps, type Theme } from '@mui/system';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DateCalendar } from '@mui/x-date-pickers';
 import { RESERVATION_PEOPLE_OPTIONS } from '~/constants';
 import { appDayjs, formatTimeOnly, formatDateOnly } from '~/utils';
 import { useAppDispatch, useAppSelector } from '~/hooks';
-import { setPeople, setSelectedDate, setSelectedPeriod, getAvailablePeriods } from '~/store/slices';
+import { bookingSliceActions } from '~/store/slices/customer/booking.slice';
+
+const { setPeople, setSelectedDate, setSelectedPeriod, getAvailablePeriods } = bookingSliceActions;
 
 const formLabelStyle: SxProps<Theme> | undefined = { fontWeight: 700, color: 'common.black' };
 

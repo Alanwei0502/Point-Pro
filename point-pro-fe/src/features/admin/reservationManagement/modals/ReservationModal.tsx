@@ -7,7 +7,7 @@ import FormLabel from '@mui/material/FormLabel';
 import MenuItem from '@mui/material/MenuItem';
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
-import Select, { SelectChangeEvent } from '@mui/material/Select';
+import Select, { type SelectChangeEvent } from '@mui/material/Select';
 import TextField from '@mui/material/TextField';
 import { DesktopDatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -16,7 +16,7 @@ import { appDayjs, emailRegex, formatDateOnly, formatTimeOnly, phoneRegex } from
 import { GENDER_TRANSLATE, RESERVATION_PEOPLE_OPTIONS } from '~/constants';
 import { AvailablePeriod, Gender, ReservationModalType } from '~/types';
 import { useAppDispatch, useAppSelector } from '~/hooks';
-import { reservationManagementSliceActions } from '~/store/slices';
+import { reservationManagementSliceActions } from '~/store/slices/admin/reservationManagement.slice';
 
 const { closeModal, getReservations, patchReservation, postReservation, setModalSelectedDate, getAvailablePeriods } =
   reservationManagementSliceActions;

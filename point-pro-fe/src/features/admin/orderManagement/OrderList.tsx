@@ -3,7 +3,7 @@ import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import TablePagination from '@mui/material/TablePagination';
 import { useAppDispatch, useAppSelector } from '~/hooks';
-import { orderManagementSliceActions } from '~/store/slices';
+import { orderManagementSliceActions } from '~/store/slices/admin/orderManagement.slice';
 import { OrderStatus } from '~/types';
 import { headerHeight, Column, Loading } from '~/components';
 import { OrderItem } from './OrderItem';

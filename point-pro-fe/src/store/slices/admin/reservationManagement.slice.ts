@@ -1,4 +1,4 @@
-import { PayloadAction, createSlice } from '@reduxjs/toolkit';
+import { type PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { PeriodApi, ReservationApi } from '~/api';
 import { createAppAsyncThunk } from '~/hooks';
 import { AvailablePeriod, Gender, IReservation, ReservationInfo, ReservationModalType, ReservationType } from '~/types';
@@ -125,7 +125,7 @@ const deleteReservation = createAppAsyncThunk(`${sliceName}/deleteReservation`, 
   }
 });
 
-export const reservationManagementSlice = createSlice({
+const reservationManagementSlice = createSlice({
   name: sliceName,
   initialState,
   reducers: {
@@ -204,3 +204,5 @@ export const reservationManagementSliceActions = {
   startDiningReservation,
   deleteReservation,
 };
+
+export default reservationManagementSlice;

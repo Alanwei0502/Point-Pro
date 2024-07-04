@@ -1,4 +1,4 @@
-import { PayloadAction, createSlice } from '@reduxjs/toolkit';
+import { type PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { MenuApi } from '~/api';
 import { createAppAsyncThunk } from '~/hooks';
 import { MenuCategory, MenuMeal, MenuSpecialtiesWithItems, MenuSpecialtyItem, ICategory, ISpecialty, SelectionType } from '~/types';
@@ -50,7 +50,7 @@ const getAdminMenu = createAppAsyncThunk(`${sliceName}/getAdminMenu`, async (_, 
   }
 });
 
-export const takeOrderSlice = createSlice({
+const takeOrderSlice = createSlice({
   name: sliceName,
   initialState,
   reducers: {
@@ -172,9 +172,7 @@ export const takeOrderSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(getAdminMenu.pending, (state) => {
-        // state.isLoading = true;
-      })
+      .addCase(getAdminMenu.pending, (state) => {})
       .addCase(getAdminMenu.fulfilled, (state, action) => {
         if (state.selectCategory === initialState.selectCategory) {
           state.selectCategory = action.payload?.categories[0]?.id ?? '';
@@ -182,13 +180,11 @@ export const takeOrderSlice = createSlice({
         state.categories = action.payload?.categories ?? [];
         state.meals = action.payload?.meals ?? [];
         state.specialtiesWithItems = action.payload?.specialtiesWithItems ?? [];
-        // state.isLoading = false;
       })
       .addCase(getAdminMenu.rejected, (state) => {
         state.categories = initialState.categories;
         state.selectCategory = initialState.selectCategory;
         state.meals = initialState.meals;
-        // state.isLoading = false;
       });
   },
 });
@@ -197,3 +193,5 @@ export const takeOrderSliceActions = {
   ...takeOrderSlice.actions,
   getAdminMenu,
 };
+
+export default takeOrderSlice;

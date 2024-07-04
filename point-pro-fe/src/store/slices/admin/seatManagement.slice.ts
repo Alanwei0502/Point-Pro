@@ -26,7 +26,7 @@ const getSeats = createAppAsyncThunk(`${sliceName}/getSeats`, async (_, thunkApi
   }
 });
 
-export const seatManagementSlice = createSlice({
+const seatManagementSlice = createSlice({
   name: sliceName,
   initialState,
   reducers: {},
@@ -53,3 +53,5 @@ export const seatManagementSliceActions = {
   ...seatManagementSlice.actions,
   getSeats,
 };
+
+export default seatManagementSlice;

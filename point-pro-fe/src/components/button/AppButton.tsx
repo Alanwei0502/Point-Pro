@@ -1,6 +1,6 @@
 import { FC } from 'react';
 import styled from '@emotion/styled';
-import Button, { ButtonProps } from '@mui/material/Button';
+import Button, { type ButtonProps } from '@mui/material/Button';
 import { theme } from '~/theme';
 
 const BaseButton = styled(Button)<ButtonProps>(({ size }) => ({

@@ -2,10 +2,12 @@ import { FC } from 'react';
 import { toast } from 'react-toastify';
 import MobileStepper from '@mui/material/MobileStepper';
 import { AppButton } from '~/components';
-import { MobileBookingDialog } from '~/types';
+import { MobileBookingDialog, ReservationType } from '~/types';
 import { useAppDispatch, useAppSelector } from '~/hooks';
-import { setStep, setDialog, postReservation } from '~/store/slices';
 import { emailRegex, phoneRegex } from '~/utils';
+import { bookingSliceActions } from '~/store/slices/customer/booking.slice';
+
+const { setStep, setDialog, postReservation } = bookingSliceActions;
 
 interface IBookingStepsProps {
   stepLength: number;
@@ -18,10 +20,12 @@ export const BookingSteps: FC<IBookingStepsProps> = (props) => {
   const step = useAppSelector(({ booking }) => booking.step);
   const selectedDate = useAppSelector(({ booking }) => booking.selectedDate);
   const selectedPeriod = useAppSelector(({ booking }) => booking.selectedPeriod);
-  const people = useAppSelector(({ booking }) => booking.people);
   const username = useAppSelector(({ booking }) => booking.username);
+  const gender = useAppSelector(({ booking }) => booking.gender);
+  const people = useAppSelector(({ booking }) => booking.people);
   const phone = useAppSelector(({ booking }) => booking.phone);
   const email = useAppSelector(({ booking }) => booking.email);
+  const remark = useAppSelector(({ booking }) => booking.remark);
   const isAgreedPrivacyPolicy = useAppSelector(({ booking }) => booking.isAgreedPrivacyPolicy);
 
   const isNotFirstStep = step !== 0;
@@ -55,9 +59,22 @@ export const BookingSteps: FC<IBookingStepsProps> = (props) => {
   };
 
   const handleConfirm = () => {
+    if (!selectedPeriod?.id) return;
+
     toast.promise(
       async () => {
-        await dispatch(postReservation()).unwrap();
+        await dispatch(
+          postReservation({
+            username,
+            gender,
+            phone,
+            email,
+            remark,
+            people,
+            periodId: selectedPeriod.id,
+            type: ReservationType.ONLINE,
+          }),
+        ).unwrap();
         dispatch(setDialog(MobileBookingDialog.REMINDER));
       },
       {

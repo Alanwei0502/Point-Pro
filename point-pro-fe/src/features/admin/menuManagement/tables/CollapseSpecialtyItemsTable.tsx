@@ -8,13 +8,15 @@ import TableBody from '@mui/material/TableBody';
 import TableFooter from '@mui/material/TableFooter';
 import TableHead from '@mui/material/TableHead';
 import AddIcon from '@mui/icons-material/Add';
-import { DndContext, DragEndEvent, KeyboardSensor, MouseSensor, TouchSensor, useSensor, useSensors } from '@dnd-kit/core';
+import { DndContext, type DragEndEvent, KeyboardSensor, MouseSensor, TouchSensor, useSensor, useSensors } from '@dnd-kit/core';
 import { SortableContext, arrayMove, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { AppButton, StyledTableCell, StyledTableRow } from '~/components';
 import { SpecialtyWithSpecialtyItems, PatchSpecialtyItemOrderPayload } from '~/types';
 import { SpecialtyItemRow } from '../rows/SpecialtyItemRow';
 import { useAppDispatch } from '~/hooks';
-import { getSpecialties, openCreateSpecialtyItemModal, patchSpecialtyItemOrder, setSpecialtyItems } from '~/store/slices';
+import { menuManagementSliceActions } from '~/store/slices/admin/menuManagement.slice';
+
+const { getSpecialties, openCreateSpecialtyItemModal, patchSpecialtyItemOrder, setSpecialtyItems } = menuManagementSliceActions;
 
 interface ICollapseSpecialtyItemsTableProps {
   isOpen: boolean;

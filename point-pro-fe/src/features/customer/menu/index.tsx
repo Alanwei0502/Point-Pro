@@ -1,6 +1,5 @@
 import { FC, useEffect } from 'react';
 import { MobileLayout, MobileHeader, MobileMask } from '~/components';
-import { getMenu, newSocketSliceActions, orderSliceActions } from '~/store/slices';
 import { useAppDispatch, useToken, useAppSelector } from '~/hooks';
 import { DineInInfo } from './DineInInfo';
 import { CategoryNavbar } from './CategoryNavbar';
@@ -11,6 +10,13 @@ import { CustomizedDialog } from './dialogs/CustomizedDialog';
 import { OrdersDialog } from './dialogs/OrderDialog';
 import { RemoveCartItemConfirmModal } from './modals/RemoveCartItemConfirmModal';
 import { CartItemIsOffReminderModal } from './modals/CartItemIsOffReminderModal';
+import { menuSliceActions } from '~/store/slices/customer/menu.slice';
+import { socketSliceActions } from '~/store/slices/socket.slice';
+import { orderSliceActions } from '~/store/slices/customer/order.slice';
+
+const { getMenu } = menuSliceActions;
+const { initSocket } = socketSliceActions;
+const { getOrders } = orderSliceActions;
 
 interface IMenuProps {}
 
@@ -19,14 +25,12 @@ const Menu: FC<IMenuProps> = () => {
 
   const { dineInToken } = useToken();
 
-  const isConnected = useAppSelector((state) => state.newSocket.isConnected);
+  const isConnected = useAppSelector((state) => state.socket.isConnected);
   const reservationId = useAppSelector((state) => state.dineInToken.reservationId);
 
   useEffect(() => {
     if (!dineInToken) return;
 
-    const { initSocket } = newSocketSliceActions;
-    const { getOrders } = orderSliceActions;
     dispatch(getMenu());
     dispatch(getOrders());
     dispatch(initSocket());
@@ -35,7 +39,7 @@ const Menu: FC<IMenuProps> = () => {
   useEffect(() => {
     if (!isConnected) return;
 
-    const { joinRoom } = newSocketSliceActions;
+    const { joinRoom } = socketSliceActions;
     dispatch(joinRoom(reservationId));
   }, [isConnected, reservationId, dispatch]);
 

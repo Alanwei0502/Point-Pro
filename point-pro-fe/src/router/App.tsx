@@ -7,6 +7,9 @@ import { ROUTE_PATH } from '~/constants';
 import { store } from '~/store/store';
 import { LinePayConfirm, LoadingMask } from '~/components';
 import ProtectedRoute from './ProtectedRoute';
+import { injectStore } from '~/utils';
+
+injectStore(store);
 
 const Booking = lazy(() => import('~/features/customer/booking'));
 const Menu = lazy(() => import('~/features/customer/menu'));

@@ -6,7 +6,7 @@ import ListItem from '@mui/material/ListItem';
 import { AppButton, headerHeight, Column, Row } from '~/components';
 import { useAppDispatch, useAppSelector } from '~/hooks';
 import { theme } from '~/theme';
-import { takeOrderSliceActions } from '~/store/slices';
+import { takeOrderSliceActions } from '~/store/slices/admin/takeOrder.slice';
 import { CartMeal } from './CartMeal';
 
 interface ICartListProps {}

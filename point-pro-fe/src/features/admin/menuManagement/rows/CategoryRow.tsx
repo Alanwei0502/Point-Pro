@@ -18,8 +18,10 @@ import { ICategory } from '~/types';
 import { StyledTableCell, TextInput } from '~/components';
 import { theme } from '~/theme';
 import { useAppDispatch, useAppSelector } from '~/hooks';
-import { getCategories, openDeleteCategoryConfirmModal, patchCategory } from '~/store/slices';
+import { menuManagementSliceActions } from '~/store/slices/admin/menuManagement.slice';
 import { CollapseMealsTable } from '../tables/CollapseMealsTable';
+
+const { getCategories, openDeleteCategoryConfirmModal, patchCategory } = menuManagementSliceActions;
 
 const StyledCategoryRow = styled(TableRow)(() => ({
   '&.MuiTableRow-root': {

@@ -1,4 +1,4 @@
-import { PayloadAction, createSlice } from '@reduxjs/toolkit';
+import { type PayloadAction, createSlice } from '@reduxjs/toolkit';
 
 const sliceName = 'dineInToken';
 
@@ -16,7 +16,7 @@ const initialState: IDineInTokenState = {
   startAt: '',
 };
 
-export const dineInTokenSlice = createSlice({
+const dineInTokenSlice = createSlice({
   name: sliceName,
   initialState,
   reducers: {
@@ -39,3 +39,5 @@ export const dineInTokenSlice = createSlice({
 export const dineInTokenSliceActions = {
   ...dineInTokenSlice.actions,
 };
+
+export default dineInTokenSlice;

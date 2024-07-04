@@ -1,4 +1,4 @@
-import { ICartItem } from './common.type';
+import { MenuMeal, MenuSpecialtyItem } from './api.type';
 
 export enum MobileDialog {
   CUSTOMIZED = 'CUSTOMIZED',
@@ -24,6 +24,11 @@ export enum ReservationModalType {
 export interface MobileModalPayload<T extends MobileModalType | '', D = undefined> {
   type: T;
   data?: D;
+}
+
+export interface ICartItem extends MenuMeal {
+  amount: number;
+  selectedSpecialtyItems: MenuSpecialtyItem[];
 }
 
 export type MobileModalState =

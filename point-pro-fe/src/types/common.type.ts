@@ -1,4 +1,3 @@
-import { MenuMeal, MenuSpecialtyItem } from './api.type';
 import { Gender, OrderStatus, OrderType, PaymentGateway, PaymentStatus, ReservationType, Role, SelectionType } from './enum.type';
 
 export interface IBase {
@@ -84,9 +83,4 @@ export interface IPayment extends IBase {
   price: number;
   gateway: PaymentGateway;
   status: PaymentStatus;
-}
-
-export interface ICartItem extends MenuMeal {
-  amount: number;
-  selectedSpecialtyItems: MenuSpecialtyItem[];
 }

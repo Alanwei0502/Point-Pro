@@ -2,7 +2,7 @@ import { FC } from 'react';
 import Typography from '@mui/material/Typography';
 import { AppButton, TabletModal } from '~/components';
 import { useAppDispatch, useAppSelector } from '~/hooks';
-import { takeOrderSliceActions } from '~/store/slices';
+import { takeOrderSliceActions } from '~/store/slices/admin/takeOrder.slice';
 
 interface IClearCartConfirmModalProps {}
 

@@ -7,10 +7,12 @@ import { CartMeal } from '~/features/customer/menu/CartMeal';
 import { AppButton, MobileDialogLayout } from '~/components';
 import { calculateCartPrice } from '~/utils';
 import { useAppDispatch, useAppSelector } from '~/hooks';
-import { closeDialog, openModal, deleteCartItem, orderSliceActions } from '~/store/slices';
 import { MobileModalType, MobileDialog } from '~/types';
+import { menuSliceActions } from '~/store/slices/customer/menu.slice';
+import { orderSliceActions } from '~/store/slices/customer/order.slice';
 
 const { postOrder } = orderSliceActions;
+const { closeDialog, openModal, deleteCartItem, openDialog, clearCart } = menuSliceActions;
 
 interface ICartDialogProps {}
 
@@ -38,6 +40,8 @@ export const CartDialog: FC<ICartDialogProps> = () => {
       .promise(
         async () => {
           await dispatch(postOrder()).unwrap();
+          dispatch(openDialog({ type: MobileDialog.ORDER }));
+          dispatch(clearCart());
         },
         {
           pending: '送出訂單中...',

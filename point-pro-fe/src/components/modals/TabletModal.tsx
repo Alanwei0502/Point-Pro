@@ -1,10 +1,10 @@
 import { FC, ReactNode } from 'react';
 import Box from '@mui/material/Box';
-import Card, { CardProps } from '@mui/material/Card';
-import CardActions, { CardActionsProps } from '@mui/material/CardActions';
-import CardContent, { CardContentProps } from '@mui/material/CardContent';
-import CardHeader, { CardHeaderProps } from '@mui/material/CardHeader';
-import Modal, { ModalProps } from '@mui/material/Modal';
+import Card, { type CardProps } from '@mui/material/Card';
+import CardActions, { type CardActionsProps } from '@mui/material/CardActions';
+import CardContent, { type CardContentProps } from '@mui/material/CardContent';
+import CardHeader, { type CardHeaderProps } from '@mui/material/CardHeader';
+import Modal, { type ModalProps } from '@mui/material/Modal';
 import { theme } from '~/theme';
 
 interface ITabletModalProps extends Omit<ModalProps, 'children'> {

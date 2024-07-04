@@ -1,8 +1,10 @@
 import { FC, ReactNode } from 'react';
-import Box, { BoxProps } from '@mui/material/Box';
-import Modal, { ModalProps } from '@mui/material/Modal';
+import Box, { type BoxProps } from '@mui/material/Box';
+import Modal, { type ModalProps } from '@mui/material/Modal';
 import { useAppDispatch } from '~/hooks';
-import { closeModal } from '~/store/slices';
+import { menuSliceActions } from '~/store/slices/customer/menu.slice';
+
+const { closeModal } = menuSliceActions;
 
 interface IMobileModalProps extends Omit<ModalProps, 'children'> {
   children?: ReactNode;

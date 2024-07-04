@@ -1,9 +1,8 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { OrderApi } from '~/api';
 import { createAppAsyncThunk } from '~/hooks';
-import { clearCart, openDialog } from '~/store/slices';
 import { appDayjs, calculateCartItemPrice } from '~/utils';
-import { MobileDialog, OrdersResult, OrderStatus, OrderType } from '~/types';
+import { OrdersResult, OrderStatus, OrderType } from '~/types';
 
 const sliceName = 'order';
 
@@ -44,14 +43,12 @@ const postOrder = createAppAsyncThunk(`${sliceName}/postOrder`, async (_, thunkA
 
     await OrderApi.postOrder(payload);
     thunkApi.dispatch(getOrders());
-    thunkApi.dispatch(openDialog({ type: MobileDialog.ORDER }));
-    thunkApi.dispatch(clearCart());
   } catch (error) {
     return thunkApi.rejectWithValue(error);
   }
 });
 
-export const orderSlice = createSlice({
+const orderSlice = createSlice({
   name: sliceName,
   initialState,
   reducers: {},
@@ -77,3 +74,5 @@ export const orderSliceActions = {
   getOrders,
   postOrder,
 };
+
+export default orderSlice;

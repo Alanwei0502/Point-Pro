@@ -8,7 +8,7 @@ import IconButton from '@mui/material/IconButton';
 import MenuItem from '@mui/material/MenuItem';
 import TableRow from '@mui/material/TableRow';
 import Typography from '@mui/material/Typography';
-import { SelectChangeEvent } from '@mui/material/Select';
+import { type SelectChangeEvent } from '@mui/material/Select';
 import ReorderIcon from '@mui/icons-material/Reorder';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -22,7 +22,9 @@ import { SpecialtyWithSpecialtyItems, SelectionType } from '~/types';
 import { theme } from '~/theme';
 import { CollapseSpecialtyItemsTable } from '../tables/CollapseSpecialtyItemsTable';
 import { SELECTION_TYPE_TRANSLATE } from '~/constants';
-import { getSpecialties, openDeleteSpecialtyConfirmModal, patchSpecialty } from '~/store/slices';
+import { menuManagementSliceActions } from '~/store/slices/admin/menuManagement.slice';
+
+const { getSpecialties, openDeleteSpecialtyConfirmModal, patchSpecialty } = menuManagementSliceActions;
 
 const StyledSpecialtyRow = styled(TableRow)(() => ({
   '&.MuiTableRow-root': {

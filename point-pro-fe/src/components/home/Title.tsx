@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
-import { SxProps, Theme } from '@mui/system';
+import { type SxProps, type Theme } from '@mui/system';
 import Circle from '@mui/icons-material/Circle';
 import { theme } from '~/theme';
 import { useResponsiveStyles } from '~/hooks';

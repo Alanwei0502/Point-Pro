@@ -1,31 +1,25 @@
 import { combineReducers } from '@reduxjs/toolkit';
-import {
-  authSlice,
-  orderSlice,
-  paymentSlice,
-  socketSlice,
-  bookingSlice,
-  menuSlice,
-  menuManagementSlice,
-  takeOrderSlice,
-  adminUISlice,
-  orderManagementSlice,
-  reservationManagementSlice,
-  seatManagementSlice,
-  homeSlice,
-  dineInTokenSlice,
-  newSocketSlice,
-} from './slices';
+import dineInTokenSlice from './slices/customer/dineInToken.slice';
+import socketSlice from './slices/socket.slice';
+import menuSlice from './slices/customer/menu.slice';
+import bookingSlice from './slices/customer/booking.slice';
+import orderSlice from './slices/customer/order.slice';
+import adminUISlice from './slices/admin/adminUI.slice';
+import authSlice from './slices/admin/auth.slice';
+import paymentSlice from './slices/admin/payment.slice';
+import takeOrderSlice from './slices/admin/takeOrder.slice';
+import menuManagementSlice from './slices/admin/menuManagement.slice';
+import orderManagementSlice from './slices/admin/orderManagement.slice';
+import reservationManagementSlice from './slices/admin/reservationManagement.slice';
+import seatManagementSlice from './slices/admin/seatManagement.slice';
 
 const reducer = combineReducers({
   // customer
-  [homeSlice.name]: homeSlice.reducer,
   [dineInTokenSlice.name]: dineInTokenSlice.reducer,
+  [socketSlice.name]: socketSlice.reducer,
   [menuSlice.name]: menuSlice.reducer,
   [bookingSlice.name]: bookingSlice.reducer,
   [orderSlice.name]: orderSlice.reducer,
-  [socketSlice.name]: socketSlice.reducer,
-  [newSocketSlice.name]: newSocketSlice.reducer,
   // admin
   [adminUISlice.name]: adminUISlice.reducer,
   [authSlice.name]: authSlice.reducer,

@@ -1,8 +1,10 @@
 import { FC } from 'react';
 import { AppButton, TabletModal } from '~/components';
 import { useAppDispatch, useAppSelector } from '~/hooks';
-import { closeSpecialtySettingModal } from '~/store/slices';
+import { menuManagementSliceActions } from '~/store/slices/admin/menuManagement.slice';
 import { SpecialtySettingTable } from '../tables/SpecialtySettingTable';
+
+const { closeSpecialtySettingModal } = menuManagementSliceActions;
 
 interface ISpecialtyItemsSettingModalProps {}
 

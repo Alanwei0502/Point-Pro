@@ -12,7 +12,9 @@ import { MobileBookingDialog, Gender } from '~/types';
 import { GENDER_TRANSLATE } from '~/constants';
 import { emailRegex, phoneRegex } from '~/utils';
 import { useAppDispatch, useAppSelector } from '~/hooks';
-import { setPhone, setDialog, setName, setEmail, setRemark, setGender, setAgreedPolicy } from '~/store/slices';
+import { bookingSliceActions } from '~/store/slices/customer/booking.slice';
+
+const { setPhone, setDialog, setName, setEmail, setRemark, setGender, setAgreedPolicy } = bookingSliceActions;
 
 interface IBookerInfoProps {}
 
