@@ -9,6 +9,13 @@ export class PaymentModel {
       where: {
         id,
       },
+      include: {
+        orders: {
+          include: {
+            reservations: true,
+          },
+        },
+      },
     });
 
     return payment;
@@ -22,6 +29,13 @@ export class PaymentModel {
         status: gateway === PaymentGateway.CASH ? PaymentStatus.PAID : PaymentStatus.UNPAID,
         orders: {
           connect: [...body.map((order) => ({ id: order.id }))],
+        },
+      },
+      include: {
+        orders: {
+          include: {
+            reservations: true,
+          },
         },
       },
     });

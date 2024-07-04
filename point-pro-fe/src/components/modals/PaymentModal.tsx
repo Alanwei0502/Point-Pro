@@ -53,7 +53,7 @@ const CheckoutOrderList: FC<ICheckoutOrderListProps> = (props) => {
       ) : (
         <List>
           {checkOutOrder
-            .filter((co) => co.status !== OrderStatus.CANCEL)
+            .filter((co) => co.status === OrderStatus.FINISHED)
             .map((co) => (
               <ListItem key={co.id} sx={{ display: 'flex', alignItems: 'flex-start', backgroundColor: theme.palette.common.black_20, mb: 1 }}>
                 {modalType === 'EDIT' && (
@@ -107,7 +107,7 @@ export const PaymentModal: FC<IPaymentModalProps> = () => {
   const statusTab = useAppSelector((state) => state.orderManagement.statusTab);
   const dateFilter = useAppSelector((state) => state.reservationManagement.dateFilter);
 
-  const totalPrice = checkOutOrder.filter((co) => co.status !== OrderStatus.CANCEL).reduce((acc, co) => acc + co.totalPrice, 0);
+  const totalPrice = checkOutOrder.filter((co) => co.status === OrderStatus.FINISHED).reduce((acc, co) => acc + co.totalPrice, 0);
 
   const handleSelectPaymentType = (e: SelectChangeEvent<PaymentType>) => {
     const paymentType = e.target.value;

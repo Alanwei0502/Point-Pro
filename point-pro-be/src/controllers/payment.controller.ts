@@ -1,14 +1,20 @@
 import { NextFunction } from 'express';
 import { ReasonPhrases, StatusCodes } from 'http-status-codes';
 import { PaymentGateway, PaymentStatus } from '@prisma/client';
-import { ApiResponse, IConfirmLinePayRequest, ICreatePaymentRequest, IUpdatePaymentStatusRequest } from '../types';
+import { ApiResponse, IConfirmLinePayRequest, ICreatePaymentRequest, IUpdatePaymentStatusRequest, SessionRole } from '../types';
 import { PaymentModel } from '../models';
-import { LinePayClient, Logger } from '../helpers';
+import { LinePayClient, Logger, SessionRedis } from '../helpers';
 
 export class PaymentController {
   static cashPaymentHandler = async (req: ICreatePaymentRequest, res: ApiResponse, next: NextFunction) => {
     try {
       const payment = await PaymentModel.createPayment(req.body, PaymentGateway.CASH);
+
+      // Remove dine in customer's redis session
+      if (payment.orders[0].reservationId) {
+        SessionRedis.deleteSession('customer', payment.orders[0].reservationId);
+      }
+
       res.status(StatusCodes.CREATED).send({
         message: ReasonPhrases.CREATED,
         result: payment,
@@ -60,6 +66,11 @@ export class PaymentController {
 
       // Update payment status
       await PaymentModel.updatePaymentStatus(paymentId, transactionId, PaymentStatus.PAID);
+
+      // Remove dine in customer's redis session
+      if (payment.orders[0].reservationId) {
+        SessionRedis.deleteSession('customer', payment.orders[0].reservationId);
+      }
 
       res.status(StatusCodes.OK).send({
         message: ReasonPhrases.OK,
