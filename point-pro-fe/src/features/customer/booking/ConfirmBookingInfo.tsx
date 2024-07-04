@@ -7,7 +7,8 @@ import AccessibilityIcon from '@mui/icons-material/Accessibility';
 import PhoneIphoneIcon from '@mui/icons-material/PhoneIphone';
 import EmailIcon from '@mui/icons-material/Email';
 import StickyNote2Icon from '@mui/icons-material/StickyNote2';
-import { formatFullDate, formatTimeOnly, GENDER_TRANSLATE } from '~/utils';
+import { formatFullDate, formatTimeOnly } from '~/utils';
+import { GENDER_TRANSLATE } from '~/constants';
 import { useAppSelector } from '~/hooks';
 
 interface IConfirmBookingTextFieldProps extends Omit<TextFieldProps, 'label' | 'value' | 'InputProps' | 'variant'> {

@@ -9,7 +9,8 @@ import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import TextField from '@mui/material/TextField';
 import { MobileBookingDialog, Gender } from '~/types';
-import { emailRegex, GENDER_TRANSLATE, phoneRegex } from '~/utils';
+import { GENDER_TRANSLATE } from '~/constants';
+import { emailRegex, phoneRegex } from '~/utils';
 import { useAppDispatch, useAppSelector } from '~/hooks';
 import { setPhone, setDialog, setName, setEmail, setRemark, setGender, setAgreedPolicy } from '~/store/slices';
 

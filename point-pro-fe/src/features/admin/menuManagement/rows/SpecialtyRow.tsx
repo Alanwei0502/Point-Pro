@@ -21,7 +21,7 @@ import { useAppDispatch, useAppSelector } from '~/hooks';
 import { SpecialtyWithSpecialtyItems, SelectionType } from '~/types';
 import { theme } from '~/theme';
 import { CollapseSpecialtyItemsTable } from '../tables/CollapseSpecialtyItemsTable';
-import { SELECTION_TYPE_TRANSLATE } from '~/utils';
+import { SELECTION_TYPE_TRANSLATE } from '~/constants';
 import { getSpecialties, openDeleteSpecialtyConfirmModal, patchSpecialty } from '~/store/slices';
 
 const StyledSpecialtyRow = styled(TableRow)(() => ({

@@ -12,7 +12,7 @@ import { GlobalStyles, css } from '@mui/system';
 import CheckIcon from '@mui/icons-material/Check';
 import { Row, Column, CallToActionButton, Title, Section } from '~/components';
 import { useResponsiveStyles } from '~/hooks';
-import { IMAGE_URL } from '~/utils';
+import { IMAGE_URL } from '~/constants';
 import { theme } from '~/theme';
 
 type AnimatedCardProps = {

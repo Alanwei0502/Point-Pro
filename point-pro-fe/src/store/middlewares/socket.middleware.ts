@@ -1,6 +1,7 @@
-import { takeOrderSliceActions } from './../slices/admin/takeOrder.slice';
 import type { Middleware, MiddlewareAPI } from '@reduxjs/toolkit';
-import { ROUTE_PATH, SocketInterface, SocketFactory } from '~/utils';
+import { ROUTE_PATH } from '~/constants';
+import { SocketInterface, SocketFactory } from '~/utils';
+import { SocketEvent, SocketTopic } from '~/types';
 import {
   deleteCategory,
   deleteMeal,
@@ -27,8 +28,8 @@ import {
   postSpecialty,
   postSpecialtyItem,
   reservationManagementSliceActions,
+  takeOrderSliceActions,
 } from '../slices';
-import { SocketEvent, SocketTopic } from '~/types';
 import type { AppDispatch, AppState } from '../store';
 
 const { initSocket, connectionEstablished, connectionLost, joinRoom, leaveRoom, setAdminNotification } = newSocketSliceActions;

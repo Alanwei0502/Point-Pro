@@ -12,7 +12,7 @@ import MenuBookIcon from '@mui/icons-material/MenuBook';
 import EventSeatIcon from '@mui/icons-material/EventSeat';
 import { BaseDraw } from '~/components';
 import { theme } from '~/theme';
-import { ROUTE_PATH } from '~/utils';
+import { ROUTE_PATH } from '~/constants';
 
 interface ISideBarItem {
   id: string;

@@ -2,7 +2,7 @@ import { FC } from 'react';
 import Box from '@mui/material/Box';
 import { useAppDispatch, useAppSelector } from '~/hooks';
 import { IOrderManagementSliceState, orderManagementSliceActions } from '~/store/slices';
-import { ORDER_STATUS_TRANSLATE, ORDER_TYPE_TRANSLATE } from '~/utils';
+import { ORDER_STATUS_TRANSLATE, ORDER_TYPE_TRANSLATE } from '~/constants';
 import { BaseTab, BaseTabs } from '~/components';
 
 const { setTypeTab, setStatusTab } = orderManagementSliceActions;

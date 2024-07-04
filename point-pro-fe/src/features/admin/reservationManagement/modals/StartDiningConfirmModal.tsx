@@ -1,11 +1,11 @@
 import { FC, useState } from 'react';
+import { AxiosError } from 'axios';
+import { toast } from 'react-toastify';
 import Typography from '@mui/material/Typography';
 import { AppButton, TabletModal } from '~/components';
-import { GENDER_TRANSLATE } from '~/utils';
+import { GENDER_TRANSLATE } from '~/constants';
 import { useAppDispatch, useAppSelector } from '~/hooks';
 import { adminUISliceActions, reservationManagementSliceActions } from '~/store/slices';
-import { toast } from 'react-toastify';
-import { AxiosError } from 'axios';
 
 const { closeStartDiningConfirmModal, getReservations, startDiningReservation, getAvailablePeriods } = reservationManagementSliceActions;
 const { openStartDiningQRCodeModal } = adminUISliceActions;

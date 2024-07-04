@@ -15,7 +15,7 @@ import RadioGroup from '@mui/material/RadioGroup';
 import TextField from '@mui/material/TextField';
 import Slide from '@mui/material/Slide';
 import { TransitionProps } from '@mui/material/transitions';
-import { CITY_LIST, CONTACT_TIME_LIST } from '~/utils';
+import { CITY_LIST, CONTACT_TIME_LIST } from '~/constants';
 import { Row } from '~/components';
 
 const Transition = forwardRef(function Transition(

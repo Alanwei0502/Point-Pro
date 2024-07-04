@@ -2,7 +2,8 @@ import { FC, useEffect, useState } from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid';
-import { ROUTE_PATH, appDayjs, formatTimeLeft, formatTimeOnly } from '~/utils';
+import { appDayjs, formatTimeLeft, formatTimeOnly } from '~/utils';
+import { ROUTE_PATH } from '~/constants';
 import { useAppDispatch, useAppSelector } from '~/hooks';
 import { dineInTokenSliceActions } from '~/store/slices';
 

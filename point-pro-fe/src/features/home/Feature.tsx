@@ -5,7 +5,7 @@ import Typography from '@mui/material/Typography';
 import { Assignment, MoreTime, MenuBook, Inventory } from '@mui/icons-material';
 import { Column, Section, Title } from '~/components';
 import { useResponsiveStyles } from '~/hooks';
-import { IMAGE_URL } from '~/utils';
+import { IMAGE_URL } from '~/constants';
 import { theme } from '~/theme';
 import { ReactComponent as FeatureIllustration } from '~/assets/images/featureIllustration.svg';
 

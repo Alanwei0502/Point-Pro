@@ -5,7 +5,7 @@ import { API_HOST } from '~/api/http';
 import { useAppDispatch, useAppSelector } from '~/hooks';
 import { addNotification, resetSocket, setSocket, closeDialog, getMenu, orderSliceActions } from '~/store/slices';
 import { SocketTopic } from '~/types';
-import { ROUTE_PATH } from '~/utils';
+import { ROUTE_PATH } from '~/constants';
 
 enum NameSpace {
   RESERVATION = '/',

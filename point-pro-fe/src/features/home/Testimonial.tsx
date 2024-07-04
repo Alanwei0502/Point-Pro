@@ -7,7 +7,7 @@ import Grid from '@mui/material/Grid';
 import Rating from '@mui/material/Rating';
 import { Section, Title } from '~/components';
 import { useResponsiveStyles } from '~/hooks';
-import { IMAGE_URL } from '~/utils';
+import { IMAGE_URL } from '~/constants';
 import { theme } from '~/theme';
 
 const testimonialsData = [

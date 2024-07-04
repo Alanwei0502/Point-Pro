@@ -1,7 +1,8 @@
-import { defineConfig } from 'vite';
+import { defineConfig, type PluginOption } from 'vite';
 import { resolve } from 'path';
 import react from '@vitejs/plugin-react';
 import svgr from 'vite-plugin-svgr';
+import { visualizer } from 'rollup-plugin-visualizer';
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -11,7 +12,7 @@ export default defineConfig({
       '~': resolve(__dirname, './src'),
     },
   },
-  plugins: [react(), svgr()],
+  plugins: [react(), svgr(), visualizer() as PluginOption],
   build: {
     rollupOptions: {
       output: {
@@ -23,7 +24,6 @@ export default defineConfig({
           icon: ['@mui/icons-material'],
           react: ['react', 'react-dom', 'react-router-dom'],
           store: ['@reduxjs/toolkit', 'react-redux'],
-          lodash: ['lodash'],
           dayjs: ['dayjs'],
           qrcode: ['qrcode.react'],
           toast: ['react-toastify'],

@@ -17,7 +17,7 @@ import { useAppDispatch, useAppSelector, useInititalize } from '~/hooks';
 import { theme } from '~/theme';
 import { LeftMenuDrawer, NotificationDrawer, PaymentModal, sideBarItemList, LinePayModal, ConfirmCloseLinePayModal } from '~/components';
 import { adminUISliceActions, authSliceActions } from '~/store/slices';
-import { ROUTE_PATH } from '~/utils';
+import { ROUTE_PATH } from '~/constants';
 
 const drawerExpandWidth = '250px';
 const drawerCollapseWidth = '100px';

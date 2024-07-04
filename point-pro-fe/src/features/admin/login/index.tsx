@@ -14,7 +14,7 @@ import { useAppDispatch } from '~/hooks';
 import { authSliceActions } from '~/store/slices';
 import HeaderLogo from '~/assets/images/header-logo.svg';
 import { AppButton } from '~/components';
-import { ROUTE_PATH } from '~/utils';
+import { ROUTE_PATH } from '~/constants';
 
 interface ILoginProps {}
 

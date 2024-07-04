@@ -9,7 +9,7 @@ import { AppButton, TabletModal } from '~/components';
 import { useAppDispatch, useAppSelector } from '~/hooks';
 import { closeCreateSpecialtyModal, getSpecialties, postSpecialty } from '~/store/slices';
 import { ISpecialty, SelectionType } from '~/types';
-import { SELECTION_TYPE_TRANSLATE } from '~/utils';
+import { SELECTION_TYPE_TRANSLATE } from '~/constants';
 
 interface ICreateSpecialtyModalProps {}
 

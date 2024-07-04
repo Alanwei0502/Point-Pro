@@ -6,7 +6,7 @@ import { useAppDispatch, useAppSelector } from '~/hooks';
 import { takeOrderSliceActions } from '~/store/slices';
 import { theme } from '~/theme';
 import { MenuMeal } from '~/types';
-import { IMAGE_URL } from '~/utils';
+import { IMAGE_URL } from '~/constants';
 
 interface MealItemProps {
   meal: MenuMeal;

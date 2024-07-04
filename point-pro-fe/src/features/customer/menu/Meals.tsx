@@ -9,7 +9,7 @@ import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import { useAppDispatch, useAppSelector } from '~/hooks';
 import { openDialog } from '~/store/slices';
 import { MobileDialog, MenuMeal } from '~/types';
-import { IMAGE_URL } from '~/utils';
+import { IMAGE_URL } from '~/constants';
 
 interface IMealsProps {}
 

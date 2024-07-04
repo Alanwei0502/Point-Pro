@@ -174,7 +174,7 @@ export const HeaderNavBar: FC<IHeaderNavBarProps> = () => {
       setScrollTimeout(window.setTimeout(() => setIsHidden(false), 500));
     };
 
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => {
       window.removeEventListener('scroll', handleScroll);
     };

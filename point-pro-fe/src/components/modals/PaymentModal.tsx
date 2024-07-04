@@ -16,7 +16,7 @@ import { orderManagementSliceActions, paymentSliceActions, reservationManagement
 import { AppButton, Loading } from '~/components';
 import { theme } from '~/theme';
 import { OrderStatus, OrderType, PaymentType } from '~/types';
-import { ROUTE_PATH } from '~/utils';
+import { ROUTE_PATH } from '~/constants';
 import { TabletModal } from './TabletModal';
 
 interface ICheckoutOrderListProps {

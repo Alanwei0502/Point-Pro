@@ -7,7 +7,7 @@ import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import { useAppDispatch, useAppSelector } from '~/hooks';
 import { newSocketSliceActions } from '~/store/slices';
-import { ROUTE_PATH } from '~/utils';
+import { ROUTE_PATH } from '~/constants';
 import { BaseDraw } from '~/components';
 
 // const menuTitle = {

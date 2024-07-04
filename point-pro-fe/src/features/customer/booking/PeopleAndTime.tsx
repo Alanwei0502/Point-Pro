@@ -8,7 +8,8 @@ import { SxProps, Theme } from '@mui/system';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DateCalendar } from '@mui/x-date-pickers';
-import { appDayjs, formatTimeOnly, formatDateOnly, RESERVATION_PEOPLE_OPTIONS } from '~/utils';
+import { RESERVATION_PEOPLE_OPTIONS } from '~/constants';
+import { appDayjs, formatTimeOnly, formatDateOnly } from '~/utils';
 import { useAppDispatch, useAppSelector } from '~/hooks';
 import { setPeople, setSelectedDate, setSelectedPeriod, getAvailablePeriods } from '~/store/slices';
 

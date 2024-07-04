@@ -7,7 +7,7 @@ import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import { Title, Section } from '~/components';
 import { useResponsiveStyles } from '~/hooks';
-import { IMAGE_URL } from '~/utils';
+import { IMAGE_URL } from '~/constants';
 import { theme } from '~/theme';
 
 const aboutUsData = [

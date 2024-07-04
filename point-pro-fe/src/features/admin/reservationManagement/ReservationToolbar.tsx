@@ -1,11 +1,10 @@
 import { FC, useRef } from 'react';
-import { debounce } from 'lodash';
 import Box from '@mui/material/Box';
 import { GridToolbar, GridToolbarProps } from '@mui/x-data-grid';
 import AddIcon from '@mui/icons-material/Add';
 import { DesktopDatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AppButton } from '~/components';
-import { appDayjs } from '~/utils';
+import { appDayjs, debounce } from '~/utils';
 import { useAppDispatch, useAppSelector } from '~/hooks';
 import { reservationManagementSliceActions } from '~/store/slices';
 import { ReservationModalType } from '~/types';
@@ -24,7 +23,7 @@ export const ReservationToolbar: FC<GridToolbarProps> = (props) => {
         dispatch(getReservations(dateFilter));
       },
       500,
-      { leading: true, trailing: false },
+      { leading: true },
     ),
   ).current;
 

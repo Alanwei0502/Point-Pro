@@ -1,4 +1,4 @@
-import { IMAGE_URL } from '~/utils';
+import { IMAGE_URL } from '~/constants';
 
 const Video = () => {
   return (

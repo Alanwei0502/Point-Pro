@@ -8,15 +8,8 @@ import PointOfSaleIcon from '@mui/icons-material/PointOfSale';
 import EditIcon from '@mui/icons-material/Edit';
 import CancelIcon from '@mui/icons-material/Cancel';
 import ReceiptIcon from '@mui/icons-material/Receipt';
-import {
-  formatTimeOnly,
-  GENDER_TRANSLATE,
-  RESERVATION_PERIODS,
-  RESERVATION_PEOPLE_OPTIONS,
-  RESERVATION_STATUS,
-  getReservationStatusLabel,
-  RESERVATION_STATUS_OPTIONS,
-} from '~/utils';
+import { GENDER_TRANSLATE, RESERVATION_PERIODS, RESERVATION_PEOPLE_OPTIONS, RESERVATION_STATUS, RESERVATION_STATUS_OPTIONS } from '~/constants';
+import { formatTimeOnly, getReservationStatusLabel } from '~/utils';
 import { headerHeight } from '~/components';
 import { OrderType, ReservationInfo, ReservationModalType } from '~/types';
 import { useAppDispatch, useAppSelector } from '~/hooks';

@@ -2,7 +2,7 @@ import { FC, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import Typography from '@mui/material/Typography';
 import { AppButton, TabletModal } from '~/components';
-import { GENDER_TRANSLATE } from '~/utils';
+import { GENDER_TRANSLATE } from '~/constants';
 import { useAppDispatch, useAppSelector } from '~/hooks';
 import { reservationManagementSliceActions } from '~/store/slices';
 

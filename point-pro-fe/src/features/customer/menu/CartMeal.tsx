@@ -8,7 +8,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { useAppDispatch } from '~/hooks';
 import { viewCartItemCustomized, openModal } from '~/store/slices';
 import { ICartItem, MobileModalType } from '~/types';
-import { IMAGE_URL } from '~/utils';
+import { IMAGE_URL } from '~/constants';
 
 interface ICartMealProps {
   cartItem: ICartItem;

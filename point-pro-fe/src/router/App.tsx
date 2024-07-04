@@ -3,7 +3,7 @@ import { Outlet, RouterProvider, createBrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import Box from '@mui/material/Box';
 import Home from '~/features/home';
-import { ROUTE_PATH } from '~/utils';
+import { ROUTE_PATH } from '~/constants';
 import { store } from '~/store/store';
 import { LinePayConfirm, LoadingMask } from '~/components';
 import ProtectedRoute from './ProtectedRoute';

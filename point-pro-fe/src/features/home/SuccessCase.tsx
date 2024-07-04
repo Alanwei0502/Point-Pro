@@ -6,7 +6,7 @@ import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import { AppButton, Section, Title } from '~/components';
 import { theme } from '~/theme';
 import { useResponsiveStyles } from '~/hooks';
-import { ROUTE_PATH } from '~/utils';
+import { ROUTE_PATH } from '~/constants';
 
 interface ISuccessCaseProps {}
 

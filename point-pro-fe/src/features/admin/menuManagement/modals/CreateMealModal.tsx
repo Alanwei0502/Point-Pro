@@ -13,7 +13,8 @@ import { useAppDispatch, useAppSelector } from '~/hooks';
 import { closeCreateMealModal, getMeals, postMeal } from '~/store/slices';
 import { theme } from '~/theme';
 import { IMeal, ISpecialtyItem } from '~/types';
-import { MEAL_IMAGE_FORMAT_REMINDER, MEAL_IMAGE_SIZE_LIMIT, MEAL_IMAGE_TYPES, appDayjs } from '~/utils';
+import { MEAL_IMAGE_FORMAT_REMINDER, MEAL_IMAGE_SIZE_LIMIT, MEAL_IMAGE_TYPES } from '~/constants';
+import { appDayjs } from '~/utils';
 
 interface ICreateMealModalProps {}
 
