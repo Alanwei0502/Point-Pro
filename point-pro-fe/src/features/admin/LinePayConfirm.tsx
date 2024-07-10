@@ -7,7 +7,7 @@ const { confirmLinePay } = paymentSliceActions;
 
 interface ILinePayConfirmProps {}
 
-export const LinePayConfirm: FC<ILinePayConfirmProps> = () => {
+const LinePayConfirm: FC<ILinePayConfirmProps> = () => {
   const dispatch = useAppDispatch();
 
   const [description, setDescription] = useState('付款中...');
@@ -35,3 +35,5 @@ export const LinePayConfirm: FC<ILinePayConfirmProps> = () => {
     </Box>
   );
 };
+
+export default LinePayConfirm;

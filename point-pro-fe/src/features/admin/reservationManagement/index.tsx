@@ -1,9 +1,10 @@
-import { FC } from 'react';
+import { FC, lazy } from 'react';
 import { StartDiningQRCodeModal } from '~/components';
-import { ReservationTable } from './ReservationTable';
 import { ReservationModal } from './modals/ReservationModal';
 import { DeleteReservationConfirmModal } from './modals/DeleteReservationConfirmModal';
 import { StartDiningConfirmModal } from './modals/StartDiningConfirmModal';
+
+const ReservationTable = lazy(() => import('./ReservationTable'));
 
 interface IReservationManagementProps {}
 

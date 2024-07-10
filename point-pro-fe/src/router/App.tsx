@@ -5,14 +5,17 @@ import Box from '@mui/material/Box';
 import Home from '~/features/home';
 import { ROUTE_PATH } from '~/constants';
 import { store } from '~/store/store';
-import { LinePayConfirm, LoadingMask } from '~/components';
+import { LoadingMask } from '~/components';
 import ProtectedRoute from './ProtectedRoute';
 import { injectStore } from '~/utils';
 
 injectStore(store);
 
+// customer
 const Booking = lazy(() => import('~/features/customer/booking'));
 const Menu = lazy(() => import('~/features/customer/menu'));
+// admin
+const LinePayConfirm = lazy(() => import('~/features/admin/LinePayConfirm'));
 const TakeOrder = lazy(() => import('~/features/admin/takeOrder'));
 const OrderManagement = lazy(() => import('~/features/admin/orderManagement'));
 const MenuManagement = lazy(() => import('~/features/admin/menuManagement'));
@@ -52,13 +55,21 @@ const router = createBrowserRouter(
           children: [
             {
               path: ROUTE_PATH.confirm,
-              element: <LinePayConfirm />,
+              element: (
+                <Suspense fallback={<LoadingMask />}>
+                  <LinePayConfirm />
+                </Suspense>
+              ),
             },
           ],
         },
         {
           path: ROUTE_PATH.admin,
-          element: <ProtectedRoute />,
+          element: (
+            <Suspense fallback={<LoadingMask />}>
+              <ProtectedRoute />
+            </Suspense>
+          ),
           children: [
             {
               path: ROUTE_PATH.takeOrder,

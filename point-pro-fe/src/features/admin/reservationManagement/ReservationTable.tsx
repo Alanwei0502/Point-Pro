@@ -1,4 +1,4 @@
-import { FC, useState, ChangeEvent } from 'react';
+import { FC, useState, ChangeEvent, lazy } from 'react';
 import Box from '@mui/material/Box';
 import Chip from '@mui/material/Chip';
 import IconButton from '@mui/material/IconButton';
@@ -22,8 +22,9 @@ import { useAppDispatch, useAppSelector } from '~/hooks';
 import { IPaymentSliceState, paymentSliceActions } from '~/store/slices/admin/payment.slice';
 import { reservationManagementSliceActions } from '~/store/slices/admin/reservationManagement.slice';
 import { theme } from '~/theme';
-import { ReservationToolbar } from './ReservationToolbar';
 import { ReservationTablePagination } from './ReservationPagination';
+
+const ReservationToolbar = lazy(() => import('./ReservationToolbar'));
 
 const defaultPage = 0;
 const defaultRowsPerPage = 20;
@@ -209,7 +210,7 @@ const GRID_DEFAULT_LOCALE_TEXT: GridLocaleText = {
 
 interface IReservationListProps {}
 
-export const ReservationTable: FC<IReservationListProps> = () => {
+const ReservationTable: FC<IReservationListProps> = () => {
   const dispatch = useAppDispatch();
 
   const loading = useAppSelector((state) => state.reservationManagement.loading);
@@ -422,3 +423,5 @@ export const ReservationTable: FC<IReservationListProps> = () => {
     </Box>
   );
 };
+
+export default ReservationTable;

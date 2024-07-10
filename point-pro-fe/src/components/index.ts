@@ -54,5 +54,3 @@ export * from './table/StyledTableRow';
 export * from './home/Title';
 export * from './home/Section';
 export * from './home/NavLink';
-// line-pay-redirect
-export * from './line-pay-redirect/LinePayConfirm';

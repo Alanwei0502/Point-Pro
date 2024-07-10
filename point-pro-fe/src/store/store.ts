@@ -8,3 +8,4 @@ export const store = configureStore({
   devTools: import.meta.env.VITE_APP_ENV === 'development',
 });
 
+store.replaceReducer(reducer);

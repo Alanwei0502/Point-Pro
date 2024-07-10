@@ -2,17 +2,18 @@ import { FC, useRef } from 'react';
 import Box from '@mui/material/Box';
 import { GridToolbar, type GridToolbarProps } from '@mui/x-data-grid';
 import AddIcon from '@mui/icons-material/Add';
-import { DesktopDatePicker, LocalizationProvider } from '@mui/x-date-pickers';
+import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { AppButton } from '~/components';
 import { appDayjs, debounce } from '~/utils';
 import { useAppDispatch, useAppSelector } from '~/hooks';
 import { reservationManagementSliceActions } from '~/store/slices/admin/reservationManagement.slice';
 import { ReservationModalType } from '~/types';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 
 const { setDateFilter, openModal, getReservations } = reservationManagementSliceActions;
 
-export const ReservationToolbar: FC<GridToolbarProps> = (props) => {
+const ReservationToolbar: FC<GridToolbarProps> = (props) => {
   const dispatch = useAppDispatch();
 
   const debouncedChangeDateFilter = useRef(
@@ -67,3 +68,5 @@ export const ReservationToolbar: FC<GridToolbarProps> = (props) => {
     </Box>
   );
 };
+
+export default ReservationToolbar;
