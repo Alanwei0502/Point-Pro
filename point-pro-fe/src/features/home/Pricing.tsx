@@ -50,7 +50,7 @@ const pricingData = [
     title: '基本版',
     price: '299/月',
     content: ['單一設備連線', '基本銷售報告', '產品庫存管理', '信用卡/現金支付', '電子收據功能', '電子郵件支援'],
-    imgUrl: `${IMAGE_URL}LRjtwv8l.webp`,
+    imgUrl: `${IMAGE_URL}LRjtwv8m.webp`,
     animationClass: '',
   },
   {
@@ -58,7 +58,7 @@ const pricingData = [
     title: '專業版',
     price: '999/月',
     content: ['多設備連線', '高級銷售報告', '高級庫存管理', '員工管理與時薪追踪', '促銷活動設定', '24/7專業客服支援'],
-    imgUrl: `${IMAGE_URL}RPjv7lrl.webp`,
+    imgUrl: `${IMAGE_URL}RPjv7lrm.webp`,
     animationClass: '',
   },
   {
@@ -66,7 +66,7 @@ const pricingData = [
     title: '企業版',
     price: '聯繫獲取定價',
     content: ['定制功能與整合', '企業報告', '專屬客戶經理', 'API整合', '線上與電話客服支援', '量身打造的解決方案'],
-    imgUrl: `${IMAGE_URL}44FxMw3l.webp`,
+    imgUrl: `${IMAGE_URL}44FxMw3m.webp`,
     animationClass: '',
   },
 ];
@@ -191,7 +191,7 @@ export const Pricing: FC<IPricingProps> = (props) => {
                         </ListItem>
                       ))}
                     </List>
-                    <CallToActionButton handleOnClick={handleOpenCallToActionModal} sx={{ mx: 'auto' }}>
+                    <CallToActionButton handleOnClick={handleOpenCallToActionModal} sx={{ mx: 'auto' }} aria-label='ask now'>
                       立即詢問
                     </CallToActionButton>
                   </Box>
@@ -231,7 +231,7 @@ export const Pricing: FC<IPricingProps> = (props) => {
                       </ListItem>
                     ))}
                   </List>
-                  <CallToActionButton handleOnClick={handleOpenCallToActionModal} sx={{ mx: 'auto', mb: 3 }}>
+                  <CallToActionButton handleOnClick={handleOpenCallToActionModal} sx={{ mx: 'auto', mb: 3 }} aria-label='ask now'>
                     立即詢問
                   </CallToActionButton>
                 </Box>

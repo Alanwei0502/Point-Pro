@@ -106,7 +106,7 @@ export const AboutUs: FC<IAboutUsProps> = () => {
           }}
         />
         <Typography
-          variant={isDesktop ? 'display1' : isTablet ? 'display3' : 'h1'}
+          fontSize={isDesktop ? theme.typography.display1.fontSize : isTablet ? theme.typography.display3.fontSize : theme.typography.h1.fontSize}
           color='primary.main'
           fontWeight={900}
           textTransform='uppercase'

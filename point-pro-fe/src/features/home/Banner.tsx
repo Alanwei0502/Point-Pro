@@ -80,7 +80,9 @@ export const Banner: FC<IBannerProps> = (props) => {
               特別的餐飲體驗, 來自於我們與您的專屬互動
             </Typography>
           </Typography>
-          <CallToActionButton handleOnClick={handleOpenCallToActionModal}>立即詢問</CallToActionButton>
+          <CallToActionButton handleOnClick={handleOpenCallToActionModal} aria-label='ask now'>
+            立即詢問
+          </CallToActionButton>
           {isTablet ? (
             <Box
               component='svg'

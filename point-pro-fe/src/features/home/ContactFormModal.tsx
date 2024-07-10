@@ -200,7 +200,7 @@ export const ContactFormModal: FC<IContactFormModalProps> = (props) => {
             value={getData('requirement')}
             onChange={(e) => setData('requirement', e.target.value)}
           />
-          <Button type='submit' fullWidth variant='contained' role='button' aria-label='submit'>
+          <Button type='submit' fullWidth variant='contained' role='button' aria-label='submit form'>
             送出表單
           </Button>
         </form>

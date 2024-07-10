@@ -13,6 +13,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import { Row, NavLink } from '~/components';
 import { useResponsiveStyles } from '~/hooks';
 import { ReactComponent as Logo } from '~/assets/images/logo.svg';
+import { theme } from '~/theme';
 
 const navData = [
   {
@@ -58,7 +59,7 @@ const DeskTopMenu: FC<IDesktopMenuProps> = () => {
           <ListItemText
             primary={
               <NavLink href={item.url} underline='none' color='white'>
-                <Typography variant='h6' component='span'>
+                <Typography fontSize={theme.typography.h6.fontSize} component='span'>
                   {item.name}
                 </Typography>
               </NavLink>
@@ -144,7 +145,7 @@ const MobileMenu: FC<IMobileMenuProps> = () => {
                 <ListItemText
                   primary={
                     <NavLink href={item.url} underline='none' color='common.black' onClick={() => toggleMenu(false)}>
-                      <Typography variant='h1' component='span' fontWeight={700} color='common.black'>
+                      <Typography fontSize={theme.typography.h1.fontSize} component='span' fontWeight={700} color='common.black'>
                         {item.name}
                       </Typography>
                     </NavLink>

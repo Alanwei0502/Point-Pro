@@ -41,6 +41,7 @@ export const BackToTopButton: FC<IBackToTopButtonProps> = () => {
         backgroundColor: theme.palette.secondary.light,
         color: 'white',
       }}
+      aria-label='back to top'
     >
       <ArrowUpwardIcon fontSize='small' />
     </IconButton>
