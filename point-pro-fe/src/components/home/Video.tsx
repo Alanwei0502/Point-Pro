@@ -13,7 +13,7 @@ const Video = () => {
         objectPosition: '50% 50%',
       }}
       src={`${IMAGE_URL}KOH3og1.mp4`}
-      poster={`${IMAGE_URL}RJFzeefl.png`}
+      poster={`${IMAGE_URL}RJFzeefl.webp`}
       autoPlay
       muted
       loop
