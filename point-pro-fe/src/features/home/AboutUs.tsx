@@ -14,37 +14,37 @@ const aboutUsData = [
   {
     name: 'Alan',
     title: 'CEO',
-    imgUrl: `${IMAGE_URL}cE8PwHym.png`,
+    imgUrl: `${IMAGE_URL}cE8PwHym.webp`,
     description: '領導團隊走向成功，擁有豐富的管理經驗。',
   },
   {
     name: 'Sam',
     title: 'CO-FOUNDER',
-    imgUrl: `${IMAGE_URL}1z15oeAm.png`,
+    imgUrl: `${IMAGE_URL}1z15oeAm.webp`,
     description: '聯合創始人，技術專家與市場策略家。',
   },
   {
     name: 'Emily',
     title: 'DEVELOPER',
-    imgUrl: `${IMAGE_URL}pDr5trFm.png`,
+    imgUrl: `${IMAGE_URL}pDr5trFm.webp`,
     description: '後端開發專家，保障系統穩定性。',
   },
   {
     name: 'LinYee',
     title: 'DEVELOPER',
-    imgUrl: `${IMAGE_URL}ud201Upm.png`,
+    imgUrl: `${IMAGE_URL}ud201Upm.webp`,
     description: '專注於前端開發，提升用戶體驗。',
   },
   {
     name: 'ShihHuan',
     title: 'DEVELOPER',
-    imgUrl: `${IMAGE_URL}3fy2zohm.png`,
+    imgUrl: `${IMAGE_URL}3fy2zohm.webp`,
     description: '全端開發高手，解決複雜技術挑戰。',
   },
   {
     name: 'Cooper',
     title: 'DESIGNER',
-    imgUrl: `${IMAGE_URL}dIn5b2Lm.png`,
+    imgUrl: `${IMAGE_URL}dIn5b2Lm.webp`,
     description: '創意設計師，負責產品視覺設計。',
   },
 ];
@@ -94,7 +94,7 @@ export const AboutUs: FC<IAboutUsProps> = () => {
       <Box position='relative' textAlign='center' mb={isTablet ? 16 : 3}>
         <Box
           component='img'
-          src={`${IMAGE_URL}xqbTOKeh.jpeg`}
+          src={`${IMAGE_URL}xqbTOKel.webp`}
           alt='about us'
           loading='lazy'
           sx={{

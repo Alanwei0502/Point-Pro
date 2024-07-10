@@ -74,22 +74,22 @@ export const SystemFeatureCards: FC<SystemFeatureCardProps> = () => {
 
 const features = [
   {
-    imgUrl: `${IMAGE_URL}ZFJKU0lm.jpeg`,
+    imgUrl: `${IMAGE_URL}ZFJKU0lm.webp`,
     title: '客製化菜單',
     description: '提供客人個性化的餐飲選擇，讓他們品嚐到獨特的體驗。',
   },
   {
-    imgUrl: `${IMAGE_URL}166GpEbm.jpeg`,
+    imgUrl: `${IMAGE_URL}166GpEbm.webp`,
     title: '溫馨提醒',
     description: '智能POS助顧客餐點補充，感受關懷與新鮮度。',
   },
   {
-    imgUrl: `${IMAGE_URL}Uox67gdm.jpeg`,
+    imgUrl: `${IMAGE_URL}Uox67gdm.webp`,
     title: '科技提升體驗',
     description: '智能點餐、雲端支付，顧客享受便利與舒適。',
   },
   {
-    imgUrl: `${IMAGE_URL}xtLxX7Mm.jpeg`,
+    imgUrl: `${IMAGE_URL}xtLxX7Mm.webp`,
     title: '客人回饋',
     description: '定期收集意見，解決問題，顧客感受尊重。',
   },

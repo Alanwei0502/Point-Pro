@@ -1,14 +1,8 @@
-import { FC, useState, ChangeEvent, lazy } from 'react';
+import { FC, useState, ChangeEvent } from 'react';
 import Box from '@mui/material/Box';
 import Chip from '@mui/material/Chip';
 import IconButton from '@mui/material/IconButton';
-import {
-  DataGrid,
-  type GridLocaleText,
-  type GridRenderCellParams,
-  type GridValueFormatterParams,
-  type GridValueGetterParams,
-} from '@mui/x-data-grid';
+import { DataGrid, type GridLocaleText, type GridRenderCellParams } from '@mui/x-data-grid';
 import DinnerDiningIcon from '@mui/icons-material/DinnerDining';
 import PointOfSaleIcon from '@mui/icons-material/PointOfSale';
 import EditIcon from '@mui/icons-material/Edit';
@@ -22,9 +16,7 @@ import { useAppDispatch, useAppSelector } from '~/hooks';
 import { IPaymentSliceState, paymentSliceActions } from '~/store/slices/admin/payment.slice';
 import { reservationManagementSliceActions } from '~/store/slices/admin/reservationManagement.slice';
 import { theme } from '~/theme';
-import { ReservationTablePagination } from './ReservationPagination';
-
-const ReservationToolbar = lazy(() => import('./ReservationToolbar'));
+import ReservationToolbar from './ReservationToolbar';
 
 const defaultPage = 0;
 const defaultRowsPerPage = 20;
@@ -137,12 +129,11 @@ const GRID_DEFAULT_LOCALE_TEXT: GridLocaleText = {
   columnMenuSortAsc: '升冪排序',
   columnMenuSortDesc: '降冪排序',
 
-  // Column Panel
-  columnsPanelTextFieldLabel: '搜尋欄位',
-  columnsPanelTextFieldPlaceholder: '欄位名稱',
-  columnsPanelDragIconLabel: '重新排序列',
-  columnsPanelShowAllButton: <Box sx={{ color: theme.palette.secondary.light, fontSize: 16 }}>顯示全部</Box>,
-  columnsPanelHideAllButton: <Box sx={{ color: theme.palette.secondary.light, fontSize: 16 }}>隱藏全部</Box>,
+  // Column Management
+  columnsManagementSearchTitle: '搜尋欄位',
+  columnsManagementReset: '重設',
+  columnsManagementNoColumns: '無可用欄位',
+  columnsManagementShowHideAllText: '顯示/隱藏全部',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) => (count !== 1 ? `${count} active filters` : `${count} active filter`),
@@ -151,7 +142,6 @@ const GRID_DEFAULT_LOCALE_TEXT: GridLocaleText = {
 
   // Rows selected footer text
   footerRowSelected: () => '',
-  // footerRowSelected: (count) => `已選擇 ${count.toLocaleString()} 列`,
 
   // Total row amount footer text
   footerTotalRows: '總共筆數:',
@@ -194,7 +184,10 @@ const GRID_DEFAULT_LOCALE_TEXT: GridLocaleText = {
   collapseDetailPanel: '收合',
 
   // Used core components translation keys
-  MuiTablePagination: {},
+  MuiTablePagination: {
+    labelRowsPerPage: '每頁筆數:',
+    labelDisplayedRows: ({ from, to, count }) => `${from}-${to} 共 ${count !== -1 ? count : `超過 ${to}`}`,
+  },
 
   // Row reordering text
   rowReorderingHeaderName: '重新排序列',
@@ -312,8 +305,8 @@ const ReservationTable: FC<IReservationListProps> = () => {
             sortable: false,
             type: 'singleSelect',
             valueOptions: RESERVATION_STATUS_OPTIONS,
-            valueGetter: (params: GridValueGetterParams<ReservationInfo>) => {
-              return getReservationStatusLabel({ params: params.row, clock });
+            valueGetter: (value, row) => {
+              return getReservationStatusLabel({ params: row, clock });
             },
             renderCell: (params: GridRenderCellParams<ReservationInfo>) => {
               const value = allReservationStatus.find((v) => v.label === params.value);
@@ -326,8 +319,8 @@ const ReservationTable: FC<IReservationListProps> = () => {
             headerName: '姓名',
             minWidth: 140,
             sortable: false,
-            valueGetter: (params: GridValueGetterParams<ReservationInfo>) => {
-              const { username, gender } = params.row;
+            valueGetter: (value, row) => {
+              const { username, gender } = row;
               return `${username} ${GENDER_TRANSLATE[gender]}`;
             },
           },
@@ -338,11 +331,11 @@ const ReservationTable: FC<IReservationListProps> = () => {
             width: 170,
             type: 'singleSelect',
             valueOptions: RESERVATION_PERIODS,
-            valueGetter: (params: GridValueGetterParams<ReservationInfo>) => {
-              return formatTimeOnly(params.row.periods.startTime);
+            valueGetter: (value, row) => {
+              return formatTimeOnly(row.periods.startTime);
             },
-            valueFormatter: (params: GridValueFormatterParams<ReservationInfo['periods']['startTime']>) => {
-              return params.value ?? '-';
+            valueFormatter: (value) => {
+              return value ?? '-';
             },
           },
           {
@@ -351,7 +344,7 @@ const ReservationTable: FC<IReservationListProps> = () => {
             type: 'singleSelect',
             valueOptions: RESERVATION_PEOPLE_OPTIONS,
             width: 140,
-            valueFormatter: (params: GridValueFormatterParams<ReservationInfo['people']>) => `${params.value} 位`,
+            valueFormatter: (value) => `${value} 位`,
           },
           { field: 'remark', headerName: '備註', sortable: false, minWidth: 120, flex: 1 },
           {
@@ -395,7 +388,11 @@ const ReservationTable: FC<IReservationListProps> = () => {
             },
           },
         ]}
-        slots={{ pagination: ReservationTablePagination, toolbar: ReservationToolbar }}
+        slots={{
+          toolbar: ReservationToolbar,
+        }}
+        pagination={true}
+        pageSizeOptions={[5, 10, 20, 50, 100]}
         slotProps={{
           pagination: {
             count: reservations.length,

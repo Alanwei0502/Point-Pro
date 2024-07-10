@@ -17,13 +17,16 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks: {
-          mui: ['@mui/material'],
-          xDate: ['@mui/x-date-pickers'],
-          xGrid: ['@mui/x-data-grid'],
-          icon: ['@mui/icons-material'],
-          toastify: ['react-toastify'],
-          qrcode: ['qrcode.react'],
-          dnd: ['@dnd-kit/core', '@dnd-kit/modifiers', '@dnd-kit/sortable', '@dnd-kit/utilities'],
+          '@mui/base': ['@mui/base'],
+          '@mui/private-theming': ['@mui/private-theming'],
+          '@mui/styled-engine': ['@mui/styled-engine'],
+          '@mui/system': ['@mui/system'],
+          '@mui/material': ['@mui/material'],
+          '@mui/x-date-pickers': ['@mui/x-date-pickers'],
+          '@mui/x-data-grid': ['@mui/x-data-grid'],
+          '@dnd-kit': ['@dnd-kit/core', '@dnd-kit/modifiers', '@dnd-kit/sortable', '@dnd-kit/utilities'],
+          'qrcode.react': ['qrcode.react'],
+          dayjs: ['dayjs'],
         },
       },
     },

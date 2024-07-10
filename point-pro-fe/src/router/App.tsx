@@ -65,11 +65,7 @@ const router = createBrowserRouter(
         },
         {
           path: ROUTE_PATH.admin,
-          element: (
-            <Suspense fallback={<LoadingMask />}>
-              <ProtectedRoute />
-            </Suspense>
-          ),
+          element: <ProtectedRoute />,
           children: [
             {
               path: ROUTE_PATH.takeOrder,

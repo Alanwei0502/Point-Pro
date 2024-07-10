@@ -1,5 +1,5 @@
-import { FC, lazy } from 'react';
-import { StartDiningQRCodeModal } from '~/components';
+import { FC, lazy, Suspense } from 'react';
+import { Loading, StartDiningQRCodeModal } from '~/components';
 import { ReservationModal } from './modals/ReservationModal';
 import { DeleteReservationConfirmModal } from './modals/DeleteReservationConfirmModal';
 import { StartDiningConfirmModal } from './modals/StartDiningConfirmModal';
@@ -11,7 +11,9 @@ interface IReservationManagementProps {}
 const ReservationManagement: FC<IReservationManagementProps> = () => {
   return (
     <>
-      <ReservationTable />
+      <Suspense fallback={<Loading />}>
+        <ReservationTable />
+      </Suspense>
       {/* MODAL */}
       <ReservationModal />
       <DeleteReservationConfirmModal />
