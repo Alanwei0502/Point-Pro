@@ -21,6 +21,7 @@ export const SuccessCase: FC<ISuccessCaseProps> = () => {
       <Box display='flex' flexGrow={1} gap={2} flexDirection={isTablet ? 'row' : 'column'} mt={3}>
         <AppButton
           endIcon={<InsertInvitationIcon />}
+          aria-label='make a reservation'
           sx={{
             color: theme.palette.common.black,
             width: '100%',
@@ -36,6 +37,7 @@ export const SuccessCase: FC<ISuccessCaseProps> = () => {
         </AppButton>
         <AppButton
           endIcon={<ManageAccountsIcon />}
+          aria-label='go to admin page'
           sx={{
             color: theme.palette.common.black,
             width: '100%',

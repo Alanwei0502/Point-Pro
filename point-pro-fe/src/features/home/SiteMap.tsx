@@ -72,7 +72,7 @@ export const SiteMap: FC<ISiteMapProps> = () => {
     <Box bgcolor='primary.main' py={5}>
       <Container>
         <Box display='flex' alignItems='center' gap={5}>
-          <Link href='/' onClick={(e) => handleClick(e, 'hero-section')}>
+          <Link href='/' onClick={(e) => handleClick(e, 'hero-section')} aria-label='go to home page'>
             <LogoText width={100} />
           </Link>
           <Typography fontSize={isTablet ? theme.typography.h2.fontSize : theme.typography.h5.fontSize} fontWeight={900} mb={5}>

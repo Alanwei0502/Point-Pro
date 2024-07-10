@@ -90,7 +90,13 @@ export const Subscription: FC<ISubscriptionProps> = () => {
                   onChange={handleChangeEmail}
                 />
               </FormControl>
-              <AppButton onClick={handleButtonClick} disableRipple={true} disableFocusRipple={true} disabled={isSubscrbing}>
+              <AppButton
+                onClick={handleButtonClick}
+                disableRipple={true}
+                disableFocusRipple={true}
+                disabled={isSubscrbing}
+                aria-label='subscribe newsletter'
+              >
                 <SendIcon fontSize='small' />
               </AppButton>
             </Grid>
@@ -121,7 +127,7 @@ export const Subscription: FC<ISubscriptionProps> = () => {
             </Typography>
             <Typography>我們將會寄送最新優惠及最新餐飲趨勢到您的信箱。</Typography>
           </Box>
-          <AppButton fullWidth onClick={handleCloseModal}>
+          <AppButton fullWidth onClick={handleCloseModal} aria-label='confirm subscription'>
             確認
           </AppButton>
         </Box>

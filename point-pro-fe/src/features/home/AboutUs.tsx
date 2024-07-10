@@ -67,7 +67,7 @@ export const TeamMembers: FC<ITeamMembersProps> = () => {
           >
             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
               <CardContent>
-                <Typography variant='h5' fontWeight={600}>
+                <Typography fontSize={theme.typography.h5.fontSize} fontWeight={600}>
                   {m.name}
                 </Typography>
                 <Typography variant='subtitle1' color='text.secondary'>

@@ -14,7 +14,7 @@ export const MobileHeader: FC<IMobileHeaderProps> = () => {
   return (
     <Box>
       <Breadcrumbs separator='>' sx={{ userSelect: 'none' }}>
-        <Link href='/' underline='hover' color='inherit'>
+        <Link href='/' underline='hover' color='inherit' aria-label='go to home page'>
           首頁
         </Link>
         <Typography fontWeight={500} color='common.black' sx={{ textDecoration: 'underline' }}>

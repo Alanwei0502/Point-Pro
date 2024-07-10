@@ -203,7 +203,7 @@ export const HeaderNavBar: FC<IHeaderNavBarProps> = () => {
       >
         <Container maxWidth='lg'>
           <Row justifyContent='space-between' alignItems='center'>
-            <Link href='/' key='Home' aria-label='Click Point Pro Logo to go to home page'>
+            <Link href='/' key='Home' aria-label='go to home page'>
               <Logo style={{ height: isTablet ? 64 : 40, aspectRatio: 1 }} />
             </Link>
 
