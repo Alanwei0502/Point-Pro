@@ -94,7 +94,7 @@ export const AboutUs: FC<IAboutUsProps> = () => {
       <Box position='relative' textAlign='center' mb={isTablet ? 16 : 3}>
         <Box
           component='img'
-          src={`${IMAGE_URL}xqbTOKel.webp`}
+          src={`${IMAGE_URL}xqbTOKe${isTablet ? 'm' : 'l'}.webp`}
           alt='about us'
           loading='lazy'
           sx={{

@@ -42,9 +42,11 @@ export const Meals: FC<IMealsProps> = () => {
                     <Grid item position='relative'>
                       <Box
                         component='img'
-                        src={`${IMAGE_URL}${meal.imageId}s.jpg`}
+                        src={`${IMAGE_URL}${meal.imageId}b.jpeg`}
                         alt={`${meal.title}-img`}
-                        sx={{ width: '5rem', verticalAlign: 'middle' }}
+                        width='5rem'
+                        height='5rem'
+                        sx={{ verticalAlign: 'middle' }}
                       />
                       {meal.isPopular && (
                         <Box position='absolute' left={0} top={0} bgcolor='primary.main' display='flex' padding='.1rem'>

@@ -43,7 +43,7 @@ export const MealItem: FC<MealItemProps> = (props) => {
         {meal.title}
       </Typography>
       <Box height='6rem' bgcolor={theme.palette.common.black} textAlign='center'>
-        <Box component='img' src={`${IMAGE_URL}${meal.imageId}b.jpg`} alt={meal.title} height='100%' maxWidth='100%' />
+        <Box component='img' src={`${IMAGE_URL}${meal.imageId}m.webp`} alt={meal.title} height='100%' maxWidth='100%' />
       </Box>
       <Typography textAlign='center'>{meal.price}元</Typography>
       <Row justifyContent='space-between' alignItems='center'></Row>

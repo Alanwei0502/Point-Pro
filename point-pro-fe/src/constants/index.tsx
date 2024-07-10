@@ -24,7 +24,7 @@ export const ROUTE_PATH = {
 export const IMAGE_URL = 'https://i.imgur.com/';
 export const MEAL_IMAGE_TYPES = ['image/jpeg', 'image/jpg', 'image/png'];
 export const MEAL_IMAGE_SIZE_LIMIT = 2 * 1024 * 1024;
-export const MEAL_IMAGE_FORMAT_REMINDER = '圖片大小不得超過 2MB，格式為 .jpg、.jpeg 或 .png';
+export const MEAL_IMAGE_FORMAT_REMINDER = '圖片大小不得超過 2MB，格式為 .webp、.jpeg 或 .png';
 
 export const GENDER_TRANSLATE = {
   [Gender.MALE]: '先生',

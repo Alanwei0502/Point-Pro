@@ -51,7 +51,7 @@ export const MealRow: FC<IMealRowProps> = (props) => {
   const [newTitle, setNewTitle] = useState<IMeal['title']>(meal.title);
   const [newPrice, setNewPrice] = useState<IMeal['price']>(meal.price);
   const [newImage, setNewImage] = useState<File>();
-  const [newPreviewImage, setNewPreviewImage] = useState<string>(`${IMAGE_URL}${meal.imageId}m.jpg`);
+  const [newPreviewImage, setNewPreviewImage] = useState<string>(`${IMAGE_URL}${meal.imageId}m.webp`);
   const [newDescription, setNewDescription] = useState<IMeal['description']>(meal.description);
   const [newSpecialtyItems, setNewSpecialtyItems] = useState<ISpecialtyItem[]>(meal.specialtyItems);
   const [newIsPopular, setNewIsPopular] = useState<IMeal['isPopular']>(meal.isPopular);
@@ -65,7 +65,7 @@ export const MealRow: FC<IMealRowProps> = (props) => {
     setNewCategoryId(meal.categoryId);
     setNewTitle(meal.title);
     setNewPrice(meal.price);
-    setNewPreviewImage(`${IMAGE_URL}${meal.imageId}m.jpg`);
+    setNewPreviewImage(`${IMAGE_URL}${meal.imageId}m.webp`);
     setNewDescription(meal.description);
     setNewSpecialtyItems(meal.specialtyItems);
     setNewIsPopular(meal.isPopular);
@@ -133,7 +133,7 @@ export const MealRow: FC<IMealRowProps> = (props) => {
     setNewTitle(meal.title);
     setNewPrice(meal.price);
     setNewImage(undefined);
-    setNewPreviewImage(`${IMAGE_URL}${meal.imageId}m.jpg`);
+    setNewPreviewImage(`${IMAGE_URL}${meal.imageId}m.webp`);
     setNewDescription(meal.description);
     setNewSpecialtyItems(meal.specialtyItems);
     setNewIsPopular(meal.isPopular);

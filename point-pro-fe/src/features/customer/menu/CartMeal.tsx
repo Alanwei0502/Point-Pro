@@ -41,7 +41,14 @@ export const CartMeal: FC<ICartMealProps> = (props) => {
       <Box width='100%'>
         <Grid container justifyContent='space-between' flexWrap='nowrap' my={1}>
           <Grid item position='relative'>
-            <Box component='img' src={`${IMAGE_URL}${imageId}s.jpg`} alt={title} width='5rem' sx={{ verticalAlign: 'middle', paddingRight: 1 }} />
+            <Box
+              component='img'
+              src={`${IMAGE_URL}${imageId}b.jpeg`}
+              alt={title}
+              width='5rem'
+              height='5rem'
+              sx={{ verticalAlign: 'middle', paddingRight: 1 }}
+            />
             {cartItem.isPopular && (
               <Box position='absolute' left={0} top={0} bgcolor='primary.main' display='flex' padding='.1rem'>
                 <ThumbUpIcon sx={{ width: '1rem', height: '1rem' }} />
