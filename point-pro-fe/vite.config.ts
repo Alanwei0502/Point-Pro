@@ -17,10 +17,7 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks: {
-          '@mui/base': ['@mui/base'],
-          '@mui/private-theming': ['@mui/private-theming'],
-          '@mui/styled-engine': ['@mui/styled-engine'],
-          '@mui/system': ['@mui/system'],
+          '@mui/base': ['@mui/base', '@mui/private-theming', '@mui/styled-engine', '@mui/system'],
           '@mui/material': ['@mui/material'],
           '@mui/x-date-pickers': ['@mui/x-date-pickers'],
           '@mui/x-data-grid': ['@mui/x-data-grid'],
