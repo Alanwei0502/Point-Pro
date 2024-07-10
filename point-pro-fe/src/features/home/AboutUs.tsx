@@ -70,7 +70,7 @@ export const TeamMembers: FC<ITeamMembersProps> = () => {
                 <Typography fontSize={theme.typography.h5.fontSize} fontWeight={600}>
                   {m.name}
                 </Typography>
-                <Typography variant='subtitle1' color='text.secondary'>
+                <Typography fontSize={theme.typography.subtitle1.fontSize} color='text.secondary'>
                   {m.title}
                 </Typography>
                 <Typography>{m.description}</Typography>
