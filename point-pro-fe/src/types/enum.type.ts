@@ -20,12 +20,6 @@ export enum OrderType {
   TAKE_OUT = 'TAKE_OUT',
 }
 
-export enum PaymentGateway {
-  LINE_PAY = 'LINE_PAY',
-  CASH = 'CASH',
-  EC_PAY = 'EC_PAY',
-}
-
 export enum PaymentStatus {
   UNPAID = 'UNPAID',
   PAID = 'PAID',

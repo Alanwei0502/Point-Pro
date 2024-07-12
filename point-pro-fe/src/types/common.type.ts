@@ -1,4 +1,4 @@
-import { Gender, OrderStatus, OrderType, PaymentGateway, PaymentStatus, ReservationType, Role, SelectionType } from './enum.type';
+import { Gender, OrderStatus, OrderType, PaymentStatus, PaymentType, ReservationType, Role, SelectionType } from './enum.type';
 
 export interface IBase {
   id: string;
@@ -81,6 +81,6 @@ export interface IOrderMeal {
 export interface IPayment extends IBase {
   paymentNo: string;
   price: number;
-  gateway: PaymentGateway;
+  gateway: PaymentType;
   status: PaymentStatus;
 }

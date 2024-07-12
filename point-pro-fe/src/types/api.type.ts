@@ -1,4 +1,18 @@
-import { ICategory, IMeal, IOrder, IOrderMeal, IPayment, IPeriod, IReservation, ISeat, ISpecialty, ISpecialtyItem, IUser, OrderType } from '~/types';
+import {
+  ICategory,
+  IMeal,
+  IOrder,
+  IOrderMeal,
+  IPayment,
+  IPeriod,
+  IReservation,
+  ISeat,
+  ISpecialty,
+  ISpecialtyItem,
+  IUser,
+  OrderType,
+  PaymentType,
+} from '~/types';
 
 export interface ApiResponse<Result> {
   message: string;
@@ -106,6 +120,7 @@ export type OrdersResult = IOrder & {
   paymentId: IPayment['id'];
   orderMeals: OrderMealInOrdersResult[];
   payments?: IPayment;
+  reservations?: Pick<IReservation, 'username'>;
 };
 
 export type PostOrderResponse = ApiResponse<IOrder>;
@@ -114,11 +129,12 @@ export type PatchOrderResponse = ApiResponse<IOrder>;
 export type GetOrdersResponse = ApiResponse<OrdersResult[]>;
 export type GetOrdersToCheckoutResponse = ApiResponse<{
   msg: string;
+  gateway: PaymentType;
   orders: OrdersResult[];
 }>;
 
 // RESERVATION
-export type ReservationInfo = IReservation & { periods: IPeriod };
+export type ReservationInfo = IReservation & { periods: IPeriod; allOrdersPaid: boolean };
 export type PostReservationPayload = Pick<IReservation, 'username' | 'gender' | 'phone' | 'email' | 'people' | 'type' | 'remark'> & {
   periodId: IPeriod['id'];
 };

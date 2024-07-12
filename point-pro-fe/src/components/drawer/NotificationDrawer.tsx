@@ -62,10 +62,12 @@ export const NotificationDrawer: FC<INotificationDrawerProps> = ({ open, setOpen
         break;
     }
     dispatch(removeAdminNotification(id));
+    setOpen(false);
   };
 
   const handleReadAllNotifications = () => {
     dispatch(removeAllAdminNotification());
+    setOpen(false);
   };
   return (
     <BaseDraw title='即時通知' open={open} onClose={() => setOpen(false)} width='300px'>

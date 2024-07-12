@@ -10,7 +10,7 @@ import {
 } from '../types';
 import { OrderModel, PaymentModel } from '../models';
 import { getRoleAndAuth } from '../helpers';
-import { OrderStatus, OrderType } from '@prisma/client';
+import { OrderStatus, OrderType, PaymentGateway } from '@prisma/client';
 
 export class OrderController {
   static getOrdersHandler = async (req: IGetOrderRequest, res: ApiResponse, next: NextFunction) => {
@@ -96,6 +96,7 @@ export class OrderController {
       // check if dine in or take out
       const orders = await OrderModel.getOrdersToCheckout(req.query);
       let msg = '';
+      let gateway: PaymentGateway | undefined;
 
       if (!orders.length) {
         msg = '無點餐紀錄';
@@ -105,8 +106,10 @@ export class OrderController {
         msg = '尚有餐點未完成';
       } else if (orders.every((o) => o.paymentId)) {
         const payment = await PaymentModel.getPaymentById(orders[0].paymentId!);
+
         if (payment?.status === 'PAID') {
           msg = '餐點已付款';
+          gateway = payment.gateway;
         }
       }
 
@@ -114,6 +117,7 @@ export class OrderController {
         message: ReasonPhrases.OK,
         result: {
           msg,
+          gateway,
           orders,
         },
       });

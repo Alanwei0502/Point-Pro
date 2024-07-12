@@ -1,7 +1,7 @@
 import { type PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { OrderApi } from '~/api';
 import { createAppAsyncThunk } from '~/hooks';
-import { GetOrderPayload, OrderStatus, OrderType, OrdersResult, PostOrderPayload } from '~/types';
+import { GetOrderPayload, OrderStatus, OrderType, OrdersResult, PaymentType, PostOrderPayload } from '~/types';
 
 const sliceName = 'orderManagement';
 
@@ -11,6 +11,7 @@ export interface IOrderManagementSliceState {
   workingOrders: OrdersResult[];
   finishedOrders: OrdersResult[];
   cancelOrders: OrdersResult[];
+  paymentType: PaymentType;
   checkOutOrder: OrdersResult[];
   cancelOrderConfirmModal: {
     isOpen: boolean;
@@ -25,6 +26,7 @@ const initialState: IOrderManagementSliceState = {
   workingOrders: [],
   finishedOrders: [],
   cancelOrders: [],
+  paymentType: PaymentType.CASH,
   checkOutOrder: [],
   cancelOrderConfirmModal: {
     isOpen: false,
@@ -170,7 +172,13 @@ const orderManagementSlice = createSlice({
         }
       })
       .addCase(getOrdersToCheckout.fulfilled, (state, action) => {
-        state.checkOutOrder = action.payload?.orders ?? [];
+        if (!action.payload) {
+          state.paymentType = initialState.paymentType;
+          state.checkOutOrder = initialState.checkOutOrder;
+        } else {
+          state.paymentType = action.payload.gateway;
+          state.checkOutOrder = action.payload.orders;
+        }
       });
   },
 });

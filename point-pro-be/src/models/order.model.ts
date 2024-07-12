@@ -44,6 +44,11 @@ export class OrderModel {
             },
           },
         },
+        reservations: {
+          select: {
+            username: true,
+          },
+        },
       },
       orderBy: {
         createdAt: 'desc',

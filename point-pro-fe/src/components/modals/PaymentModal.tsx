@@ -53,7 +53,11 @@ const CheckoutOrderList: FC<ICheckoutOrderListProps> = (props) => {
       ) : (
         <List>
           {checkOutOrder
-            .filter((co) => co.status === OrderStatus.FINISHED)
+            .filter(
+              (co) =>
+                (co.type === OrderType.DINE_IN && co.status !== OrderStatus.CANCEL) ||
+                (co.type === OrderType.TAKE_OUT && co.status !== OrderStatus.CANCEL),
+            )
             .map((co) => (
               <ListItem key={co.id} sx={{ display: 'flex', alignItems: 'flex-start', backgroundColor: theme.palette.common.black_20, mb: 1 }}>
                 {modalType === 'EDIT' && (
@@ -102,6 +106,7 @@ export const PaymentModal: FC<IPaymentModalProps> = () => {
 
   const { isOpen, modalType, data } = useAppSelector((state) => state.payment.paymentModal);
   const paymentType = useAppSelector((state) => state.payment.paymentType);
+  const orderPaymentType = useAppSelector((state) => state.orderManagement.paymentType);
   const checkOutOrder = useAppSelector((state) => state.orderManagement.checkOutOrder);
   const typeTab = useAppSelector((state) => state.orderManagement.typeTab);
   const statusTab = useAppSelector((state) => state.orderManagement.statusTab);
@@ -178,18 +183,20 @@ export const PaymentModal: FC<IPaymentModalProps> = () => {
         children: (
           <Box display='flex' flexDirection='column' justifyContent='center'>
             <Box display='flex' alignItems='center' justifyContent='space-between' gap={2}>
-              {modalType === 'EDIT' && (
-                <Select value={paymentType} onChange={handleSelectPaymentType} size='small' sx={{ flexGrow: 1, height: 50 }}>
-                  <MenuItem value={PaymentType.CASH}>
-                    <Typography fontSize={20} textAlign='center'>
-                      現金付款
-                    </Typography>
-                  </MenuItem>
-                  <MenuItem value={PaymentType.LINE_PAY}>
-                    <Typography fontSize={20}>Line Pay</Typography>
-                  </MenuItem>
-                </Select>
-              )}
+              <Select
+                value={modalType === 'EDIT' ? paymentType : orderPaymentType}
+                onChange={handleSelectPaymentType}
+                size='small'
+                sx={{ flexGrow: 1, height: 50 }}
+                disabled={modalType !== 'EDIT'}
+              >
+                <MenuItem value={PaymentType.CASH}>
+                  <Typography fontSize={20}>現金付款</Typography>
+                </MenuItem>
+                <MenuItem value={PaymentType.LINE_PAY}>
+                  <Typography fontSize={20}>Line Pay</Typography>
+                </MenuItem>
+              </Select>
               <Box flexGrow={1} fontSize={theme.typography.h6.fontSize} textAlign='right'>
                 總金額：{totalPrice}元
               </Box>

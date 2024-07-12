@@ -18,7 +18,10 @@ export class ReservationController {
 
       return res.status(StatusCodes.OK).send({
         message: ReasonPhrases.OK,
-        result: reservations,
+        result: reservations.map((reservation) => {
+          const allOrdersPaid = reservation.orders.every((order) => order.payments?.status === 'PAID');
+          return { ...reservation, allOrdersPaid };
+        }),
       });
     } catch (error) {
       next(error);

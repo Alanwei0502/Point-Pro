@@ -32,6 +32,11 @@ export class ReservationModel {
       },
       include: {
         periods: true,
+        orders: {
+          include: {
+            payments: true,
+          },
+        },
       },
       orderBy: {
         username: 'asc',

@@ -24,7 +24,7 @@ const LinePayConfirm: FC<ILinePayConfirmProps> = () => {
           window.parent.postMessage('close', window.location.origin);
         })
         .catch(() => {
-          setDescription('確認付款失敗，請至 LINE 後台確認付款狀態');
+          setDescription('請至 LINE 後台確認付款狀態');
         });
     }
   }, [dispatch]);

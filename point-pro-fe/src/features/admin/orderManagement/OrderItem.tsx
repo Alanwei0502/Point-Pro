@@ -61,7 +61,7 @@ export const OrderItem: FC<IOrderItemProps> = (props) => {
 
   const cancellable = order.status === OrderStatus.WORKING && progress === 0 && order.payments?.status !== PaymentStatus.PAID;
 
-  const isTakeOutUnpaid = order.type === OrderType.TAKE_OUT && order.payments?.status !== PaymentStatus.PAID;
+  const isTakeOutUnpaid = order.type === OrderType.TAKE_OUT && order.payments?.status !== PaymentStatus.PAID && order.status !== OrderStatus.CANCEL;
 
   const handleExpand = (event: React.SyntheticEvent<Element, Event>, value: boolean) => {
     setExpanded((prev) => !prev);
@@ -131,6 +131,12 @@ export const OrderItem: FC<IOrderItemProps> = (props) => {
               {ORDER_TYPE_TRANSLATE[order.type]} ({PAYMENT_STATUS[order.payments?.status ?? PaymentStatus.UNPAID]})
             </Typography>
           </Column>
+          <Divider orientation='vertical' flexItem variant='middle' sx={{ margin: 2 }} />
+          {order.reservations?.username && (
+            <Column sx={{ flex: '0 70%' }}>
+              <Typography fontWeight={700}>{order.reservations.username}</Typography>
+            </Column>
+          )}
           <Divider orientation='vertical' flexItem variant='middle' sx={{ margin: 2 }} />
           <Column sx={{ flex: '0 70%' }}>
             <Typography>訂單編號</Typography>

@@ -12,6 +12,7 @@ import { RESERVATION_PEOPLE_OPTIONS } from '~/constants';
 import { appDayjs, formatTimeOnly, formatDateOnly } from '~/utils';
 import { useAppDispatch, useAppSelector } from '~/hooks';
 import { bookingSliceActions } from '~/store/slices/customer/booking.slice';
+import { Loading } from '~/components';
 
 const { setPeople, setSelectedDate, setSelectedPeriod, getAvailablePeriods } = bookingSliceActions;
 
@@ -22,6 +23,7 @@ interface IPeopleAndTimeProps {}
 export const PeopleAndTime: FC<IPeopleAndTimeProps> = () => {
   const dispatch = useAppDispatch();
 
+  const isLoading = useAppSelector(({ booking }) => booking.isLoading);
   const availableTime = useAppSelector(({ booking }) => booking.availableTime);
   const selectedDate = useAppSelector(({ booking }) => booking.selectedDate);
   const selectedPeriod = useAppSelector(({ booking }) => booking.selectedPeriod);
@@ -66,6 +68,7 @@ export const PeopleAndTime: FC<IPeopleAndTimeProps> = () => {
 
   return (
     <>
+      {isLoading && <Loading boxProps={{ position: 'fixed', top: 0, left: '45%' }} />}
       <FormControl margin='none' fullWidth required>
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <DateCalendar
