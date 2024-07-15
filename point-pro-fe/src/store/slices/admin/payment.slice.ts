@@ -1,7 +1,7 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 import { PaymentApi } from '~/api';
 import { createAppAsyncThunk } from '~/hooks';
-import { PostLinePayResponse, LinePayConfirmRedirectPayload, OrderType, PatchPaymentStatusPayload, PaymentType } from '~/types';
+import { PostLinePayResponse, LinePayConfirmRedirectPayload, OrderType, PatchPaymentStatusPayload, PaymentType, OrderStatus } from '~/types';
 
 const sliceName = 'payment';
 
@@ -49,7 +49,7 @@ const requestCashPayment = createAppAsyncThunk(`${sliceName}/cashPaymentRequest`
 
 const requestLinePay = createAppAsyncThunk(`${sliceName}/requestLinePay`, async (_, thunkApi) => {
   try {
-    const payload = thunkApi.getState().orderManagement.checkOutOrder;
+    const payload = thunkApi.getState().orderManagement.checkOutOrder.filter((o) => o.status !== OrderStatus.CANCEL);
     const response = await PaymentApi.postLinePayPayment(payload);
     return response;
   } catch (error) {

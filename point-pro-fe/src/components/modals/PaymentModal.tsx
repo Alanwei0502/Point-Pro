@@ -112,7 +112,7 @@ export const PaymentModal: FC<IPaymentModalProps> = () => {
   const statusTab = useAppSelector((state) => state.orderManagement.statusTab);
   const dateFilter = useAppSelector((state) => state.reservationManagement.dateFilter);
 
-  const totalPrice = checkOutOrder.filter((co) => co.status === OrderStatus.FINISHED).reduce((acc, co) => acc + co.totalPrice, 0);
+  const totalPrice = checkOutOrder.filter((co) => co.status !== OrderStatus.CANCEL).reduce((acc, co) => acc + co.totalPrice, 0);
 
   const handleSelectPaymentType = (e: SelectChangeEvent<PaymentType>) => {
     const paymentType = e.target.value;
@@ -183,20 +183,22 @@ export const PaymentModal: FC<IPaymentModalProps> = () => {
         children: (
           <Box display='flex' flexDirection='column' justifyContent='center'>
             <Box display='flex' alignItems='center' justifyContent='space-between' gap={2}>
-              <Select
-                value={modalType === 'EDIT' ? paymentType : orderPaymentType}
-                onChange={handleSelectPaymentType}
-                size='small'
-                sx={{ flexGrow: 1, height: 50 }}
-                disabled={modalType !== 'EDIT'}
-              >
-                <MenuItem value={PaymentType.CASH}>
-                  <Typography fontSize={20}>現金付款</Typography>
-                </MenuItem>
-                <MenuItem value={PaymentType.LINE_PAY}>
-                  <Typography fontSize={20}>Line Pay</Typography>
-                </MenuItem>
-              </Select>
+              {modalType === 'EDIT' && (
+                <Select
+                  value={paymentType}
+                  onChange={handleSelectPaymentType}
+                  size='small'
+                  sx={{ flexGrow: 1, height: 50 }}
+                  disabled={modalType !== 'EDIT'}
+                >
+                  <MenuItem value={PaymentType.CASH}>
+                    <Typography fontSize={20}>現金付款</Typography>
+                  </MenuItem>
+                  <MenuItem value={PaymentType.LINE_PAY}>
+                    <Typography fontSize={20}>Line Pay</Typography>
+                  </MenuItem>
+                </Select>
+              )}
               <Box flexGrow={1} fontSize={theme.typography.h6.fontSize} textAlign='right'>
                 總金額：{totalPrice}元
               </Box>

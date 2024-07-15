@@ -10,6 +10,7 @@ import {
   IUpdateReservationRequest,
 } from '../types';
 import { ReservationModel } from '../models';
+import { OrderStatus } from '@prisma/client';
 
 export class ReservationController {
   static getReservationsHandler = async (req: IGetReservationsRequest, res: ApiResponse, next: NextFunction) => {
@@ -19,7 +20,8 @@ export class ReservationController {
       return res.status(StatusCodes.OK).send({
         message: ReasonPhrases.OK,
         result: reservations.map((reservation) => {
-          const allOrdersPaid = reservation.orders.every((order) => order.payments?.status === 'PAID');
+          const needToPayOrders = reservation.orders.filter((o) => o.status !== OrderStatus.CANCEL);
+          const allOrdersPaid = needToPayOrders.every((o) => o.payments?.status === 'PAID');
           return { ...reservation, allOrdersPaid };
         }),
       });
